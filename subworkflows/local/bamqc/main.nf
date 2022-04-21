@@ -4,10 +4,10 @@
 
 params.options = [:]
 
-include { SAMTOOLS_QC                   } from '../../modules/local/samtoolsqc/main'                                addParams( options: params.options )
-include { PICARD_COLLECTMULTIPLEMETRICS } from '../../modules/nf-core/modules/picardcollectmultiplemetrics/main'    addParams( options: params.options )
-include { PICARD_COLLECTWGSMETRICS      } from '../../modules/nf-core/modules/picardcollectwgsmetrics/main'         addParams( options: params.options )
-include { PICARD_COLLECTHSMETRICS       } from '../../modules/nf-core/modules/picardcollecthsmetrics/main'          addParams( options: params.options )
+include { SAMTOOLS_QC                   } from '../../../modules/local/samtoolsqc/main'                                addParams( options: params.options )
+include { PICARD_COLLECTMULTIPLEMETRICS } from '../../../modules/nf-core/modules/picardcollectmultiplemetrics/main'    addParams( options: params.options )
+include { PICARD_COLLECTWGSMETRICS      } from '../../../modules/nf-core/modules/picardcollectwgsmetrics/main'         addParams( options: params.options )
+include { PICARD_COLLECTHSMETRICS       } from '../../../modules/nf-core/modules/picardcollecthsmetrics/main'          addParams( options: params.options )
 
 workflow BAM_QC {
     take:
