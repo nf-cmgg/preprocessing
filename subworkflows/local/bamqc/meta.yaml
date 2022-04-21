@@ -32,11 +32,11 @@ input:
       description: Reference file the CRAM was created with
       pattern: "*.{fasta,fa}"
   - bait_intervals:
-      type: file
+      type: optional file
       description: An interval list file that contains the locations of the baits used.
       pattern: "baits.interval_list"
   - target_intervals:
-      type: file
+      type: optional file
       description: An interval list file that contains the locations of the targets.
       pattern: "targets.interval_list"
 output:
