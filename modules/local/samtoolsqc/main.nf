@@ -12,17 +12,17 @@ process SAMTOOLS_QC {
     path fasta
 
     output:
-    tuple val(meta), path("*.stats"), emit: stats
-    tuple val(meta), path("*.idxstats"), emit: idxstats
-    tuple val(meta), path("*.flagstat"), emit: flagstat
-    path  "versions.yml"            , emit: versions
+    tuple val(meta), path("*.stats")    , emit: stats
+    tuple val(meta), path("*.idxstats") , emit: idxstats
+    tuple val(meta), path("*.flagstat") , emit: flagstat
+    path "versions.yml"                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
     def reference = fasta ? "--reference ${fasta}" : ""
+
     """
     samtools \\
         stats \\

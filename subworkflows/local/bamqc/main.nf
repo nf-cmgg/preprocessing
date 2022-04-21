@@ -24,7 +24,7 @@ workflow BAM_QC {
 
     PICARD_COLLECTMULTIPLEMETRICS( ch_bam_bai, ch_fasta] )
     ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
-    if (ch_bait_interval.isEmpty() || ch_target_interval.isEmpty()) {
+    if (!ch_bait_interval.isEmpty() || !ch_target_interval.isEmpty()) {
         if (ch_bait_interval.isEmpty()) {
             throw new Error("Bait interval channel is empty")
         }
