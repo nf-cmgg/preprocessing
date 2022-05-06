@@ -12,14 +12,14 @@
             "bowtie2/align": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
-            "bwamem2/mem": {
-                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
-            },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "fastp": {
                 "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
+            },
+            "md5sum": {
+                "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
             },
             "mosdepth": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -42,11 +42,11 @@
             "samtools/idxstats": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
-            "samtools/stats": {
+            "samtools/index": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
-            "snapaligner/paired": {
-                "git_sha": "09125979cce65350cf50948cf4233a6ce2804bec"
+            "samtools/stats": {
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "stadeniolib/scramble": {
                 "git_sha": "e19a9a2474c6609875b49d8140a7264e21a1beee"

@@ -11,6 +11,9 @@ WorkflowCmggpreprocessing.initialise(params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
+
+// TODO: Add input fasta_fai and aligner index
+
 def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
@@ -50,8 +53,14 @@ inlcude { BAM_QC_PICARD     } from '../subworkflows/nf-core/subworkflows/bam_qc_
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
-include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+include { FASTP                       } from '../modules/nf-core/modules/fastp/main'
 include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+include { BOWTIE2                     } from '../modules/nf-core/modules/bowtie2/main'
+include { BAMSORMADUP                 } from '../modules/nf-core/modules/biobambam/bamsormadup/main'
+include { SCRAMBLE                    } from '../modules/nf-core/modules/stadeniolib/scramble/main'
+include { MOSDEPTH                    } from '../modules/nf-core/modules/mosdepth/main'
+include { MD5SUM                      } from '../modules/nf-core/modules/md5sum/main'
+include { SAMTOOLS_INDEX              } from '../modules/nf-core/modules/samtools/index/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,6 +93,7 @@ workflow CMGGPREPROCESSING {
     //
     // FASTQ QC
     //
+
     // MODULE: fastp
     // Run QC, trimming and adapter removal
     ch_trimmed_fastq    = FASTP(ch_raw_fastq, false, false).out.reads
@@ -93,6 +103,7 @@ workflow CMGGPREPROCESSING {
     //
     // ALIGNMENT
     //
+
     // MODULE: bowtie2
     // Align fastq files to reference genome
     ch_split_bam        = BOWTIE2(ch_trimmed_fastq, [], false).out.bam
@@ -117,12 +128,25 @@ workflow CMGGPREPROCESSING {
     ch_cram             = SCRAMBLE(ch_merged_bam, [], false).out.cram
     ch_versions         = ch_versions.mix(SCRAMBLE.out.versions)
 
+    // MODULE: samtools/index
+    // Generate index for cram
+    ch_cram_index       = SAMTOOLS_INDEX(ch_cram, [], false).out.crai
+    ch_versions         = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
+
+    ch_cram_crai        = ch_cram.join(ch_cram_index)
+
+    // MODULE: MD5SUM
+    // Generate md5sum for cram file
+    ch_cram_checksum    = MD5SUM(ch_cram, [], false).out.md5
+    ch_versions         = ch_versions.mix(MD5SUM.out.versions)
+
     //
     // COVERAGE
     //
+
     // MODULE: mosdepth
     // Generate coverage beds
-    MOSDEPTH(ch_merged_bam, [], false)
+    MOSDEPTH(ch_merged_bam_bai, [], false)
     ch_multiqc_files    = ch_multiqc_files.mix(
         MOSDEPTH.out.summary_txt.map { meta, summary_txt -> return summary_txt},
         MOSDEPTH.out.global_txt.map  { meta, global_txt -> return global_txt},
@@ -132,9 +156,11 @@ workflow CMGGPREPROCESSING {
 
     //
     // QC
+    //
+
     // SUBWORKFLOW: bam_stats_samtools
     // Run samtools QC modules
-    BAM_STATS_SAMTOOLS(ch_merged_bam, [], false)
+    BAM_STATS_SAMTOOLS(ch_merged_bam_bai, [], false)
     ch_multiqc_files    = ch_multiqc_files.mix(
         BAM_STATS_SAMTOOLS.out.stats.map    { meta, stats -> return stats},
         BAM_STATS_SAMTOOLS.out.flagstat.map { meta, flagstat -> return flagstat},
