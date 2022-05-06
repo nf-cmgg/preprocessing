@@ -3,6 +3,9 @@
     "homePage": "https://github.com/nf-core/cmggpreprocessing",
     "repos": {
         "nf-core/modules": {
+            "bclconvert": {
+                "git_sha": "f4c69bc4270186ca5ec174833dbe26cc0e1860fc"
+            },
             "biobambam/bamsormadup": {
                 "git_sha": "dc95e67e153ad937b869d90229333c0654628912"
             },
@@ -18,9 +21,6 @@
             "fastp": {
                 "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
             },
-            "fastqc": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
             "mosdepth": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
@@ -28,13 +28,22 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "picard/collecthsmetrics": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
             },
             "picard/collectmultiplemetrics": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
             },
             "picard/collectwgsmetrics": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "e263f267a7b3c2cbf95372c832e38ba8b76dfd2e"
+            },
+            "samtools/flagstat": {
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+            },
+            "samtools/idxstats": {
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+            },
+            "samtools/stats": {
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "snapaligner/paired": {
                 "git_sha": "09125979cce65350cf50948cf4233a6ce2804bec"

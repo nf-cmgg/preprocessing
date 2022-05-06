@@ -3,9 +3,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     nf-core/cmggpreprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/cmggpreprocessing
-    Website: https://nf-co.re/cmggpreprocessing
-    Slack  : https://nfcore.slack.com/channels/cmggpreprocessing
+    Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
 ----------------------------------------------------------------------------------------
 */
 

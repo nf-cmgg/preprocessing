@@ -3,6 +3,8 @@ description: Produces comprehensive statistics from BAM file
 keywords:
   - statistics
   - counts
+  - hs_metrics
+  - wgs_metrics
   - bam
   - sam
   - cram
