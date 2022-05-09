@@ -6,8 +6,8 @@
 
 params.options = [:]
 
-include { BCLCONVERT    } from '../../modules/nf-core/modules/bcl-convert'
-include { UNTAR         } from '../../modules/nf-core/modules/untar'
+include { BCLCONVERT    } from "../../modules/nf-core/modules/bcl-convert"
+include { UNTAR         } from "../../modules/nf-core/modules/untar"
 
 workflow DEMULTIPLEX {
     take:
@@ -21,7 +21,7 @@ workflow DEMULTIPLEX {
         // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
         ch_flowcell
             .branch { meta, samplesheet, run ->
-                tar: run.toString().endsWith('.tar.gz')
+                tar: run.toString().endsWith(".tar.gz")
                 dir: true
             }.set { ch_flowcells }
 

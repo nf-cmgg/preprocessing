@@ -15,11 +15,11 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.bowtie2   = WorkflowMain.getGenomeAttribute(params, 'bowtie2')
-params.bwamem2   = WorkflowMain.getGenomeAttribute(params, 'bwamem2')
-params.fasta     = WorkflowMain.getGenomeAttribute(params, 'fasta')
-params.fasta_fai = WorkflowMain.getGenomeAttribute(params, 'fasta_fai')
-params.snapaligner = WorkflowMain.getGenomeAttribute(params, 'snapaligner')
+params.bowtie2   = WorkflowMain.getGenomeAttribute(params, "bowtie2")
+params.bwamem2   = WorkflowMain.getGenomeAttribute(params, "bwamem2")
+params.fasta     = WorkflowMain.getGenomeAttribute(params, "fasta")
+params.fasta_fai = WorkflowMain.getGenomeAttribute(params, "fasta_fai")
+params.snapaligner = WorkflowMain.getGenomeAttribute(params, "snapaligner")
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,7 +35,7 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { CMGGPREPROCESSING } from './workflows/cmggpreprocessing'
+include { CMGGPREPROCESSING } from "./workflows/cmggpreprocessing"
 
 //
 // WORKFLOW: Run main nf-core/cmggpreprocessing analysis pipeline

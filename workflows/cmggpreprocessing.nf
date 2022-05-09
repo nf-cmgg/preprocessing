@@ -9,17 +9,11 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 // Validate input parameters
 WorkflowCmggpreprocessing.initialise(params, log)
 
-// TODO nf-core: Add all file path parameters for the pipeline to the list below
-// Check input path parameters to see if they exist
-
-
-// TDOD: Add input sample metadata
-
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.fasta_fai ]
+def checkPathParamList = [ params.input, params.sample_meta, params.multiqc_config, params.fasta, params.fasta_fai ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.input) { ch_input = file(params.input) } else { exit 1, "Input samplesheet not specified!" }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,10 +33,10 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BAM_STATS_SAMTOOLS} from '../subworkflows/nf-core/subworkflows/bam_stats_samtools'
-include { DEMULTIPLEX       } from '../subworkflows/local/demultiplex'
-include { INPUT_CHECK       } from '../subworkflows/local/input_check'
-inlcude { BAM_QC_PICARD     } from '../subworkflows/nf-core/subworkflows/bam_qc_picard'
+include { BAM_STATS_SAMTOOLS} from "../subworkflows/nf-core/subworkflows/bam_stats_samtools"
+include { DEMULTIPLEX       } from "../subworkflows/local/demultiplex"
+include { INPUT_CHECK       } from "../subworkflows/local/input_check"
+inlcude { BAM_QC_PICARD     } from "../subworkflows/nf-core/subworkflows/bam_qc_picard"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -53,15 +47,15 @@ inlcude { BAM_QC_PICARD     } from '../subworkflows/nf-core/subworkflows/bam_qc_
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { BIOBAMBAM_BAMSORMADUP       } from '../modules/nf-core/modules/biobambam/bamsormadup/main'
-include { BOWTIE2_ALIGN               } from '../modules/nf-core/modules/bowtie2/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
-include { FASTP                       } from '../modules/nf-core/modules/fastp/main'
-include { MD5SUM                      } from '../modules/nf-core/modules/md5sum/main'
-include { MOSDEPTH                    } from '../modules/nf-core/modules/mosdepth/main'
-include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
-include { SAMTOOLS_INDEX              } from '../modules/nf-core/modules/samtools/index/main'
-include { SAMTOOLS_BAMTOCRAM          } from '../modules/nf-core/modules/samtools/bamtocram/main'
+include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
+include { BOWTIE2_ALIGN               } from "../modules/nf-core/modules/bowtie2/main"
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
+include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
+include { MD5SUM                      } from "../modules/nf-core/modules/md5sum/main"
+include { MOSDEPTH                    } from "../modules/nf-core/modules/mosdepth/main"
+include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
+include { SAMTOOLS_INDEX              } from "../modules/nf-core/modules/samtools/index/main"
+include { SAMTOOLS_BAMTOCRAM          } from "../modules/nf-core/modules/samtools/bamtocram/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -178,7 +172,7 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     // Gather software versions for QC report
-    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: 'collated_versions.yml'))
+    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
     // MODULE: MultiQC
@@ -189,7 +183,7 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(
         Channel.from(ch_multiqc_config),
         ch_multiqc_custom_config.collect().ifEmpty([]),
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+        ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml"),
     )
 
     MULTIQC (

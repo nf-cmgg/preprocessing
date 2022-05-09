@@ -2,7 +2,7 @@
 // Check input samplesheet and get read channels
 //
 
-include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
+include { SAMPLESHEET_CHECK } from "../../modules/local/samplesheet_check"
 
 workflow INPUT_CHECK {
     take:
@@ -11,7 +11,7 @@ workflow INPUT_CHECK {
     main:
     SAMPLESHEET_CHECK ( samplesheet )
         .csv
-        .splitCsv ( header:true, sep:',' )
+        .splitCsv ( header:true, sep:"," )
         .map { create_fastq_channel(it) }
         .set { reads }
 

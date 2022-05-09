@@ -5,9 +5,9 @@
 
 nextflow.enable.dsl = 2
 
-include { ELPREP_SPLIT  } from '../../modules/nf-core/modules/elprep/split'
-include { ELPREP_FILTER } from '../../modules/nf-core/modules/elprep/filter'
-include { ELPREP_MERGE  } from '../../modules/nf-core/modules/elprep/merge'
+include { ELPREP_SPLIT  } from "../../modules/nf-core/modules/elprep/split"
+include { ELPREP_FILTER } from "../../modules/nf-core/modules/elprep/filter"
+include { ELPREP_MERGE  } from "../../modules/nf-core/modules/elprep/merge"
 
 workflow bamprocessing_elprep {
     take:
