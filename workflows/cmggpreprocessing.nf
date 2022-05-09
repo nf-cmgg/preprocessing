@@ -15,7 +15,7 @@ WorkflowCmggpreprocessing.initialise(params, log)
 
 // TDOD: Add input sample metadata
 
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.fasta_fai ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -77,23 +77,23 @@ workflow CMGGPREPROCESSING {
     ch_versions         = Channel.empty()
     ch_multiqc_files    = Channel.empty()
 
-    //
+    //*
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
+    //*
     ch_flowcells        = INPUT_CHECK (ch_input).out.flowcells
     ch_versions         = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    //
+    //*
     // DEMULTIPLEXING
-    //
+    //*
     // SUBWORKFLOW: demultiplex
     ch_raw_fastq        = DEMULTIPLEX.out.fastq
     ch_multiqc_files    = ch_multiqc_files.mix(DEMULTIPLEX.out.reports)
     ch_versions         = ch_versions.mix(DEMULTIPLEX.out.versions)
 
-    //
-    // FASTQ QC
-    //
+    //*
+    // FASTQ QC and TRIMMING
+    //*
 
     // MODULE: fastp
     // Run QC, trimming and adapter removal
@@ -101,28 +101,29 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files    = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
     ch_versions         = ch_versions.mix(FASTP.out.versions)
 
-    //
+    //*
     // ALIGNMENT
-    //
+    //*
 
     // MODULE: bowtie2
     // Align fastq files to reference genome
-    ch_split_bam        = BOWTIE2(ch_trimmed_fastq, [], false).out.bam
-    ch_versions         = ch_versions.mix(BOWTIE2.out.versions)
+    ch_split_bam        = BOWTIE2_ALIGN(ch_trimmed_fastq, [], false).out.bam
+    ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
-    //
+    //*
     // POST ALIGNMENT
-    //
+    //*
 
     // TODO: Gather bam records per sample into ch_split_bam_per_sample
 
     // MODULE: biobambam/bamsormadup
     // Take multiple split bam files per sample, merge, sort and mark duplicates
-    ch_merged_bam       = BAMSORMADUP(ch_split_bam_per_sample, [], false).out.bam
-    ch_merged_bai       = BAMSORMADUP(ch_split_bam_per_sample, [], false).out.bam_index
+    BIOBAMBAM_BAMSORMADUP(ch_split_bam_per_sample, [], false)
+    ch_merged_bam       = BIOBAMBAM_BAMSORMADUP.out.bam
+    ch_merged_bai       = BIOBAMBAM_BAMSORMADUP.out.bam_index
     ch_merged_bam_bai   = ch_merged_bam.join(ch_merged_bai)
-    ch_multiqc_files    = ch_multiqc_files.mix( BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions         = ch_versions.mix(BAMSORMADUP.out.versions)
+    ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
     // MODULE: samtools/bamtocram
     // Compress bam to cram
@@ -135,12 +136,12 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: MD5SUM
     // Generate md5sum for cram file
-    ch_cram_checksum    = MD5SUM(ch_cram, [], false).out.md5
+    ch_cram_checksum    = MD5SUM(ch_cram).out.md5
     ch_versions         = ch_versions.mix(MD5SUM.out.versions)
 
-    //
+    //*
     // COVERAGE
-    //
+    //*
 
     // MODULE: mosdepth
     // Generate coverage beds
@@ -152,13 +153,13 @@ workflow CMGGPREPROCESSING {
     )
     ch_versions         = ch_versions.mix(MOSDEPTH.out.versions)
 
-    //
+    //*
     // QC
-    //
+    //*
 
     // SUBWORKFLOW: bam_stats_samtools
     // Run samtools QC modules
-    BAM_STATS_SAMTOOLS(ch_merged_bam_bai, [], false)
+    BAM_STATS_SAMTOOLS(ch_merged_bam_bai, , false)
     ch_multiqc_files    = ch_multiqc_files.mix(
         BAM_STATS_SAMTOOLS.out.stats.map    { meta, stats -> return stats},
         BAM_STATS_SAMTOOLS.out.flagstat.map { meta, flagstat -> return flagstat},
