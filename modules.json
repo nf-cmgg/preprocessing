@@ -36,6 +36,9 @@
             "picard/collectwgsmetrics": {
                 "git_sha": "e263f267a7b3c2cbf95372c832e38ba8b76dfd2e"
             },
+            "samtools/bamtocram": {
+                "git_sha": "569e07f0af74e2a6ea43fca61ae90bb762893461"
+            },
             "samtools/flagstat": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
@@ -47,9 +50,6 @@
             },
             "samtools/stats": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
-            },
-            "stadeniolib/scramble": {
-                "git_sha": "e19a9a2474c6609875b49d8140a7264e21a1beee"
             }
         }
     }

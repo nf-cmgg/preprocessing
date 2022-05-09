@@ -53,15 +53,15 @@ inlcude { BAM_QC_PICARD     } from '../subworkflows/nf-core/subworkflows/bam_qc_
 //
 // MODULE: Installed directly from nf-core/modules
 //
+include { BIOBAMBAM_BAMSORMADUP       } from '../modules/nf-core/modules/biobambam/bamsormadup/main'
+include { BOWTIE2_ALIGN               } from '../modules/nf-core/modules/bowtie2/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { FASTP                       } from '../modules/nf-core/modules/fastp/main'
-include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
-include { BOWTIE2                     } from '../modules/nf-core/modules/bowtie2/main'
-include { BAMSORMADUP                 } from '../modules/nf-core/modules/biobambam/bamsormadup/main'
-include { SCRAMBLE                    } from '../modules/nf-core/modules/stadeniolib/scramble/main'
-include { MOSDEPTH                    } from '../modules/nf-core/modules/mosdepth/main'
 include { MD5SUM                      } from '../modules/nf-core/modules/md5sum/main'
+include { MOSDEPTH                    } from '../modules/nf-core/modules/mosdepth/main'
+include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
 include { SAMTOOLS_INDEX              } from '../modules/nf-core/modules/samtools/index/main'
+include { SAMTOOLS_BAMTOCRAM          } from '../modules/nf-core/modules/samtools/bamtocram/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -124,17 +124,14 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files    = ch_multiqc_files.mix( BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions         = ch_versions.mix(BAMSORMADUP.out.versions)
 
-    // MODULE: stadeniolib/scramble
+    // MODULE: samtools/bamtocram
     // Compress bam to cram
-    ch_cram             = SCRAMBLE(ch_merged_bam, [], false).out.cram
-    ch_versions         = ch_versions.mix(SCRAMBLE.out.versions)
-
-    // MODULE: samtools/index
-    // Generate index for cram
-    ch_cram_index       = SAMTOOLS_INDEX(ch_cram, [], false).out.crai
-    ch_versions         = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
-
-    ch_cram_crai        = ch_cram.join(ch_cram_index)
+    ch_cram_crai        = SAMTOOLS_BAMTOCRAM(
+        ch_merged_bam,
+        params.fasta,
+        params.fasta_fai
+    ).out.cram_crai
+    ch_versions         = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
     // MODULE: MD5SUM
     // Generate md5sum for cram file
