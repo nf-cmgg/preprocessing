@@ -55,7 +55,7 @@ include { MD5SUM                      } from "../modules/nf-core/modules/md5sum/
 include { MOSDEPTH                    } from "../modules/nf-core/modules/mosdepth/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
 include { SAMTOOLS_INDEX              } from "../modules/nf-core/modules/samtools/index/main"
-include { SAMTOOLS_BAMTOCRAM          } from "../modules/nf-core/modules/samtools/bamtocram/main"
+include { SAMTOOLS_CONVERT            } from "../modules/nf-core/modules/samtools/convert/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -101,7 +101,7 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: bowtie2
     // Align fastq files to reference genome
-    ch_split_bam        = BOWTIE2_ALIGN(ch_trimmed_fastq, [], false).out.bam
+    ch_split_bam        = BOWTIE2_ALIGN(ch_trimmed_fastq, params.bowtie2, false).out.bam
     ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
     //*
@@ -119,14 +119,14 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
-    // MODULE: samtools/bamtocram
+    // MODULE: samtools/convert
     // Compress bam to cram
-    ch_cram_crai        = SAMTOOLS_BAMTOCRAM(
+    ch_cram_crai        = SAMTOOLS_CONVERT(
         ch_merged_bam,
         params.fasta,
         params.fasta_fai
-    ).out.cram_crai
-    ch_versions         = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
+    ).out.alignment_index
+    ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
     // MODULE: MD5SUM
     // Generate md5sum for cram file

@@ -10,7 +10,7 @@
                 "git_sha": "dc95e67e153ad937b869d90229333c0654628912"
             },
             "bowtie2/align": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                "git_sha": "61f68913fefc20241ceccb671b104230b2d775d7"
             },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -34,7 +34,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "multiqc": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "picard/collecthsmetrics": {
                 "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
@@ -45,8 +45,8 @@
             "picard/collectwgsmetrics": {
                 "git_sha": "e263f267a7b3c2cbf95372c832e38ba8b76dfd2e"
             },
-            "samtools/bamtocram": {
-                "git_sha": "569e07f0af74e2a6ea43fca61ae90bb762893461"
+            "samtools/convert": {
+                "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
             },
             "samtools/flagstat": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
