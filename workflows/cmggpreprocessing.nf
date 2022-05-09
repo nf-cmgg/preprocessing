@@ -12,7 +12,8 @@ WorkflowCmggpreprocessing.initialise(params, log)
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
 
-// TODO: Add input fasta_fai and aligner index
+
+// TDOD: Add input sample metadata
 
 def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
