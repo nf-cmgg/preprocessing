@@ -64,6 +64,100 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 The nf-core/cmggpreprocessing pipeline comes with documentation about the pipeline [usage](https://nf-co.re/cmggpreprocessing/usage), [parameters](https://nf-co.re/cmggpreprocessing/parameters) and [output](https://nf-co.re/cmggpreprocessing/output).
 
+## Flowchart
+
+```mermaid
+
+flowchart TB
+
+FC(["Flowcell (BCL)"])                          --> DEMULTIPLEX
+SS([SampleSheet])                               --> DEMULTIPLEX
+
+subgraph DEMULTIPLEX[Demultiplex]
+    direction LR
+    SAMPLESHEET([SampleSheet])                  --> BCLCONVERT[bcl-convert]
+    FLOWCELL([Flowcell])                        --Split by LANE--> BCLCONVERT[bcl-convert]
+    BCLCONVERT                                  --> DEMUX_FASTQ([Fastq])
+    BCLCONVERT                                  --> DEMULTIPLEX_STATS([Demultiplex Reports])
+    DEMUX_FASTQ                                 --> FASTP[FastP]
+    FASTP                                       --> DEMUX_MULTIQC[MultiQC]
+    DEMULTIPLEX_STATS                           --> DEMUX_MULTIQC[MultiQC]
+    DEMUX_MULTIQC                               --> DEMUX_MULTIQC_REPORT([MultiQC Report])
+end
+
+DEMULTIPLEX                                     --> RAW_FASTQ([Demultiplexed Fastq per sample per lane])
+DEMULTIPLEX                                     --> DEMUX_REPORTS([Demultiplexing reports])
+RAW_FASTQ                                       --> ALIGNMENT
+
+subgraph ALIGNMENT
+    direction TB
+    FASTQ([Fastq per sample per lane])          --> IS_HUMAN{Human data?}
+    IS_HUMAN                                    --YES--> NX_SPLITFASTQ[nx SplitFastq]
+    IS_HUMAN                                    --NO--> FASTQTOSAM[Picard FastqToSam]
+    FASTQTOSAM                                  --> UNALIGNED_BAM([Unaligned BAM])
+    NX_SPLITFASTQ                               --split by # reads--> ALIGNER{ALIGNER}
+    ALIGNER                                     --> BOWTIE2[Bowtie2-align]
+    ALIGNER                                     --> BWAMEM2[Bwamem2 mem]
+    ALIGNER                                     --> SNAP[snap-aligner]
+    BOWTIE2                                     --> MERGE((Merge bam chunks))
+    BWAMEM2                                     --> MERGE((Merge bam chunks))
+    SNAP                                        --> MERGE((Merge bam chunks))
+    MERGE                                       --> BAMPROCESSOR{BAMPROCESSOR}
+    BAMPROCESSOR{BAMPROCESSOR}                  --> BIOBAMBAM[Biobambam]
+    BAMPROCESSOR{BAMPROCESSOR}                  --> ELPREP[Elprep]
+
+    subgraph ELPREP_FLOW[Elprep subroutine]
+        direction TB
+        ELPREP_BAM([BAM])                       --> ELPREP_SPLIT[Elprep split]
+        ELPREP_SPLIT                            --split by chromosome-->    ELPREP_FILTER[Elprep filter]
+        ELPREP_FILTER                           --sort/mark duplicates-->   ELPREP_MERGE[Elprep merge]
+        ELPREP_FILTER                           --BQSR/variant calling-->   ELPREP_MERGE[Elprep merge]
+        ELPREP_MERGE                            --> ELPREP_SORTBAM([Postprocessed BAM])
+        ELPREP_MERGE                            --> ELPREP_GVCF([gVCF])
+    end
+    ELPREP                                      --> ELPREP_FLOW
+    ELPREP_FLOW                                 --> SORTBAM([Postprocessed BAM])
+    ELPREP_FLOW                                 --> ELPREP_GVCF([gVCF])
+    ELPREP_FLOW                                 --> MARKDUP_METRICS([Markduplicates Metrics])
+
+    subgraph BIOBAMBAM_FLOW[Biobambam subroutine]
+        direction TB
+        BIOBAMBAM_BAM([BAM])                    --> SPLIT[Split tool TBD]
+        SPLIT                                   --split by chromosome-->    BAMSORMADUP[BamSorMaDup]
+        BAMSORMADUP                             --sort/mark duplicates -->  BIOBAMBAM_SORTBAM([Postprocessed BAM])
+    end
+    BIOBAMBAM                                   --> BIOBAMBAM_FLOW
+    BIOBAMBAM_FLOW                              --> SORTBAM
+    BIOBAMBAM_FLOW                              --> MARKDUP_METRICS([Markduplicates Metrics])
+
+    SORTBAM                                     -->  BAMQC[BAM QC Tools]
+    BAMQC                                       -->  BAM_METRICS([BAM metrics])
+    SORTBAM                                     -->  SCRAMBLE[Scramble]
+    SORTBAM                                     -->  MOSDEPTH[Mosdepth]
+    MOSDEPTH                                    -->  COVERAGE_BED([Coverage BEDs])
+    MOSDEPTH                                    -->  COVERAGE_METRICS([Coverage Metrics])
+    UNALIGNED_BAM                               -->  SCRAMBLE
+    SCRAMBLE                                    -->  ALN_CRAM([CRAM])
+
+    BAM_METRICS                                 -->  ALN_MULTIQC[MultiQC]
+    MARKDUP_METRICS                             -->  ALN_MULTIQC
+    COVERAGE_METRICS                            -->  ALN_MULTIQC
+    ALN_MULTIQC                                 -->  ALN_MULTIQC_REPORT([MultiQC Report])
+end
+
+ALIGNMENT                                       --> A_CRAM([CRAM])
+ALIGNMENT                                       --> GVCF([gVCF])
+ALIGNMENT                                       --> A_BAM_METRICS([BAM metrics])
+ALIGNMENT                                       --> A_COVERAGE_METRICS([Coverage metrics])
+ALIGNMENT                                       --> A_COVERAGE_BED([Coverage BED])
+
+A_BAM_METRICS                                   --> MQC([Run MultiQC Report])
+A_COVERAGE_METRICS                              --> MQC
+DEMUX_REPORTS                                   --> MQC
+
+```
+
+
 ## Credits
 
 nf-core/cmggpreprocessing was originally written by Matthias De Smet.
