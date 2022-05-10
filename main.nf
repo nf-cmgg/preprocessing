@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/cmggpreprocessing
+    CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
 ----------------------------------------------------------------------------------------
@@ -15,10 +15,10 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.bowtie2   = WorkflowMain.getGenomeAttribute(params, "bowtie2")
-params.bwamem2   = WorkflowMain.getGenomeAttribute(params, "bwamem2")
-params.fasta     = WorkflowMain.getGenomeAttribute(params, "fasta")
-params.fasta_fai = WorkflowMain.getGenomeAttribute(params, "fasta_fai")
+params.bowtie2     = WorkflowMain.getGenomeAttribute(params, "bowtie2")
+params.bwamem2     = WorkflowMain.getGenomeAttribute(params, "bwamem2")
+params.fasta       = WorkflowMain.getGenomeAttribute(params, "fasta")
+params.fasta_fai   = WorkflowMain.getGenomeAttribute(params, "fasta_fai")
 params.snapaligner = WorkflowMain.getGenomeAttribute(params, "snapaligner")
 
 /*
@@ -35,12 +35,12 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { CMGGPREPROCESSING } from "./workflows/cmggpreprocessing"
+include { CMGGPREPROCESSING } from "./workflows/cmgg-preprocessing"
 
 //
-// WORKFLOW: Run main nf-core/cmggpreprocessing analysis pipeline
+// WORKFLOW: Run main CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing analysis pipeline
 //
-workflow NFCORE_CMGGPREPROCESSING {
+workflow CMGG_CMGGPREPROCESSING {
     CMGGPREPROCESSING ()
 }
 
@@ -55,7 +55,7 @@ workflow NFCORE_CMGGPREPROCESSING {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_CMGGPREPROCESSING ()
+    CMGG_CMGGPREPROCESSING ()
 }
 
 /*
