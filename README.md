@@ -11,7 +11,6 @@ This workflow handles demultiplexing, alignment, qc and archiving.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
-
 ## Pipeline summary
 
 1. Demultiplexing
@@ -40,7 +39,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
    > - If you are using `conda`, it is highly recommended to use the [`NXF_CONDA_CACHEDIR` or `conda.cacheDir`](https://www.nextflow.io/docs/latest/conda.html) settings to store the environments in a central location for future pipeline runs.
 
 4. Start running your own analysis!
-
 
    ```console
    nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing --input flowcells.csv --samples samples.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
@@ -139,7 +137,6 @@ DEMUX_REPORTS                                   --> MQC
 
 ```
 
-
 ## Credits
 
 CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing was originally written by Matthias De Smet.
@@ -151,11 +148,3 @@ If you would like to contribute to this pipeline, please see the [contributing g
 ## Citations
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
-
-You can cite the `nf-core` publication as follows:
-
-> **The nf-core framework for community-curated bioinformatics pipelines.**
->
-> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
->
-> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).

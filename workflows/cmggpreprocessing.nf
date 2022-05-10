@@ -13,7 +13,9 @@ def checkPathParamList = [ params.input, params.sample_meta, params.multiqc_conf
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, "Input samplesheet not specified!" }
+if (params.input) { ch_input = file(params.input) } else { exit 1, "Flowcell metadata sheet not specified!" }
+if (params.samples) { ch_input = file(params.samples) } else { exit 1, "Sample metadata sheet not specified!" }
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,129 +70,134 @@ def multiqc_report = []
 
 workflow CMGGPREPROCESSING {
 
-    ch_versions         = Channel.empty()
-    ch_multiqc_files    = Channel.empty()
+    take:
+        flowcell_csv
+        samples_csv
 
-    //*
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //*
-    ch_flowcells        = INPUT_CHECK (ch_input).out.flowcells
-    ch_versions         = ch_versions.mix(INPUT_CHECK.out.versions)
+    main:
+        ch_versions         = Channel.empty()
+        ch_multiqc_files    = Channel.empty()
 
-    //*
-    // DEMULTIPLEXING
-    //*
-    // SUBWORKFLOW: demultiplex
-    ch_raw_fastq        = DEMULTIPLEX.out.fastq
-    ch_multiqc_files    = ch_multiqc_files.mix(DEMULTIPLEX.out.reports)
-    ch_versions         = ch_versions.mix(DEMULTIPLEX.out.versions)
+        //*
+        // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+        //*
+        ch_flowcells        = INPUT_CHECK (ch_input).out.flowcells
+        ch_versions         = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    //*
-    // FASTQ QC and TRIMMING
-    //*
+        //*
+        // DEMULTIPLEXING
+        //*
+        // SUBWORKFLOW: demultiplex
+        ch_raw_fastq        = DEMULTIPLEX.out.fastq
+        ch_multiqc_files    = ch_multiqc_files.mix(DEMULTIPLEX.out.reports)
+        ch_versions         = ch_versions.mix(DEMULTIPLEX.out.versions)
 
-    // MODULE: fastp
-    // Run QC, trimming and adapter removal
-    ch_trimmed_fastq    = FASTP(ch_raw_fastq, false, false).out.reads
-    ch_multiqc_files    = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
-    ch_versions         = ch_versions.mix(FASTP.out.versions)
+        //*
+        // FASTQ QC and TRIMMING
+        //*
 
-    //*
-    // ALIGNMENT
-    //*
+        // MODULE: fastp
+        // Run QC, trimming and adapter removal
+        ch_trimmed_fastq    = FASTP(ch_raw_fastq, false, false).out.reads
+        ch_multiqc_files    = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
+        ch_versions         = ch_versions.mix(FASTP.out.versions)
 
-    // MODULE: bowtie2
-    // Align fastq files to reference genome
-    ch_split_bam        = BOWTIE2_ALIGN(ch_trimmed_fastq, params.bowtie2, false).out.bam
-    ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
+        //*
+        // ALIGNMENT
+        //*
 
-    //*
-    // POST ALIGNMENT
-    //*
+        // MODULE: bowtie2
+        // Align fastq files to reference genome
+        ch_split_bam        = BOWTIE2_ALIGN(ch_trimmed_fastq, params.bowtie2, false).out.bam
+        ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
-    // TODO: Gather bam records per sample into ch_split_bam_per_sample
+        //*
+        // POST ALIGNMENT
+        //*
 
-    // MODULE: biobambam/bamsormadup
-    // Take multiple split bam files per sample, merge, sort and mark duplicates
-    BIOBAMBAM_BAMSORMADUP(ch_split_bam_per_sample, [], false)
-    ch_merged_bam       = BIOBAMBAM_BAMSORMADUP.out.bam
-    ch_merged_bai       = BIOBAMBAM_BAMSORMADUP.out.bam_index
-    ch_merged_bam_bai   = ch_merged_bam.join(ch_merged_bai)
-    ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+        // TODO: Gather bam records per sample into ch_split_bam_per_sample
 
-    // MODULE: samtools/convert
-    // Compress bam to cram
-    ch_cram_crai        = SAMTOOLS_CONVERT(
-        ch_merged_bam,
-        params.fasta,
-        params.fasta_fai
-    ).out.alignment_index
-    ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
+        // MODULE: biobambam/bamsormadup
+        // Take multiple split bam files per sample, merge, sort and mark duplicates
+        BIOBAMBAM_BAMSORMADUP(ch_split_bam_per_sample, [], false)
+        ch_merged_bam       = BIOBAMBAM_BAMSORMADUP.out.bam
+        ch_merged_bai       = BIOBAMBAM_BAMSORMADUP.out.bam_index
+        ch_merged_bam_bai   = ch_merged_bam.join(ch_merged_bai)
+        ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+        ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
-    // MODULE: MD5SUM
-    // Generate md5sum for cram file
-    ch_cram_checksum    = MD5SUM(ch_cram).out.md5
-    ch_versions         = ch_versions.mix(MD5SUM.out.versions)
+        // MODULE: samtools/convert
+        // Compress bam to cram
+        ch_cram_crai        = SAMTOOLS_CONVERT(
+            ch_merged_bam,
+            params.fasta,
+            params.fasta_fai
+        ).out.alignment_index
+        ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
-    //*
-    // COVERAGE
-    //*
+        // MODULE: MD5SUM
+        // Generate md5sum for cram file
+        ch_cram_checksum    = MD5SUM(ch_cram).out.md5
+        ch_versions         = ch_versions.mix(MD5SUM.out.versions)
 
-    // MODULE: mosdepth
-    // Generate coverage beds
-    MOSDEPTH(ch_merged_bam_bai, [], false)
-    ch_multiqc_files    = ch_multiqc_files.mix(
-        MOSDEPTH.out.summary_txt.map { meta, summary_txt -> return summary_txt},
-        MOSDEPTH.out.global_txt.map  { meta, global_txt -> return global_txt},
-        MOSDEPTH.out.regions_txt.map { meta, regions_txt -> return regions_txt}
-    )
-    ch_versions         = ch_versions.mix(MOSDEPTH.out.versions)
+        //*
+        // COVERAGE
+        //*
 
-    //*
-    // QC
-    //*
+        // MODULE: mosdepth
+        // Generate coverage beds
+        MOSDEPTH(ch_merged_bam_bai, [], false)
+        ch_multiqc_files    = ch_multiqc_files.mix(
+            MOSDEPTH.out.summary_txt.map { meta, summary_txt -> return summary_txt},
+            MOSDEPTH.out.global_txt.map  { meta, global_txt -> return global_txt},
+            MOSDEPTH.out.regions_txt.map { meta, regions_txt -> return regions_txt}
+        )
+        ch_versions         = ch_versions.mix(MOSDEPTH.out.versions)
 
-    // SUBWORKFLOW: bam_stats_samtools
-    // Run samtools QC modules
-    BAM_STATS_SAMTOOLS(ch_merged_bam_bai, , false)
-    ch_multiqc_files    = ch_multiqc_files.mix(
-        BAM_STATS_SAMTOOLS.out.stats.map    { meta, stats -> return stats},
-        BAM_STATS_SAMTOOLS.out.flagstat.map { meta, flagstat -> return flagstat},
-        BAM_STATS_SAMTOOLS.out.idxstats.map { meta, idxstats -> return idxstats}
-    )
-    ch_versions         = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
+        //*
+        // QC
+        //*
 
-    // SUBWORKFLOW: bam_stats_picard
-    // Run Picard QC modules
-    BAM_QC_PICARD(ch_merged_bam, [], false)
-    ch_multiqc_files    = ch_multiqc_files.mix(
-        BAM_QC_PICARD.out.coverage_metrics.map { meta, coverage_metrics -> return coverage_metrics},
-        BAM_QC_PICARD.out.multiple_metrics.map { meta, multiple_metrics -> return multiple_metrics},
-    )
-    ch_versions         = ch_versions.mix(BAM_QC_PICARD.out.versions)
+        // SUBWORKFLOW: bam_stats_samtools
+        // Run samtools QC modules
+        BAM_STATS_SAMTOOLS(ch_merged_bam_bai, , false)
+        ch_multiqc_files    = ch_multiqc_files.mix(
+            BAM_STATS_SAMTOOLS.out.stats.map    { meta, stats -> return stats},
+            BAM_STATS_SAMTOOLS.out.flagstat.map { meta, flagstat -> return flagstat},
+            BAM_STATS_SAMTOOLS.out.idxstats.map { meta, idxstats -> return idxstats}
+        )
+        ch_versions         = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
-    // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
-    // Gather software versions for QC report
-    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+        // SUBWORKFLOW: bam_stats_picard
+        // Run Picard QC modules
+        BAM_QC_PICARD(ch_merged_bam, [], false)
+        ch_multiqc_files    = ch_multiqc_files.mix(
+            BAM_QC_PICARD.out.coverage_metrics.map { meta, coverage_metrics -> return coverage_metrics},
+            BAM_QC_PICARD.out.multiple_metrics.map { meta, multiple_metrics -> return multiple_metrics},
+        )
+        ch_versions         = ch_versions.mix(BAM_QC_PICARD.out.versions)
 
-    // MODULE: MultiQC
-    // Generate aggregate QC report
-    workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
+        // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
+        // Gather software versions for QC report
+        CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
-    ch_multiqc_files = ch_multiqc_files.mix(
-        Channel.from(ch_multiqc_config),
-        ch_multiqc_custom_config.collect().ifEmpty([]),
-        ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml"),
-    )
+        // MODULE: MultiQC
+        // Generate aggregate QC report
+        workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
-    MULTIQC (
-        ch_multiqc_files.collect()
-    )
-    multiqc_report = MULTIQC.out.report.toList()
-    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix(
+            Channel.from(ch_multiqc_config),
+            ch_multiqc_custom_config.collect().ifEmpty([]),
+            ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml"),
+        )
+
+        MULTIQC (
+            ch_multiqc_files.collect()
+        )
+        multiqc_report = MULTIQC.out.report.toList()
+        ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*
