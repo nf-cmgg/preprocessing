@@ -1,8 +1,8 @@
 //
-// This file holds several functions specific to the workflow/cmggpreprocessing.nf in the nf-core/cmggpreprocessing pipeline
+// This file holds several functions specific to the workflow/cmgg-preprocessing.nf in the nf-core/cmgg-preprocessing pipeline
 //
 
-class WorkflowCmggpreprocessing {
+class WorkflowCmgg-preprocessing {
 
     //
     // Check and validate parameters

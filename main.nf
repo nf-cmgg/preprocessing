@@ -1,9 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/cmggpreprocessing
+    nf-core/cmgg-preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+    Github : https://github.com/nf-core/cmgg-preprocessing
+    Website: https://nf-co.re/cmgg-preprocessing
+    Slack  : https://nfcore.slack.com/channels/cmgg-preprocessing
 ----------------------------------------------------------------------------------------
 */
 
@@ -15,11 +17,7 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.bowtie2   = WorkflowMain.getGenomeAttribute(params, "bowtie2")
-params.bwamem2   = WorkflowMain.getGenomeAttribute(params, "bwamem2")
-params.fasta     = WorkflowMain.getGenomeAttribute(params, "fasta")
-params.fasta_fai = WorkflowMain.getGenomeAttribute(params, "fasta_fai")
-params.snapaligner = WorkflowMain.getGenomeAttribute(params, "snapaligner")
+params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,13 +33,13 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { CMGGPREPROCESSING } from "./workflows/cmggpreprocessing"
+include { CMGG-PREPROCESSING } from './workflows/cmgg-preprocessing'
 
 //
-// WORKFLOW: Run main nf-core/cmggpreprocessing analysis pipeline
+// WORKFLOW: Run main nf-core/cmgg-preprocessing analysis pipeline
 //
-workflow NFCORE_CMGGPREPROCESSING {
-    CMGGPREPROCESSING ()
+workflow NFCORE_CMGG-PREPROCESSING {
+    CMGG-PREPROCESSING ()
 }
 
 /*
@@ -55,7 +53,7 @@ workflow NFCORE_CMGGPREPROCESSING {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_CMGGPREPROCESSING ()
+    NFCORE_CMGG-PREPROCESSING ()
 }
 
 /*

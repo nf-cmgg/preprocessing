@@ -1,4 +1,4 @@
-# nf-core/cmggpreprocessing: Output
+# nf-core/cmgg-preprocessing: Output
 
 ## Introduction
 

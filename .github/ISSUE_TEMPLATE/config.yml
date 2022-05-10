@@ -2,6 +2,6 @@ contact_links:
   - name: Join nf-core
     url: https://nf-co.re/join
     about: Please join the nf-core community here
-  - name: "Slack #cmggpreprocessing channel"
-    url: https://nfcore.slack.com/channels/cmggpreprocessing
-    about: Discussion about the nf-core/cmggpreprocessing pipeline
+  - name: "Slack #cmgg-preprocessing channel"
+    url: https://nfcore.slack.com/channels/cmgg-preprocessing
+    about: Discussion about the nf-core/cmgg-preprocessing pipeline

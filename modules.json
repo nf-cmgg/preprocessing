@@ -1,64 +1,16 @@
 {
-    "name": "nf-core/cmggpreprocessing",
-    "homePage": "https://github.com/nf-core/cmggpreprocessing",
+    "name": "nf-core/cmgg-preprocessing",
+    "homePage": "https://github.com/nf-core/cmgg-preprocessing",
     "repos": {
         "nf-core/modules": {
-            "bclconvert": {
-                "git_sha": "f4c69bc4270186ca5ec174833dbe26cc0e1860fc"
-            },
-            "biobambam/bamsormadup": {
-                "git_sha": "dc95e67e153ad937b869d90229333c0654628912"
-            },
-            "bowtie2/align": {
-                "git_sha": "61f68913fefc20241ceccb671b104230b2d775d7"
-            },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
-            "elprep/filter": {
-                "git_sha": "c17d1a7a7b473e103ddd3f28bd91b79733aa7cf2"
-            },
-            "elprep/merge": {
-                "git_sha": "9d0f03d96a6855af87f19f27728757e839e51842"
-            },
-            "elprep/split": {
-                "git_sha": "b1749445d76d12d9961e687e811af1337f0eff0f"
-            },
-            "fastp": {
-                "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
-            },
-            "md5sum": {
-                "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
-            },
-            "mosdepth": {
+            "fastqc": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "multiqc": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
-            },
-            "picard/collecthsmetrics": {
-                "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
-            },
-            "picard/collectmultiplemetrics": {
-                "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
-            },
-            "picard/collectwgsmetrics": {
-                "git_sha": "e263f267a7b3c2cbf95372c832e38ba8b76dfd2e"
-            },
-            "samtools/convert": {
-                "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
-            },
-            "samtools/flagstat": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
-            },
-            "samtools/idxstats": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
-            },
-            "samtools/index": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
-            },
-            "samtools/stats": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             }
         }
     }

@@ -4,16 +4,16 @@
   |\\ | |__  __ /  ` /  \\ |__) |__         }  {
   | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                         `._,._,'
-  nf-core/cmggpreprocessing v${version}
+  nf-core/cmgg-preprocessing v${version}
 ----------------------------------------------------
 
 Run Name: $runName
 
 <% if (success){
-    out << "## nf-core/cmggpreprocessing execution completed successfully! ##"
+    out << "## nf-core/cmgg-preprocessing execution completed successfully! ##"
 } else {
     out << """####################################################
-## nf-core/cmggpreprocessing execution completed unsuccessfully! ##
+## nf-core/cmgg-preprocessing execution completed unsuccessfully! ##
 ####################################################
 The exit status of the task that caused the workflow execution to fail was: $exitStatus.
 The full error message was:
@@ -36,5 +36,5 @@ Pipeline Configuration:
 <% out << summary.collect{ k,v -> " - $k: $v" }.join("\n") %>
 
 --
-nf-core/cmggpreprocessing
-https://github.com/nf-core/cmggpreprocessing
+nf-core/cmgg-preprocessing
+https://github.com/nf-core/cmgg-preprocessing
