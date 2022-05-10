@@ -9,7 +9,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 // Validate input parameters
 WorkflowCmggpreprocessing.initialise(params, log)
 
-def checkPathParamList = [ params.input, params.sample_meta, params.multiqc_config, params.fasta, params.fasta_fai ]
+def checkPathParamList = [ params.input, params.samples, params.multiqc_config, params.fasta, params.fasta_fai ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
