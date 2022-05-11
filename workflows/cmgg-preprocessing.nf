@@ -111,25 +111,45 @@ workflow CMGGPREPROCESSING {
     // STEP: POST ALIGNMENT
     //*
 
-    // TODO: Gather bam records per sample into ch_split_bam_per_sample
-
     // MODULE: biobambam/bamsormadup
     // Take multiple split bam files per sample, merge, sort and mark duplicates
-    BIOBAMBAM_BAMSORMADUP(BOWTIE2_ALIGN.out.bam, params.fasta)
-    ch_merged_bam_bai   = ch_merged_bam.join(BIOBAMBAM_BAMSORMADUP.out.bam, BIOBAMBAM_BAMSORMADUP.out.bam_index)
+    BIOBAMBAM_BAMSORMADUP(
+        gather_bam_per_sample(BOWTIE2_ALIGN.out.bam),
+        params.fasta
+    )
+
+    ch_merged_bam_bai   = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
     ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
     // MODULE: samtools/convert
     // Compress bam to cram
-    SAMTOOLS_CONVERT(
-        BIOBAMBAM_BAMSORMADUP.out.bam,
-        params.fasta,
-        params.fasta_fai
-    ).out.alignment_index
+    SAMTOOLS_CONVERT(BIOBAMBAM_BAMSORMADUP.out.bam, params.fasta, params.fasta_fai)
     ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
 }
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+    def gather_bam_per_sample(ch_aligned_bam) {
+        // Gather bam files per sample based on id
+        ch_aligned_bam.map {
+            // set id to filename without lane designation
+            meta, bam ->
+            meta.id = meta.id - ~/_L[0-9]+.*$/
+            [meta, bam]
+        }
+        // group by meta.id
+        .groupTuple([0])
+        .map {
+            return it
+        }
+    }
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

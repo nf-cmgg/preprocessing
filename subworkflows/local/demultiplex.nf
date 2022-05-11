@@ -65,8 +65,7 @@ def generate_fastq_meta(ch_reads) {
     .flatten().map{
         fastq ->
         def meta = [
-            "id": fastq.getSimpleName().toString() - ~/_S[0-9]+_.*$/,
-            "basename": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/
+            "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/
         ]
         [ meta , fastq ]
     }
