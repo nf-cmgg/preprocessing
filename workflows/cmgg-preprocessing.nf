@@ -145,7 +145,7 @@ workflow CMGGPREPROCESSING {
         ch_aligned_bam.map {
             // set id to filename without lane designation
             meta, bam ->
-            meta.id = meta.id - ~/_L[0-9]+.*$/
+            meta.id = meta.id - ~/_S[0-9]+_.*$/
             [meta, bam]
         }
         // group by meta.id
