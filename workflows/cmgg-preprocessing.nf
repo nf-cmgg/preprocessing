@@ -81,7 +81,7 @@ workflow CMGGPREPROCESSING {
     ch_versions         = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //*
-    // DEMULTIPLEXING
+    // STEP: DEMULTIPLEXING
     //*
     // SUBWORKFLOW: demultiplex
     DEMULTIPLEX(ch_flowcells)
@@ -89,7 +89,7 @@ workflow CMGGPREPROCESSING {
     ch_versions         = ch_versions.mix(DEMULTIPLEX.out.versions)
 
     //*
-    // FASTQ QC and TRIMMING
+    // STEP: FASTQ QC and TRIMMING
     //*
 
     // MODULE: fastp
@@ -97,6 +97,15 @@ workflow CMGGPREPROCESSING {
     FASTP(DEMULTIPLEX.out.fastq, false, false)
     ch_multiqc_files    = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
     ch_versions         = ch_versions.mix(FASTP.out.versions)
+
+    //*
+    // STEP: ALIGNMENT
+    //*
+
+    // MODULE: bowtie2
+    // Align fastq files to reference genome
+    BOWTIE2_ALIGN(ch_trimmed_fastq, params.bowtie2, false).out.bam
+    ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
 }
 
