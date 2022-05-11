@@ -6,13 +6,12 @@
 
 params.options = [:]
 
-include { BCLCONVERT    } from "../../modules/nf-core/modules/bcl-convert"
-include { UNTAR         } from "../../modules/nf-core/modules/untar"
+include { BCLCONVERT    } from "../../modules/nf-core/modules/bclconvert/main"
+include { UNTAR         } from "../../modules/nf-core/modules/untar/main"
 
 workflow DEMULTIPLEX {
     take:
         ch_flowcell
-        ch_samplesheet
 
     main:
         ch_versions = Channel.empty()
@@ -40,13 +39,13 @@ workflow DEMULTIPLEX {
         // Merge the two channels back together
         ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
 
-        BCLCONVERT( ch_samplesheet, ch_flowcell)
+        BCLCONVERT( ch_flowcells)
         ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
     emit:
-        fastq = generate_fastq_meta(ch_raw_fastq)
-        bclconvert_reports = BCLCONVERT.out.reports
-        bclconvert_interop = BCLCONVERT.out.interop
+        fastq = generate_fastq_meta(BCLCONVERT.out.fastq)
+        reports = BCLCONVERT.out.reports
+        interop = BCLCONVERT.out.interop
         versions = ch_versions
 }
 
