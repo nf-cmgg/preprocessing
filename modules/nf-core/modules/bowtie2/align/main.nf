@@ -25,43 +25,31 @@ process BOWTIE2_ALIGN {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+
+    def samtools = "samtools view -@ $task.cpus --fast --with-header ${args2} > ${prefix}.bam"
+
     if (meta.single_end) {
         def unaligned = save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
-        """
-        INDEX=`find -L ./ -name "*.rev.1.bt2" | sed 's/.rev.1.bt2//'`
-        [ -z "\$INDEX" ] && INDEX=`find -L ./ -name "*.rev.1.bt2l" | sed 's/.rev.1.bt2l//'`
-        [ -z "\$INDEX" ] && echo "BT2 index files not found" 1>&2 && exit 1
-        bowtie2 \\
-            -x \$INDEX \\
-            -U $reads \\
-            --threads $task.cpus \\
-            $unaligned \\
-            $args \\
-            2> ${prefix}.bowtie2.log \\
-            | samtools view -@ $task.cpus $args2 -bhS -o ${prefix}.bam -
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            bowtie2: \$(echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//')
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-            pigz: \$( pigz --version 2>&1 | sed 's/pigz //g' )
-        END_VERSIONS
-        """
+        def reads_args = "-U ${reads}"
     } else {
         def unaligned = save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
+        def reads_args = "-1 ${reads[0]} -2 ${reads[1]}"
+
+    }
+
         """
         INDEX=`find -L ./ -name "*.rev.1.bt2" | sed 's/.rev.1.bt2//'`
         [ -z "\$INDEX" ] && INDEX=`find -L ./ -name "*.rev.1.bt2l" | sed 's/.rev.1.bt2l//'`
         [ -z "\$INDEX" ] && echo "BT2 index files not found" 1>&2 && exit 1
+
         bowtie2 \\
             -x \$INDEX \\
-            -1 ${reads[0]} \\
-            -2 ${reads[1]} \\
+            ${reads_args} \\
             --threads $task.cpus \\
             $unaligned \\
             $args \\
             2> ${prefix}.bowtie2.log \\
-            | samtools view -@ $task.cpus $args2 -bhS -o ${prefix}.bam -
+            | ${samtools}
 
         if [ -f ${prefix}.unmapped.fastq.1.gz ]; then
             mv ${prefix}.unmapped.fastq.1.gz ${prefix}.unmapped_1.fastq.gz

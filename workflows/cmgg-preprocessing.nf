@@ -104,8 +104,30 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: bowtie2
     // Align fastq files to reference genome
-    BOWTIE2_ALIGN(ch_trimmed_fastq, params.bowtie2, false).out.bam
+    BOWTIE2_ALIGN(FASTP.out.reads, params.bowtie2, false)
     ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
+
+    //*
+    // STEP: POST ALIGNMENT
+    //*
+
+    // TODO: Gather bam records per sample into ch_split_bam_per_sample
+
+    // MODULE: biobambam/bamsormadup
+    // Take multiple split bam files per sample, merge, sort and mark duplicates
+    BIOBAMBAM_BAMSORMADUP(BOWTIE2_ALIGN.out.bam, params.fasta)
+    ch_merged_bam_bai   = ch_merged_bam.join(BIOBAMBAM_BAMSORMADUP.out.bam, BIOBAMBAM_BAMSORMADUP.out.bam_index)
+    ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+
+    // MODULE: samtools/convert
+    // Compress bam to cram
+    SAMTOOLS_CONVERT(
+        BIOBAMBAM_BAMSORMADUP.out.bam,
+        params.fasta,
+        params.fasta_fai
+    ).out.alignment_index
+    ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
 }
 
