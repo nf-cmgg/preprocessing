@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the nf-core/cmggpreprocessing pipeline
+description: Suggest an idea for the cmgg-preprocessing pipeline
 labels: enhancement
 body:
   - type: textarea
