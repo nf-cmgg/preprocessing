@@ -85,9 +85,18 @@ workflow CMGGPREPROCESSING {
     //*
     // SUBWORKFLOW: demultiplex
     DEMULTIPLEX(ch_flowcells)
-    //ch_raw_fastq        = DEMULTIPLEX.out.fastq
     ch_multiqc_files    = ch_multiqc_files.mix(DEMULTIPLEX.out.reports)
     ch_versions         = ch_versions.mix(DEMULTIPLEX.out.versions)
+
+    //*
+    // FASTQ QC and TRIMMING
+    //*
+
+    // MODULE: fastp
+    // Run QC, trimming and adapter removal
+    FASTP(DEMULTIPLEX.out.fastq, false, false)
+    ch_multiqc_files    = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
+    ch_versions         = ch_versions.mix(FASTP.out.versions)
 
 }
 
