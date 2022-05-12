@@ -8,7 +8,7 @@ process SAMTOOLS_CONVERT {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(input), path(index)
+    tuple val(meta), path(input)
     path  fasta
     path  fai
 

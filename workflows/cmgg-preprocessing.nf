@@ -118,13 +118,13 @@ workflow CMGGPREPROCESSING {
         params.fasta
     )
 
-    ch_merged_bam_bai   = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index).dump()
+    ch_merged_bam_bai   = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
     ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
     // MODULE: samtools/convert
     // Compress bam to cram
-    SAMTOOLS_CONVERT(ch_merged_bam_bai, params.fasta, params.fasta_fai)
+    SAMTOOLS_CONVERT(BIOBAMBAM_BAMSORMADUP.out.bam, params.fasta, params.fasta_fai)
     ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
     // MODULE: MD5SUM
