@@ -113,14 +113,11 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: biobambam/bamsormadup
     // Take multiple split bam files per sample, merge, sort and mark duplicates
-    BIOBAMBAM_BAMSORMADUP(
-        gather_bam_per_sample(BOWTIE2_ALIGN.out.bam),
-        params.fasta
-    )
-
-    ch_merged_bam_bai   = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
+    BIOBAMBAM_BAMSORMADUP(gather_bam_per_sample(BOWTIE2_ALIGN.out.bam),params.fasta)
     ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+
+    ch_merged_bam_bai   = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
 
     // MODULE: samtools/convert
     // Compress bam to cram
