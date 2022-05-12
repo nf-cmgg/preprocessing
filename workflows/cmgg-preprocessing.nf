@@ -118,7 +118,7 @@ workflow CMGGPREPROCESSING {
         params.fasta
     )
 
-    ch_merged_bam_bai   = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
+    ch_merged_bam_bai   = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index).dump()
     ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
@@ -147,11 +147,6 @@ workflow CMGGPREPROCESSING {
             meta, bam ->
             meta.id = meta.id - ~/_S[0-9]+_.*$/
             [meta, bam]
-        }
-        // group by meta.id
-        .groupTuple([0])
-        .map {
-            return it
         }
     }
 
