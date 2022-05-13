@@ -6,12 +6,12 @@
 
 params.options = [:]
 
-include { BCLCONVERT    } from "../../modules/nf-core/modules/bclconvert/main"
-include { UNTAR         } from "../../modules/nf-core/modules/untar/main"
+include { BCLCONVERT    } from "../../../modules/nf-core/modules/bclconvert/main"
+include { UNTAR         } from "../../../modules/nf-core/modules/untar/main"
 
 workflow DEMULTIPLEX {
     take:
-        ch_flowcell
+        ch_flowcell // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
 
     main:
         ch_versions = Channel.empty()
