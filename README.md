@@ -72,61 +72,28 @@ RAW_FASTQ                                       --> ALIGNMENT
 subgraph ALIGNMENT
     direction TB
     FASTQ([Fastq per sample per lane])          --> IS_HUMAN{Human data?}
-    IS_HUMAN                                    --YES--> NX_SPLITFASTQ[nx SplitFastq]
+    IS_HUMAN                                    --YES--> NX_SPLITFASTQ[Seqkit]
     IS_HUMAN                                    --NO--> FASTQTOSAM[Picard FastqToSam]
     FASTQTOSAM                                  --> UNALIGNED_BAM([Unaligned BAM])
-    NX_SPLITFASTQ                               --split by # reads--> ALIGNER{ALIGNER}
-    ALIGNER                                     --> BOWTIE2[Bowtie2-align]
-    ALIGNER                                     --> BWAMEM2[Bwamem2 mem]
-    ALIGNER                                     --> SNAP[snap-aligner]
-    BOWTIE2                                     --> MERGE((Merge bam chunks))
-    BWAMEM2                                     --> MERGE((Merge bam chunks))
-    SNAP                                        --> MERGE((Merge bam chunks))
-    MERGE                                       --> BAMPROCESSOR{BAMPROCESSOR}
-    BAMPROCESSOR{BAMPROCESSOR}                  --> BIOBAMBAM[Biobambam]
-    BAMPROCESSOR{BAMPROCESSOR}                  --> ELPREP[Elprep]
+    NX_SPLITFASTQ                               --split by # reads--> BOWTIE2[Bowtie2-align + sort] & BWAMEM2[Bwamem2 mem + sort] & SNAP[snap-aligner + sort]
+    BOWTIE2 & BWAMEM2 & SNAP                    --> MARKDUP_PARALLEL
 
-    subgraph ELPREP_FLOW[Elprep subroutine]
+    subgraph MARKDUP_PARALLEL[Parallel Markduplicates]
         direction TB
-        ELPREP_BAM([BAM])                       --> ELPREP_SPLIT[Elprep split]
-        ELPREP_SPLIT                            --split by chromosome-->    ELPREP_FILTER[Elprep filter]
-        ELPREP_FILTER                           --sort/mark duplicates-->   ELPREP_MERGE[Elprep merge]
-        ELPREP_FILTER                           --BQSR/variant calling-->   ELPREP_MERGE[Elprep merge]
-        ELPREP_MERGE                            --> ELPREP_SORTBAM([Postprocessed BAM])
-        ELPREP_MERGE                            --> ELPREP_GVCF([gVCF])
+        MERGESPLIT[Bamtools merge/split]        --split by chromosome-->    BAMMARKDUP2[Bammarkduplicates2]
+        BAMMARKDUP2                             --sort/mark duplicates -->  SAMTOOLS_MERGE[Samtools Merge]
     end
-    ELPREP                                      --> ELPREP_FLOW
-    ELPREP_FLOW                                 --> SORTBAM([Postprocessed BAM])
-    ELPREP_FLOW                                 --> ELPREP_GVCF([gVCF])
-    ELPREP_FLOW                                 --> MARKDUP_METRICS([Markduplicates Metrics])
 
-    subgraph BIOBAMBAM_FLOW[Biobambam subroutine]
-        direction TB
-        BIOBAMBAM_BAM([BAM])                    --> SPLIT[Split tool TBD]
-        SPLIT                                   --split by chromosome-->    BAMSORMADUP[BamSorMaDup]
-        BAMSORMADUP                             --sort/mark duplicates -->  BIOBAMBAM_SORTBAM([Postprocessed BAM])
-    end
-    BIOBAMBAM                                   --> BIOBAMBAM_FLOW
-    BIOBAMBAM_FLOW                              --> SORTBAM
-    BIOBAMBAM_FLOW                              --> MARKDUP_METRICS([Markduplicates Metrics])
+    MARKDUP_PARALLEL                            --> SORTBAM[Sorted/markdup bam] & MARKDUP_METRICS([Markduplicates Metrics])
+    SORTBAM                                     -->  ALN_CRAM([CRAM]) & MOSDEPTH[Mosdepth] & BAMQC[BAM QC Tools]
 
-    SORTBAM                                     -->  BAMQC[BAM QC Tools]
-    BAMQC                                       -->  BAM_METRICS([BAM metrics])
-    SORTBAM                                     -->  SCRAMBLE[Scramble]
-    SORTBAM                                     -->  MOSDEPTH[Mosdepth]
-    MOSDEPTH                                    -->  COVERAGE_BED([Coverage BEDs])
-    MOSDEPTH                                    -->  COVERAGE_METRICS([Coverage Metrics])
-    UNALIGNED_BAM                               -->  SCRAMBLE
-    SCRAMBLE                                    -->  ALN_CRAM([CRAM])
+    MOSDEPTH                                    -->  COVERAGE_BED([Coverage BEDs]) & COVERAGE_METRICS([Coverage Metrics])
+    UNALIGNED_BAM                               --> ALN_CRAM([CRAM])
 
-    BAM_METRICS                                 -->  ALN_MULTIQC[MultiQC]
-    MARKDUP_METRICS                             -->  ALN_MULTIQC
-    COVERAGE_METRICS                            -->  ALN_MULTIQC
-    ALN_MULTIQC                                 -->  ALN_MULTIQC_REPORT([MultiQC Report])
+    BAMQC & MARKDUP_METRICS & COVERAGE_METRICS  -->  ALN_MULTIQC[MultiQC]
 end
 
 ALIGNMENT                                       --> A_CRAM([CRAM])
-ALIGNMENT                                       --> GVCF([gVCF])
 ALIGNMENT                                       --> A_BAM_METRICS([BAM metrics])
 ALIGNMENT                                       --> A_COVERAGE_METRICS([Coverage metrics])
 ALIGNMENT                                       --> A_COVERAGE_BED([Coverage BED])
