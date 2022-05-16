@@ -6,8 +6,8 @@
             "bclconvert": {
                 "git_sha": "f4c69bc4270186ca5ec174833dbe26cc0e1860fc"
             },
-            "biobambam/bamsormadup": {
-                "git_sha": "dc95e67e153ad937b869d90229333c0654628912"
+            "biobambam/bammarkduplicates2": {
+                "git_sha": "797ce3254e1868b224ec5c2742418876af254c35"
             },
             "bowtie2/align": {
                 "git_sha": "cbc47767f7bb4751a9d178395bd66f051401a0c1"
