@@ -38,7 +38,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 //inlcude { BAM_QC_PICARD       } from "../subworkflows/nf-core/subworkflows/bam_qc_picard/main"
 include { BAM_STATS_SAMTOOLS    } from "../subworkflows/nf-core/subworkflows/bam_stats_samtools/main"
-include { MARKDUP_PARALLEL      } from "../subworkflows/markdup_parallel/main"
+include { MARKDUP_PARALLEL      } from "../subworkflows/local/markdup_parallel/main"
 include { DEMULTIPLEX           } from "../subworkflows/local/demultiplex/main"
 include { INPUT_CHECK           } from "../subworkflows/local/input_check"
 
