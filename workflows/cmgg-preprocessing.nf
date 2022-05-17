@@ -36,10 +36,11 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BAM_STATS_SAMTOOLS} from "../subworkflows/nf-core/subworkflows/bam_stats_samtools/main"
-include { DEMULTIPLEX       } from "../subworkflows/local/demultiplex"
-include { INPUT_CHECK       } from "../subworkflows/local/input_check"
-//inlcude { BAM_QC_PICARD     } from "../subworkflows/nf-core/subworkflows/bam_qc_picard/main"
+//inlcude { BAM_QC_PICARD       } from "../subworkflows/nf-core/subworkflows/bam_qc_picard/main"
+include { BAM_STATS_SAMTOOLS    } from "../subworkflows/nf-core/subworkflows/bam_stats_samtools/main"
+include { MARKDUP_PARALLEL      } from "../subworkflows/markdup_parallel/main"
+include { DEMULTIPLEX           } from "../subworkflows/local/demultiplex/main"
+include { INPUT_CHECK           } from "../subworkflows/local/input_check"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,14 +51,12 @@ include { INPUT_CHECK       } from "../subworkflows/local/input_check"
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
 include { BOWTIE2_ALIGN               } from "../modules/nf-core/modules/bowtie2/align/main"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
 include { MD5SUM                      } from "../modules/nf-core/modules/md5sum/main"
 include { MOSDEPTH                    } from "../modules/nf-core/modules/mosdepth/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
-include { SAMTOOLS_INDEX              } from "../modules/nf-core/modules/samtools/index/main"
 include { SAMTOOLS_CONVERT            } from "../modules/nf-core/modules/samtools/convert/main"
 
 /*
@@ -103,21 +102,22 @@ workflow CMGGPREPROCESSING {
     //*
 
     // MODULE: bowtie2
-    // Align fastq files to reference genome
-    BOWTIE2_ALIGN(FASTP.out.reads, params.bowtie2, false)
+    // Align fastq files to reference genome and sort
+    // BOWTIE2_ALIGN([meta,reads, index, save_unaligned, sort])
+    BOWTIE2_ALIGN(FASTP.out.reads, params.bowtie2, false, true)
     ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
     //*
     // STEP: POST ALIGNMENT
     //*
 
-    // MODULE: biobambam/bamsormadup
-    // Take multiple split bam files per sample, merge, sort and mark duplicates
-    BIOBAMBAM_BAMSORMADUP(gather_bam_per_sample(BOWTIE2_ALIGN.out.bam),params.fasta)
-    ch_multiqc_files    = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions         = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+    // gather split bams per samples
+    ch_bam_per_sample = gather_bam_per_sample(BOWTIE2_ALIGN.out.bam)
 
-    ch_merged_bam_bai   = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
+    // SUBWORKFLOW: parallel markdup
+    // Take split bam files, mark duplicates and merge
+    MARKDUP_PARALLEL(ch_bam_per_sample)
+
 
     // MODULE: samtools/convert
     // Compress bam to cram
@@ -137,15 +137,16 @@ workflow CMGGPREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-    def gather_bam_per_sample(ch_aligned_bam) {
-        // Gather bam files per sample based on id
-        ch_aligned_bam.map {
-            // set id to filename without lane designation
-            meta, bam ->
-            meta.id = meta.id - ~/_S[0-9]+_.*$/
-            [meta, bam]
-        }
-    }
+def gather_bam_per_sample(ch_aligned_bam) {
+    // Gather bam files per sample based on id
+    ch_aligned_bam.map {
+        // set id to filename without lane designation
+        meta, bam ->
+        new_meta = meta.clone()
+        new_meta.id = meta.id - ~/_S[0-9]+_.*$/
+        return [new_meta, bam]
+    }.groupTuple( by: [0])
+}
 
 
 /*
