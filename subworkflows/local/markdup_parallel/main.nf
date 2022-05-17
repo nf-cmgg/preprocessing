@@ -28,22 +28,34 @@ workflow MARKDUP_PARALLEL {
         BIOBAMBAM_BAMMARKDUPLICATES2(ch_split_bams)
         ch_versions = ch_versions.mix(BIOBAMBAM_BAMMARKDUPLICATES2.out.versions)
 
-        ch_markdup_bam = BIOBAMBAM_BAMMARKDUPLICATES2.out.bam.map{
-            meta, bam ->
-            new_meta = meta.clone()
-            new_meta.id = meta.samplename
-            return [new_meta, bam]
-        }.groupTuple()
+        ch_markdup_bam     = merge_markdup_out(BIOBAMBAM_BAMMARKDUPLICATES2.out.bam)
+        ch_markdup_metrics = merge_markdup_out(BIOBAMBAM_BAMMARKDUPLICATES2.out.metrics)
+
 
         // re-merge bam
         SAMTOOLS_MERGE(ch_markdup_bam, [])
         ch_versions = ch_versions.mix(SAMTOOLS_MERGE.out.versions)
 
         // TODO re-merge metrics
-        ch_metrics_merged = Channel.empty()
 
     emit:
         bam      = SAMTOOLS_MERGE.out.bam  // [meta, bam]
-        metrics  = ch_metrics_merged       // [meta, metrics]
+        metrics  = ch_markdup_metrics      // [meta, metrics]
         versions = ch_versions             // versions
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Merge the outputs of markduplicates
+def merge_markdup_out(ch_markdup_out) {
+    ch_markdup_out.map{
+        meta, bam ->
+        new_meta = meta.clone()
+        new_meta.id = meta.samplename
+        return [new_meta, bam]
+    }.groupTuple()
 }
