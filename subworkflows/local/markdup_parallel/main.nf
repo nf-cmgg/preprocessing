@@ -15,15 +15,15 @@ workflow MARKDUP_PARALLEL {
 
         // merge the bams and split per chromosome or interval
         BAMTOOLS_SPLIT(ch_input_bam)
-        ch_versions = ch_versions.mix(BAMPROCESSING_MERGE_SPLIT.out.versions)
+        ch_versions = ch_versions.mix(BAMTOOLS_SPLIT.out.versions)
 
         // markduplicates
-        BIOBAMBAM_BAMMARKDUPLICATES2(BAMPROCESSING_MERGE_SPLIT.out.bam)
+        BIOBAMBAM_BAMMARKDUPLICATES2(BAMTOOLS_SPLIT.out.bam)
         ch_versions = ch_versions.mix(BAMPROCESSING_MARKDUP.out.versions)
 
         // re-merge bam
-        SAMTOOLS_MERGE(BAMPROCESSING_MARKDUP.out.bam, [])
-        ch_versions = ch_versions.mix(BAMPROCESSING_MERGE.out.versions)
+        SAMTOOLS_MERGE(BIOBAMBAM_BAMMARKDUPLICATES2.out.bam, [])
+        ch_versions = ch_versions.mix(BIOBAMBAM_BAMMARKDUPLICATES2.out.versions)
 
         // TODO re-merge metrics
         ch_metrics_merged = Channel.empty()
