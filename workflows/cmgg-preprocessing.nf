@@ -121,7 +121,7 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: samtools/convert
     // Compress bam to cram
-    SAMTOOLS_CONVERT(BIOBAMBAM_BAMSORMADUP.out.bam, params.fasta, params.fasta_fai)
+    SAMTOOLS_CONVERT(MARKDUP_PARALLEL.out.bam, params.fasta, params.fasta_fai)
     ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
     // MODULE: MD5SUM
