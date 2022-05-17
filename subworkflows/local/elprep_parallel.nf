@@ -26,7 +26,7 @@ workflow bamprocessing_elprep {
         ch_versions = ch_versions.mix(ELPREP_MERGE.out.versions)
 
     emit:
-        bam: ELPREP_MERGE.out.
-        metrics: ELPREP_MERGE.out.metrics
+        bam      = ELPREP_MERGE.out.
+        metrics  = ELPREP_MERGE.out.metrics
         versions = ch_versions
 }

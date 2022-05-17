@@ -29,7 +29,7 @@ workflow MARKDUP_PARALLEL {
         ch_metrics_merged = Channel.empty()
 
     emit:
-        bam: BAMPROCESSING_MERGE.out.bam    // [meta, bam]
-        metrics: ch_metrics_merged          // [meta, metrics]
-        versions = ch_versions              // versions
+        bam      = BAMPROCESSING_MERGE.out.bam  // [meta, bam]
+        metrics  = ch_metrics_merged            // [meta, metrics]
+        versions = ch_versions                  // versions
 }
