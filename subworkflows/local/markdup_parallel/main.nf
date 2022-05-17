@@ -19,7 +19,7 @@ workflow MARKDUP_PARALLEL {
 
         // markduplicates
         BIOBAMBAM_BAMMARKDUPLICATES2(BAMTOOLS_SPLIT.out.bam)
-        ch_versions = ch_versions.mix(BAMPROCESSING_MARKDUP.out.versions)
+        ch_versions = ch_versions.mix(BIOBAMBAM_BAMMARKDUPLICATES2.out.versions)
 
         // re-merge bam
         SAMTOOLS_MERGE(BIOBAMBAM_BAMMARKDUPLICATES2.out.bam, [])
