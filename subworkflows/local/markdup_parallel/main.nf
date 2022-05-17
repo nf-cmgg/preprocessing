@@ -6,7 +6,7 @@ include {BAMTOOLS_SPLIT as BAMPROCESSING_MERGE_SPLIT            } from "../../..
 include {BIOBAMBAM_BAMMARKDUPLICATES2 as BAMPROCESSING_MARKDUP  } from "../../../modules/nf-core/modules/biobambam/bamsormadup/main"
 include {SAMTOOLS_MERGE as BAMPROCESSING_MERGE                  } from "../../../modules/nf-core/modules/samtools/merge/main"
 
-workflow BAMPROCESSING_PARALLEL {
+workflow MARKDUP_PARALLEL {
     take:
         ch_input_bam    // [meta, [bam1,bam2,...]]
 
