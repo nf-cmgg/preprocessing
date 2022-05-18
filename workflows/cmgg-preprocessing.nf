@@ -121,12 +121,20 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: samtools/convert
     // Compress bam to cram
-    SAMTOOLS_CONVERT(MARKDUP_PARALLEL.out.bam, params.fasta, params.fasta_fai)
+    SAMTOOLS_CONVERT(
+        MARKDUP_PARALLEL.out.bam_bai.map {
+            meta, bam, bai -> return [meta, bam]
+        }, params.fasta, params.fasta_fai
+    )
     ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
     // MODULE: MD5SUM
     // Generate md5sum for cram file
-    MD5SUM(SAMTOOLS_CONVERT.out.alignment_index.map { meta, cram, crai -> return [meta, cram]})
+    MD5SUM(
+        SAMTOOLS_CONVERT.out.alignment_index.map {
+            meta, cram, crai -> return [meta, cram]
+        }
+    )
     ch_versions         = ch_versions.mix(MD5SUM.out.versions)
 
 }
