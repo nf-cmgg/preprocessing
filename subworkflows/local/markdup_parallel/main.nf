@@ -4,7 +4,7 @@ nextflow.enable.dsl = 2
 
 include {BAMTOOLS_SPLIT               } from "../../../modules/nf-core/modules/bamtools/split/main"
 include {BIOBAMBAM_BAMMARKDUPLICATES2 } from "../../../modules/nf-core/modules/biobambam/bammarkduplicates2/main"
-include {SAMTOOLS_MERGE               } from "../../../modules/nf-core/modules/samtools/merge/main"
+include {BIOBAMBAM_BAMMERGE           } from "../../../modules/nf-core/modules/biobambam/bammerge/main"
 
 workflow MARKDUP_PARALLEL {
     take:
@@ -33,15 +33,15 @@ workflow MARKDUP_PARALLEL {
 
 
         // re-merge bam
-        SAMTOOLS_MERGE(ch_markdup_bam, [])
-        ch_versions = ch_versions.mix(SAMTOOLS_MERGE.out.versions)
+        BIOBAMBAM_BAMMERGE(ch_markdup_bam, [])
+        ch_versions = ch_versions.mix(BIOBAMBAM_BAMMERGE.out.versions)
 
         // TODO re-merge metrics
 
     emit:
-        bam      = SAMTOOLS_MERGE.out.bam  // [meta, bam]
-        metrics  = ch_markdup_metrics      // [meta, metrics]
-        versions = ch_versions             // versions
+        bam_bai  = BIOBAMBAM_BAMMERGE.out.bam.join(BIOBAMBAM_BAMMERGE.out.bam_index) // [meta, bam, bai]
+        metrics  = ch_markdup_metrics                                                // [meta, metrics]
+        versions = ch_versions                                                       // versions
 }
 
 /*
