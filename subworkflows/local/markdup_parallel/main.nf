@@ -33,7 +33,7 @@ workflow MARKDUP_PARALLEL {
 
 
         // re-merge bam
-        BIOBAMBAM_BAMMERGE(ch_markdup_bam, [])
+        BIOBAMBAM_BAMMERGE(ch_markdup_bam)
         ch_versions = ch_versions.mix(BIOBAMBAM_BAMMERGE.out.versions)
 
         // TODO re-merge metrics
