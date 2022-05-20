@@ -123,7 +123,7 @@ workflow CMGGPREPROCESSING {
     SAMTOOLS_CONVERT(
         MARKDUP_PARALLEL.out.bam_bai.map {
             meta, bam, bai -> return [meta, bam]
-        }, params.fasta, params.fasta_fai
+        }, params.fasta, params.fai
     )
     ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
