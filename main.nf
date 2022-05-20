@@ -18,7 +18,7 @@ nextflow.enable.dsl = 2
 params.bowtie2     = WorkflowMain.getGenomeAttribute(params, "bowtie2")
 params.bwamem2     = WorkflowMain.getGenomeAttribute(params, "bwamem2")
 params.fasta       = WorkflowMain.getGenomeAttribute(params, "fasta")
-params.fai   = WorkflowMain.getGenomeAttribute(params, "fai")
+params.fai         = WorkflowMain.getGenomeAttribute(params, "fai")
 params.snapaligner = WorkflowMain.getGenomeAttribute(params, "snapaligner")
 
 /*
