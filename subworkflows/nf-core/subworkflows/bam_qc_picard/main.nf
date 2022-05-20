@@ -2,9 +2,9 @@
 // Run QC steps on BAM/CRAM files using Picard
 //
 
-include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../modules/nf-core/modules/picard/collectmultiplemetrics/main"
-include { PICARD_COLLECTWGSMETRICS      } from "../../../modules/nf-core/modules/picard/collectwgsmetrics/main"
-include { PICARD_COLLECTHSMETRICS       } from "../../../modules/nf-core/modules/picard/collecthsmetrics/main"
+include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../../modules/nf-core/modules/picard/collectmultiplemetrics/main"
+include { PICARD_COLLECTWGSMETRICS      } from "../../../../modules/nf-core/modules/picard/collectwgsmetrics/main"
+include { PICARD_COLLECTHSMETRICS       } from "../../../../modules/nf-core/modules/picard/collecthsmetrics/main"
 
 workflow BAM_QC_PICARD {
     take:

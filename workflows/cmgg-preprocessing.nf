@@ -9,7 +9,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 // Validate input parameters
 WorkflowCmggpreprocessing.initialise(params, log)
 
-def checkPathParamList = [ params.input, params.samples, params.multiqc_config, params.fasta, params.fasta_fai ]
+def checkPathParamList = [ params.input, params.samples, params.multiqc_config, params.fasta, params.fai ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -35,7 +35,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-//inlcude { BAM_QC_PICARD       } from "../subworkflows/nf-core/subworkflows/bam_qc_picard/main"
+include { BAM_QC_PICARD         } from "../subworkflows/nf-core/subworkflows/bam_qc_picard/main"
 include { BAM_STATS_SAMTOOLS    } from "../subworkflows/nf-core/subworkflows/bam_stats_samtools/main"
 include { MARKDUP_PARALLEL      } from "../subworkflows/local/markdup_parallel/main"
 include { DEMULTIPLEX           } from "../subworkflows/local/demultiplex/main"
@@ -149,6 +149,30 @@ workflow CMGGPREPROCESSING {
         MOSDEPTH.out.regions_txt.map { meta, regions_txt -> return regions_txt}
     )
     ch_versions         = ch_versions.mix(MOSDEPTH.out.versions)
+
+    //*
+    // QC
+    //*
+
+    // SUBWORKFLOW: bam_stats_samtools
+    // Run samtools QC modules
+    BAM_STATS_SAMTOOLS(ch_merged_bam_bai)
+    ch_multiqc_files    = ch_multiqc_files.mix(
+        BAM_STATS_SAMTOOLS.out.stats.map    { meta, stats -> return stats},
+        BAM_STATS_SAMTOOLS.out.flagstat.map { meta, flagstat -> return flagstat},
+        BAM_STATS_SAMTOOLS.out.idxstats.map { meta, idxstats -> return idxstats}
+    )
+    ch_versions         = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
+
+    // SUBWORKFLOW: bam_stats_picard
+    // Run Picard QC modules
+    BAM_QC_PICARD(ch_merged_bam, [], false)
+    ch_multiqc_files    = ch_multiqc_files.mix(
+        BAM_QC_PICARD.out.coverage_metrics.map { meta, coverage_metrics -> return coverage_metrics},
+        BAM_QC_PICARD.out.multiple_metrics.map { meta, multiple_metrics -> return multiple_metrics},
+    )
+    ch_versions         = ch_versions.mix(BAM_QC_PICARD.out.versions)
+
 
 }
 
