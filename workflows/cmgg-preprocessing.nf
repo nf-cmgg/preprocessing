@@ -82,6 +82,7 @@ workflow CMGGPREPROCESSING {
     // STEP: DEMULTIPLEXING
     //*
     // SUBWORKFLOW: demultiplex
+    // DEMULTIPLEX([meta, samplesheet, flowcell])
     DEMULTIPLEX(ch_flowcells)
     ch_multiqc_files    = ch_multiqc_files.mix(DEMULTIPLEX.out.reports)
     ch_versions         = ch_versions.mix(DEMULTIPLEX.out.versions)
@@ -92,6 +93,7 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: fastp
     // Run QC, trimming and adapter removal
+    // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(DEMULTIPLEX.out.fastq, false, false)
     ch_multiqc_files    = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
     ch_versions         = ch_versions.mix(FASTP.out.versions)
@@ -102,7 +104,7 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: bowtie2
     // Align fastq files to reference genome and sort
-    // BOWTIE2_ALIGN([meta,reads, index, save_unaligned, sort])
+    // BOWTIE2_ALIGN([meta, reads], index, save_unaligned, sort)
     BOWTIE2_ALIGN(FASTP.out.reads, params.bowtie2, false, true)
     ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
@@ -115,11 +117,13 @@ workflow CMGGPREPROCESSING {
 
     // SUBWORKFLOW: parallel markdup
     // Take split bam files, mark duplicates and merge
+    // MARKDUP_PARALLEL([meta, [bam1, bam2, ...]])
     MARKDUP_PARALLEL(ch_bam_per_sample)
 
 
     // MODULE: samtools/convert
     // Compress bam to cram
+    // SAMTOOLS CONVERT([meta, bam, bai], fasta, fai)
     SAMTOOLS_CONVERT(
         MARKDUP_PARALLEL.out.bam_bai.map {
             meta, bam, bai -> return [meta, bam]
@@ -129,6 +133,7 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: MD5SUM
     // Generate md5sum for cram file
+    // MD5SUM([meta, cram])
     MD5SUM(
         SAMTOOLS_CONVERT.out.alignment_index.map {
             meta, cram, crai -> return [meta, cram]
@@ -142,7 +147,8 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: mosdepth
     // Generate coverage beds
-    MOSDEPTH(MARKDUP_PARALLEL.out.bam_bai, [], false)
+    // MOSDEPTH([meta, bam], bed, window_size)
+    MOSDEPTH(MARKDUP_PARALLEL.out.bam_bai, [], [])
     ch_multiqc_files    = ch_multiqc_files.mix(
         MOSDEPTH.out.summary_txt.map { meta, summary_txt -> return summary_txt},
         MOSDEPTH.out.global_txt.map  { meta, global_txt -> return global_txt},
@@ -156,6 +162,7 @@ workflow CMGGPREPROCESSING {
 
     // SUBWORKFLOW: bam_stats_samtools
     // Run samtools QC modules
+    // BAM_STATS_SAMTOOLS([meta, bam, bai])
     BAM_STATS_SAMTOOLS(MARKDUP_PARALLEL.out.bam_bai)
     ch_multiqc_files    = ch_multiqc_files.mix(
         BAM_STATS_SAMTOOLS.out.stats.map    { meta, stats -> return stats},
@@ -166,6 +173,7 @@ workflow CMGGPREPROCESSING {
 
     // SUBWORKFLOW: bam_stats_picard
     // Run Picard QC modules
+    // BAM_STATS_PICARD([meta, bam], fasta, fai, bait, target)
     BAM_QC_PICARD(
         MARKDUP_PARALLEL.out.bam_bai.map {
             meta, bam, bai -> return [meta, bam]
