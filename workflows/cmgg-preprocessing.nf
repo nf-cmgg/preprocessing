@@ -156,7 +156,7 @@ workflow CMGGPREPROCESSING {
 
     // SUBWORKFLOW: bam_stats_samtools
     // Run samtools QC modules
-    BAM_STATS_SAMTOOLS(ch_merged_bam_bai)
+    BAM_STATS_SAMTOOLS(MARKDUP_PARALLEL.out.bam_bai)
     ch_multiqc_files    = ch_multiqc_files.mix(
         BAM_STATS_SAMTOOLS.out.stats.map    { meta, stats -> return stats},
         BAM_STATS_SAMTOOLS.out.flagstat.map { meta, flagstat -> return flagstat},
@@ -166,7 +166,13 @@ workflow CMGGPREPROCESSING {
 
     // SUBWORKFLOW: bam_stats_picard
     // Run Picard QC modules
-    BAM_QC_PICARD(ch_merged_bam, [], false)
+    BAM_QC_PICARD(
+        MARKDUP_PARALLEL.out.bam_bai.map {
+            meta, bam, bai -> return [meta, bam]
+        },
+        [],
+        false
+    )
     ch_multiqc_files    = ch_multiqc_files.mix(
         BAM_QC_PICARD.out.coverage_metrics.map { meta, coverage_metrics -> return coverage_metrics},
         BAM_QC_PICARD.out.multiple_metrics.map { meta, multiple_metrics -> return multiple_metrics},
