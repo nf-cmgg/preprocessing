@@ -84,7 +84,7 @@ workflow CMGGPREPROCESSING {
     // SUBWORKFLOW: demultiplex
     // DEMULTIPLEX([meta, samplesheet, flowcell])
     DEMULTIPLEX(ch_flowcells)
-    ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.reports)
+    ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.reports.map { meta, reports -> return reports})
     ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
 
     //*
