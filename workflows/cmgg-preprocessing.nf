@@ -10,8 +10,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowCmggpreprocessing.initialise(params, log)
 
 def checkPathParamList = [ params.input, params.samples, params.multiqc_config, params.fasta, params.fasta_fai ]
-// TODO: restore this
-//for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
+for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, "Flowcell metadata sheet not specified!" }
