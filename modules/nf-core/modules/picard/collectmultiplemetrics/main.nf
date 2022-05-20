@@ -22,6 +22,7 @@ process PICARD_COLLECTMULTIPLEMETRICS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def fasta = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
     def avail_mem = 3
     if (!task.memory) {
         log.info '[Picard CollectMultipleMetrics] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
@@ -35,7 +36,7 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         $args \\
         --INPUT $bam \\
         --OUTPUT ${prefix}.CollectMultipleMetrics \\
-        --REFERENCE_SEQUENCE $fasta
+        $fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
