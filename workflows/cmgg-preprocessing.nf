@@ -136,6 +136,20 @@ workflow CMGGPREPROCESSING {
     )
     ch_versions         = ch_versions.mix(MD5SUM.out.versions)
 
+    //*
+    // COVERAGE
+    //*
+
+    // MODULE: mosdepth
+    // Generate coverage beds
+    MOSDEPTH(MARKDUP_PARALLEL.out.bam_bai, [], false)
+    ch_multiqc_files    = ch_multiqc_files.mix(
+        MOSDEPTH.out.summary_txt.map { meta, summary_txt -> return summary_txt},
+        MOSDEPTH.out.global_txt.map  { meta, global_txt -> return global_txt},
+        MOSDEPTH.out.regions_txt.map { meta, regions_txt -> return regions_txt}
+    )
+    ch_versions         = ch_versions.mix(MOSDEPTH.out.versions)
+
 }
 
 /*
