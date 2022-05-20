@@ -69,14 +69,14 @@ def multiqc_report = []
 
 workflow CMGGPREPROCESSING {
 
-    ch_versions         = Channel.empty()
-    ch_multiqc_files    = Channel.empty()
+    ch_versions      = Channel.empty()
+    ch_multiqc_files = Channel.empty()
 
     //*
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //*
-    ch_flowcells        = INPUT_CHECK (ch_input).flowcells
-    ch_versions         = ch_versions.mix(INPUT_CHECK.out.versions)
+    ch_flowcells = INPUT_CHECK (ch_input).flowcells
+    ch_versions  = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //*
     // STEP: DEMULTIPLEXING
@@ -84,8 +84,8 @@ workflow CMGGPREPROCESSING {
     // SUBWORKFLOW: demultiplex
     // DEMULTIPLEX([meta, samplesheet, flowcell])
     DEMULTIPLEX(ch_flowcells)
-    ch_multiqc_files    = ch_multiqc_files.mix(DEMULTIPLEX.out.reports)
-    ch_versions         = ch_versions.mix(DEMULTIPLEX.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.reports)
+    ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
 
     //*
     // STEP: FASTQ QC and TRIMMING
@@ -96,7 +96,7 @@ workflow CMGGPREPROCESSING {
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(DEMULTIPLEX.out.fastq, false, false)
     ch_multiqc_files    = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
-    ch_versions         = ch_versions.mix(FASTP.out.versions)
+    ch_versions = ch_versions.mix(FASTP.out.versions)
 
     //*
     // STEP: ALIGNMENT
@@ -106,7 +106,7 @@ workflow CMGGPREPROCESSING {
     // Align fastq files to reference genome and sort
     // BOWTIE2_ALIGN([meta, reads], index, save_unaligned, sort)
     BOWTIE2_ALIGN(FASTP.out.reads, params.bowtie2, false, true)
-    ch_versions         = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
+    ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
     //*
     // STEP: POST ALIGNMENT
@@ -119,7 +119,7 @@ workflow CMGGPREPROCESSING {
     // Take split bam files, mark duplicates and merge
     // MARKDUP_PARALLEL([meta, [bam1, bam2, ...]])
     MARKDUP_PARALLEL(ch_bam_per_sample)
-
+    ch_versions = ch_versions.mix(MARKDUP_PARALLEL.out.versions)
 
     // MODULE: samtools/convert
     // Compress bam to cram
@@ -129,7 +129,7 @@ workflow CMGGPREPROCESSING {
             meta, bam, bai -> return [meta, bam]
         }, params.fasta, params.fai
     )
-    ch_versions         = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
     // MODULE: MD5SUM
     // Generate md5sum for cram file
@@ -139,7 +139,7 @@ workflow CMGGPREPROCESSING {
             meta, cram, crai -> return [meta, cram]
         }
     )
-    ch_versions         = ch_versions.mix(MD5SUM.out.versions)
+    ch_versions = ch_versions.mix(MD5SUM.out.versions)
 
     //*
     // COVERAGE
@@ -154,7 +154,7 @@ workflow CMGGPREPROCESSING {
         MOSDEPTH.out.global_txt.map  { meta, global_txt -> return global_txt},
         MOSDEPTH.out.regions_txt.map { meta, regions_txt -> return regions_txt}
     )
-    ch_versions         = ch_versions.mix(MOSDEPTH.out.versions)
+    ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
 
     //*
     // QC
@@ -169,7 +169,7 @@ workflow CMGGPREPROCESSING {
         BAM_STATS_SAMTOOLS.out.flagstat.map { meta, flagstat -> return flagstat},
         BAM_STATS_SAMTOOLS.out.idxstats.map { meta, idxstats -> return idxstats}
     )
-    ch_versions         = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
+    ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     // SUBWORKFLOW: bam_stats_picard
     // Run Picard QC modules
@@ -187,9 +187,29 @@ workflow CMGGPREPROCESSING {
         BAM_QC_PICARD.out.coverage_metrics.map { meta, coverage_metrics -> return coverage_metrics},
         BAM_QC_PICARD.out.multiple_metrics.map { meta, multiple_metrics -> return multiple_metrics},
     )
-    ch_versions         = ch_versions.mix(BAM_QC_PICARD.out.versions)
+    ch_versions = ch_versions.mix(BAM_QC_PICARD.out.versions)
 
+    // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
+    // Gather software versions for QC report
+    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
+    // MODULE: MultiQC
+    // Generate aggregate QC report
+    workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
+    ch_workflow_summary = Channel.value(workflow_summary)
+
+    ch_multiqc_files = ch_multiqc_files.mix(
+        Channel.from(ch_multiqc_config),
+        ch_multiqc_custom_config.collect().ifEmpty([]),
+        ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml"),
+    )
+
+    MULTIQC (
+        ch_multiqc_files.collect()
+    )
+    multiqc_report = MULTIQC.out.report.toList()
+    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*
