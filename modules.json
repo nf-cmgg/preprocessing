@@ -43,13 +43,13 @@
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "picard/collecthsmetrics": {
-                "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
+                "git_sha": "a5a6973fcf161d0449b216c166ba232c6c55bcbb"
             },
             "picard/collectmultiplemetrics": {
-                "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
+                "git_sha": "a5a6973fcf161d0449b216c166ba232c6c55bcbb"
             },
             "picard/collectwgsmetrics": {
-                "git_sha": "e263f267a7b3c2cbf95372c832e38ba8b76dfd2e"
+                "git_sha": "c390385cf5a234906a30f013ba0a3c9a27b1b601"
             },
             "samtools/convert": {
                 "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
