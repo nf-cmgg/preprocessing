@@ -147,8 +147,8 @@ workflow CMGGPREPROCESSING {
 
     // MODULE: mosdepth
     // Generate coverage beds
-    // MOSDEPTH([meta, bam], bed, window_size)
-    MOSDEPTH(MARKDUP_PARALLEL.out.bam_bai, [], [])
+    // MOSDEPTH([meta, bam, bai], bed, fasta)
+    MOSDEPTH(MARKDUP_PARALLEL.out.bam_bai, [], params.fasta)
     ch_multiqc_files    = ch_multiqc_files.mix(
         MOSDEPTH.out.summary_txt.map { meta, summary_txt -> return summary_txt},
         MOSDEPTH.out.global_txt.map  { meta, global_txt -> return global_txt},
