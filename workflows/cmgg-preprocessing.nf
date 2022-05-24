@@ -178,10 +178,10 @@ workflow CMGGPREPROCESSING {
         MARKDUP_PARALLEL.out.bam_bai.map {
             meta, bam, bai -> return [meta, bam]
         },
-        [], // fasta
-        [], // fai
-        [], // bait interval
-        []  // target interval
+        params.fasta, // fasta
+        params.fai,   // fai
+        [],           // bait interval
+        []            // target interval
     )
     ch_multiqc_files    = ch_multiqc_files.mix(
         BAM_QC_PICARD.out.coverage_metrics.map { meta, coverage_metrics -> return coverage_metrics},
