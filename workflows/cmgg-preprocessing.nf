@@ -35,8 +35,9 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BAM_QC_PICARD         } from "../subworkflows/nf-core/subworkflows/bam_qc_picard/main"
 include { BAM_STATS_SAMTOOLS    } from "../subworkflows/nf-core/subworkflows/bam_stats_samtools/main"
+include { COVERAGE              } from "../subworkflows/local/coverage/main"
+include { BAMQC                 } from "../subworkflows/local/bam_qc/main"
 include { MARKDUP_PARALLEL      } from "../subworkflows/local/markdup_parallel/main"
 include { DEMULTIPLEX           } from "../subworkflows/local/demultiplex/main"
 include { INPUT_CHECK           } from "../subworkflows/local/input_check"
@@ -141,53 +142,27 @@ workflow CMGGPREPROCESSING {
     )
     ch_versions = ch_versions.mix(MD5SUM.out.versions)
 
-    //*
-    // COVERAGE
-    //*
-
-    // MODULE: mosdepth
-    // Generate coverage beds
-    // MOSDEPTH([meta, bam, bai], bed, fasta)
-    MOSDEPTH(MARKDUP_PARALLEL.out.bam_bai, [], params.fasta)
-    ch_multiqc_files    = ch_multiqc_files.mix(
-        MOSDEPTH.out.summary_txt.map { meta, summary_txt -> return summary_txt},
-        MOSDEPTH.out.global_txt.map  { meta, global_txt -> return global_txt},
-        MOSDEPTH.out.regions_txt.map { meta, regions_txt -> return regions_txt}
-    )
-    ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
 
     //*
-    // QC
+    // STEP: COVERAGE
+    //*
+    COVERAGE(
+        MARKDUP_PARALLEL.out.bam_bai,   // [meta, bam, bai]
+        [params.fasta, params.fai],     // [fasta, fai]
+        [],                             // target
+        []                              // bait
+    )
+
+    //*
+    // STEP: QC
     //*
 
-    // SUBWORKFLOW: bam_stats_samtools
-    // Run samtools QC modules
-    // BAM_STATS_SAMTOOLS([meta, bam, bai])
-    BAM_STATS_SAMTOOLS(MARKDUP_PARALLEL.out.bam_bai)
-    ch_multiqc_files    = ch_multiqc_files.mix(
-        BAM_STATS_SAMTOOLS.out.stats.map    { meta, stats -> return stats},
-        BAM_STATS_SAMTOOLS.out.flagstat.map { meta, flagstat -> return flagstat},
-        BAM_STATS_SAMTOOLS.out.idxstats.map { meta, idxstats -> return idxstats}
+    // SUBWORKFLOW: BAM QC
+    // Gather metrics from bam files
+    BAMQC(
+        MARKDUP_PARALLEL.out.bam_bai,   // [meta, bam, bai]
     )
-    ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
-    // SUBWORKFLOW: bam_stats_picard
-    // Run Picard QC modules
-    // BAM_STATS_PICARD([meta, bam], fasta, fai, bait, target)
-    BAM_QC_PICARD(
-        MARKDUP_PARALLEL.out.bam_bai.map {
-            meta, bam, bai -> return [meta, bam]
-        },
-        params.fasta, // fasta
-        params.fai,   // fai
-        [],           // bait interval
-        []            // target interval
-    )
-    ch_multiqc_files    = ch_multiqc_files.mix(
-        BAM_QC_PICARD.out.coverage_metrics.map { meta, coverage_metrics -> return coverage_metrics},
-        BAM_QC_PICARD.out.multiple_metrics.map { meta, multiple_metrics -> return multiple_metrics},
-    )
-    ch_versions = ch_versions.mix(BAM_QC_PICARD.out.versions)
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     // Gather software versions for QC report
