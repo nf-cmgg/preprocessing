@@ -11,22 +11,24 @@ workflow BAMQC {
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
+        // Collect multiple metrics
+        // PICARD_COLLECTMULTIPLEMETRICS( [meta, bam], fasta)
         PICARD_COLLECTMULTIPLEMETRICS( ch_bam_bai.map(meta, bam, bai -> return [meta,bam]), [] )
         ch_metrics  = ch_metrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
-        ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
-
+        ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions)
 
         // SUBWORKFLOW: bam_stats_samtools
         // Run samtools QC modules
         // BAM_STATS_SAMTOOLS([meta, bam, bai])
         BAM_STATS_SAMTOOLS(ch_bam_bai)
         ch_metrics = ch_metrics.mix(
-            BAM_STATS_SAMTOOLS.out.stats.map,
-            BAM_STATS_SAMTOOLS.out.flagstat.map,
-            BAM_STATS_SAMTOOLS.out.idxstats.map
+            BAM_STATS_SAMTOOLS.out.stats,
+            BAM_STATS_SAMTOOLS.out.flagstat,
+            BAM_STATS_SAMTOOLS.out.idxstats
         )
         ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:
-
+        metrics  = ch_metrics
+        versions = ch_versions
 }

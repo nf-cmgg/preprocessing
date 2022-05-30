@@ -36,11 +36,11 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { BAM_STATS_SAMTOOLS    } from "../subworkflows/nf-core/subworkflows/bam_stats_samtools/main"
+include { BAMQC                 } from "../subworkflows/local/bamqc/main"
 include { COVERAGE              } from "../subworkflows/local/coverage/main"
-include { BAMQC                 } from "../subworkflows/local/bam_qc/main"
-include { MARKDUP_PARALLEL      } from "../subworkflows/local/markdup_parallel/main"
 include { DEMULTIPLEX           } from "../subworkflows/local/demultiplex/main"
 include { INPUT_CHECK           } from "../subworkflows/local/input_check"
+include { MARKDUP_PARALLEL      } from "../subworkflows/local/markdup_parallel/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,11 +51,11 @@ include { INPUT_CHECK           } from "../subworkflows/local/input_check"
 //
 // MODULE: Installed directly from nf-core/modules
 //
+include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
 include { BOWTIE2_ALIGN               } from "../modules/nf-core/modules/bowtie2/align/main"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
 include { MD5SUM                      } from "../modules/nf-core/modules/md5sum/main"
-include { MOSDEPTH                    } from "../modules/nf-core/modules/mosdepth/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
 include { SAMTOOLS_CONVERT            } from "../modules/nf-core/modules/samtools/convert/main"
 
@@ -116,11 +116,21 @@ workflow CMGGPREPROCESSING {
     // gather split bams per samples
     ch_bam_per_sample = gather_bam_per_sample(BOWTIE2_ALIGN.out.bam)
 
-    // SUBWORKFLOW: parallel markdup
-    // Take split bam files, mark duplicates and merge
-    // MARKDUP_PARALLEL([meta, [bam1, bam2, ...]])
-    MARKDUP_PARALLEL(ch_bam_per_sample)
-    ch_versions = ch_versions.mix(MARKDUP_PARALLEL.out.versions)
+    ch_markdup_bam_bai = Channel.empty()
+    if params.markdup_parallel {
+        // SUBWORKFLOW: parallel markdup
+        // Take split bam files, mark duplicates and merge
+        // MARKDUP_PARALLEL([meta, [bam1, bam2, ...]])
+        MARKDUP_PARALLEL(ch_bam_per_sample)
+        ch_markdup_bam_bai = MARKDUP_PARALLEL.out.bam_bai
+        ch_multiqc_files = ch_multiqc_files.mix( MARKDUP_PARALLEL.out.metrics.map { meta, metrics -> return metrics} )
+        ch_versions = ch_versions.mix(MARKDUP_PARALLEL.out.versions)
+    } else {
+        BAMSORMADUP(ch_bam_per_sample)
+        ch_markdup_bam_bai = BAMSORMADUP.out.bam.join(BAMSORMADUP.out.bai)
+        ch_multiqc_files = ch_multiqc_files.mix( BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+        ch_versions = ch_versions.mix(BAMSORMADUP.out.versions)
+    }
 
     // MODULE: samtools/convert
     // Compress bam to cram
@@ -152,6 +162,8 @@ workflow CMGGPREPROCESSING {
         [],                             // target
         []                              // bait
     )
+    ch_multiqc_files    = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions = ch_versions.mix(COVERAGE.out.versions)
 
     //*
     // STEP: QC
@@ -162,6 +174,8 @@ workflow CMGGPREPROCESSING {
     BAMQC(
         MARKDUP_PARALLEL.out.bam_bai,   // [meta, bam, bai]
     )
+    ch_multiqc_files    = ch_multiqc_files.mix( BAMQC.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions = ch_versions.mix(BAMQC.out.versions)
 
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS

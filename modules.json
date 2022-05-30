@@ -15,6 +15,9 @@
             "biobambam/bammerge": {
                 "git_sha": "f48790a728492a2ebcd540614a414a9caef8e284"
             },
+            "biobambam/bamsormadup": {
+                "git_sha": "dc95e67e153ad937b869d90229333c0654628912"
+            },
             "bowtie2/align": {
                 "git_sha": "cbc47767f7bb4751a9d178395bd66f051401a0c1"
             },
