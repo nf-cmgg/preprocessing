@@ -161,7 +161,7 @@ workflow CMGGPREPROCESSING {
     //*
     COVERAGE(
         ch_markdup_bam_bai,         // [meta, bam, bai]
-        [params.fasta, params.fai], // [fasta, fai]
+        params.fasta, params.fai,   // fasta, fai
         [],                         // target
         []                          // bait
     )
