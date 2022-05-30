@@ -122,12 +122,12 @@ workflow CMGGPREPROCESSING {
         // Take split bam files, mark duplicates and merge
         // MARKDUP_PARALLEL([meta, [bam1, bam2, ...]])
         MARKDUP_PARALLEL(ch_bam_per_sample)
-        ch_markdup_bam_bai = MARKDUP_PARALLEL.out.bam_bai
+        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(MARKDUP_PARALLEL.out.bam_bai)
         ch_multiqc_files = ch_multiqc_files.mix( MARKDUP_PARALLEL.out.metrics.map { meta, metrics -> return metrics} )
         ch_versions = ch_versions.mix(MARKDUP_PARALLEL.out.versions)
     } else {
         BAMSORMADUP(ch_bam_per_sample)
-        ch_markdup_bam_bai = BAMSORMADUP.out.bam.join(BAMSORMADUP.out.bai)
+        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(BAMSORMADUP.out.bam.join(BAMSORMADUP.out.bam_index))
         ch_multiqc_files = ch_multiqc_files.mix( BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
         ch_versions = ch_versions.mix(BAMSORMADUP.out.versions)
     }
@@ -136,7 +136,7 @@ workflow CMGGPREPROCESSING {
     // Compress bam to cram
     // SAMTOOLS CONVERT([meta, bam, bai], fasta, fai)
     SAMTOOLS_CONVERT(
-        MARKDUP_PARALLEL.out.bam_bai.map {
+        ch_markdup_bam_bai.map {
             meta, bam, bai -> return [meta, bam]
         }, params.fasta, params.fai
     )
@@ -157,7 +157,7 @@ workflow CMGGPREPROCESSING {
     // STEP: COVERAGE
     //*
     COVERAGE(
-        MARKDUP_PARALLEL.out.bam_bai,   // [meta, bam, bai]
+        ch_markdup_bam_bai,   // [meta, bam, bai]
         [params.fasta, params.fai],     // [fasta, fai]
         [],                             // target
         []                              // bait
@@ -172,7 +172,7 @@ workflow CMGGPREPROCESSING {
     // SUBWORKFLOW: BAM QC
     // Gather metrics from bam files
     BAMQC(
-        MARKDUP_PARALLEL.out.bam_bai,   // [meta, bam, bai]
+        ch_markdup_bam_bai,   // [meta, bam, bai]
     )
     ch_multiqc_files    = ch_multiqc_files.mix( BAMQC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions = ch_versions.mix(BAMQC.out.versions)
