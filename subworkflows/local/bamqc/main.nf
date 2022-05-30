@@ -1,13 +1,13 @@
 #!/usr/bin/env nextflow
 
-include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../../modules/nf-core/modules/picard/collectmultiplemetrics/main"
+include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../modules/nf-core/modules/picard/collectmultiplemetrics/main"
 include { BAM_STATS_SAMTOOLS            } from "../../nf-core/subworkflows/bam_stats_samtools/main"
 
 workflow BAMQC {
     take:
         ch_bam_bai      // [meta, bam, bai]
 
-    workflow:
+    main:
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
@@ -29,6 +29,6 @@ workflow BAMQC {
         ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:
-        metrics  = ch_metrics
-        versions = ch_versions
+        metrics  = ch_metrics  // [[meta, metrics], [...], ...]
+        versions = ch_versions // [versions]
 }

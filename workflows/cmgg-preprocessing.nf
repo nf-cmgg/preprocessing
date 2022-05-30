@@ -117,7 +117,7 @@ workflow CMGGPREPROCESSING {
     ch_bam_per_sample = gather_bam_per_sample(BOWTIE2_ALIGN.out.bam)
 
     ch_markdup_bam_bai = Channel.empty()
-    if params.markdup_parallel {
+    if ( params.markdup_parallel ) {
         // SUBWORKFLOW: parallel markdup
         // Take split bam files, mark duplicates and merge
         // MARKDUP_PARALLEL([meta, [bam1, bam2, ...]])
@@ -126,10 +126,13 @@ workflow CMGGPREPROCESSING {
         ch_multiqc_files = ch_multiqc_files.mix( MARKDUP_PARALLEL.out.metrics.map { meta, metrics -> return metrics} )
         ch_versions = ch_versions.mix(MARKDUP_PARALLEL.out.versions)
     } else {
-        BAMSORMADUP(ch_bam_per_sample)
-        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(BAMSORMADUP.out.bam.join(BAMSORMADUP.out.bam_index))
-        ch_multiqc_files = ch_multiqc_files.mix( BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-        ch_versions = ch_versions.mix(BAMSORMADUP.out.versions)
+        // BIOBAMBAM_BAMSORMADUP([meta, bam1, bam2, ...], fasta)
+        BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, [])
+        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(
+            BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
+        )
+        ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+        ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
     }
 
     // MODULE: samtools/convert
@@ -157,10 +160,10 @@ workflow CMGGPREPROCESSING {
     // STEP: COVERAGE
     //*
     COVERAGE(
-        ch_markdup_bam_bai,   // [meta, bam, bai]
-        [params.fasta, params.fai],     // [fasta, fai]
-        [],                             // target
-        []                              // bait
+        ch_markdup_bam_bai,         // [meta, bam, bai]
+        [params.fasta, params.fai], // [fasta, fai]
+        [],                         // target
+        []                          // bait
     )
     ch_multiqc_files    = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions = ch_versions.mix(COVERAGE.out.versions)
