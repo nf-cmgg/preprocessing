@@ -46,13 +46,13 @@
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "picard/collecthsmetrics": {
-                "git_sha": "a5a6973fcf161d0449b216c166ba232c6c55bcbb"
+                "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
             },
             "picard/collectmultiplemetrics": {
-                "git_sha": "a5a6973fcf161d0449b216c166ba232c6c55bcbb"
+                "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
             },
             "picard/collectwgsmetrics": {
-                "git_sha": "c390385cf5a234906a30f013ba0a3c9a27b1b601"
+                "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
             },
             "samtools/convert": {
                 "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
@@ -70,7 +70,7 @@
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "untar": {
-                "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
+                "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
             }
         }
     }
