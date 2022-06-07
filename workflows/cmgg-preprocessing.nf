@@ -103,6 +103,11 @@ workflow CMGGPREPROCESSING {
     // STEP: ALIGNMENT
     //*
 
+    // TODO: Unblock workflow by first collecting ALL fastq's per sample, then running subworkflow per sample
+    // Currently, the wf is blocked by the alignment step, which makes all other steps wait for the alignment step to finish
+    // "gather_bam_per_sample" is the culprit here
+
+
     // MODULE: bowtie2
     // Align fastq files to reference genome and sort
     // BOWTIE2_ALIGN([meta, reads], index, save_unaligned, sort)
