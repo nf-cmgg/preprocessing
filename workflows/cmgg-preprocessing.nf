@@ -23,8 +23,12 @@ if (params.samples) { ch_input = file(params.samples) } else { exit 1, "Sample m
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_config        = Channel.fromPath(file("$projectDir/assets/multiqc_config.yml", checkIfExists: true))
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+ch_cmgg_logo             = Channel.fromPath(file("$projectDir/assets/CMGG_logo.png", checkIfExists: true))
+
+// Info required for completion email and summary
+def multiqc_report = []
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,9 +68,6 @@ include { SAMTOOLS_CONVERT            } from "../modules/nf-core/modules/samtool
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-// Info required for completion email and summary
-def multiqc_report = []
 
 workflow CMGGPREPROCESSING {
 
@@ -197,8 +198,9 @@ workflow CMGGPREPROCESSING {
     ch_workflow_summary = Channel.value(workflow_summary)
 
     ch_multiqc_files = ch_multiqc_files.mix(
-        Channel.from(ch_multiqc_config),
+        ch_multiqc_config,
         ch_multiqc_custom_config.collect().ifEmpty([]),
+        ch_cmgg_logo,
         ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml"),
     )
 
