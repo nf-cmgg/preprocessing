@@ -197,7 +197,6 @@ workflow CMGGPREPROCESSING {
     ch_workflow_summary = Channel.value(workflow_summary)
 
     ch_multiqc_files = ch_multiqc_files.mix(
-        ch_cmgg_logo,
         ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml"),
     )
 
