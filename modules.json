@@ -24,15 +24,6 @@
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
-            "elprep/filter": {
-                "git_sha": "c17d1a7a7b473e103ddd3f28bd91b79733aa7cf2"
-            },
-            "elprep/merge": {
-                "git_sha": "9d0f03d96a6855af87f19f27728757e839e51842"
-            },
-            "elprep/split": {
-                "git_sha": "b1749445d76d12d9961e687e811af1337f0eff0f"
-            },
             "fastp": {
                 "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
             },
