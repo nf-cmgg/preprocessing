@@ -1,5 +1,5 @@
 //
-// This file holds several functions specific to the workflow/cmggpreprocessing.nf in the nf-core/cmggpreprocessing pipeline
+// This file holds several functions specific to the workflow/cmggpreprocessing.nf in the CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline
 //
 
 class WorkflowCmggpreprocessing {
