@@ -34,7 +34,7 @@
                 "git_sha": "72a31b76eb1b58879e0d91fb1d992e0118693098"
             },
             "multiqc": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "e5f8924fabf4c8380f55fb7aee89fd2c268161b1"
             },
             "picard/collecthsmetrics": {
                 "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
