@@ -3,7 +3,7 @@
 include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../modules/nf-core/modules/picard/collectmultiplemetrics/main"
 include { BAM_STATS_SAMTOOLS            } from "../../nf-core/subworkflows/bam_stats_samtools/main"
 
-workflow BAMQC {
+workflow BAM_QC {
     take:
         ch_bam_bai      // [meta, bam, bai]
 
