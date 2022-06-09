@@ -31,7 +31,7 @@ workflow BAM_ARCHIVE {
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
 
     emit:
-        cram_crai = ch_metrics           // [[meta, metrics], [...], ...]
-        checksums = MD5SUM.out.checksum  // [[meta, checksums], [...], ...]
-        versions  = ch_versions          // [versions]
+        cram_crai = SAMTOOLS_CONVERT.out.alignment_index  // [meta, cram, crai]
+        checksums = MD5SUM.out.checksum                   // [meta, checksum]
+        versions  = ch_versions                           // [versions]
 }

@@ -25,18 +25,18 @@ workflow ALIGNMENT {
         ch_versions = Channel.empty()
 
         // Align fastq files to reference genome and (optionally) sort
-        BOWTIE2_ALIGN(ch_reads, ch_aligner_index, false, sort)// if aligner is bowtie2
-        BWAMEM1_MEM(ch_reads,   ch_map_index, sort)     // If aligner is bwa-mem
-        BWAMEM2_MEM(ch_reads,   ch_map_index, sort)     // If aligner is bwa-mem2
-        DRAGMAP_ALIGN(ch_reads, ch_map_index, sort)     // If aligner is dragmap
-        SNAP_ALIGN(ch_reads, ch_map_index)              // If aligner is snap
+        BOWTIE2_ALIGN(ch_reads, ch_aligner_index, false, sort) // if aligner is bowtie2
+        BWAMEM1_MEM  (ch_reads, ch_aligner_index, sort)        // If aligner is bwa-mem
+        BWAMEM2_MEM  (ch_reads, ch_aligner_index, sort)        // If aligner is bwa-mem2
+        DRAGMAP_ALIGN(ch_reads, ch_aligner_index, sort)        // If aligner is dragmap
+        SNAP_ALIGN   (ch_reads, ch_aligner_index)              // If aligner is snap
 
         ch_versions = ch_versions.mix(
             BOWTIE2_ALIGN.out.versions,
-            BWAMEM1_MEM.versions,
-            BWAMEM2_MEM.versions,
-            DRAGMAP_ALIGN.versions,
-            SNAP_ALIGN.versions
+            BWAMEM1_MEM.out.versions,
+            BWAMEM2_MEM.out.versions,
+            DRAGMAP_ALIGN.out.versions,
+            SNAP_ALIGN.out.versions
         )
 
         // Get the bam files from the aligner
