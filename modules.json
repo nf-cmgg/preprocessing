@@ -21,8 +21,17 @@
             "bowtie2/align": {
                 "git_sha": "cbc47767f7bb4751a9d178395bd66f051401a0c1"
             },
+            "bwa/mem": {
+                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
+            },
+            "bwamem2/mem": {
+                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
+            },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+            },
+            "dragmap/align": {
+                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
             },
             "fastp": {
                 "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
@@ -59,6 +68,9 @@
             },
             "samtools/stats": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+            },
+            "snapaligner/align": {
+                "git_sha": "3930ba227bc49541e25272eb9332a10d01a1b271"
             },
             "untar": {
                 "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
