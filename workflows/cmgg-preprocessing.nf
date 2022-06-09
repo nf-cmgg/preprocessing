@@ -38,12 +38,12 @@ def multiqc_report = []
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BAM_STATS_SAMTOOLS    } from "../subworkflows/nf-core/subworkflows/bam_stats_samtools/main"
-include { BAMQC                 } from "../subworkflows/local/bamqc/main"
-include { COVERAGE              } from "../subworkflows/local/coverage/main"
-include { DEMULTIPLEX           } from "../subworkflows/local/demultiplex/main"
-include { INPUT_CHECK           } from "../subworkflows/local/input_check"
-include { MARKDUP_PARALLEL      } from "../subworkflows/local/markdup_parallel/main"
+include { INPUT_CHECK } from "../subworkflows/local/input_check"
+include { DEMULTIPLEX } from "../subworkflows/local/demultiplex/main"
+include { ALIGNMENT   } from "../subworkflows/local/alignement/main"
+include { COVERAGE    } from "../subworkflows/local/coverage/main"
+include { BAM_QC      } from "../subworkflows/local/bam_qc/main"
+include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -54,13 +54,8 @@ include { MARKDUP_PARALLEL      } from "../subworkflows/local/markdup_parallel/m
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
-include { BOWTIE2_ALIGN               } from "../modules/nf-core/modules/bowtie2/align/main"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
-include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
-include { MD5SUM                      } from "../modules/nf-core/modules/md5sum/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
-include { SAMTOOLS_CONVERT            } from "../modules/nf-core/modules/samtools/convert/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -73,16 +68,13 @@ workflow CMGGPREPROCESSING {
     ch_versions      = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    //*
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //*
+    // Sanitize inputs
     ch_flowcells = INPUT_CHECK (ch_input).flowcells
     ch_versions  = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //*
     // STEP: DEMULTIPLEXING and FASTQ QC
     //*
-    // SUBWORKFLOW: demultiplex
     // DEMULTIPLEX([meta, samplesheet, flowcell])
     DEMULTIPLEX(ch_flowcells)
     ch_multiqc_files = ch_multiqc_files.mix(
@@ -92,78 +84,31 @@ workflow CMGGPREPROCESSING {
     ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
 
     // TODO: parse metadata from params.samples and merge with metadata from DEMULTIPLEX.out.fastq
-
-
-    //*
-    // STEP: ALIGNMENT
-    //*
-
     // TODO: Unblock workflow by first collecting ALL fastq's per sample, then running subworkflow per sample
     // Currently, the wf is blocked by the alignment step, which makes all other steps wait for the alignment step to finish
     // "gather_bam_per_sample" is the culprit here
 
-
-    // MODULE: bowtie2
-    // Align fastq files to reference genome and sort
-    // BOWTIE2_ALIGN([meta, reads], index, save_unaligned, sort)
-    BOWTIE2_ALIGN(DEMULTIPLEX.out.trimmed_fastq, params.bowtie2, false, true)
-    ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
+    ch_fastq_per_sample = Channel.empty()
 
     //*
-    // STEP: POST ALIGNMENT
+    // STEP: ALIGNMENT
     //*
-
-    // gather split bams per samples
-    ch_bam_per_sample = gather_bam_per_sample(BOWTIE2_ALIGN.out.bam)
-
-    ch_markdup_bam_bai = Channel.empty()
-    if ( params.markdup_parallel ) {
-        // SUBWORKFLOW: parallel markdup
-        // Take split bam files, mark duplicates and merge
-        // MARKDUP_PARALLEL([meta, [bam1, bam2, ...]])
-        MARKDUP_PARALLEL(ch_bam_per_sample)
-        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(MARKDUP_PARALLEL.out.bam_bai)
-        ch_multiqc_files = ch_multiqc_files.mix( MARKDUP_PARALLEL.out.metrics.map { meta, metrics -> return metrics} )
-        ch_versions = ch_versions.mix(MARKDUP_PARALLEL.out.versions)
-    } else {
-        // BIOBAMBAM_BAMSORMADUP([meta, bam1, bam2, ...], fasta)
-        BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, [])
-        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(
-            BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
-        )
-        ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-        ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
-    }
-
-    // MODULE: samtools/convert
-    // Compress bam to cram
-    // SAMTOOLS CONVERT([meta, bam, bai], fasta, fai)
-    SAMTOOLS_CONVERT(
-        ch_markdup_bam_bai.map {
-            meta, bam, bai -> return [meta, bam]
-        }, params.fasta, params.fai
-    )
-    ch_versions = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
-
-    // MODULE: MD5SUM
-    // Generate md5sum for cram file
-    // MD5SUM([meta, cram])
-    MD5SUM(
-        SAMTOOLS_CONVERT.out.alignment_index.map {
-            meta, cram, crai -> return [meta, cram]
-        }
-    )
-    ch_versions = ch_versions.mix(MD5SUM.out.versions)
-
+    // align fastq files per sample, merge, sort and markdup.
+    // ALIGNMENT([meta,fastq], index, sort)
+    ALIGNMENT(ch_fastq_per_sample, params.bowtie2, true)
+    ch_multiqc_files = ch_multiqc_files.mix(ALIGNMENT.out.markdup_metrics.map { meta, metrics -> return metrics})
+    ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
     //*
     // STEP: COVERAGE
     //*
+    // Generate coverage metrics and beds for each sample
+    // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
     COVERAGE(
-        ch_markdup_bam_bai,         // [meta, bam, bai]
-        params.fasta, params.fai,   // fasta, fai
-        [],                         // target
-        []                          // bait
+        ALIGNMENT.out.bam_bai,
+        params.fasta, params.fai,
+        [],
+        []
     )
     ch_multiqc_files    = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions = ch_versions.mix(COVERAGE.out.versions)
@@ -171,22 +116,32 @@ workflow CMGGPREPROCESSING {
     //*
     // STEP: QC
     //*
-
-    // SUBWORKFLOW: BAM QC
     // Gather metrics from bam files
-    BAMQC(
-        ch_markdup_bam_bai,   // [meta, bam, bai]
+    BAM_QC(
+        ALIGNMENT.out.bam_bai,   // [meta, bam, bai]
     )
-    ch_multiqc_files    = ch_multiqc_files.mix( BAMQC.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions = ch_versions.mix(BAMQC.out.versions)
+    ch_multiqc_files    = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions = ch_versions.mix(BAM_QC.out.versions)
 
+    //*
+    // STEP: BAM ARCHIVE
+    //*
+    // Compress and checksum bam files
+    BAM_ARCHIVE(
+        ALIGNMENT.out.bam_bai.map {meta, bam, bai -> return [meta,bam]},
+        params.fasta,
+        params.fai
+    )
 
+    //*
+    // STEP: POST QC
+    //*
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     // Gather software versions for QC report
     CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
-    // MODULE: MultiQC
+    // MODULE: MULTIQC
     // Generate aggregate QC report
     workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
