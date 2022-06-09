@@ -33,5 +33,5 @@ workflow BAM_ARCHIVE {
     emit:
         cram_crai = ch_metrics           // [[meta, metrics], [...], ...]
         checksums = MD5SUM.out.checksum  // [[meta, checksums], [...], ...]
-        versions  = ch_versions            // [versions]
+        versions  = ch_versions          // [versions]
 }

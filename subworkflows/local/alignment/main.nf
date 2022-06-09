@@ -48,7 +48,13 @@ workflow ALIGNMENT {
             BWAMEM2_MEM.out.bam,
             DRAGMAP_ALIGN.out.bam,
             SNAP_ALIGN.out.bam,
-        ).groupTuple()
+        )
+
+        // TODO: clean up meta
+        ch_cleaned_bam = ch_bam.map { meta, bam ->
+            new_meta = meta.clone()
+            return [new_meta, bam]
+        }.groupTuple()
 
         // MODULE: bamsormadup
         // Merge, sort and mark duplicates
