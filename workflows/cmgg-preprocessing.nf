@@ -80,7 +80,7 @@ workflow CMGGPREPROCESSING {
     ch_versions  = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //*
-    // STEP: DEMULTIPLEXING
+    // STEP: DEMULTIPLEXING and FASTQ QC
     //*
     // SUBWORKFLOW: demultiplex
     // DEMULTIPLEX([meta, samplesheet, flowcell])
@@ -88,16 +88,8 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.reports.map { meta, reports -> return reports})
     ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
 
-    //*
-    // STEP: FASTQ QC and TRIMMING
-    //*
+    // TODO: parse metadata from params.samples and merge with metadata from DEMULTIPLEX.out.fastq
 
-    // MODULE: fastp
-    // Run QC, trimming and adapter removal
-    // FASTP([meta, fastq], save_trimmed, save_merged)
-    FASTP(DEMULTIPLEX.out.fastq, false, false)
-    ch_multiqc_files    = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
-    ch_versions = ch_versions.mix(FASTP.out.versions)
 
     //*
     // STEP: ALIGNMENT
@@ -111,7 +103,7 @@ workflow CMGGPREPROCESSING {
     // MODULE: bowtie2
     // Align fastq files to reference genome and sort
     // BOWTIE2_ALIGN([meta, reads], index, save_unaligned, sort)
-    BOWTIE2_ALIGN(FASTP.out.reads, params.bowtie2, false, true)
+    BOWTIE2_ALIGN(DEMULTIPLEX.out.trimmed_fastq, params.bowtie2, false, true)
     ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
     //*
