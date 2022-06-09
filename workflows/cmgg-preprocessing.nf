@@ -40,7 +40,7 @@ def multiqc_report = []
 //
 include { INPUT_CHECK } from "../subworkflows/local/input_check"
 include { DEMULTIPLEX } from "../subworkflows/local/demultiplex/main"
-include { ALIGNMENT   } from "../subworkflows/local/alignement/main"
+include { ALIGNMENT   } from "../subworkflows/local/alignment/main"
 include { COVERAGE    } from "../subworkflows/local/coverage/main"
 include { BAM_QC      } from "../subworkflows/local/bam_qc/main"
 include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
