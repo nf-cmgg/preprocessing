@@ -25,14 +25,14 @@ workflow ALIGNMENT {
         ch_versions = Channel.empty()
 
         // Align fastq files to reference genome and (optionally) sort
-        BOWTIE2(ch_reads, ch_aligner_index, false, sort)// if aligner is bowtie2
+        BOWTIE2_ALIGN(ch_reads, ch_aligner_index, false, sort)// if aligner is bowtie2
         BWAMEM1_MEM(ch_reads,   ch_map_index, sort)     // If aligner is bwa-mem
         BWAMEM2_MEM(ch_reads,   ch_map_index, sort)     // If aligner is bwa-mem2
         DRAGMAP_ALIGN(ch_reads, ch_map_index, sort)     // If aligner is dragmap
         SNAP_ALIGN(ch_reads, ch_map_index)              // If aligner is snap
 
         ch_versions = ch_versions.mix(
-            BOWTIE2.out.versions,
+            BOWTIE2_ALIGN.out.versions,
             BWAMEM1_MEM.versions,
             BWAMEM2_MEM.versions,
             DRAGMAP_ALIGN.versions,
@@ -43,7 +43,7 @@ workflow ALIGNMENT {
         // Only one aligner is run
         ch_bam = Channel.empty()
         ch_bam = ch_bam.mix(
-            BOWTIE2.out.bam,
+            BOWTIE2_ALIGN.out.bam,
             BWAMEM1_MEM.out.bam,
             BWAMEM2_MEM.out.bam,
             DRAGMAP_ALIGN.out.bam,
@@ -59,7 +59,7 @@ workflow ALIGNMENT {
         // MODULE: bamsormadup
         // Merge, sort and mark duplicates
         // BIOBAMBAM_BAMSORMADUP([meta, bam1, bam2, ...], fasta)
-        BIOBAMBAM_BAMSORMADUP(ch_bam, [])
+        BIOBAMBAM_BAMSORMADUP(ch_cleaned_bam, [])
         ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
         ch_markdup_metrics = BIOBAMBAM_BAMSORMADUP.out.metrics
         ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
