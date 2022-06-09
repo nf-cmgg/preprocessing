@@ -58,9 +58,9 @@ workflow DEMULTIPLEX {
         bclconvert_fastq    = ch_bclconvert_fastq
         bclconvert_reports  = BCLCONVERT.out.reports
         bclconvert_interop  = BCLCONVERT.out.interop
-        fastp_reports       = FASTP.out.json.map { meta, json -> return json}
+        fastp_reports       = FASTP.out.json
         trimmed_fastq       = FASTP.out.reads
-        versions = ch_versions
+        versions            = ch_versions
 }
 
 /*
