@@ -54,7 +54,7 @@ include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup"
+include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
 
@@ -98,14 +98,17 @@ workflow CMGGPREPROCESSING {
     //*
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
-    ALIGNMENT(DEMULTIPLEX.out.bclconvert_fastq, ch_map_index, true)
-    ch_multiqc_files = ch_multiqc_files.mix(ALIGNMENT.out.markdup_metrics.map { meta, metrics -> return metrics})
+    ALIGNMENT(DEMULTIPLEX.out.trimmed_fastq, ch_map_index, true)
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
     ch_bam_per_sample = gather_bam_per_sample(ALIGNMENT.out.bam)
 
-    BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample)
-    ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bai)
+    //*
+    // STEP: MARK DUPLICATES
+    //*
+    // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
+    BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, params.fasta)
+    ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
     ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
@@ -181,7 +184,11 @@ def gather_bam_per_sample(ch_aligned_bam) {
         new_meta = meta.clone()
         new_meta.id = meta.id - ~/_S[0-9]+_.*$/
         return [new_meta, bam]
-    }.groupTuple( by: [0])
+    }
+    .groupTuple( by: [0])
+    .map { meta, bam ->
+        return [meta, bam.flatten()]
+    }
 }
 
 

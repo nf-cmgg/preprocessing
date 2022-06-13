@@ -56,7 +56,7 @@ workflow ALIGNMENT {
         }.groupTuple()
 
     emit:
-        bam      = ch_cleaned_bam // channel: [ [meta], bam, bai ]
+        bam      = ch_cleaned_bam // channel: [ [meta], bam ]
         versions = ch_versions    // channel: [ versions.yml ]
 }
 
