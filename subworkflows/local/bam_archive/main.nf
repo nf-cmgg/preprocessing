@@ -14,7 +14,7 @@ workflow BAM_ARCHIVE {
 
         // MODULE: samtools/convert
         // Compress bam to cram
-        // SAMTOOLS CONVERT([meta, bam, bai], fasta, fai)
+        // SAMTOOLS CONVERT([meta, bam], fasta, fai)
         SAMTOOLS_CONVERT(
             ch_bam, ch_fasta, ch_fai
         )
