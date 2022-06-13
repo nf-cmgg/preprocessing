@@ -68,6 +68,15 @@ workflow CMGGPREPROCESSING {
     ch_versions      = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+
+    // Gather index for mapping given the chosen aligner
+    ch_map_index =  params.aligner == "bwa" ? params.bwa :
+                    params.aligner == "bwamem2" ? params.bwamem2 :
+                    params.aligner == "bowtie2" ? params.bowtie2 :
+                    params.aligner == "dragmap" ? params.dragmap :
+                    params.aligner == "snapaligner" ? params.snapaligner :
+                    []
+
     // Sanitize inputs
     ch_flowcells = INPUT_CHECK (ch_input).flowcells
     ch_versions  = ch_versions.mix(INPUT_CHECK.out.versions)
@@ -88,14 +97,14 @@ workflow CMGGPREPROCESSING {
     // Currently, the wf is blocked by the alignment step, which makes all other steps wait for the alignment step to finish
     // "gather_bam_per_sample" is the culprit here
 
-    ch_fastq_per_sample = Channel.empty()
+    ch_fastq_per_sample = DEMULTIPLEX.out.bclconvert_fastq
 
     //*
     // STEP: ALIGNMENT
     //*
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
-    ALIGNMENT(ch_fastq_per_sample, params.bowtie2, true)
+    ALIGNMENT(ch_fastq_per_sample, ch_map_index, true)
     ch_multiqc_files = ch_multiqc_files.mix(ALIGNMENT.out.markdup_metrics.map { meta, metrics -> return metrics})
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
