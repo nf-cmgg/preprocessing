@@ -6,7 +6,6 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BIOBAMBAM_BAMSORMADUP             } from "../../../modules/nf-core/modules/biobambam/bamsormadup/main"
 include { BOWTIE2_ALIGN                     } from "../../../modules/nf-core/modules/bowtie2/align/main"
 include { BWA_MEM as BWAMEM1_MEM            } from '../../../modules/nf-core/modules/bwa/mem/main'
 include { BWAMEM2_MEM                       } from '../../../modules/nf-core/modules/bwamem2/mem/main'
@@ -56,17 +55,8 @@ workflow ALIGNMENT {
             return [new_meta, bam]
         }.groupTuple()
 
-        // MODULE: bamsormadup
-        // Merge, sort and mark duplicates
-        // BIOBAMBAM_BAMSORMADUP([meta, bam1, bam2, ...], fasta)
-        BIOBAMBAM_BAMSORMADUP(ch_cleaned_bam, [])
-        ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
-        ch_markdup_metrics = BIOBAMBAM_BAMSORMADUP.out.metrics
-        ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
-
     emit:
-        bam_bai         = ch_markdup_bam_bai // channel: [ [meta], bam, bai ]
-        markdup_metrics = ch_markdup_metrics // channel: [ [meta], metrics ]
-        versions        = ch_versions        // channel: [ versions.yml ]
+        bam      = ch_cleaned_bam // channel: [ [meta], bam, bai ]
+        versions = ch_versions    // channel: [ versions.yml ]
 }
 

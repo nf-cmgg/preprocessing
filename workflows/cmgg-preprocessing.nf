@@ -54,6 +54,7 @@ include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
 //
 // MODULE: Installed directly from nf-core/modules
 //
+include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
 
@@ -92,21 +93,21 @@ workflow CMGGPREPROCESSING {
     )
     ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
 
-    // TODO: parse metadata from params.samples and merge with metadata from DEMULTIPLEX.out.fastq
-    // TODO: Unblock workflow by first collecting ALL fastq's per sample, then running subworkflow per sample
-    // Currently, the wf is blocked by the alignment step, which makes all other steps wait for the alignment step to finish
-    // "gather_bam_per_sample" is the culprit here
-
-    ch_fastq_per_sample = DEMULTIPLEX.out.bclconvert_fastq
-
     //*
     // STEP: ALIGNMENT
     //*
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
-    ALIGNMENT(ch_fastq_per_sample, ch_map_index, true)
+    ALIGNMENT(DEMULTIPLEX.out.bclconvert_fastq, ch_map_index, true)
     ch_multiqc_files = ch_multiqc_files.mix(ALIGNMENT.out.markdup_metrics.map { meta, metrics -> return metrics})
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
+
+    ch_bam_per_sample = gather_bam_per_sample(ALIGNMENT.out.bam)
+
+    BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample)
+    ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bai)
+    ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
     //*
     // STEP: COVERAGE
@@ -114,7 +115,7 @@ workflow CMGGPREPROCESSING {
     // Generate coverage metrics and beds for each sample
     // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
     COVERAGE(
-        ALIGNMENT.out.bam_bai,
+        ch_markdup_bam_bai,
         params.fasta, params.fai,
         [],
         []
@@ -127,7 +128,7 @@ workflow CMGGPREPROCESSING {
     //*
     // Gather metrics from bam files
     BAM_QC(
-        ALIGNMENT.out.bam_bai,   // [meta, bam, bai]
+        ch_markdup_bam_bai,   // [meta, bam, bai]
     )
     ch_multiqc_files    = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions = ch_versions.mix(BAM_QC.out.versions)
@@ -137,7 +138,7 @@ workflow CMGGPREPROCESSING {
     //*
     // Compress and checksum bam files
     BAM_ARCHIVE(
-        ALIGNMENT.out.bam_bai.map {meta, bam, bai -> return [meta,bam]},
+        ch_markdup_bam_bai.map {meta, bam, bai -> return [meta,bam]},
         params.fasta,
         params.fai
     )
