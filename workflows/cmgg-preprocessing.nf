@@ -70,10 +70,10 @@ workflow CMGGPREPROCESSING {
 
 
     // Gather index for mapping given the chosen aligner
-    ch_map_index =  params.aligner == "bwa" ? params.bwa :
-                    params.aligner == "bwamem2" ? params.bwamem2 :
-                    params.aligner == "bowtie2" ? params.bowtie2 :
-                    params.aligner == "dragmap" ? params.dragmap :
+    ch_map_index =  params.aligner == "bwa"         ? params.bwa         :
+                    params.aligner == "bwamem2"     ? params.bwamem2     :
+                    params.aligner == "bowtie2"     ? params.bowtie2     :
+                    params.aligner == "dragmap"     ? params.dragmap     :
                     params.aligner == "snapaligner" ? params.snapaligner :
                     []
 
