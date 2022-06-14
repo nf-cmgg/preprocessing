@@ -104,8 +104,8 @@ workflow CMGGPREPROCESSING {
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
     ch_sample_fastqs = ch_sample_fastqs.mix(
-        ch_inputs.fastq
-        DEMULTIPLEX.out.bclconvert_fastq,
+        ch_inputs.fastq,
+        DEMULTIPLEX.out.bclconvert_fastq
     )
 
     // MODULE: fastp
