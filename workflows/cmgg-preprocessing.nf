@@ -234,9 +234,8 @@ def extract_csv(csv_file) {
 
 def parse_flowcell_csv(row) {
     def meta = [:]
-
-    meta.id = row.id
-    meta.lane = row.lane ?: ""
+    meta.id   = row.id.toString()
+    meta.lane = row.lane.toInteger() ?: null
 
     def flowcell    = file(row.flowcell, checkIfExists: true)
     def samplesheet = file(row.samplesheet, checkIfExists: true)
@@ -247,16 +246,16 @@ def parse_flowcell_csv(row) {
 
 def parse_fastq_csv(row) {
     def meta = [:]
-
-    meta.id         = row.id
-    meta.samplename = row.samplename
+    meta.id         = row.id.toString()
+    meta.samplename = row.samplename.toString()
     meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
     meta.reference  = row.reference ? row.reference.toString() : ""
     meta.single_end = row.fastq_2   ? false : true
 
     def fastq_1 = file(row.fastq_1, checkIfExists: true)
     def fastq_2 = row.fastq_2 ? file(row.fastq_2, checkIfExists: true) : null
-    def reads = fastq_2 ? [fastq_1, fastq_2] : [fastq_1]
+    def reads   = fastq_2 ? [fastq_1, fastq_2] : [fastq_1]
+
     return [meta, reads]
 }
 
