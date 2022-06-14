@@ -4,11 +4,8 @@
 // Demultiplex Illumina BCL data using bcl-convert
 //
 
-params.options = [:]
-
-include { BCLCONVERT    } from "../../../modules/nf-core/modules/bclconvert/main"
-include { FASTP         } from "../../../modules/nf-core/modules/fastp/main"
-include { UNTAR         } from "../../../modules/nf-core/modules/untar/main"
+include { BCLCONVERT } from "../../../modules/nf-core/modules/bclconvert/main"
+include { UNTAR      } from "../../../modules/nf-core/modules/untar/main"
 
 workflow DEMULTIPLEX {
     take:
@@ -48,18 +45,10 @@ workflow DEMULTIPLEX {
         // Genereate meta for each fastq
         ch_bclconvert_fastq = generate_fastq_meta(BCLCONVERT.out.fastq)
 
-        // MODULE: fastp
-        // Run QC, trimming and adapter removal
-        // FASTP([meta, fastq], save_trimmed, save_merged)
-        FASTP(ch_bclconvert_fastq, false, false)
-        ch_versions = ch_versions.mix(FASTP.out.versions)
-
     emit:
         bclconvert_fastq    = ch_bclconvert_fastq
         bclconvert_reports  = BCLCONVERT.out.reports
         bclconvert_interop  = BCLCONVERT.out.interop
-        fastp_reports       = FASTP.out.json
-        trimmed_fastq       = FASTP.out.reads
         versions            = ch_versions
 }
 
