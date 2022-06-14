@@ -1,1 +1,2 @@
-id,samplename,readgroup,reference,fastq_1,fastq_2,target_bed,bait_bed,
+id,samplename,readgroup,reference,fastq_1,fastq_2
+test1,test1,,hg38-noalt,https://github.com/nf-core/test-datasets/raw/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz,https://github.com/nf-core/test-datasets/raw/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz

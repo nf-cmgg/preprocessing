@@ -204,29 +204,30 @@ workflow CMGGPREPROCESSING {
 
 // Function to extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
-    Channel.from(csv_file).splitCsv(header: true).map { row ->
-        switch(row) {
-            // check mandatory fields
-            case !(row.id):
-                log.error "Missing id field in input csv file"
-                break
-            // check for invalid flowcell input
-            case row.flowcell && !(row.samplesheet):
-                log.error "Flowcell input requires both samplesheet and flowcell"
-                break
-            // valid flowcell input
-            case row.flowcell && row.samplesheet:
-                return parse_flowcell_csv(row)
-            // check for invalid fastq input
-            case row.fastq_1 && !(row.samplename):
-                log.error "Flowcell input requires both samplesheet and flowcell"
-                break
-            case row.fastq_1 && row.samplename:
-                return parse_fastq_csv(row)
-            // check for mixed input
-            default:
-                log.error "Invalid csv input"
-                break;
+    Channel.from(csv_file).splitCsv(header: true, strip: true).map { row ->
+        // check common mandatory fields
+        if(!(row.id)){
+            log.error "Missing id field in input csv file"
+        }
+        // check for invalid flowcell input
+        if(row.flowcell && !(row.samplesheet)){
+            log.error "Flowcell input requires both samplesheet and flowcell"
+        }
+        // check for invalid fastq input
+        if(row.fastq_1 && !(row.samplename)){
+            log.error "Flowcell input requires both samplesheet and flowcell"
+        }
+        // check for mixed input
+        if(row.flowcell && row.fastq_1){
+            log.error "Cannot mix flowcell and fastq inputs"
+        }
+        // valid flowcell input
+        if(row.flowcell && row.samplesheet){
+            return parse_flowcell_csv(row)
+        }
+        // valid fastq input
+        if(row.fastq_1 && row.samplename){
+            return parse_fastq_csv(row)
         }
     }
 }
@@ -239,27 +240,34 @@ def parse_flowcell_csv(row) {
 
     def flowcell    = file(row.flowcell, checkIfExists: true)
     def samplesheet = file(row.samplesheet, checkIfExists: true)
-    def sample_info = file(row.sample_info, checkIfExists: true)
+    def sample_info = row.sample_info ? file(row.sample_info, checkIfExists: true) : null
 
     return [meta, samplesheet, flowcell, sample_info]
 }
 
 def parse_fastq_csv(row) {
-    def meta = row.clone()
-    meta.remove(["fastq_1","fastq_2"])
-    meta.single_end = row.fastq_2 ? false : true
+    def meta = [:]
+
+    meta.id         = row.id
+    meta.samplename = row.samplename
+    meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
+    meta.reference  = row.reference ? row.reference.toString() : ""
+    meta.single_end = row.fastq_2   ? false : true
 
     def fastq_1 = file(row.fastq_1, checkIfExists: true)
-    def fastq_2 = file(row.fastq_2, checkIfExists: true)
-    def reads = fastq_2 ? [fastq_1, fastq2] : [fastq_1]
+    def fastq_2 = row.fastq_2 ? file(row.fastq_2, checkIfExists: true) : null
+    def reads = fastq_2 ? [fastq_1, fastq_2] : [fastq_1]
     return [meta, reads]
 }
 
 def parse_sample_info_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true).map { row ->
         // check mandatory fields
-        if (!(row.id && row.samplename)) log.error "Missing id or samplename field in sample info file"
-        return [row]
+        if (!(row.id && row.samplename)){
+            log.error "Missing id or samplename field in sample info file"
+        } else {
+            return [row]
+        }
     }
 }
 
