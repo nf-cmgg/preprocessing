@@ -228,7 +228,7 @@ def extract_csv(csv_file) {
                 log.error "Invalid csv input"
                 break;
         }
-    }.groupTuple()
+    }
 }
 
 def parse_flowcell_csv(row) {
@@ -238,8 +238,8 @@ def parse_flowcell_csv(row) {
     meta.lane = row.lane ?: ""
 
     def flowcell    = file(row.flowcell, checkIfExists: true)
-    def samplesheet = (row.samplesheet, checkIfExists: true)
-    def sample_info = (row.sample_info, checkIfExists: true)
+    def samplesheet = file(row.samplesheet, checkIfExists: true)
+    def sample_info = file(row.sample_info, checkIfExists: true)
 
     return [meta, samplesheet, flowcell, sample_info]
 }
