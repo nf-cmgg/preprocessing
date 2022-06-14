@@ -9,12 +9,11 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 // Validate input parameters
 WorkflowCmggpreprocessing.initialise(params, log)
 
-def checkPathParamList = [ params.input, params.samples, params.multiqc_config, params.fasta, params.fai ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.fai ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, "Flowcell metadata sheet not specified!" }
-if (params.samples) { ch_input = file(params.samples) } else { exit 1, "Sample metadata sheet not specified!" }
+if (params.input) { ch_input = file(params.input) } else { exit 1, "inputs sheet not specified!" }
 
 
 /*
@@ -38,7 +37,6 @@ def multiqc_report = []
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK } from "../subworkflows/local/input_check"
 include { DEMULTIPLEX } from "../subworkflows/local/demultiplex/main"
 include { ALIGNMENT   } from "../subworkflows/local/alignment/main"
 include { COVERAGE    } from "../subworkflows/local/coverage/main"
@@ -56,6 +54,7 @@ include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
 //
 include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
+include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
 
 /*
@@ -78,29 +77,55 @@ workflow CMGGPREPROCESSING {
                     params.aligner == "snapaligner" ? params.snapaligner :
                     []
 
-    // Sanitize inputs
-    ch_flowcells = INPUT_CHECK (ch_input).flowcells
-    ch_versions  = ch_versions.mix(INPUT_CHECK.out.versions)
+    // Sanitize inputs and separate input types
+    ch_inputs = extract_csv(ch_input).branch {
+        fastq: it.size() == 2
+        flowcell: it.size() == 4
+    }
 
     //*
-    // STEP: DEMULTIPLEXING and FASTQ QC
+    // STEP: DEMULTIPLEX FLOWCELLS
     //*
     // DEMULTIPLEX([meta, samplesheet, flowcell])
-    DEMULTIPLEX(ch_flowcells)
+    DEMULTIPLEX(
+        ch_inputs.flowcell.map {
+            meta,samplesheet, flowcell, sample_info ->
+            return [meta, samplesheet, flowcell]
+        }
+    )
     ch_multiqc_files = ch_multiqc_files.mix(
         DEMULTIPLEX.out.bclconvert_reports.map { meta, reports -> return reports},
-        DEMULTIPLEX.out.fastp_reports.map { meta, json -> return json}
     )
     ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
+
+    //*
+    // STEP: FASTQ TRIMMING AND QC
+    //*
+    // "Gather" fastq's from demultiplex and fastq inputs
+    ch_sample_fastqs = Channel.empty()
+    ch_sample_fastqs = ch_sample_fastqs.mix(
+        ch_inputs.fastq
+        DEMULTIPLEX.out.bclconvert_fastq,
+    )
+
+    // MODULE: fastp
+    // Run QC, trimming and adapter removal
+    // FASTP([meta, fastq], save_trimmed, save_merged)
+    FASTP(ch_sample_fastqs, false, false)
+    ch_multiqc_files  = ch_multiqc_files.mix(
+        FASTP.out.json.map { meta, json -> return json}
+    )
+    ch_versions = ch_versions.mix(FASTP.out.versions)
 
     //*
     // STEP: ALIGNMENT
     //*
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
-    ALIGNMENT(DEMULTIPLEX.out.trimmed_fastq, ch_map_index, true)
+    ALIGNMENT(FASTP.out.reads, ch_map_index, true)
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
+    // Gather bams per sample for merging
     ch_bam_per_sample = gather_bam_per_sample(ALIGNMENT.out.bam)
 
     //*
@@ -145,6 +170,7 @@ workflow CMGGPREPROCESSING {
         params.fasta,
         params.fai
     )
+    ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
 
     //*
     // STEP: POST QC
@@ -176,6 +202,68 @@ workflow CMGGPREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// Function to extract information (meta data + file(s)) from csv file(s)
+def extract_csv(csv_file) {
+    Channel.from(csv_file).splitCsv(header: true).map { row ->
+        switch(row) {
+            // check mandatory fields
+            case !(row.id):
+                log.error "Missing id field in input csv file"
+                break
+            // check for invalid flowcell input
+            case row.flowcell && !(row.samplesheet):
+                log.error "Flowcell input requires both samplesheet and flowcell"
+                break
+            // valid flowcell input
+            case row.flowcell && row.samplesheet:
+                return parse_flowcell_csv(row)
+            // check for invalid fastq input
+            case row.fastq_1 && !(row.samplename):
+                log.error "Flowcell input requires both samplesheet and flowcell"
+                break
+            case row.fastq_1 && row.samplename:
+                return parse_fastq_csv(row)
+            // check for mixed input
+            default:
+                log.error "Invalid csv input"
+                break;
+        }
+    }.groupTuple()
+}
+
+def parse_flowcell_csv(row) {
+    def meta = [:]
+
+    meta.id = row.id
+    meta.lane = row.lane ?: ""
+
+    def flowcell    = file(row.flowcell, checkIfExists: true)
+    def samplesheet = (row.samplesheet, checkIfExists: true)
+    def sample_info = (row.sample_info, checkIfExists: true)
+
+    return [meta, samplesheet, flowcell, sample_info]
+}
+
+def parse_fastq_csv(row) {
+    def meta = row.clone()
+    meta.remove(["fastq_1","fastq_2"])
+    meta.single_end = row.fastq_2 ? false : true
+
+    def fastq_1 = file(row.fastq_1, checkIfExists: true)
+    def fastq_2 = file(row.fastq_2, checkIfExists: true)
+    def reads = fastq_2 ? [fastq_1, fastq2] : [fastq_1]
+    return [meta, reads]
+}
+
+def parse_sample_info_csv(csv_file) {
+    Channel.from(csv_file).splitCsv(header: true).map { row ->
+        // check mandatory fields
+        if (!(row.id && row.samplename)) log.error "Missing id or samplename field in sample info file"
+        return [row]
+    }
+}
+
+// Function to gather bam files per sample
 def gather_bam_per_sample(ch_aligned_bam) {
     // Gather bam files per sample based on id
     ch_aligned_bam.map {

@@ -1,1 +1,1 @@
-id,samplename,readgroup,reference,fastq_1,fastq_2
+id,samplename,readgroup,reference,fastq_1,fastq_2,target_bed,bait_bed,
