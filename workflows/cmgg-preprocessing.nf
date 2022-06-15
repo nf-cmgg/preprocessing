@@ -86,36 +86,32 @@ workflow CMGGPREPROCESSING {
     //*
     // STEP: DEMULTIPLEX FLOWCELLS
     //*
+
+    ch_flowcell = ch_inputs.flowcell.multiMap { meta,samplesheet, flowcell, sample_info_csv ->
+        fc   = [meta, samplesheet, flowcell]
+        info = parse_sample_info_csv(sample_info_csv)
+    }
+
     // DEMULTIPLEX([meta, samplesheet, flowcell])
-    DEMULTIPLEX(
-        ch_inputs.flowcell.map {
-            meta,samplesheet, flowcell, sample_info ->
-            return [meta, samplesheet, flowcell]
-        }
-    )
-    ch_multiqc_files = ch_multiqc_files.mix(
-        DEMULTIPLEX.out.bclconvert_reports.map { meta, reports -> return reports},
-    )
-    ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
+    DEMULTIPLEX(ch_flowcell.fc)
+    ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.bclconvert_reports.map { meta, reports -> return reports} )
+    ch_versions      = ch_versions.mix(DEMULTIPLEX.out.versions)
+
+    // Add metadata to demultiplexed fastq's
+    ch_bclconvert_fastq = merge_sample_info(DEMULTIPLEX.out.bclconvert_fastq, ch_flowcell.info)
+
+    // "Gather" fastq's from demultiplex and fastq inputs
+    ch_sample_fastqs = Channel.of(ch_inputs.fastq, ch_bclconvert_fastq).flatten()
 
     //*
     // STEP: FASTQ TRIMMING AND QC
     //*
-    // "Gather" fastq's from demultiplex and fastq inputs
-    ch_sample_fastqs = Channel.empty()
-    ch_sample_fastqs = ch_sample_fastqs.mix(
-        ch_inputs.fastq,
-        DEMULTIPLEX.out.bclconvert_fastq
-    )
-
     // MODULE: fastp
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, false, false)
-    ch_multiqc_files  = ch_multiqc_files.mix(
-        FASTP.out.json.map { meta, json -> return json}
-    )
-    ch_versions = ch_versions.mix(FASTP.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
+    ch_versions      = ch_versions.mix(FASTP.out.versions)
 
     //*
     // STEP: ALIGNMENT
@@ -127,6 +123,8 @@ workflow CMGGPREPROCESSING {
 
     // Gather bams per sample for merging
     ch_bam_per_sample = gather_bam_per_sample(ALIGNMENT.out.bam)
+
+    // TODO: unblock workflow from alignment step
 
     //*
     // STEP: MARK DUPLICATES
@@ -148,8 +146,8 @@ workflow CMGGPREPROCESSING {
         [],
         []
     )
-    ch_multiqc_files    = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions = ch_versions.mix(COVERAGE.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions      = ch_versions.mix(COVERAGE.out.versions)
 
     //*
     // STEP: QC
@@ -158,8 +156,8 @@ workflow CMGGPREPROCESSING {
     BAM_QC(
         ch_markdup_bam_bai,   // [meta, bam, bai]
     )
-    ch_multiqc_files    = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions = ch_versions.mix(BAM_QC.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
     //*
     // STEP: BAM ARCHIVE
@@ -202,7 +200,7 @@ workflow CMGGPREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Function to extract information (meta data + file(s)) from csv file(s)
+// Extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true, strip: true).map { row ->
         // check common mandatory fields
@@ -232,6 +230,7 @@ def extract_csv(csv_file) {
     }
 }
 
+// Parse flowcell input map
 def parse_flowcell_csv(row) {
     def meta = [:]
     meta.id   = row.id.toString()
@@ -244,12 +243,13 @@ def parse_flowcell_csv(row) {
     return [meta, samplesheet, flowcell, sample_info]
 }
 
+// Parse fastq input mpa
 def parse_fastq_csv(row) {
     def meta = [:]
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
     meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
-    meta.reference  = row.reference ? row.reference.toString() : ""
+    meta.organism   = row.organism ? row.organism.toString() : ""
     meta.single_end = row.fastq_2   ? false : true
 
     def fastq_1 = file(row.fastq_1, checkIfExists: true)
@@ -259,18 +259,35 @@ def parse_fastq_csv(row) {
     return [meta, reads]
 }
 
+// Parse sample info input map
 def parse_sample_info_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true).map { row ->
         // check mandatory fields
         if (!(row.id && row.samplename)){
             log.error "Missing id or samplename field in sample info file"
         } else {
-            return [row]
+            def meta = [:]
+            meta.id         = row.id.toString()
+            meta.samplename = row.samplename.toString()
+            meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
+            meta.organism   = row.organism ? row.organism.toString() : ""
         }
     }
 }
 
-// Function to gather bam files per sample
+// Merge fastq meta with sample info
+def merge_sample_info(fastq, sample_info) {
+    fastq
+    .combine(sample_info)
+    .map { meta1, fastq, meta2 ->
+        if (meta1.samplename == meta2.samplename) {
+            def meta = meta1 + meta2
+            return [ meta, fastq ]
+        }
+    }
+}
+
+// Gather bam files per sample
 def gather_bam_per_sample(ch_aligned_bam) {
     // Gather bam files per sample based on id
     ch_aligned_bam.map {
