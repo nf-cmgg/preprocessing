@@ -79,7 +79,7 @@ workflow CMGGPREPROCESSING {
 
     // Sanitize inputs and separate input types
     ch_inputs = extract_csv(ch_input).branch {
-        fastq: it.size() == 2
+        fastq   : it.size() == 2
         flowcell: it.size() == 4
     }
 
@@ -88,8 +88,8 @@ workflow CMGGPREPROCESSING {
     //*
 
     ch_flowcell = ch_inputs.flowcell.multiMap { meta,samplesheet, flowcell, sample_info_csv ->
-        fc   = [meta, samplesheet, flowcell]
-        info = parse_sample_info_csv(sample_info_csv)
+        fc   : [meta, samplesheet, flowcell]
+        info : parse_sample_info_csv(sample_info_csv)
     }
 
     // DEMULTIPLEX([meta, samplesheet, flowcell])
@@ -101,7 +101,8 @@ workflow CMGGPREPROCESSING {
     ch_bclconvert_fastq = merge_sample_info(DEMULTIPLEX.out.bclconvert_fastq, ch_flowcell.info)
 
     // "Gather" fastq's from demultiplex and fastq inputs
-    ch_sample_fastqs = Channel.of(ch_inputs.fastq, ch_bclconvert_fastq).flatten()
+    ch_sample_fastqs = Channel.empty()
+    ch_sample_fastqs.mix(ch_inputs.fastq, ch_bclconvert_fastq)
 
     //*
     // STEP: FASTQ TRIMMING AND QC
@@ -261,24 +262,22 @@ def parse_fastq_csv(row) {
 
 // Parse sample info input map
 def parse_sample_info_csv(csv_file) {
-    Channel.from(csv_file).splitCsv(header: true).map { row ->
+    Channel.from(csv_file).splitCsv(header: true, strip: true).map { row ->
         // check mandatory fields
-        if (!(row.id && row.samplename)){
-            log.error "Missing id or samplename field in sample info file"
-        } else {
-            def meta = [:]
-            meta.id         = row.id.toString()
-            meta.samplename = row.samplename.toString()
-            meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
-            meta.organism   = row.organism ? row.organism.toString() : ""
-        }
+        if (!(row.samplename)) log.error "Missing samplename field in sample info file"
+
+        def meta = [:]
+        meta.samplename = row.samplename.toString()
+        meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
+        meta.organism   = row.organism ? row.organism.toString() : ""
+        return meta
     }
 }
 
 // Merge fastq meta with sample info
-def merge_sample_info(fastq, sample_info) {
-    fastq
-    .combine(sample_info)
+def merge_sample_info(ch_fastq, ch_sample_info) {
+    ch_fastq
+    .combine(ch_sample_info)
     .map { meta1, fastq, meta2 ->
         if (meta1.samplename == meta2.samplename) {
             def meta = meta1 + meta2
