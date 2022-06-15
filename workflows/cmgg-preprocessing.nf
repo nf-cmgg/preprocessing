@@ -87,7 +87,7 @@ workflow CMGGPREPROCESSING {
     // STEP: DEMULTIPLEX FLOWCELLS
     //*
 
-    ch_flowcell = ch_inputs.flowcell.multiMap { meta,samplesheet, flowcell, sample_info_csv ->
+    ch_flowcell = ch_inputs.flowcell.multiMap { meta, samplesheet, flowcell, sample_info_csv ->
         fc   : [meta, samplesheet, flowcell]
         info : parse_sample_info_csv(sample_info_csv)
     }
