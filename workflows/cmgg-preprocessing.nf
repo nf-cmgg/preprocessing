@@ -89,7 +89,7 @@ workflow CMGGPREPROCESSING {
 
     ch_flowcell = ch_inputs.flowcell.multiMap { meta, samplesheet, flowcell, sample_info_csv ->
         fc   : [meta, samplesheet, flowcell]
-        info : parse_sample_info_csv(sample_info_csv)
+        info_csv : sample_info_csv
     }
 
     // DEMULTIPLEX([meta, samplesheet, flowcell])
@@ -98,11 +98,14 @@ workflow CMGGPREPROCESSING {
     ch_versions      = ch_versions.mix(DEMULTIPLEX.out.versions)
 
     // Add metadata to demultiplexed fastq's
-    ch_bclconvert_fastq = merge_sample_info(DEMULTIPLEX.out.bclconvert_fastq, ch_flowcell.info)
+    ch_demultiplexed_fastq = merge_sample_info(
+        DEMULTIPLEX.out.bclconvert_fastq,
+        parse_sample_info_csv(ch_flowcell.info_csv)
+    )
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
-    ch_sample_fastqs.mix(ch_inputs.fastq, ch_bclconvert_fastq)
+    ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq)
 
     //*
     // STEP: FASTQ TRIMMING AND QC
@@ -262,7 +265,7 @@ def parse_fastq_csv(row) {
 
 // Parse sample info input map
 def parse_sample_info_csv(csv_file) {
-    Channel.from(csv_file).splitCsv(header: true, strip: true).map { row ->
+    csv_file.splitCsv(header: true, strip: true).map { row ->
         // check mandatory fields
         if (!(row.samplename)) log.error "Missing samplename field in sample info file"
 
