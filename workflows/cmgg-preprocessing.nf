@@ -277,6 +277,47 @@ def parse_sample_info_csv(csv_file) {
     }
 }
 
+https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
+def readgroup_from_fastq(path) {
+    // expected format:
+    // xx:yy:FLOWCELLID:LANE:... (seven fields)
+    // or
+    // FLOWCELLID:LANE:xx:... (five fields)
+    def line
+
+    path.withInputStream {
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(':')
+    def rg = [:]
+
+    if (fields.size() >= 7) {
+        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
+        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
+        sequencer_serial = fields[0]
+        run_nubmer       = fields[1]
+        fcid             = fields[2]
+        lane             = fields[3]
+        UMI              = fields[7]
+        index            = fields[-1]
+
+        rg.ID = [fcid,lane].join(".")
+        rg.PU = [fcid, lane, index].join(".")
+        rg.PL = "ILLUMINA"
+    } else if (fields.size() == 5) {
+        fcid = fields[0]
+
+        rg.ID = fcid
+    }
+    return rg
+}
+
+
 // Merge fastq meta with sample info
 def merge_sample_info(ch_fastq, ch_sample_info) {
     ch_fastq
