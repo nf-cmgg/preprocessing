@@ -94,7 +94,7 @@
                     "fa_icon": "fas fa-download"
                 },
                 "genomes_ignore": {
-                    "type": "string",
+                    "type": "boolean",
                     "default": "false",
                     "hidden": true,
                     "description": "Do not load the local references",
