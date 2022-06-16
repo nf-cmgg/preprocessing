@@ -7,7 +7,7 @@
                 "git_sha": "da56a2d50968f12ff2aa1a6d6b05fae083ba26c3"
             },
             "bclconvert": {
-                "git_sha": "f4c69bc4270186ca5ec174833dbe26cc0e1860fc"
+                "git_sha": "f32dc15414700682c27dda0a35aaa6b6287ebc4d"
             },
             "biobambam/bammarkduplicates2": {
                 "git_sha": "797ce3254e1868b224ec5c2742418876af254c35"
@@ -58,16 +58,16 @@
                 "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
             },
             "samtools/flagstat": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
             },
             "samtools/idxstats": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
             },
             "samtools/index": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/stats": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
             },
             "snapaligner/align": {
                 "git_sha": "3930ba227bc49541e25272eb9332a10d01a1b271"
