@@ -168,7 +168,7 @@ workflow CMGGPREPROCESSING {
     //*
     // Compress and checksum bam files
     BAM_ARCHIVE(
-        ch_markdup_bam_bai.map {meta, bam, bai -> return [meta,bam]},
+        ch_markdup_bam_bai,
         params.fasta,
         params.fai
     )

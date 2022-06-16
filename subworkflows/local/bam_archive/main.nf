@@ -5,7 +5,7 @@ include { MD5SUM           } from "../../../modules/nf-core/modules/md5sum/main"
 
 workflow BAM_ARCHIVE {
     take:
-        ch_bam      // [meta, bam]
+        ch_bam_bai      // [meta, bam, bai]
         ch_fasta    // fasta
         ch_fai      // fasta.fai
 
@@ -14,9 +14,9 @@ workflow BAM_ARCHIVE {
 
         // MODULE: samtools/convert
         // Compress bam to cram
-        // SAMTOOLS CONVERT([meta, bam], fasta, fai)
+        // SAMTOOLS CONVERT([meta, bam, bai], fasta, fai)
         SAMTOOLS_CONVERT(
-            ch_bam, ch_fasta, ch_fai
+            ch_bam_bai, ch_fasta, ch_fai
         )
         ch_versions = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
