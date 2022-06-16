@@ -1,28 +1,37 @@
 {
-    "name": "nf-core/cmggpreprocessing",
-    "homePage": "https://github.com/nf-core/cmggpreprocessing",
+    "name": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
+    "homePage": "https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
     "repos": {
         "nf-core/modules": {
+            "bamtools/split": {
+                "git_sha": "da56a2d50968f12ff2aa1a6d6b05fae083ba26c3"
+            },
             "bclconvert": {
                 "git_sha": "f4c69bc4270186ca5ec174833dbe26cc0e1860fc"
+            },
+            "biobambam/bammarkduplicates2": {
+                "git_sha": "797ce3254e1868b224ec5c2742418876af254c35"
+            },
+            "biobambam/bammerge": {
+                "git_sha": "f48790a728492a2ebcd540614a414a9caef8e284"
             },
             "biobambam/bamsormadup": {
                 "git_sha": "dc95e67e153ad937b869d90229333c0654628912"
             },
             "bowtie2/align": {
-                "git_sha": "61f68913fefc20241ceccb671b104230b2d775d7"
+                "git_sha": "cbc47767f7bb4751a9d178395bd66f051401a0c1"
+            },
+            "bwa/mem": {
+                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
+            },
+            "bwamem2/mem": {
+                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
             },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
-            "elprep/filter": {
-                "git_sha": "c17d1a7a7b473e103ddd3f28bd91b79733aa7cf2"
-            },
-            "elprep/merge": {
-                "git_sha": "9d0f03d96a6855af87f19f27728757e839e51842"
-            },
-            "elprep/split": {
-                "git_sha": "b1749445d76d12d9961e687e811af1337f0eff0f"
+            "dragmap/align": {
+                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
             },
             "fastp": {
                 "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
@@ -31,19 +40,19 @@
                 "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
             },
             "mosdepth": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "72a31b76eb1b58879e0d91fb1d992e0118693098"
             },
             "multiqc": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "e5f8924fabf4c8380f55fb7aee89fd2c268161b1"
             },
             "picard/collecthsmetrics": {
-                "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
+                "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
             },
             "picard/collectmultiplemetrics": {
-                "git_sha": "00467ac64affbbc17b255762f10a6c8fa362aabc"
+                "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
             },
             "picard/collectwgsmetrics": {
-                "git_sha": "e263f267a7b3c2cbf95372c832e38ba8b76dfd2e"
+                "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
             },
             "samtools/convert": {
                 "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
@@ -59,6 +68,12 @@
             },
             "samtools/stats": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+            },
+            "snapaligner/align": {
+                "git_sha": "3930ba227bc49541e25272eb9332a10d01a1b271"
+            },
+            "untar": {
+                "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
             }
         }
     }
