@@ -4,6 +4,8 @@
     CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+    Website: https://nf-co.re/cmgg-preprocessing
+    Slack  : https://nfcore.slack.com/channels/cmgg-preprocessing
 ----------------------------------------------------------------------------------------
 */
 

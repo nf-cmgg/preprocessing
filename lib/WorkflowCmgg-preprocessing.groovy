@@ -2,7 +2,7 @@
 // This file holds several functions specific to the workflow/cmggpreprocessing.nf in the CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline
 //
 
-class WorkflowCmggpreprocessing {
+class WorkflowCmgg-preprocessing {
 
     //
     // Check and validate parameters

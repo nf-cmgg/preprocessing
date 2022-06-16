@@ -1,6 +1,6 @@
 # CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing: Usage
 
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/cmggpreprocessing/usage](https://nf-co.re/cmggpreprocessing/usage)
+## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/cmgg-preprocessing/usage](https://nf-co.re/cmgg-preprocessing/usage)
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 

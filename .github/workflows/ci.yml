@@ -16,7 +16,11 @@ jobs:
   test:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
+<<<<<<< HEAD
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing') }}"
+=======
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/cmgg-preprocessing') }}"
+>>>>>>> template
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -48,5 +52,3 @@ jobs:
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
-
-#
