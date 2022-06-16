@@ -5,7 +5,7 @@ include { MD5SUM           } from "../../../modules/nf-core/modules/md5sum/main"
 
 workflow BAM_ARCHIVE {
     take:
-        ch_bam_bai      // [meta, bam, bai]
+        ch_bam_bai  // [meta, bam, bai]
         ch_fasta    // fasta
         ch_fai      // fasta.fai
 
