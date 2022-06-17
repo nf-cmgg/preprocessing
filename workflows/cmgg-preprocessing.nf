@@ -293,7 +293,7 @@ def merge_sample_info(ch_fastq, ch_sample_info) {
     }
 }
 
-https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
+// https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
 def readgroup_from_fastq(path) {
     // expected format:
     // xx:yy:FLOWCELLID:LANE:... (seven fields)
