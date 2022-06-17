@@ -87,9 +87,9 @@ workflow CMGGPREPROCESSING {
     // STEP: DEMULTIPLEX FLOWCELLS
     //*
 
-    ch_flowcell = ch_inputs.flowcell.multiMap { meta, samplesheet, flowcell, sample_info_csv ->
+    ch_flowcell = ch_inputs.flowcell.multiMap { meta, samplesheet, flowcell, sample_info ->
         fc   : [meta, samplesheet, flowcell]
-        info_csv : sample_info_csv
+        info : sample_info
     }
 
     // DEMULTIPLEX([meta, samplesheet, flowcell])
@@ -100,7 +100,7 @@ workflow CMGGPREPROCESSING {
     // Add metadata to demultiplexed fastq's
     ch_demultiplexed_fastq = ch_flowcell.info_csv ? merge_sample_info(
         DEMULTIPLEX.out.bclconvert_fastq,
-        parse_sample_info_csv(ch_flowcell.info_csv)
+        ch_flowcell.info
     ) : DEMULTIPLEX.out.bclconvert_fastq
 
     // "Gather" fastq's from demultiplex and fastq inputs
@@ -242,7 +242,7 @@ def parse_flowcell_csv(row) {
 
     def flowcell    = file(row.flowcell, checkIfExists: true)
     def samplesheet = file(row.samplesheet, checkIfExists: true)
-    def sample_info = row.sample_info ? file(row.sample_info, checkIfExists: true) : null
+    def sample_info = row.sample_info ? parse_sample_info_csv(file(row.sample_info, checkIfExists: true)) : []
 
     return [meta, samplesheet, flowcell, sample_info]
 }
