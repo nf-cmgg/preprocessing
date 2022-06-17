@@ -249,18 +249,21 @@ def parse_flowcell_csv(row) {
 
 // Parse fastq input mpa
 def parse_fastq_csv(row) {
+    def fastq_1 = file(row.fastq_1, checkIfExists: true)
+    def fastq_2 = row.fastq_2 ? file(row.fastq_2, checkIfExists: true) : null
+
     def meta = [:]
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
-    meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
     meta.organism   = row.organism ? row.organism.toString() : ""
-    meta.single_end = row.fastq_2   ? false : true
+    meta.single_end = fastq_2      ? false : true
+    // Set readgroup info
+    meta.readgroup    = [:]
+    meta.readgroup    = readgroup_from_fastq(fastq_1)
+    meta.readgroup.SM = meta.samplename
+    meta.readgroup.LB = row.library ? row.library.toString() : ""
 
-    def fastq_1 = file(row.fastq_1, checkIfExists: true)
-    def fastq_2 = row.fastq_2 ? file(row.fastq_2, checkIfExists: true) : null
-    def reads   = fastq_2 ? [fastq_1, fastq_2] : [fastq_1]
-
-    return [meta, reads]
+    return [meta, fastq_2 ? [fastq_1, fastq_2] : [fastq_1]]
 }
 
 // Parse sample info input map
@@ -269,11 +272,24 @@ def parse_sample_info_csv(csv_file) {
         // check mandatory fields
         if (!(row.samplename)) log.error "Missing samplename field in sample info file"
 
-        def meta = [:]
-        meta.samplename = row.samplename.toString()
-        meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
-        meta.organism   = row.organism ? row.organism.toString() : ""
-        return meta
+        return row
+    }
+}
+
+// Merge fastq meta with sample info
+def merge_sample_info(ch_fastq, ch_sample_info) {
+    ch_fastq
+    .combine(ch_sample_info)
+    .map { meta1, fastq, meta2 ->
+        if (meta1.samplename == meta2.samplename) {
+            def meta = meta1 + meta2
+            meta.readgroup    = [:]
+            meta.readgroup    = readgroup_from_fastq(fastq[0])
+            meta.readgroup.SM = meta.samplename
+            meta.readgroup.LB = meta.readgroup.LB = meta.library ? meta.library.toString() : ""
+
+            return [ meta, fastq ]
+        }
     }
 }
 
@@ -303,7 +319,6 @@ def readgroup_from_fastq(path) {
         run_nubmer       = fields[1]
         fcid             = fields[2]
         lane             = fields[3]
-        UMI              = fields[7]
         index            = fields[-1]
 
         rg.ID = [fcid,lane].join(".")
@@ -315,19 +330,6 @@ def readgroup_from_fastq(path) {
         rg.ID = fcid
     }
     return rg
-}
-
-
-// Merge fastq meta with sample info
-def merge_sample_info(ch_fastq, ch_sample_info) {
-    ch_fastq
-    .combine(ch_sample_info)
-    .map { meta1, fastq, meta2 ->
-        if (meta1.samplename == meta2.samplename) {
-            def meta = meta1 + meta2
-            return [ meta, fastq ]
-        }
-    }
 }
 
 // Gather bam files per sample
