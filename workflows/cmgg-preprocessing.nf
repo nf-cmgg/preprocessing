@@ -98,10 +98,10 @@ workflow CMGGPREPROCESSING {
     ch_versions      = ch_versions.mix(DEMULTIPLEX.out.versions)
 
     // Add metadata to demultiplexed fastq's
-    ch_demultiplexed_fastq = merge_sample_info(
+    ch_demultiplexed_fastq = ch_flowcell.info_csv ? merge_sample_info(
         DEMULTIPLEX.out.bclconvert_fastq,
         parse_sample_info_csv(ch_flowcell.info_csv)
-    )
+    ) : DEMULTIPLEX.out.bclconvert_fastq
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
@@ -247,7 +247,7 @@ def parse_flowcell_csv(row) {
     return [meta, samplesheet, flowcell, sample_info]
 }
 
-// Parse fastq input mpa
+// Parse fastq input map
 def parse_fastq_csv(row) {
     def fastq_1 = file(row.fastq_1, checkIfExists: true)
     def fastq_2 = row.fastq_2 ? file(row.fastq_2, checkIfExists: true) : null
