@@ -240,10 +240,10 @@ def parse_flowcell_csv(row) {
     meta.id   = row.id.toString()
     meta.lane = row.lane.toInteger() ?: null
 
-    def flowcell    = file(row.flowcell, checkIfExists: true)
-    def samplesheet = file(row.samplesheet, checkIfExists: true)
-    def sample_info = row.sample_info ? parse_sample_info_csv(file(row.sample_info, checkIfExists: true)) : [:]
-
+    def flowcell        = file(row.flowcell, checkIfExists: true)
+    def samplesheet     = file(row.samplesheet, checkIfExists: true)
+    def sample_info_csv = row.sample_info ? file(row.sample_info, checkIfExists: true) : null
+    def sample_info     = sample_info_csv ? parse_sample_info_csv(sample_info_csv) : [:]
     return [meta, samplesheet, flowcell, sample_info]
 }
 
@@ -281,15 +281,16 @@ def merge_sample_info(ch_fastq, ch_sample_info) {
     ch_fastq
     .combine(ch_sample_info)
     .map { meta1, fastq, meta2 ->
-        if (meta1.samplename == meta2.samplename) {
-            def meta = meta1 + meta2
-            meta.readgroup    = [:]
-            meta.readgroup    = readgroup_from_fastq(fastq[0])
-            meta.readgroup.SM = meta.samplename
-            meta.readgroup.LB = meta.readgroup.LB = meta.library ? meta.library.toString() : ""
-
-            return [ meta, fastq ]
+        def meta = meta1.clone()
+        if ( meta2 && (meta1.samplename == meta2.samplename)) {
+            meta = meta1 + meta2
         }
+        meta.readgroup    = [:]
+        meta.readgroup    = readgroup_from_fastq(fastq[0])
+        meta.readgroup.SM = meta.samplename
+        meta.readgroup.LB = meta.readgroup.LB = meta.library ? meta.library.toString() : ""
+
+        return [ meta, fastq ]
     }
 }
 
@@ -319,10 +320,10 @@ def readgroup_from_fastq(path) {
         run_nubmer       = fields[1]
         fcid             = fields[2]
         lane             = fields[3]
-        index            = fields[-1]
+        index            = fields[-1] =~ /[GATC+-]/ ?: ""
 
         rg.ID = [fcid,lane].join(".")
-        rg.PU = [fcid, lane, index].join(".")
+        rg.PU = [fcid, lane, index].findAll().join(".")
         rg.PL = "ILLUMINA"
     } else if (fields.size() == 5) {
         fcid = fields[0]
