@@ -100,7 +100,7 @@ workflow CMGGPREPROCESSING {
     // Add metadata to demultiplexed fastq's
     ch_demultiplexed_fastq = merge_sample_info(
         DEMULTIPLEX.out.bclconvert_fastq,
-        ch_flowcell.info
+        parse_sample_info_csv(ch_flowcell.info)
     )
 
     // "Gather" fastq's from demultiplex and fastq inputs
@@ -206,7 +206,7 @@ workflow CMGGPREPROCESSING {
 
 // Extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
-    Channel.from(csv_file).splitCsv(header: true, strip: true).map { row ->
+    Channel.value(csv_file).splitCsv(header: true, strip: true).map { row ->
         // check common mandatory fields
         if(!(row.id)){
             log.error "Missing id field in input csv file"
@@ -242,9 +242,9 @@ def parse_flowcell_csv(row) {
 
     def flowcell        = file(row.flowcell, checkIfExists: true)
     def samplesheet     = file(row.samplesheet, checkIfExists: true)
-    def sample_info_csv = row.sample_info ? file(row.sample_info, checkIfExists: true) : null
-    def sample_info     = sample_info_csv ? parse_sample_info_csv(sample_info_csv) : [:]
-    return [meta, samplesheet, flowcell, sample_info]
+    if (!(row.sample_info)) log.error "Sample info csv not defined"
+    def sample_info_csv = file(row.sample_info, checkIfExists: true)
+    return [meta, samplesheet, flowcell, sample_info_csv]
 }
 
 // Parse fastq input map
@@ -271,7 +271,6 @@ def parse_sample_info_csv(csv_file) {
     csv_file.splitCsv(header: true, strip: true).map { row ->
         // check mandatory fields
         if (!(row.samplename)) log.error "Missing samplename field in sample info file"
-
         return row
     }
 }
