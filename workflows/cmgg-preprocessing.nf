@@ -319,7 +319,7 @@ def readgroup_from_fastq(path) {
         run_nubmer       = fields[1]
         fcid             = fields[2]
         lane             = fields[3]
-        index            = fields[-1] ? fields[-1] =~ /[GATC+-]/ : ""
+        index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
         rg.ID = [fcid,lane].join(".")
         rg.PU = [fcid, lane, index].findAll().join(".")
