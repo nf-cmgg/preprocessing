@@ -287,7 +287,9 @@ def merge_sample_info(ch_fastq, ch_sample_info) {
         meta.readgroup    = [:]
         meta.readgroup    = readgroup_from_fastq(fastq[0])
         meta.readgroup.SM = meta.samplename
-        meta.readgroup.LB = meta.readgroup.LB = meta.library ? meta.library.toString() : ""
+        if(meta.library){
+            meta.readgroup.LB =  meta.library.toString()
+        }
 
         return [ meta, fastq ]
     }
