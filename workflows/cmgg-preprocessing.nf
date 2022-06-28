@@ -283,15 +283,17 @@ def merge_sample_info(ch_fastq, ch_sample_info) {
         def meta = meta1.clone()
         if ( meta2 && (meta1.samplename == meta2.samplename)) {
             meta = meta1 + meta2
+            meta.readgroup    = [:]
+            meta.readgroup    = readgroup_from_fastq(fastq[0])
+            meta.readgroup.SM = meta.samplename
+            if(meta.library){
+                meta.readgroup.LB =  meta.library.toString()
+            }
+            return [ meta, fastq ]
         }
-        meta.readgroup    = [:]
-        meta.readgroup    = readgroup_from_fastq(fastq[0])
-        meta.readgroup.SM = meta.samplename
-        if(meta.library){
-            meta.readgroup.LB =  meta.library.toString()
-        }
-
-        return [ meta, fastq ]
+    }.groupTuple( by: [0])
+    .map { meta, fq ->
+        return [meta, fq.flatten().unique()]
     }
 }
 
