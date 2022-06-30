@@ -7,7 +7,7 @@
                 "git_sha": "da56a2d50968f12ff2aa1a6d6b05fae083ba26c3"
             },
             "bclconvert": {
-                "git_sha": "f32dc15414700682c27dda0a35aaa6b6287ebc4d"
+                "git_sha": "a9521de5ac03e1873c2746af2147600821fdaa49"
             },
             "biobambam/bammarkduplicates2": {
                 "git_sha": "797ce3254e1868b224ec5c2742418876af254c35"
@@ -34,7 +34,7 @@
                 "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
             },
             "fastp": {
-                "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
+                "git_sha": "9b51362a532a14665f513cf987531f9ea5046b74"
             },
             "md5sum": {
                 "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
@@ -43,7 +43,7 @@
                 "git_sha": "72a31b76eb1b58879e0d91fb1d992e0118693098"
             },
             "multiqc": {
-                "git_sha": "e5f8924fabf4c8380f55fb7aee89fd2c268161b1"
+                "git_sha": "08376da6843b14c82d84d444784c0b3635bb7fd5"
             },
             "picard/collecthsmetrics": {
                 "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
@@ -67,7 +67,7 @@
                 "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
             },
             "snapaligner/align": {
-                "git_sha": "3930ba227bc49541e25272eb9332a10d01a1b271"
+                "git_sha": "44baf85bcc6e53275d81bb133d4e4431eec7632f"
             },
             "untar": {
                 "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"

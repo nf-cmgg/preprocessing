@@ -86,6 +86,16 @@
                     "fa_icon": "far fa-file-code",
                     "hidden": true
                 },
+                "fai": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.fai$",
+                    "description": "Path to FASTA genome index file.",
+                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
+                    "fa_icon": "far fa-file-code",
+                    "hidden": true
+                },
                 "genomes_base": {
                     "type": "string",
                     "default": "/references/",

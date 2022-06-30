@@ -70,12 +70,13 @@ workflow CMGGPREPROCESSING {
 
 
     // Gather index for mapping given the chosen aligner
-    ch_map_index =  params.aligner == "bwa"         ? params.bwa         :
-                    params.aligner == "bwamem2"     ? params.bwamem2     :
-                    params.aligner == "bowtie2"     ? params.bowtie2     :
-                    params.aligner == "dragmap"     ? params.dragmap     :
-                    params.aligner == "snapaligner" ? params.snapaligner :
-                    []
+    map_index = params.aligner == "bwa"         ? params.bwa         :
+                params.aligner == "bwamem2"     ? params.bwamem2     :
+                params.aligner == "bowtie2"     ? params.bowtie2     :
+                params.aligner == "dragmap"     ? params.dragmap     :
+                params.aligner == "snapaligner" ? params.snapaligner :
+                []
+    if (map_index) { ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect() } else { exit 1, "Invalid aligner index!" }
 
     // Sanitize inputs and separate input types
     ch_inputs = extract_csv(ch_input).branch {
@@ -87,9 +88,9 @@ workflow CMGGPREPROCESSING {
     // STEP: DEMULTIPLEX FLOWCELLS
     //*
 
-    ch_flowcell = ch_inputs.flowcell.multiMap { meta, samplesheet, flowcell, sample_info_csv ->
+    ch_flowcell = ch_inputs.flowcell.multiMap { meta, samplesheet, flowcell, sample_info ->
         fc   : [meta, samplesheet, flowcell]
-        info_csv : sample_info_csv
+        info : sample_info
     }
 
     // DEMULTIPLEX([meta, samplesheet, flowcell])
@@ -100,7 +101,7 @@ workflow CMGGPREPROCESSING {
     // Add metadata to demultiplexed fastq's
     ch_demultiplexed_fastq = merge_sample_info(
         DEMULTIPLEX.out.bclconvert_fastq,
-        parse_sample_info_csv(ch_flowcell.info_csv)
+        parse_sample_info_csv(ch_flowcell.info)
     )
 
     // "Gather" fastq's from demultiplex and fastq inputs
@@ -206,7 +207,7 @@ workflow CMGGPREPROCESSING {
 
 // Extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
-    Channel.from(csv_file).splitCsv(header: true, strip: true).map { row ->
+    Channel.value(csv_file).splitCsv(header: true, strip: true).map { row ->
         // check common mandatory fields
         if(!(row.id)){
             log.error "Missing id field in input csv file"
@@ -240,27 +241,30 @@ def parse_flowcell_csv(row) {
     meta.id   = row.id.toString()
     meta.lane = row.lane.toInteger() ?: null
 
-    def flowcell    = file(row.flowcell, checkIfExists: true)
-    def samplesheet = file(row.samplesheet, checkIfExists: true)
-    def sample_info = row.sample_info ? file(row.sample_info, checkIfExists: true) : null
-
-    return [meta, samplesheet, flowcell, sample_info]
+    def flowcell        = file(row.flowcell, checkIfExists: true)
+    def samplesheet     = file(row.samplesheet, checkIfExists: true)
+    if (!(row.sample_info)) log.error "Sample info csv not defined"
+    def sample_info_csv = file(row.sample_info, checkIfExists: true)
+    return [meta, samplesheet, flowcell, sample_info_csv]
 }
 
-// Parse fastq input mpa
+// Parse fastq input map
 def parse_fastq_csv(row) {
+    def fastq_1 = file(row.fastq_1, checkIfExists: true)
+    def fastq_2 = row.fastq_2 ? file(row.fastq_2, checkIfExists: true) : null
+
     def meta = [:]
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
-    meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
     meta.organism   = row.organism ? row.organism.toString() : ""
-    meta.single_end = row.fastq_2   ? false : true
+    meta.single_end = fastq_2      ? false : true
+    // Set readgroup info
+    meta.readgroup    = [:]
+    meta.readgroup    = readgroup_from_fastq(fastq_1)
+    meta.readgroup.SM = meta.samplename
+    meta.readgroup.LB = row.library ? row.library.toString() : ""
 
-    def fastq_1 = file(row.fastq_1, checkIfExists: true)
-    def fastq_2 = row.fastq_2 ? file(row.fastq_2, checkIfExists: true) : null
-    def reads   = fastq_2 ? [fastq_1, fastq_2] : [fastq_1]
-
-    return [meta, reads]
+    return [meta, fastq_2 ? [fastq_1, fastq_2] : [fastq_1]]
 }
 
 // Parse sample info input map
@@ -268,12 +272,7 @@ def parse_sample_info_csv(csv_file) {
     csv_file.splitCsv(header: true, strip: true).map { row ->
         // check mandatory fields
         if (!(row.samplename)) log.error "Missing samplename field in sample info file"
-
-        def meta = [:]
-        meta.samplename = row.samplename.toString()
-        meta.readgroup  = row.readgroup ? row.readgroup.toString() : ""
-        meta.organism   = row.organism ? row.organism.toString() : ""
-        return meta
+        return row
     }
 }
 
@@ -282,11 +281,60 @@ def merge_sample_info(ch_fastq, ch_sample_info) {
     ch_fastq
     .combine(ch_sample_info)
     .map { meta1, fastq, meta2 ->
-        if (meta1.samplename == meta2.samplename) {
-            def meta = meta1 + meta2
+        def meta = meta1.clone()
+        if ( meta2 && (meta1.samplename == meta2.samplename)) {
+            meta = meta1 + meta2
+            meta.readgroup    = [:]
+            meta.readgroup    = readgroup_from_fastq(fastq[0])
+            meta.readgroup.SM = meta.samplename
+            if(meta.library){
+                meta.readgroup.LB =  meta.library.toString()
+            }
             return [ meta, fastq ]
         }
+    }.groupTuple( by: [0])
+    .map { meta, fq ->
+        return [meta, fq.flatten().unique()]
     }
+}
+
+// https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
+def readgroup_from_fastq(path) {
+    // expected format:
+    // xx:yy:FLOWCELLID:LANE:... (seven fields)
+    // or
+    // FLOWCELLID:LANE:xx:... (five fields)
+    def line
+
+    path.withInputStream {
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(':')
+    def rg = [:]
+
+    if (fields.size() >= 7) {
+        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
+        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
+        sequencer_serial = fields[0]
+        run_nubmer       = fields[1]
+        fcid             = fields[2]
+        lane             = fields[3]
+        index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+
+        rg.ID = [fcid,lane].join(".")
+        rg.PU = [fcid, lane, index].findAll().join(".")
+        rg.PL = "ILLUMINA"
+    } else if (fields.size() == 5) {
+        fcid = fields[0]
+
+        rg.ID = fcid
+    }
+    return rg
 }
 
 // Gather bam files per sample
