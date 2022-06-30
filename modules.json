@@ -43,7 +43,7 @@
                 "git_sha": "72a31b76eb1b58879e0d91fb1d992e0118693098"
             },
             "multiqc": {
-                "git_sha": "e5f8924fabf4c8380f55fb7aee89fd2c268161b1"
+                "git_sha": "08376da6843b14c82d84d444784c0b3635bb7fd5"
             },
             "picard/collecthsmetrics": {
                 "git_sha": "63db63757cab03cfa7a02c0d0f134b66fbfadea6"
@@ -67,7 +67,7 @@
                 "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
             },
             "snapaligner/align": {
-                "git_sha": "3930ba227bc49541e25272eb9332a10d01a1b271"
+                "git_sha": "e2755cb0392ce9b5da512310777194ff949aea94"
             },
             "untar": {
                 "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
