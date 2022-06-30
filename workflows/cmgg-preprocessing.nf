@@ -76,7 +76,7 @@ workflow CMGGPREPROCESSING {
                 params.aligner == "dragmap"     ? params.dragmap     :
                 params.aligner == "snapaligner" ? params.snapaligner :
                 []
-    if (map_index) { ch_map_index = Channel.fromPath(map_index, checkIfExists: true) } else { exit 1, "Invalid aligner index!" }
+    if (map_index) { ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect() } else { exit 1, "Invalid aligner index!" }
 
     // Sanitize inputs and separate input types
     ch_inputs = extract_csv(ch_input).branch {
