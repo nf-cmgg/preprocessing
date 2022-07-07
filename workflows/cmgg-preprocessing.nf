@@ -344,7 +344,7 @@ def gather_bam_per_sample(ch_aligned_bam) {
         // set id to filename without lane designation
         meta, bam ->
         new_meta = meta.clone()
-        new_meta.id = meta.id - ~/_S[0-9]+_.*$/
+        new_meta.id = meta.samplename
         return [new_meta, bam]
     }
     .groupTuple( by: [0])
