@@ -118,6 +118,14 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
+    // TODO split fastp.out into multiple channels for parallel alignment
+    // from sarek:
+    // ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
+    // read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+    // [[patient: key.patient, sample:key.sample, sex:key.sex, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
+    // read_files]
+    // }.transpose()
+
     //*
     // STEP: ALIGNMENT
     //*
@@ -239,7 +247,10 @@ def extract_csv(csv_file) {
 def parse_flowcell_csv(row) {
     def meta = [:]
     meta.id   = row.id.toString()
-    meta.lane = row.lane.toInteger() ?: null
+    meta.lane = null
+    if (row.containsKey("lane") && row.lane ) {
+        meta.lane = row.lane.toInteger()
+    }
 
     def flowcell        = file(row.flowcell, checkIfExists: true)
     def samplesheet     = file(row.samplesheet, checkIfExists: true)
