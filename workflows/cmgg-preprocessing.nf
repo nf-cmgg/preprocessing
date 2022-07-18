@@ -120,18 +120,14 @@ workflow CMGGPREPROCESSING {
 
     // TODO split fastp.out into multiple channels for parallel alignment
     // from sarek:
-    // ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
-    // read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-    // [[patient: key.patient, sample:key.sample, sex:key.sex, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
-    // read_files]
-    // }.transpose()
+    ch_reads_to_map = FASTP.out.reads.transpose()
 
     //*
     // STEP: ALIGNMENT
     //*
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
-    ALIGNMENT(FASTP.out.reads, ch_map_index, true)
+    ALIGNMENT(ch_reads_to_map, ch_map_index, true)
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
     // Gather bams per sample for merging
