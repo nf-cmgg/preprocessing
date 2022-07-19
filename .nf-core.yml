@@ -4,3 +4,5 @@ lint:
     - assets/nf-core-cmgg/preprocessing_logo_light.png
     - docs/images/nf-core-cmgg/preprocessing_logo_light.png
     - docs/images/nf-core-cmgg/preprocessing_logo_dark.png
+    - .github/workflows/awstest.yml│
+    - .github/workflows/awsfulltest.yml
