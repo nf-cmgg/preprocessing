@@ -14,10 +14,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 ## Pipeline summary
 
 1. Demultiplexing
-2. Alignment
-3. QC
-4. Coverage analysis
-5. Compression
+2. Fastq preprocessing
+3. Alignment
+4. QC
+5. Coverage analysis
+6. Compression
 
 ## Quick Start
 
@@ -59,37 +60,27 @@ subgraph DEMULTIPLEX[Demultiplex]
     FLOWCELL([Flowcell])                        --Split by LANE--> BCLCONVERT[bcl-convert]
     BCLCONVERT                                  --> DEMUX_FASTQ([Fastq])
     BCLCONVERT                                  --> DEMULTIPLEX_STATS([Demultiplex Reports])
-    DEMUX_FASTQ                                 --> FASTP[FastP]
-    FASTP                                       --> DEMUX_MULTIQC[MultiQC]
-    DEMULTIPLEX_STATS                           --> DEMUX_MULTIQC[MultiQC]
-    DEMUX_MULTIQC                               --> DEMUX_MULTIQC_REPORT([MultiQC Report])
 end
 
-DEMULTIPLEX                                     --> RAW_FASTQ([Demultiplexed Fastq per sample per lane])
-DEMULTIPLEX                                     --> DEMUX_REPORTS([Demultiplexing reports])
-RAW_FASTQ                                       --> ALIGNMENT
+DEMULTIPLEX                                     --> FASTP[FastP: Trimming and QC]
+DEMULTIPLEX                                     --> DEMUX_REPORTS
+FASTP                                           --> IS_HUMAN{Human data?}
+IS_HUMAN                                        --YES--> ALIGNMENT
+IS_HUMAN                                        --NO--> FASTQTOSAM
+FASTQTOSAM[Picard FastqToSam]                   --> UNALIGNED_BAM([Unaligned BAM]) --> A_CRAM
 
 subgraph ALIGNMENT
     direction TB
-    FASTQ([Fastq per sample per lane])          --> IS_HUMAN{Human data?}
-    IS_HUMAN                                    --YES--> NX_SPLITFASTQ[Seqkit]
-    IS_HUMAN                                    --NO--> FASTQTOSAM[Picard FastqToSam]
-    FASTQTOSAM                                  --> UNALIGNED_BAM([Unaligned BAM])
-    NX_SPLITFASTQ                               --split by # reads--> BOWTIE2[Bowtie2-align + sort] & BWAMEM2[Bwamem2 mem + sort] & SNAP[snap-aligner + sort]
-    BOWTIE2 & BWAMEM2 & SNAP                    --> MARKDUP_PARALLEL
 
-    subgraph MARKDUP_PARALLEL[Parallel Markduplicates]
-        direction TB
-        MERGESPLIT[Bamtools merge/split]        --split by chromosome-->    BAMMARKDUP2[Bammarkduplicates2]
-        BAMMARKDUP2                             --sort/mark duplicates -->  SAMTOOLS_MERGE[Samtools Merge]
+    subgraph ALIGNER
+        direction LR
+        BOWTIE2[bowtie2-align] & BWAMEM2[bwamem2 mem] & SNAP[snap-aligner] & DRAGMAP[dragmap] --> SORT[Sorting]
     end
 
-    MARKDUP_PARALLEL                            --> SORTBAM[Sorted/markdup bam] & MARKDUP_METRICS([Markduplicates Metrics])
+    ALIGNER --> BamSorMaDUP
+    BamSorMaDUP                                 --> SORTBAM[Sorted/markdup bam] & MARKDUP_METRICS([Markduplicates Metrics])
     SORTBAM                                     -->  ALN_CRAM([CRAM]) & MOSDEPTH[Mosdepth] & BAMQC[BAM QC Tools]
-
     MOSDEPTH                                    -->  COVERAGE_BED([Coverage BEDs]) & COVERAGE_METRICS([Coverage Metrics])
-    UNALIGNED_BAM                               --> ALN_CRAM([CRAM])
-
     BAMQC & MARKDUP_METRICS & COVERAGE_METRICS  -->  ALN_MULTIQC[MultiQC]
 end
 
@@ -100,6 +91,7 @@ ALIGNMENT                                       --> A_COVERAGE_BED([Coverage BED
 
 A_BAM_METRICS                                   --> MQC([Run MultiQC Report])
 A_COVERAGE_METRICS                              --> MQC
+FASTP                                           --> MQC
 DEMUX_REPORTS                                   --> MQC
 
 ```
