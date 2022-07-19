@@ -13,7 +13,7 @@ workflow BAM_QC {
 
         // Collect multiple metrics
         // PICARD_COLLECTMULTIPLEMETRICS( [meta, bam], fasta)
-        PICARD_COLLECTMULTIPLEMETRICS( ch_bam_bai.map {meta, bam, bai -> return [meta,bam]}, [] )
+        PICARD_COLLECTMULTIPLEMETRICS( ch_bam_bai.map {meta, bam, bai -> return [meta,bam]}, [], [] )
         ch_metrics  = ch_metrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
         ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions)
 

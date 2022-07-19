@@ -118,12 +118,18 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
+    // Split fastp.out into multiple channels for parallel alignment
+    ch_reads_to_map = FASTP.out.reads.map{meta, reads ->
+        reads_files = meta.single_end ? reads : reads.sort().collate(2)
+        return [meta, reads_files]
+    }.transpose()
+
     //*
     // STEP: ALIGNMENT
     //*
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
-    ALIGNMENT(FASTP.out.reads, ch_map_index, true)
+    ALIGNMENT(ch_reads_to_map, ch_map_index, true)
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
     // Gather bams per sample for merging
@@ -239,7 +245,10 @@ def extract_csv(csv_file) {
 def parse_flowcell_csv(row) {
     def meta = [:]
     meta.id   = row.id.toString()
-    meta.lane = row.lane.toInteger() ?: null
+    meta.lane = null
+    if (row.containsKey("lane") && row.lane ) {
+        meta.lane = row.lane.toInteger()
+    }
 
     def flowcell        = file(row.flowcell, checkIfExists: true)
     def samplesheet     = file(row.samplesheet, checkIfExists: true)
@@ -344,7 +353,7 @@ def gather_bam_per_sample(ch_aligned_bam) {
         // set id to filename without lane designation
         meta, bam ->
         new_meta = meta.clone()
-        new_meta.id = meta.id - ~/_S[0-9]+_.*$/
+        new_meta.id = meta.samplename
         return [new_meta, bam]
     }
     .groupTuple( by: [0])
