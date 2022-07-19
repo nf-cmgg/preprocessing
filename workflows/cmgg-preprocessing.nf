@@ -119,7 +119,10 @@ workflow CMGGPREPROCESSING {
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
     // Split fastp.out into multiple channels for parallel alignment
-    ch_reads_to_map = FASTP.out.reads.transpose()
+    ch_reads_to_map = FASTP.out.reads.map{meta, reads ->
+        reads_files = meta.single_end ? reads : reads.toSortedList().collate(2)
+        return [meta, reads_files]
+    }.transpose()
 
     //*
     // STEP: ALIGNMENT
