@@ -118,8 +118,7 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
-    // TODO split fastp.out into multiple channels for parallel alignment
-    // from sarek:
+    // Split fastp.out into multiple channels for parallel alignment
     ch_reads_to_map = FASTP.out.reads.transpose()
 
     //*
