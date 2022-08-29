@@ -26,7 +26,7 @@ workflow ALIGNMENT {
         // Align fastq files to reference genome and (optionally) sort
         BOWTIE2_ALIGN(ch_reads, ch_aligner_index, false, sort) // if aligner is bowtie2
         BWAMEM1_MEM  (ch_reads, ch_aligner_index, sort)        // If aligner is bwa-mem
-        BWAMEM2_MEM  (ch_reads, ch_aligner_index, sort)        // If aligner is bwa-mem2
+        BWAMEM2_MEM  (ch_reads, [[], ch_aligner_index], sort)  // If aligner is bwa-mem2
         DRAGMAP_ALIGN(ch_reads, ch_aligner_index, sort)        // If aligner is dragmap
         SNAP_ALIGN   (ch_reads, ch_aligner_index)              // If aligner is snap
 

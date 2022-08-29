@@ -25,16 +25,16 @@
                 "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
             },
             "bwamem2/mem": {
-                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
+                "git_sha": "30b04859129f5f4235accdea9fdea8f1feb23809"
             },
             "custom/dumpsoftwareversions": {
-                "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                "git_sha": "e5b44499efcf6f7fb24874886bac60591c5d94dd"
             },
             "dragmap/align": {
                 "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
             },
             "fastp": {
-                "git_sha": "9b51362a532a14665f513cf987531f9ea5046b74"
+                "git_sha": "7e8ad566883449e7939062b5e2bcf53fc1e0002f"
             },
             "md5sum": {
                 "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
@@ -52,19 +52,19 @@
                 "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
             },
             "picard/collectwgsmetrics": {
-                "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                "git_sha": "ac1c6ad7104c7863842a322a8cf74f4fee1d20b4"
             },
             "samtools/convert": {
                 "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
             },
             "samtools/flagstat": {
-                "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
+                "git_sha": "bbb99cb8d679555cc01c98766de7869f83283545"
             },
             "samtools/idxstats": {
                 "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
             },
             "samtools/stats": {
-                "git_sha": "f48a24770e24358e58de66e9b805a70d77cd154b"
+                "git_sha": "f4eab7945952dc4934224309701a49913ea05ae6"
             },
             "snapaligner/align": {
                 "git_sha": "44baf85bcc6e53275d81bb133d4e4431eec7632f"
