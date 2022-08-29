@@ -322,11 +322,6 @@
             "default": null,
             "hidden": true
         },
-        "bwamem2": {
-            "type": "string",
-            "default": null,
-            "hidden": true
-        },
         "fasta_fai": {
             "type": "string",
             "default": null,

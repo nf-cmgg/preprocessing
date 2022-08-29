@@ -3,17 +3,8 @@
     "homePage": "https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
     "repos": {
         "nf-core/modules": {
-            "bamtools/split": {
-                "git_sha": "da56a2d50968f12ff2aa1a6d6b05fae083ba26c3"
-            },
             "bclconvert": {
                 "git_sha": "a9521de5ac03e1873c2746af2147600821fdaa49"
-            },
-            "biobambam/bammarkduplicates2": {
-                "git_sha": "797ce3254e1868b224ec5c2742418876af254c35"
-            },
-            "biobambam/bammerge": {
-                "git_sha": "f48790a728492a2ebcd540614a414a9caef8e284"
             },
             "biobambam/bamsormadup": {
                 "git_sha": "6b9a6a5b29ceff0ed648243003e2dd34c03fc042"
@@ -24,14 +15,8 @@
             "bwa/mem": {
                 "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
             },
-            "bwamem2/mem": {
-                "git_sha": "30b04859129f5f4235accdea9fdea8f1feb23809"
-            },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e5b44499efcf6f7fb24874886bac60591c5d94dd"
-            },
-            "dragmap/align": {
-                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
             },
             "fastp": {
                 "git_sha": "7e8ad566883449e7939062b5e2bcf53fc1e0002f"

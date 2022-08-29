@@ -18,10 +18,6 @@
   >- Langmead B, Trapnell C, Pop M, Salzberg SL. Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. Genome Biology 10:R25.
 - [BWA](http://bio-bwa.sourceforge.net/)
   > Li H. and Durbin R. (2009) Fast and accurate short read alignment with Burrows-Wheeler Transform. Bioinformatics, 25:1754-60. [PMID: 19451168]
-- [BWA-MEM2](https://github.com/bwa-mem2/bwa-mem2)
-  > Vasimuddin Md, Sanchit Misra, Heng Li, Srinivas Aluru. Efficient Architecture-Aware Acceleration of BWA-MEM for Multicore Systems. IEEE Parallel and Distributed Processing Symposium (IPDPS), 2019.
-- [Dragmap](https://github.com/Illumina/dragmap)
-  > DRAGEN open-source mapper, Illumina
 - [FastP](https://github.com/OpenGene/fastp)
   > Shifu Chen, Yanqing Zhou, Yaru Chen, Jia Gu; fastp: an ultra-fast all-in-one FASTQ preprocessor, Bioinformatics, Volume 34, Issue 17, 1 September 2018, Pages i884–i890, <https://doi.org/10.1093/bioinformatics/bty560>
 - [Mosdepth](https://github.com/brentp/mosdepth)

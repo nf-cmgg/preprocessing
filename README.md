@@ -74,7 +74,7 @@ subgraph ALIGNMENT
 
     subgraph ALIGNER
         direction LR
-        BOWTIE2[bowtie2-align] & BWAMEM2[bwamem2 mem] & SNAP[snap-aligner] & DRAGMAP[dragmap] --> SORT[Sorting]
+        BOWTIE2[bowtie2-align] & SNAP[snap-aligner] --> SORT[Sorting]
     end
 
     ALIGNER --> BamSorMaDUP

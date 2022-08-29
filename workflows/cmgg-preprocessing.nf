@@ -71,9 +71,7 @@ workflow CMGGPREPROCESSING {
 
     // Gather index for mapping given the chosen aligner
     map_index = params.aligner == "bwa"         ? params.bwa         :
-                params.aligner == "bwamem2"     ? params.bwamem2     :
                 params.aligner == "bowtie2"     ? params.bowtie2     :
-                params.aligner == "dragmap"     ? params.dragmap     :
                 params.aligner == "snapaligner" ? params.snapaligner :
                 []
     if (map_index) { ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect() } else { exit 1, "Invalid aligner index!" }
@@ -95,6 +93,7 @@ workflow CMGGPREPROCESSING {
 
     // DEMULTIPLEX([meta, samplesheet, flowcell])
     DEMULTIPLEX(ch_flowcell.fc)
+    DEMULTIPLEX.out.bclconvert_fastq.dump(tag: "bclconvert_fastq")
     ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.bclconvert_reports.map { meta, reports -> return reports} )
     ch_versions      = ch_versions.mix(DEMULTIPLEX.out.versions)
 
@@ -115,8 +114,11 @@ workflow CMGGPREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, false, false)
+    FASTP.out.reads.dump(tag: "fastp_trimmed_reads")
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
+
+    // Join fastp.out.reads into channel a channel per sample
 
     // Split fastp.out into multiple channels for parallel alignment
     ch_reads_to_map = FASTP.out.reads.map{meta, reads ->
