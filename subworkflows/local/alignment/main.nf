@@ -41,11 +41,10 @@ workflow ALIGNMENT {
             SNAP_ALIGN.out.bam,
         )
 
-        // TODO: clean up meta
-        ch_cleaned_bam = ch_bam.map { meta, bam ->
-            new_meta = meta.clone()
-            return [new_meta, bam]
+        ch_cleaned_bam = ch.map { meta, bam ->
+            [ meta.findAll { ! it.key in ['readgroup', 'library'] }, bam ]
         }.groupTuple()
+        ch_cleaned_bam.dump(tag:"aligned_reads")
 
     emit:
         bam      = ch_cleaned_bam // channel: [ [meta], bam ]
