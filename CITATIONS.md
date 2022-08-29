@@ -12,6 +12,8 @@
 
 - [BCLconvert](https://support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
   > BCLconvert software. Illumina
+- [Biobambam2](https://gitlab.com/german.tischler/biobambam2)
+  > Tischler, G., Leonard, S. biobambam: tools for read pair collation based algorithms on BAM files. Source Code Biol Med 9, 13 (2014). <https://doi.org/10.1186/1751-0473-9-13>
 - [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
   > - Langmead B, Wilks C., Antonescu V., Charles R. Scaling read aligners to hundreds of threads on general-purpose processors. Bioinformatics.   bty648.
   >- Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
