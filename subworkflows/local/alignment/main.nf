@@ -40,14 +40,24 @@ workflow ALIGNMENT {
             BWAMEM1_MEM.out.bam,
             SNAP_ALIGN.out.bam,
         )
-
         ch_cleaned_bam = ch_bam.map { meta, bam ->
             [ meta.findAll { !(it.key in ['readgroup', 'library']) }, bam ]
         }.groupTuple()
         ch_cleaned_bam.dump(tag:"aligned_reads")
 
+        ch_bai = Channel.empty()
+        ch_bai= ch_bai.mix(
+            SNAP_ALIGN.out.bai,
+        )
+        ch_cleaned_bai = ch_bai.map { meta, bai ->
+            [ meta.findAll { !(it.key in ['readgroup', 'library']) }, bai ]
+        }.groupTuple()
+        ch_cleaned_bai.dump(tag:"aligned_reads_index")
+
+
     emit:
-        bam      = ch_cleaned_bam // channel: [ [meta], bam ]
+        bam      = ch_cleaned_bam // channel: [ [meta], bam  ]
+        bai      = ch_cleaned_bai // channel: [ [meta], bai  ]
         versions = ch_versions    // channel: [ versions.yml ]
 }
 
