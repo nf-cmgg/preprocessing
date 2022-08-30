@@ -130,7 +130,7 @@ workflow CMGGPREPROCESSING {
     // if aliger == snapaligner, proceed
     // else split into channel per chunk
 
-    ch_reads_to_map = params.aligner == "snapaligner" ? ch_trimmed_reads : ch_trimmed_reads.human.map{meta, reads ->
+    ch_reads_to_map = params.aligner == "snapaligner" ? ch_trimmed_reads.human : ch_trimmed_reads.human.map{meta, reads ->
         reads_files = meta.single_end ? reads : reads.sort().collate(2)
         return [meta, reads_files]
     }.transpose()
