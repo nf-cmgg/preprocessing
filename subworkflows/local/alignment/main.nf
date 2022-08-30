@@ -41,8 +41,8 @@ workflow ALIGNMENT {
             SNAP_ALIGN.out.bam,
         )
 
-        ch_cleaned_bam = ch.map { meta, bam ->
-            [ meta.findAll { ! it.key in ['readgroup', 'library'] }, bam ]
+        ch_cleaned_bam = ch_bam.map { meta, bam ->
+            [ meta.findAll { !(it.key in ['readgroup', 'library']) }, bam ]
         }.groupTuple()
         ch_cleaned_bam.dump(tag:"aligned_reads")
 
