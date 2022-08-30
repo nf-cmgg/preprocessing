@@ -118,10 +118,19 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
-    // Join fastp.out.reads into channel a channel per sample
+    // merge FASTP.out.reads in channel per sample and split samples into human and non human data
+    ch_trimmed_reads = gather_split_files_per_sample(FASTP.out.reads)
+        .branch { meta, reads ->
+            human: meta.organism ==~ /(?i)Homo sapiens/
+            other: true
+        }
+    ch_trimmed_reads.human.dump(tag: "human_reads")
+    ch_trimmed_reads.other.dump(tag: "other_reads")
 
-    // Split fastp.out into multiple channels for parallel alignment
-    ch_reads_to_map = FASTP.out.reads.map{meta, reads ->
+    // if aliger == snapaligner, proceed
+    // else split into channel per chunk
+
+    ch_reads_to_map = params.aligner == "snapaligner" ? ch_trimmed_reads : ch_trimmed_reads.human.map{meta, reads ->
         reads_files = meta.single_end ? reads : reads.sort().collate(2)
         return [meta, reads_files]
     }.transpose()
