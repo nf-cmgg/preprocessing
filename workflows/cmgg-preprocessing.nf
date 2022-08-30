@@ -134,6 +134,7 @@ workflow CMGGPREPROCESSING {
         reads_files = meta.single_end ? reads : reads.sort().collate(2)
         return [meta, reads_files]
     }.transpose()
+    ch_reads_to_map.dump(tag: "reads_to_map")
 
     //*
     // STEP: ALIGNMENT
@@ -144,14 +145,13 @@ workflow CMGGPREPROCESSING {
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
     // Gather bams per sample for merging
-    ch_bam_per_sample = gather_bam_per_sample(ALIGNMENT.out.bam)
-
-    // TODO: unblock workflow from alignment step
+    ch_bam_per_sample = params.aligner == "snapaligner" ? ALIGNMENT.out.bam : gather_split_files_per_sample(ALIGNMENT.out.bam)
 
     //*
     // STEP: MARK DUPLICATES
     //*
     // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
+    // Should only run when alinger != snapaligner
     BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, params.fasta)
     ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
     ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
@@ -357,19 +357,19 @@ def readgroup_from_fastq(path) {
     return rg
 }
 
-// Gather bam files per sample
-def gather_bam_per_sample(ch_aligned_bam) {
+// Gather split files per sample
+def gather_split_files_per_sample(ch_files) {
     // Gather bam files per sample based on id
-    ch_aligned_bam.map {
+    ch_files.map {
         // set id to filename without lane designation
-        meta, bam ->
+        meta, files ->
         new_meta = meta.clone()
         new_meta.id = meta.samplename
-        return [new_meta, bam]
+        return [new_meta, files]
     }
     .groupTuple( by: [0])
-    .map { meta, bam ->
-        return [meta, bam.flatten()]
+    .map { meta, files ->
+        return [meta, files.flatten()]
     }
 }
 
