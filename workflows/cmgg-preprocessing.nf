@@ -146,6 +146,7 @@ workflow CMGGPREPROCESSING {
 
     // Gather bams per sample for merging
     ch_bam_per_sample = params.aligner == "snapaligner" ? ALIGNMENT.out.bam : gather_split_files_per_sample(ALIGNMENT.out.bam)
+    ch_bam_per_sample.dump(tag: "bam_per_sample")
 
     //*
     // STEP: MARK DUPLICATES
@@ -156,6 +157,10 @@ workflow CMGGPREPROCESSING {
     ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
     ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+
+    ch_markdup_bam_bai = Channel.empty()
+    ch_markdup_bam_bai = ch_markdup_bam_bai.mix(ALIGNMENT.out.bam.join(ALIGNMENT.out.bai), BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
+    ch_markdup_bam_bai.dump(tag: "markdup_bam_bai")
 
     //*
     // STEP: COVERAGE
