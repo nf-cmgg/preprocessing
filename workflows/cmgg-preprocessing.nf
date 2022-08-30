@@ -351,12 +351,11 @@ def readgroup_from_fastq(path) {
         lane             = fields[3]
         index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
-        rg.ID = [fcid,lane].join(".")
-        rg.PU = [fcid, lane, index].findAll().join(".")
+        rg.ID = fcid
+        rg.PU = [fcid, index].findAll().join(".")
         rg.PL = "ILLUMINA"
     } else if (fields.size() == 5) {
         fcid = fields[0]
-
         rg.ID = fcid
     }
     return rg
