@@ -5,6 +5,32 @@
     "description": "Preprocessing workflow for sequencing data at CMGG",
     "type": "object",
     "definitions": {
+        "pipeline_options": {
+            "title": "Pipeline options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "aligner": {
+                    "type": "string",
+                    "default": "bowtie2",
+                    "description": "Which aligner to use"
+                },
+                "run_coverage": {
+                    "type": "boolean",
+                    "description": "Run coverage analysis steps"
+                },
+                "skip_trimming": {
+                    "type": "boolean",
+                    "description": "Skip adapter trimming"
+                },
+                "disable_picard_qc": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Disable Picard QC steps"
+                }
+            }
+        },
         "trimming_options": {
             "title": "Trimming Options",
             "type": "object",
@@ -13,23 +39,23 @@
             "properties": {
                 "trim_front": {
                     "type": "integer",
-                    "default": 0
+                    "default": 0,
+                    "description": "Number of bases to trim from the front of the read"
                 },
                 "trim_tail": {
                     "type": "integer",
-                    "default": 0
+                    "default": 0,
+                    "description": "Number of bases to trim from the tail of the read"
                 },
                 "adapter_R1": {
                     "type": "string",
-                    "default": null
+                    "default": "None",
+                    "description": "Adapter sequence to be trimmed"
                 },
                 "adapter_R2": {
                     "type": "string",
-                    "default": null
-                },
-                "skip_trimming": {
-                    "type": "string",
-                    "default": "false"
+                    "default": "None",
+                    "description": "Adapter sequence to be trimmed"
                 }
             }
         },
@@ -38,7 +64,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -76,6 +105,11 @@
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
             "properties": {
+                "genome": {
+                    "type": "string",
+                    "default": "hg38",
+                    "description": "Reference genome build"
+                },
                 "fasta": {
                     "type": "string",
                     "format": "file-path",
@@ -105,7 +139,6 @@
                 },
                 "genomes_ignore": {
                     "type": "boolean",
-                    "default": "false",
                     "hidden": true,
                     "description": "Do not load the local references",
                     "fa_icon": "fas fa-ban"
@@ -124,8 +157,29 @@
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                },
+                "bwa": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to BWA-mem index"
+                },
+                "bowtie2": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to Bowtie2 index"
+                },
+                "snapaligner": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to Snap aligner index"
                 }
-            }
+            },
+            "required": [
+                "genome"
+            ]
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -229,7 +283,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
@@ -266,6 +327,10 @@
                     "fa_icon": "fas fa-cog",
                     "hidden": true
                 },
+                "multiqc_logo": {
+                    "type": "string",
+                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png"
+                },
                 "tracedir": {
                     "type": "string",
                     "description": "Directory to keep pipeline Nextflow logs and reports.",
@@ -298,6 +363,9 @@
     },
     "allOf": [
         {
+            "$ref": "#/definitions/pipeline_options"
+        },
+        {
             "$ref": "#/definitions/trimming_options"
         },
         {
@@ -315,22 +383,5 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ],
-    "properties": {
-        "bowtie2": {
-            "type": "string",
-            "default": null,
-            "hidden": true
-        },
-        "fasta_fai": {
-            "type": "string",
-            "default": null,
-            "hidden": true
-        },
-        "snapaligner": {
-            "type": "string",
-            "default": null,
-            "hidden": true
-        }
-    }
+    ]
 }
