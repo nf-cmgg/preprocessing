@@ -3,59 +3,80 @@
     "homePage": "https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
     "repos": {
         "nf-core/modules": {
-            "bclconvert": {
-                "git_sha": "a9521de5ac03e1873c2746af2147600821fdaa49"
-            },
-            "biobambam/bamsormadup": {
-                "git_sha": "6b9a6a5b29ceff0ed648243003e2dd34c03fc042"
-            },
-            "bowtie2/align": {
-                "git_sha": "848ee9a215d02d80be033bfa60881700f2bd914c"
-            },
-            "bwa/mem": {
-                "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
-            },
-            "custom/dumpsoftwareversions": {
-                "git_sha": "e5b44499efcf6f7fb24874886bac60591c5d94dd"
-            },
-            "fastp": {
-                "git_sha": "7e8ad566883449e7939062b5e2bcf53fc1e0002f"
-            },
-            "md5sum": {
-                "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
-            },
-            "mosdepth": {
-                "git_sha": "72a31b76eb1b58879e0d91fb1d992e0118693098"
-            },
-            "multiqc": {
-                "git_sha": "5138acca0985ca01c38a1c4fba917d83772b1106"
-            },
-            "picard/collecthsmetrics": {
-                "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
-            },
-            "picard/collectmultiplemetrics": {
-                "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
-            },
-            "picard/collectwgsmetrics": {
-                "git_sha": "ac1c6ad7104c7863842a322a8cf74f4fee1d20b4"
-            },
-            "samtools/convert": {
-                "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
-            },
-            "samtools/flagstat": {
-                "git_sha": "bbb99cb8d679555cc01c98766de7869f83283545"
-            },
-            "samtools/idxstats": {
-                "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
-            },
-            "samtools/stats": {
-                "git_sha": "f4eab7945952dc4934224309701a49913ea05ae6"
-            },
-            "snapaligner/align": {
-                "git_sha": "44baf85bcc6e53275d81bb133d4e4431eec7632f"
-            },
-            "untar": {
-                "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
+            "git_url": "https://github.com/nf-core/modules.git",
+            "modules": {
+                "bclconvert": {
+                    "branch": "master",
+                    "git_sha": "a9521de5ac03e1873c2746af2147600821fdaa49"
+                },
+                "biobambam/bamsormadup": {
+                    "branch": "master",
+                    "git_sha": "6b9a6a5b29ceff0ed648243003e2dd34c03fc042"
+                },
+                "bowtie2/align": {
+                    "branch": "master",
+                    "git_sha": "848ee9a215d02d80be033bfa60881700f2bd914c"
+                },
+                "bwa/mem": {
+                    "branch": "master",
+                    "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
+                },
+                "custom/dumpsoftwareversions": {
+                    "branch": "master",
+                    "git_sha": "e5b44499efcf6f7fb24874886bac60591c5d94dd"
+                },
+                "fastp": {
+                    "branch": "master",
+                    "git_sha": "7e8ad566883449e7939062b5e2bcf53fc1e0002f"
+                },
+                "md5sum": {
+                    "branch": "master",
+                    "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
+                },
+                "mosdepth": {
+                    "branch": "master",
+                    "git_sha": "72a31b76eb1b58879e0d91fb1d992e0118693098"
+                },
+                "multiqc": {
+                    "branch": "master",
+                    "git_sha": "5138acca0985ca01c38a1c4fba917d83772b1106"
+                },
+                "picard/collecthsmetrics": {
+                    "branch": "master",
+                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                },
+                "picard/collectmultiplemetrics": {
+                    "branch": "master",
+                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                },
+                "picard/collectwgsmetrics": {
+                    "branch": "master",
+                    "git_sha": "ac1c6ad7104c7863842a322a8cf74f4fee1d20b4"
+                },
+                "samtools/convert": {
+                    "branch": "master",
+                    "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
+                },
+                "samtools/flagstat": {
+                    "branch": "master",
+                    "git_sha": "bbb99cb8d679555cc01c98766de7869f83283545"
+                },
+                "samtools/idxstats": {
+                    "branch": "master",
+                    "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
+                },
+                "samtools/stats": {
+                    "branch": "master",
+                    "git_sha": "f4eab7945952dc4934224309701a49913ea05ae6"
+                },
+                "snapaligner/align": {
+                    "branch": "master",
+                    "git_sha": "44baf85bcc6e53275d81bb133d4e4431eec7632f"
+                },
+                "untar": {
+                    "branch": "master",
+                    "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
+                }
             }
         }
     }

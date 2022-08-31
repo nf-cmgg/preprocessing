@@ -40,7 +40,7 @@ GigaScience, Volume 10, Issue 2, February 2021, giab008, <https://doi.org/10.109
 
 - [Anaconda](https://anaconda.com)
 
-  > Anaconda Software Distribution. Computer software. Anaconda, Nov. 2016. Web.
+  > Anaconda Software Distribution. Computer software. Vers. 2-2.4.0. Anaconda, Nov. 2016. Web.
 
 - [Bioconda](https://pubmed.ncbi.nlm.nih.gov/29967506/)
 
