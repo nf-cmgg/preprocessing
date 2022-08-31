@@ -1,4 +1,4 @@
-# CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing: Output
+# nf-core/cmgg-preprocessing: Output
 
 ## Introduction
 

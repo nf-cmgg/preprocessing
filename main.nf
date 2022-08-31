@@ -1,9 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+    nf-core/cmgg-preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+    Github : https://github.com/nf-core/cmgg-preprocessing
+Website: https://nf-co.re/cmgg-preprocessing
+    Slack  : https://nfcore.slack.com/channels/cmgg-preprocessing
 ----------------------------------------------------------------------------------------
 */
 
@@ -15,11 +17,7 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.bowtie2     = WorkflowMain.getGenomeAttribute(params, "bowtie2")
-params.bwa         = WorkflowMain.getGenomeAttribute(params, "bwa")
-params.fai         = WorkflowMain.getGenomeAttribute(params, "fai")
-params.fasta       = WorkflowMain.getGenomeAttribute(params, "fasta")
-params.snapaligner = WorkflowMain.getGenomeAttribute(params, "snapaligner")
+params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,13 +33,13 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { CMGGPREPROCESSING } from "./workflows/cmgg-preprocessing"
+include { CMGG-PREPROCESSING } from './workflows/cmgg-preprocessing'
 
 //
-// WORKFLOW: Run main CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing analysis pipeline
+// WORKFLOW: Run main nf-core/cmgg-preprocessing analysis pipeline
 //
-workflow CMGG_CMGGPREPROCESSING {
-    CMGGPREPROCESSING ()
+workflow NFCORE_CMGG-PREPROCESSING {
+    CMGG-PREPROCESSING ()
 }
 
 /*
@@ -55,7 +53,7 @@ workflow CMGG_CMGGPREPROCESSING {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    CMGG_CMGGPREPROCESSING ()
+    NFCORE_CMGG-PREPROCESSING ()
 }
 
 /*
