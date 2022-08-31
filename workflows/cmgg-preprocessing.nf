@@ -1,3 +1,6 @@
+import static groovy.json.JsonOutput.toJson
+import static groovy.json.JsonOutput.prettyPrint
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE INPUTS
@@ -93,7 +96,7 @@ workflow CMGGPREPROCESSING {
 
     // DEMULTIPLEX([meta, samplesheet, flowcell])
     DEMULTIPLEX(ch_flowcell.fc)
-    DEMULTIPLEX.out.bclconvert_fastq.dump(tag: "bclconvert_fastq")
+    DEMULTIPLEX.out.bclconvert_fastq.dump(tag: "bclconvert_fastq",{prettyPrint(toJson(it))})
     ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.bclconvert_reports.map { meta, reports -> return reports} )
     ch_versions      = ch_versions.mix(DEMULTIPLEX.out.versions)
 
@@ -114,7 +117,7 @@ workflow CMGGPREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, false, false)
-    FASTP.out.reads.dump(tag: "fastp_trimmed_reads")
+    FASTP.out.reads.dump(tag: "fastp_trimmed_reads",{prettyPrint(toJson(it))})
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
@@ -124,8 +127,8 @@ workflow CMGGPREPROCESSING {
             human: meta.organism ==~ /(?i)Homo sapiens/
             other: true
         }
-    ch_trimmed_reads.human.dump(tag: "human_reads")
-    ch_trimmed_reads.other.dump(tag: "other_reads")
+    ch_trimmed_reads.human.dump(tag: "human_reads",{prettyPrint(toJson(it))})
+    ch_trimmed_reads.other.dump(tag: "other_reads",{prettyPrint(toJson(it))})
 
     // if aliger == snapaligner, proceed
     // else split into channel per chunk
@@ -134,7 +137,7 @@ workflow CMGGPREPROCESSING {
         reads_files = meta.single_end ? reads : reads.sort().collate(2)
         return [meta, reads_files]
     }.transpose()
-    ch_reads_to_map.dump(tag: "reads_to_map")
+    ch_reads_to_map.dump(tag: "reads_to_map",{prettyPrint(toJson(it))})
 
     //*
     // STEP: ALIGNMENT
@@ -146,7 +149,7 @@ workflow CMGGPREPROCESSING {
 
     // Gather bams per sample for merging
     ch_bam_per_sample = params.aligner == "snapaligner" ? ALIGNMENT.out.bam : gather_split_files_per_sample(ALIGNMENT.out.bam)
-    ch_bam_per_sample.dump(tag: "bam_per_sample")
+    ch_bam_per_sample.dump(tag: "bam_per_sample",{prettyPrint(toJson(it))})
 
     //*
     // STEP: MARK DUPLICATES
@@ -160,7 +163,7 @@ workflow CMGGPREPROCESSING {
 
     ch_markdup_bam_bai = Channel.empty()
     ch_markdup_bam_bai = ch_markdup_bam_bai.mix(ALIGNMENT.out.bam.join(ALIGNMENT.out.bai), BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
-    ch_markdup_bam_bai.dump(tag: "markdup_bam_bai")
+    ch_markdup_bam_bai.dump(tag: "markdup_bam_bai",{prettyPrint(toJson(it))})
 
     //*
     // STEP: COVERAGE
