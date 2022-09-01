@@ -43,17 +43,22 @@
                         "text": "${commandLine}",
                         "isSubtle": true,
                         "wrap": true
-                    },
+                    }
+                ],
+                "actions": [
                     {
-                        "type": "TextBlock",
-                        "text": "Pipeline configuration:",
-                        "weight": "Bolder"
-                    },
-                    {
-                        "type": "FactSet",
-                        "facts": [
-                            <% out << summary.collect{ k,v -> "{\"title\": \"$k\", \"value\" : \"$v\"}" }.join(",\n") %>
-                        ]
+                        "type": "Action.ShowCard",
+                        "title": "Pipeline Configuration",
+                        "card": {
+                            "type": "AdaptiveCard",
+                            "\$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                            "body": [
+                                {
+                                    "type": "FactSet",
+                                    "facts": [<% out << summary.collect{ k,v -> "{\"title\": \"$k\", \"value\" : \"$v\"}" }.join(",\n") %>]
+                                }
+                            ]
+                        }
                     }
                 ]
             }
