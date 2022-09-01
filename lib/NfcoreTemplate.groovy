@@ -3,6 +3,7 @@
 //
 
 import org.yaml.snakeyaml.Yaml
+import static groovy.json.JsonOutput
 
 class NfcoreTemplate {
 
@@ -143,6 +144,45 @@ class NfcoreTemplate {
         output_hf.withWriter { w -> w << email_html }
         def output_tf = new File(output_d, "pipeline_report.txt")
         output_tf.withWriter { w -> w << email_txt }
+    }
+
+    //
+    // Construct and send adaptive card
+    // https://adaptivecards.io
+    //
+    public static void adaptivecard (workflow, params, summary_params, projectDir, log, multiqc_report=[]) {
+        def hook_url = params.hook_url
+
+        println(JsonOutput.toJson(workflow).toPrettyString())
+
+        def message = [:]
+        def attachments = [:]
+        def content = [:]
+
+        content['$schema'] = 'http://adaptivecards.io/schemas/adaptive-card.json'
+        content['type'] = 'AdaptiveCard'
+        content['version'] = '1.4'
+        content['body'] = [:]
+
+        attachment = [:]
+        attachment['contentType'] = 'application/vnd.microsoft.card.adaptive'
+        attachment['contentUrl'] = null
+        attachment['content'] = content
+
+        message['type']      = "message"
+        message['attachments'] = [attachment]
+
+        // POST
+        def post = new URL(hook_url).openConnection();
+        def message = JsonOutput.toJson(message)
+        post.setRequestMethod("POST")
+        post.setDoOutput(true)
+        post.setRequestProperty("Content-Type", "application/json")
+        post.getOutputStream().write(message.getBytes("UTF-8"));
+        println(postRC);
+        if (postRC.equals(200)) {
+        println(post.getInputStream().getText());
+        }
     }
 
     //
