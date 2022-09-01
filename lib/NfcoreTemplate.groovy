@@ -3,7 +3,9 @@
 //
 
 import org.yaml.snakeyaml.Yaml
-import static groovy.json.JsonOutput
+import static groovy.json.JsonOutput.toJson
+import static groovy.json.JsonOutput.prettyPrint
+import groovy.json.*
 
 class NfcoreTemplate {
 
@@ -150,38 +152,54 @@ class NfcoreTemplate {
     // Construct and send adaptive card
     // https://adaptivecards.io
     //
-    public static void adaptivecard (workflow, params, summary_params, projectDir, log, multiqc_report=[]) {
+    public static void adaptivecard(workflow, params, summary_params, projectDir, log, multiqc_report=[]) {
         def hook_url = params.hook_url
 
-        println(JsonOutput.toJson(workflow).toPrettyString())
+        def summary = [:]
+        for (group in summary_params.keySet()) {
+            summary << summary_params[group]
+        }
 
-        def message = [:]
-        def attachments = [:]
-        def content = [:]
+        def misc_fields = [:]
+        misc_fields['start']              = workflow.start
+        misc_fields['complete']            = workflow.complete
+        misc_fields['scriptfile'] = workflow.scriptFile
+        misc_fields['scriptid']   = workflow.scriptId
+        if (workflow.repository) misc_fields['repository']    = workflow.repository
+        if (workflow.commitId)   misc_fields['commitid'] = workflow.commitId
+        if (workflow.revision)   misc_fields['revision']        = workflow.revision
+        misc_fields['nxf_version']           = workflow.nextflow.version
+        misc_fields['nxf_build']             = workflow.nextflow.build
+        misc_fields['nxf_timestamp'] = workflow.nextflow.timestamp
 
-        content['$schema'] = 'http://adaptivecards.io/schemas/adaptive-card.json'
-        content['type'] = 'AdaptiveCard'
-        content['version'] = '1.4'
-        content['body'] = [:]
+        def msg_fields = [:]
+        msg_fields['version']      = workflow.manifest.version
+        msg_fields['runName']      = workflow.runName
+        msg_fields['success']      = workflow.success
+        msg_fields['dateComplete'] = workflow.complete
+        msg_fields['duration']     = workflow.duration
+        msg_fields['exitStatus']   = workflow.exitStatus
+        msg_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
+        msg_fields['errorReport']  = (workflow.errorReport ?: 'None')
+        msg_fields['commandLine']  = workflow.commandLine
+        msg_fields['projectDir']   = workflow.projectDir
+        msg_fields['summary']      = summary << misc_fields
 
-        attachment = [:]
-        attachment['contentType'] = 'application/vnd.microsoft.card.adaptive'
-        attachment['contentUrl'] = null
-        attachment['content'] = content
-
-        message['type']      = "message"
-        message['attachments'] = [attachment]
+        // Render the JSON template
+        def engine       = new groovy.text.GStringTemplateEngine()
+        def hf = new File("$projectDir/assets/adaptivecard_template.json")
+        def json_template = engine.createTemplate(hf).make(msg_fields)
+        def json_message  = json_template.toString()
 
         // POST
         def post = new URL(hook_url).openConnection();
-        def message = JsonOutput.toJson(message)
         post.setRequestMethod("POST")
         post.setDoOutput(true)
         post.setRequestProperty("Content-Type", "application/json")
-        post.getOutputStream().write(message.getBytes("UTF-8"));
-        println(postRC);
-        if (postRC.equals(200)) {
-        println(post.getInputStream().getText());
+        post.getOutputStream().write(json_message.getBytes("UTF-8"));
+        def postRC = post.getResponseCode();
+        if !(postRC.equals(200)) {
+        println(post.getErrorStream().getText());
         }
     }
 
