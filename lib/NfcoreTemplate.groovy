@@ -161,16 +161,16 @@ class NfcoreTemplate {
         }
 
         def misc_fields = [:]
-        misc_fields['start']              = workflow.start
-        misc_fields['complete']            = workflow.complete
-        misc_fields['scriptfile'] = workflow.scriptFile
-        misc_fields['scriptid']   = workflow.scriptId
-        if (workflow.repository) misc_fields['repository']    = workflow.repository
-        if (workflow.commitId)   misc_fields['commitid'] = workflow.commitId
-        if (workflow.revision)   misc_fields['revision']        = workflow.revision
-        misc_fields['nxf_version']           = workflow.nextflow.version
-        misc_fields['nxf_build']             = workflow.nextflow.build
-        misc_fields['nxf_timestamp'] = workflow.nextflow.timestamp
+        misc_fields['start']                                = workflow.start
+        misc_fields['complete']                             = workflow.complete
+        misc_fields['scriptfile']                           = workflow.scriptFile
+        misc_fields['scriptid']                             = workflow.scriptId
+        if (workflow.repository) misc_fields['repository']  = workflow.repository
+        if (workflow.commitId)   misc_fields['commitid']    = workflow.commitId
+        if (workflow.revision)   misc_fields['revision']    = workflow.revision
+        misc_fields['nxf_version']                          = workflow.nextflow.version
+        misc_fields['nxf_build']                            = workflow.nextflow.build
+        misc_fields['nxf_timestamp']                        = workflow.nextflow.timestamp
 
         def msg_fields = [:]
         msg_fields['version']      = workflow.manifest.version
@@ -198,8 +198,8 @@ class NfcoreTemplate {
         post.setRequestProperty("Content-Type", "application/json")
         post.getOutputStream().write(json_message.getBytes("UTF-8"));
         def postRC = post.getResponseCode();
-        if !(postRC.equals(200)) {
-        println(post.getErrorStream().getText());
+        if (! postRC.equals(200)) {
+            println(post.getErrorStream().getText());
         }
     }
 
