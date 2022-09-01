@@ -4,8 +4,6 @@
 
 import org.yaml.snakeyaml.Yaml
 import static groovy.json.JsonOutput.toJson
-import static groovy.json.JsonOutput.prettyPrint
-import groovy.json.*
 
 class NfcoreTemplate {
 
