@@ -1,40 +1,3 @@
-import java.nio.file.Path
-import static groovy.json.JsonOutput.toJson
-import static groovy.json.JsonOutput.prettyPrint
-import groovy.json.*
-
-
-def replacePath(root, replaceNullWith = "") {
-    if (root instanceof List) {
-        root.collect {
-            if (it instanceof Map) {
-                replacePath(it, replaceNullWith)
-            } else if (it instanceof List) {
-                replacePath(it, replaceNullWith)
-            } else if (it == null) {
-                replaceNullWith
-            } else if (it instanceof Path) {
-                it.toString()
-            } else {
-                it
-            }
-        }
-    } else if (root instanceof Map) {
-        root.each {
-            if (it.value instanceof Map) {
-                replacePath(it.value, replaceNullWith)
-            } else if (it.value instanceof List) {
-                it.value = replacePath(it.value, replaceNullWith)
-            } else if (it.value == null) {
-                it.value = replaceNullWith
-            } else if (it.value instanceof Path) {
-                it.value = it.value.toString()
-            }
-        }
-    }
-}
-
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE INPUTS
@@ -130,7 +93,7 @@ workflow CMGGPREPROCESSING {
 
     // DEMULTIPLEX([meta, samplesheet, flowcell])
     DEMULTIPLEX(ch_flowcell.fc)
-    DEMULTIPLEX.out.bclconvert_fastq.dump(tag: "bclconvert_fastq",{prettyPrint(toJson(replacePath(it)))})
+    DEMULTIPLEX.out.bclconvert_fastq.dump(tag: "bclconvert_fastq",{prettyDump(it)})
     ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.bclconvert_reports.map { meta, reports -> return reports} )
     ch_versions      = ch_versions.mix(DEMULTIPLEX.out.versions)
 
@@ -151,7 +114,7 @@ workflow CMGGPREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, false, false)
-    FASTP.out.reads.dump(tag: "fastp_trimmed_reads",{prettyPrint(toJson(replacePath(it)))})
+    FASTP.out.reads.dump(tag: "fastp_trimmed_reads",{prettyDump(it)})
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
@@ -161,8 +124,8 @@ workflow CMGGPREPROCESSING {
             human: meta.organism ==~ /(?i)Homo sapiens/
             other: true
         }
-    ch_trimmed_reads.human.dump(tag: "human_reads",{prettyPrint(toJson(replacePath(it)))})
-    ch_trimmed_reads.other.dump(tag: "other_reads",{prettyPrint(toJson(replacePath(it)))})
+    ch_trimmed_reads.human.dump(tag: "human_reads",{prettyDump(it)})
+    ch_trimmed_reads.other.dump(tag: "other_reads",{prettyDump(it)})
 
     // if aliger == snapaligner, proceed
     // else split into channel per chunk
@@ -171,7 +134,7 @@ workflow CMGGPREPROCESSING {
         reads_files = meta.single_end ? reads : reads.sort().collate(2)
         return [meta, reads_files]
     }.transpose()
-    ch_reads_to_map.dump(tag: "reads_to_map",{prettyPrint(toJson(replacePath(it)))})
+    ch_reads_to_map.dump(tag: "reads_to_map",{prettyDump(it)})
 
     //*
     // STEP: ALIGNMENT
@@ -183,7 +146,7 @@ workflow CMGGPREPROCESSING {
 
     // Gather bams per sample for merging
     ch_bam_per_sample = params.aligner == "snapaligner" ? ALIGNMENT.out.bam : gather_split_files_per_sample(ALIGNMENT.out.bam)
-    ch_bam_per_sample.dump(tag: "bam_per_sample",{prettyPrint(toJson(replacePath(it)))})
+    ch_bam_per_sample.dump(tag: "bam_per_sample",{prettyDump(it)})
 
     //*
     // STEP: MARK DUPLICATES
@@ -197,7 +160,7 @@ workflow CMGGPREPROCESSING {
 
     ch_markdup_bam_bai = Channel.empty()
     ch_markdup_bam_bai = ch_markdup_bam_bai.mix(ALIGNMENT.out.bam.join(ALIGNMENT.out.bai), BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
-    ch_markdup_bam_bai.dump(tag: "markdup_bam_bai",{prettyPrint(toJson(replacePath(it)))})
+    ch_markdup_bam_bai.dump(tag: "markdup_bam_bai",{prettyDump(it)})
 
     //*
     // STEP: COVERAGE
@@ -412,6 +375,47 @@ def gather_split_files_per_sample(ch_files) {
     .map { meta, files ->
         return [meta, files.flatten()]
     }
+}
+
+import java.nio.file.Path
+import static groovy.json.JsonOutput.toJson
+import static groovy.json.JsonOutput.prettyPrint
+import groovy.json.*
+
+// replace Path objects with strings
+def replacePath(root, replaceNullWith = "") {
+    if (root instanceof List) {
+        root.collect {
+            if (it instanceof Map) {
+                replacePath(it, replaceNullWith)
+            } else if (it instanceof List) {
+                replacePath(it, replaceNullWith)
+            } else if (it == null) {
+                replaceNullWith
+            } else if (it instanceof Path) {
+                it.toString()
+            } else {
+                it
+            }
+        }
+    } else if (root instanceof Map) {
+        root.each {
+            if (it.value instanceof Map) {
+                replacePath(it.value, replaceNullWith)
+            } else if (it.value instanceof List) {
+                it.value = replacePath(it.value, replaceNullWith)
+            } else if (it.value == null) {
+                it.value = replaceNullWith
+            } else if (it.value instanceof Path) {
+                it.value = it.value.toString()
+            }
+        }
+    }
+}
+
+// pretty print dump values
+def prettyDump(map) {
+    return prettyPrint(toJson(replacePath(map)))
 }
 
 
