@@ -55,6 +55,7 @@ include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
 include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
+include { FGBIO_FASTQTOBAM            } from "../modules/nf-core/modules/fgbio/fastqtobam/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
 
 /*
@@ -137,6 +138,15 @@ workflow CMGGPREPROCESSING {
     ch_reads_to_map.dump(tag: "reads_to_map",{prettyDump(it)})
 
     //*
+    // STEP: FASTQ TO BAM CONVERSION
+    //*
+    // Convert non-standard fastq data (e.g. non-human, non-DNA, ...) to BAM
+
+    // FGBIO_FASTQTOBAM([meta, fastq])
+    FGBIO_FASTQTOBAM(ch_trimmed_reads.other)
+    ch_versions = ch_versions.mix(FGBIO_FASTQTOBAM.out.versions)
+
+    //*
     // STEP: ALIGNMENT
     //*
     // align fastq files per sample, merge, sort and markdup.
@@ -190,8 +200,17 @@ workflow CMGGPREPROCESSING {
     // STEP: BAM ARCHIVE
     //*
     // Compress and checksum bam files
-    BAM_ARCHIVE(
+    ch_reads_to_compress = Channel.empty()
+    ch_reads_to_compress = ch_reads_to_compress.mix(
         ch_markdup_bam_bai,
+        FGBIO_FASTQTOBAM.out.bam.map({
+            meta, bam -> return [ meta, bam, [] ]
+        })
+    )
+    ch_reads_to_compress.dump(tag: "reads_to_compress", {prettyDump(it)})
+
+    BAM_ARCHIVE(
+        ch_reads_to_compress,
         params.fasta,
         params.fai
     )
