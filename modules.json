@@ -29,6 +29,10 @@
                     "branch": "master",
                     "git_sha": "7e8ad566883449e7939062b5e2bcf53fc1e0002f"
                 },
+                "fgbio/fastqtobam": {
+                    "branch": "master",
+                    "git_sha": "36049bf544c2f3fad7508778b76f56c5e0fe1ee7"
+                },
                 "md5sum": {
                     "branch": "master",
                     "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
