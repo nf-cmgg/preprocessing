@@ -38,7 +38,6 @@ jobs:
           else
             echo "::set-output name=result::fail"
           fi
-
       - name: Run 'prettier --write'
         if: steps.prettier_status.outputs.result == 'fail'
         run: prettier --write ${GITHUB_WORKSPACE}
