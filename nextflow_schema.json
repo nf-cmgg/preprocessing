@@ -1,16 +1,73 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/cmggpreprocessing/master/nextflow_schema.json",
-    "title": "nf-core/cmggpreprocessing pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/nextflow_schema.json",
+    "title": "cmgg/preprocessing pipeline parameters",
     "description": "Preprocessing workflow for sequencing data at CMGG",
     "type": "object",
     "definitions": {
+        "pipeline_options": {
+            "title": "Pipeline options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "aligner": {
+                    "type": "string",
+                    "default": "bowtie2",
+                    "description": "Which aligner to use"
+                },
+                "run_coverage": {
+                    "type": "boolean",
+                    "description": "Run coverage analysis steps"
+                },
+                "skip_trimming": {
+                    "type": "boolean",
+                    "description": "Skip adapter trimming"
+                },
+                "disable_picard_qc": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Disable Picard QC steps"
+                }
+            }
+        },
+        "trimming_options": {
+            "title": "Trimming Options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "trim_front": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to trim from the front of the read"
+                },
+                "trim_tail": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to trim from the tail of the read"
+                },
+                "adapter_R1": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Adapter sequence to be trimmed"
+                },
+                "adapter_R2": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Adapter sequence to be trimmed"
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -19,7 +76,7 @@
                     "pattern": "^\\S+\\.csv$",
                     "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/cmggpreprocessing/usage#samplesheet-input).",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re//usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -50,9 +107,8 @@
             "properties": {
                 "genome": {
                     "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                    "default": "hg38",
+                    "description": "Reference genome build"
                 },
                 "fasta": {
                     "type": "string",
@@ -61,7 +117,31 @@
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code"
+                    "fa_icon": "far fa-file-code",
+                    "hidden": true
+                },
+                "fai": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.fai$",
+                    "description": "Path to FASTA genome index file.",
+                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
+                    "fa_icon": "far fa-file-code",
+                    "hidden": true
+                },
+                "genomes_base": {
+                    "type": "string",
+                    "default": "/references/",
+                    "hidden": true,
+                    "description": "Directory base for CMGG reference store",
+                    "fa_icon": "fas fa-download"
+                },
+                "genomes_ignore": {
+                    "type": "boolean",
+                    "hidden": true,
+                    "description": "Do not load the local references",
+                    "fa_icon": "fas fa-ban"
                 },
                 "igenomes_base": {
                     "type": "string",
@@ -77,8 +157,29 @@
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                },
+                "bwa": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to BWA-mem index"
+                },
+                "bowtie2": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to Bowtie2 index"
+                },
+                "snapaligner": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to Snap aligner index"
                 }
-            }
+            },
+            "required": [
+                "genome"
+            ]
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -182,7 +283,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
@@ -213,11 +321,22 @@
                     "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
+                "hook_url": {
+                    "type": "string",
+                    "description": "Incoming hook URL for messaging service",
+                    "fa_icon": "fas fa-people-group",
+                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "hidden": true
+                },
                 "multiqc_config": {
                     "type": "string",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
+                },
+                "multiqc_logo": {
+                    "type": "string",
+                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png"
                 },
                 "tracedir": {
                     "type": "string",
@@ -250,6 +369,12 @@
         }
     },
     "allOf": [
+        {
+            "$ref": "#/definitions/pipeline_options"
+        },
+        {
+            "$ref": "#/definitions/trimming_options"
+        },
         {
             "$ref": "#/definitions/input_output_options"
         },
