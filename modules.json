@@ -57,6 +57,10 @@
                     "branch": "master",
                     "git_sha": "ac1c6ad7104c7863842a322a8cf74f4fee1d20b4"
                 },
+                "samtools/bam2fq": {
+                    "branch": "master",
+                    "git_sha": "5510ea39fe638594bc26ac34cadf4a84bf27d159"
+                },
                 "samtools/convert": {
                     "branch": "master",
                     "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
