@@ -57,6 +57,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/
 include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
 include { FGBIO_FASTQTOBAM            } from "../modules/nf-core/modules/fgbio/fastqtobam/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
+include { SAMTOOLS_BAM2FQ             } from '../modules/nf-core/modules/samtools/bam2fq/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,6 +104,11 @@ workflow CMGGPREPROCESSING {
         DEMULTIPLEX.out.bclconvert_fastq,
         parse_sample_info_csv(ch_flowcell.info)
     )
+
+    //*
+    // STEP: INPUT PROCESSING
+    //*
+    // Convert bam/cram inputs to fastq
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
@@ -259,11 +265,15 @@ def extract_csv(csv_file) {
         }
         // check for invalid fastq input
         if(row.fastq_1 && !(row.samplename)){
-            log.error "Flowcell input requires both samplesheet and flowcell"
+            log.error "Fastq input requires both samplename and fastq"
+        }
+        // check for invalid bam/cram input
+        if((row.bam || row.cram) && !(row.samplename)){
+            log.error "BAM/CRAM input requires both samplename and bam/cram"
         }
         // check for mixed input
         if(row.flowcell && row.fastq_1){
-            log.error "Cannot mix flowcell and fastq inputs"
+            log.error "Cannot mix flowcell and fastq/cram inputs"
         }
         // valid flowcell input
         if(row.flowcell && row.samplesheet){
@@ -272,6 +282,10 @@ def extract_csv(csv_file) {
         // valid fastq input
         if(row.fastq_1 && row.samplename){
             return parse_fastq_csv(row)
+        }
+        // valid bam/cram input
+        if((row.bam || row.cram) && row.samplename){
+            return parse_reads_csv(row)
         }
     }
 }
@@ -318,6 +332,22 @@ def parse_sample_info_csv(csv_file) {
         if (!(row.samplename)) log.error "Missing samplename field in sample info file"
         return row
     }
+}
+
+// Parse bam/cram input map
+def parse_reads_csv(row) {
+    def cram = file(row.cram, checkIfExists: true)
+    def crai = file(row.crai, checkIfExists: true)
+
+    def bam = file(row.bam, checkIfExists: true)
+    def bai = file(row.bai, checkIfExists: true)
+
+    def meta = [:]
+    meta.id         = row.id.toString()
+    meta.samplename = row.samplename.toString()
+    meta.organism   = row.organism ? row.organism.toString() : ""
+
+    return [meta, bam ? bam : cram, bai ? bai : crai ?: []]
 }
 
 // Merge fastq meta with sample info
