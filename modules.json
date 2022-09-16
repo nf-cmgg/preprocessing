@@ -1,6 +1,6 @@
 {
-    "name": "nf-core/cmgg-preprocessing",
-    "homePage": "https://github.com/nf-core/cmgg-preprocessing",
+    "name": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
+    "homePage": "https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
     "repos": {
         "nf-core/modules": {
             "git_url": "https://github.com/nf-core/modules.git",

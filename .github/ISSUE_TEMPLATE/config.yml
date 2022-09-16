@@ -4,4 +4,4 @@ contact_links:
     about: Please join the nf-core community here
   - name: "Slack #cmgg-preprocessing channel"
     url: https://nfcore.slack.com/channels/cmgg-preprocessing
-    about: Discussion about the nf-core/cmgg-preprocessing pipeline
+    about: Discussion about the CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline
