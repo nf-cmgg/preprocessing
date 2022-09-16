@@ -7,7 +7,7 @@
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Validate input parameters
-WorkflowCmgg-preprocessing.initialise(params, log)
+WorkflowPreprocessing.initialise(params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
@@ -224,7 +224,7 @@ workflow CMGG-PREPROCESSING {
 
     // MODULE: MULTIQC
     // Generate aggregate QC report
-    workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
+    workflow_summary    = WorkflowPreprocessing.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
     ch_multiqc_files = Channel.empty()
