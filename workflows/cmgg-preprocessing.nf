@@ -360,6 +360,7 @@ def readgroup_from_fastq(path) {
     line = line.substring(1)
     def fields = line.split(':')
     def rg = [:]
+    rg.CN = "CMGG"
 
     if (fields.size() >= 7) {
         // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
