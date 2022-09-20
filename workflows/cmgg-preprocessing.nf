@@ -53,6 +53,7 @@ include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
 // MODULE: Installed directly from nf-core/modules
 //
 include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
+include { CAT_FASTQ                   } from '../modules/nf-core/modules/cat/fastq/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
 include { FGBIO_FASTQTOBAM            } from "../modules/nf-core/modules/fgbio/fastqtobam/main"
@@ -148,8 +149,13 @@ workflow CMGGPREPROCESSING {
     //*
     // Convert non-standard fastq data (e.g. non-human, non-DNA, ...) to BAM
 
+    // CAT_FASTQ([meta, fastq])
+    // Merge split fastqs to simplify converting to uBAM
+    CAT_FASTQ(ch_trimmed_reads.other)
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions)
+
     // FGBIO_FASTQTOBAM([meta, fastq])
-    FGBIO_FASTQTOBAM(ch_trimmed_reads.other)
+    FGBIO_FASTQTOBAM(CAT_FASTQ.out.reads)
     ch_versions = ch_versions.mix(FGBIO_FASTQTOBAM.out.versions)
 
     //*

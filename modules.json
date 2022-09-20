@@ -7,7 +7,7 @@
             "modules": {
                 "bclconvert": {
                     "branch": "master",
-                    "git_sha": "a9521de5ac03e1873c2746af2147600821fdaa49"
+                    "git_sha": "b98f1b77d1f6585995f00fb9189ad40c279417bd"
                 },
                 "biobambam/bamsormadup": {
                     "branch": "master",
@@ -20,6 +20,10 @@
                 "bwa/mem": {
                     "branch": "master",
                     "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
+                },
+                "cat/fastq": {
+                    "branch": "master",
+                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
                 },
                 "custom/dumpsoftwareversions": {
                     "branch": "master",
@@ -35,7 +39,7 @@
                 },
                 "md5sum": {
                     "branch": "master",
-                    "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
+                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
                 },
                 "mosdepth": {
                     "branch": "master",
@@ -43,7 +47,7 @@
                 },
                 "multiqc": {
                     "branch": "master",
-                    "git_sha": "4b1d4bf401d4cf65ebc4f604bc8c8e7551109db3"
+                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
                 },
                 "picard/collecthsmetrics": {
                     "branch": "master",
