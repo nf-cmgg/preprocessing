@@ -23,7 +23,7 @@
                 },
                 "cat/fastq": {
                     "branch": "master",
-                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
+                    "git_sha": "c13f2274fb9c93ad265640e0e56e6526bd4f42d4"
                 },
                 "custom/dumpsoftwareversions": {
                     "branch": "master",
