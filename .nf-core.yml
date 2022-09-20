@@ -1,25 +1,27 @@
 repository_type: pipeline
 lint:
   files_exist:
-    - CODE_OF_CONDUCT.md
     - assets/nf-core-preprocessing_logo_light.png
+    - assets/nf-core-preprocessing_logo_dark.png
     - docs/images/nf-core-preprocessing_logo_light.png
     - docs/images/nf-core-preprocessing_logo_dark.png
-    - .github/ISSUE_TEMPLATE/config.yml
-    - .github/workflows/awstest.yml
-    - .github/workflows/awsfulltest.yml
+  files_unchanged:
+    - .github/CONTRIBUTING.md
+    - .github/ISSUE_TEMPLATE/feature_request.yml
     - .github/ISSUE_TEMPLATE/bug_report.yml
-    - conf/igenomes.config
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/workflows/branch.yml
+    - .github/workflows/linting.yml
+    - assets/email_template.html
+    - assets/email_template.txt
+    - assets/sendmail_template.txt
+    - docs/README.md
+    - lib/NfcoreTemplate.groovy
+    - .prettierignore
   nextflow_config:
     - manifest.name
     - manifest.homePage
-    - process.cpus
-    - process.memory
-    - process.time
-    - custom_config
   multiqc_config:
     - report_comment
-  files_unchanged:
-    - .github/ISSUE_TEMPLATE/bug_report.yml
   readme:
     - nextflow_badge

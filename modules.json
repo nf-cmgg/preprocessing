@@ -7,7 +7,7 @@
             "modules": {
                 "bclconvert": {
                     "branch": "master",
-                    "git_sha": "a9521de5ac03e1873c2746af2147600821fdaa49"
+                    "git_sha": "b98f1b77d1f6585995f00fb9189ad40c279417bd"
                 },
                 "biobambam/bamsormadup": {
                     "branch": "master",
@@ -21,13 +21,17 @@
                     "branch": "master",
                     "git_sha": "4f5274c3de0c9521f5033893ff61057a74c45ba9"
                 },
+                "cat/fastq": {
+                    "branch": "master",
+                    "git_sha": "c13f2274fb9c93ad265640e0e56e6526bd4f42d4"
+                },
                 "custom/dumpsoftwareversions": {
                     "branch": "master",
-                    "git_sha": "e5b44499efcf6f7fb24874886bac60591c5d94dd"
+                    "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
                 },
                 "fastp": {
                     "branch": "master",
-                    "git_sha": "7e8ad566883449e7939062b5e2bcf53fc1e0002f"
+                    "git_sha": "2c70c1c1951aaf884d2e8d8d9c871db79f7b35aa"
                 },
                 "fgbio/fastqtobam": {
                     "branch": "master",
@@ -35,7 +39,7 @@
                 },
                 "md5sum": {
                     "branch": "master",
-                    "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
+                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
                 },
                 "mosdepth": {
                     "branch": "master",
@@ -43,7 +47,7 @@
                 },
                 "multiqc": {
                     "branch": "master",
-                    "git_sha": "5138acca0985ca01c38a1c4fba917d83772b1106"
+                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
                 },
                 "picard/collecthsmetrics": {
                     "branch": "master",
@@ -59,7 +63,7 @@
                 },
                 "samtools/convert": {
                     "branch": "master",
-                    "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
+                    "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
                 },
                 "samtools/flagstat": {
                     "branch": "master",
@@ -79,7 +83,7 @@
                 },
                 "untar": {
                     "branch": "master",
-                    "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
+                    "git_sha": "b63b9f752dc8e43fc70b0491aad5e0a270ab0e10"
                 }
             }
         }

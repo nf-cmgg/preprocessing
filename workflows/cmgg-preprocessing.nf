@@ -53,6 +53,7 @@ include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
 // MODULE: Installed directly from nf-core/modules
 //
 include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
+include { CAT_FASTQ                   } from '../modules/nf-core/modules/cat/fastq/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
 include { FGBIO_FASTQTOBAM            } from "../modules/nf-core/modules/fgbio/fastqtobam/main"
@@ -142,8 +143,13 @@ workflow CMGGPREPROCESSING {
     //*
     // Convert non-standard fastq data (e.g. non-human, non-DNA, ...) to BAM
 
+    // CAT_FASTQ([meta, fastq])
+    // Merge split fastqs to simplify converting to uBAM
+    CAT_FASTQ(ch_trimmed_reads.other)
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions)
+
     // FGBIO_FASTQTOBAM([meta, fastq])
-    FGBIO_FASTQTOBAM(ch_trimmed_reads.other)
+    FGBIO_FASTQTOBAM(CAT_FASTQ.out.reads)
     ch_versions = ch_versions.mix(FGBIO_FASTQTOBAM.out.versions)
 
     //*
@@ -234,7 +240,7 @@ workflow CMGGPREPROCESSING {
     )
 
     MULTIQC (
-        ch_multiqc_files.collect(), [multiqc_config, multiqc_logo]
+        ch_multiqc_files.collect(), multiqc_config, [], multiqc_logo
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
@@ -360,6 +366,7 @@ def readgroup_from_fastq(path) {
     line = line.substring(1)
     def fields = line.split(':')
     def rg = [:]
+    rg.CN = "CMGG"
 
     if (fields.size() >= 7) {
         // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
