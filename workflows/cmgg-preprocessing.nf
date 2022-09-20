@@ -246,7 +246,7 @@ workflow CMGGPREPROCESSING {
     )
 
     MULTIQC (
-        ch_multiqc_files.collect(), [multiqc_config, multiqc_logo]
+        ch_multiqc_files.collect(), multiqc_config, [], multiqc_logo
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
