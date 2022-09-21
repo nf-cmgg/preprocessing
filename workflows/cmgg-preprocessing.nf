@@ -157,7 +157,6 @@ workflow CMGGPREPROCESSING {
     // FGBIO_FASTQTOBAM([meta, fastq])
     FGBIO_FASTQTOBAM(CAT_FASTQ.out.reads)
     ch_versions = ch_versions.mix(FGBIO_FASTQTOBAM.out.versions)
-
     //*
     // STEP: ALIGNMENT
     //*
@@ -215,8 +214,10 @@ workflow CMGGPREPROCESSING {
     ch_reads_to_compress = Channel.empty()
     ch_reads_to_compress = ch_reads_to_compress.mix(
         ch_markdup_bam_bai,
-        FGBIO_FASTQTOBAM.out.bam.map({
-            meta, bam -> return [ meta, bam, [] ]
+        FGBIO_FASTQTOBAM.out.bam.map({ meta, bam ->
+            new_meta = meta.clone()
+            new_meta.id = "${meta.id}.unaligned"
+            return [ new_meta, bam, [] ]
         })
     )
     ch_reads_to_compress.dump(tag: "reads_to_compress", {prettyDump(it)})
