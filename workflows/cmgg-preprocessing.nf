@@ -42,6 +42,7 @@ include { ALIGNMENT   } from "../subworkflows/local/alignment/main"
 include { COVERAGE    } from "../subworkflows/local/coverage/main"
 include { BAM_QC      } from "../subworkflows/local/bam_qc/main"
 include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
+include { BAM_TO_FASTQ} from "../subworkflows/local/bam_to_fastq/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,7 +59,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/
 include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
 include { FGBIO_FASTQTOBAM            } from "../modules/nf-core/modules/fgbio/fastqtobam/main"
 include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
-include { SAMTOOLS_BAM2FQ             } from '../modules/nf-core/modules/samtools/bam2fq/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,6 +83,7 @@ workflow CMGGPREPROCESSING {
     ch_inputs = extract_csv(ch_input).branch {
         fastq   : it.size() == 2
         flowcell: it.size() == 4
+        reads   : it.size() == 5
     }
 
     //*
@@ -110,10 +111,13 @@ workflow CMGGPREPROCESSING {
     // STEP: INPUT PROCESSING
     //*
     // Convert bam/cram inputs to fastq
+    BAM_TO_FASTQ(ch_inputs.reads)
+    ch_converted_fastq = BAM_TO_FASTQ.out.fastq
+    ch_converted_fastq.dump(tag: "converted_fastq",{prettyDump(it)})
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
-    ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq)
+    ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq)
 
     //*
     // STEP: FASTQ TRIMMING AND QC
@@ -344,17 +348,15 @@ def parse_sample_info_csv(csv_file) {
 // Parse bam/cram input map
 def parse_reads_csv(row) {
     def cram = file(row.cram, checkIfExists: true)
-    def crai = file(row.crai, checkIfExists: true)
 
     def bam = file(row.bam, checkIfExists: true)
-    def bai = file(row.bai, checkIfExists: true)
 
     def meta = [:]
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
     meta.organism   = row.organism ? row.organism.toString() : ""
 
-    return [meta, bam ? bam : cram, bai ? bai : crai ?: []]
+    return [meta, bam ? bam : cram]
 }
 
 // Merge fastq meta with sample info

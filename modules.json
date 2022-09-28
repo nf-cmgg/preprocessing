@@ -61,17 +61,21 @@
                     "branch": "master",
                     "git_sha": "ac1c6ad7104c7863842a322a8cf74f4fee1d20b4"
                 },
-                "samtools/bam2fq": {
-                    "branch": "master",
-                    "git_sha": "5510ea39fe638594bc26ac34cadf4a84bf27d159"
-                },
                 "samtools/convert": {
                     "branch": "master",
                     "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
                 },
+                "samtools/fastq": {
+                    "branch": "master",
+                    "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                },
                 "samtools/flagstat": {
                     "branch": "master",
                     "git_sha": "bbb99cb8d679555cc01c98766de7869f83283545"
+                },
+                "samtools/getrg": {
+                    "branch": "master",
+                    "git_sha": "b5aa12ad3bf6e1ba2fb46ae24c87f2e34ff52dba"
                 },
                 "samtools/idxstats": {
                     "branch": "master",
