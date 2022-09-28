@@ -26,6 +26,9 @@ jobs:
           - "test_flowcell"
           - "test_fastq"
           - "test_cram"
+        aligner:
+          - "bwa"
+          - "bowtie2"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -37,4 +40,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test }},docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test }},docker  --aligner {{ matrix.aligner }} --outdir ./results
