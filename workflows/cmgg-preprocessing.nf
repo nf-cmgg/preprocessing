@@ -80,15 +80,23 @@ workflow CMGGPREPROCESSING {
     if (map_index) { ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect() } else { exit 1, "Invalid aligner index!" }
 
     // Sanitize inputs and separate input types
-    ch_inputs = extract_csv(ch_input).branch {
-        fastq   : it.size() == 2
-        flowcell: it.size() == 4
-        reads   : it.size() == 5
+    // For now assume 1 bam/cram per sample
+    ch_inputs = extract_csv(ch_input).view().branch {
+        fastq   : (it.size() == 2 && it[1] instanceof List)
+        flowcell: (it.size() == 4 && it[1].toString().endsWith(".csv"))
+        reads   : (it.size() == 2 && (it[1].toString().endsWith(".bam") || it[1].toString().endsWith(".cram")))
+        other   : true
     }
 
-    //*
-    // STEP: DEMULTIPLEX FLOWCELLS
-    //*
+    ch_inputs.fastq.dump(tag: "fastq inputs", {prettyDump(it)})
+    ch_inputs.flowcell.dump(tag: "flowcell inputs", {prettyDump(it)})
+    ch_inputs.reads.dump(tag: "reads inputs", {prettyDump(it)})
+    ch_inputs.other.dump(tag: "other inputs", {prettyDump(it)})
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // PROCESS FLOWCELL INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
     ch_flowcell = ch_inputs.flowcell.multiMap { meta, samplesheet, flowcell, sample_info ->
         fc   : [meta, samplesheet, flowcell]
@@ -107,21 +115,34 @@ workflow CMGGPREPROCESSING {
         parse_sample_info_csv(ch_flowcell.info)
     )
 
-    //*
-    // STEP: INPUT PROCESSING
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // PROCESS BAM/CRAM INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // Convert bam/cram inputs to fastq
-    BAM_TO_FASTQ(ch_inputs.reads)
+    BAM_TO_FASTQ(ch_inputs.reads, params.fasta)
     ch_converted_fastq = BAM_TO_FASTQ.out.fastq
     ch_converted_fastq.dump(tag: "converted_fastq",{prettyDump(it)})
+
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // GATHER PROCESSED INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
     ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq)
 
-    //*
-    // STEP: FASTQ TRIMMING AND QC
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // FASTQ TRIMMING AND QC
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // MODULE: fastp
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
@@ -148,11 +169,13 @@ workflow CMGGPREPROCESSING {
     }.transpose()
     ch_reads_to_map.dump(tag: "reads_to_map",{prettyDump(it)})
 
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // STEP: FASTQ TO BAM CONVERSION
-    //*
-    // Convert non-standard fastq data (e.g. non-human, non-DNA, ...) to BAM
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
+    // Convert non-standard fastq data (e.g. non-human, non-DNA, ...) to BAM
     // CAT_FASTQ([meta, fastq])
     // Merge split fastqs to simplify converting to uBAM
     CAT_FASTQ(ch_trimmed_reads.other)
@@ -161,9 +184,13 @@ workflow CMGGPREPROCESSING {
     // FGBIO_FASTQTOBAM([meta, fastq])
     FGBIO_FASTQTOBAM(CAT_FASTQ.out.reads)
     ch_versions = ch_versions.mix(FGBIO_FASTQTOBAM.out.versions)
-    //*
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // STEP: ALIGNMENT
-    //*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
     ALIGNMENT(ch_reads_to_map, ch_map_index, true)
@@ -173,9 +200,12 @@ workflow CMGGPREPROCESSING {
     ch_bam_per_sample = params.aligner == "snapaligner" ? ALIGNMENT.out.bam : gather_split_files_per_sample(ALIGNMENT.out.bam)
     ch_bam_per_sample.dump(tag: "bam_per_sample",{prettyDump(it)})
 
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // STEP: MARK DUPLICATES
-    //*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
     // Should only run when alinger != snapaligner
     BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, params.fasta)
@@ -187,9 +217,12 @@ workflow CMGGPREPROCESSING {
     ch_markdup_bam_bai = ch_markdup_bam_bai.mix(ALIGNMENT.out.bam.join(ALIGNMENT.out.bai), BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
     ch_markdup_bam_bai.dump(tag: "markdup_bam_bai",{prettyDump(it)})
 
-    //*
-    // STEP: COVERAGE
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // COVERAGE ANALYSIS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // Generate coverage metrics and beds for each sample
     // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
     COVERAGE(
@@ -201,9 +234,12 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(COVERAGE.out.versions)
 
-    //*
-    // STEP: QC
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // QC FOR BAM FILES
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // Gather metrics from bam files
     BAM_QC(
         ch_markdup_bam_bai,   // [meta, bam, bai]
@@ -211,9 +247,12 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
-    //*
-    // STEP: BAM ARCHIVE
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ARCHIVING
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // Compress and checksum bam files
     ch_reads_to_compress = Channel.empty()
     ch_reads_to_compress = ch_reads_to_compress.mix(
@@ -233,9 +272,12 @@ workflow CMGGPREPROCESSING {
     )
     ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
 
-    //*
-    // STEP: POST QC
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // REPORTING
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     // Gather software versions for QC report
     CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
@@ -347,9 +389,9 @@ def parse_sample_info_csv(csv_file) {
 
 // Parse bam/cram input map
 def parse_reads_csv(row) {
-    def cram = file(row.cram, checkIfExists: true)
+    def cram = row.cram ? file(row.cram, checkIfExists: true) : null
 
-    def bam = file(row.bam, checkIfExists: true)
+    def bam = row.bam ? file(row.bam, checkIfExists: true) : null
 
     def meta = [:]
     meta.id         = row.id.toString()
