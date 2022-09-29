@@ -17,14 +17,21 @@ workflow BAM_TO_FASTQ {
         ch_fastq = SAMTOOLS_FASTQ.out.fastq
         ch_versions = ch_versions.mix(SAMTOOLS_FASTQ.out.versions)
 
-        // Get RG info from BAM/CRAM
+        // Get RG info from BAM/CRAM and parse into maps
         SAMTOOLS_GETRG (ch_bam)
-        ch_rg = SAMTOOLS_GETRG.out.readgroup.splitText().dump(tag: 'readgroups')
+        ch_rg = SAMTOOLS_GETRG.out.readgroup
+            .splitText()
+            .map{ meta, rg ->
+                meta.readgroup = rg.stripTrailing().split('\t').tail().collectEntries{ [it.split(':')[0], it.split(':')[1]] }
+                meta.readgroup['SM'] = meta.samplename
+                return [meta]
+            }
         ch_versions = ch_versions.mix(SAMTOOLS_GETRG.out.versions)
 
         // Add RG data to fastq meta
-
+        // thanks to @Midnighter for the utility function
+        ch_fastq_with_rg = CustomChannelOperators.joinOnKeys(ch_rg, ch_fastq, "samplename").dump(tag: 'fastq with RG', {FormattingService.prettyFormat(it)})
     emit:
-        fastq    = ch_fastq    // [[meta, [fastq1, (fastq2)]]]
+        fastq    = ch_fastq_with_rg    // [[meta, [fastq1, (fastq2)]]]
         versions = ch_versions // [versions]
 }

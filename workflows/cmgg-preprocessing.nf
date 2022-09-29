@@ -81,17 +81,17 @@ workflow CMGGPREPROCESSING {
 
     // Sanitize inputs and separate input types
     // For now assume 1 bam/cram per sample
-    ch_inputs = extract_csv(ch_input).view().branch {
+    ch_inputs = extract_csv(ch_input).branch {
         fastq   : (it.size() == 2 && it[1] instanceof List)
         flowcell: (it.size() == 4 && it[1].toString().endsWith(".csv"))
         reads   : (it.size() == 2 && (it[1].toString().endsWith(".bam") || it[1].toString().endsWith(".cram")))
         other   : true
     }
 
-    ch_inputs.fastq.dump(tag: "fastq inputs", {prettyDump(it)})
-    ch_inputs.flowcell.dump(tag: "flowcell inputs", {prettyDump(it)})
-    ch_inputs.reads.dump(tag: "reads inputs", {prettyDump(it)})
-    ch_inputs.other.dump(tag: "other inputs", {prettyDump(it)})
+    ch_inputs.fastq.dump(tag: "fastq inputs", {FormattingService.prettyFormat(it)})
+    ch_inputs.flowcell.dump(tag: "flowcell inputs", {FormattingService.prettyFormat(it)})
+    ch_inputs.reads.dump(tag: "reads inputs", {FormattingService.prettyFormat(it)})
+    ch_inputs.other.dump(tag: "other inputs", {FormattingService.prettyFormat(it)})
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // PROCESS FLOWCELL INPUTS
@@ -105,7 +105,7 @@ workflow CMGGPREPROCESSING {
 
     // DEMULTIPLEX([meta, samplesheet, flowcell])
     DEMULTIPLEX(ch_flowcell.fc)
-    DEMULTIPLEX.out.bclconvert_fastq.dump(tag: "bclconvert_fastq",{prettyDump(it)})
+    DEMULTIPLEX.out.bclconvert_fastq.dump(tag: "bclconvert_fastq",{FormattingService.prettyFormat(it)})
     ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.bclconvert_reports.map { meta, reports -> return reports} )
     ch_versions      = ch_versions.mix(DEMULTIPLEX.out.versions)
 
@@ -124,7 +124,7 @@ workflow CMGGPREPROCESSING {
     // Convert bam/cram inputs to fastq
     BAM_TO_FASTQ(ch_inputs.reads, params.fasta)
     ch_converted_fastq = BAM_TO_FASTQ.out.fastq
-    ch_converted_fastq.dump(tag: "converted_fastq",{prettyDump(it)})
+    ch_converted_fastq.dump(tag: "converted_fastq",{FormattingService.prettyFormat(it)})
 
 
     /*
@@ -147,7 +147,7 @@ workflow CMGGPREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, false, false)
-    FASTP.out.reads.dump(tag: "fastp_trimmed_reads",{prettyDump(it)})
+    FASTP.out.reads.dump(tag: "fastp_trimmed_reads",{FormattingService.prettyFormat(it)})
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
@@ -157,8 +157,8 @@ workflow CMGGPREPROCESSING {
             human: meta.organism ==~ /(?i)Homo sapiens/
             other: true
         }
-    ch_trimmed_reads.human.dump(tag: "human_reads",{prettyDump(it)})
-    ch_trimmed_reads.other.dump(tag: "other_reads",{prettyDump(it)})
+    ch_trimmed_reads.human.dump(tag: "human_reads",{FormattingService.prettyFormat(it)})
+    ch_trimmed_reads.other.dump(tag: "other_reads",{FormattingService.prettyFormat(it)})
 
     // if aliger == snapaligner, proceed
     // else split into channel per chunk
@@ -167,7 +167,7 @@ workflow CMGGPREPROCESSING {
         reads_files = meta.single_end ? reads : reads.sort().collate(2)
         return [meta, reads_files]
     }.transpose()
-    ch_reads_to_map.dump(tag: "reads_to_map",{prettyDump(it)})
+    ch_reads_to_map.dump(tag: "reads_to_map",{FormattingService.prettyFormat(it)})
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -198,7 +198,7 @@ workflow CMGGPREPROCESSING {
 
     // Gather bams per sample for merging
     ch_bam_per_sample = params.aligner == "snapaligner" ? ALIGNMENT.out.bam : gather_split_files_per_sample(ALIGNMENT.out.bam)
-    ch_bam_per_sample.dump(tag: "bam_per_sample",{prettyDump(it)})
+    ch_bam_per_sample.dump(tag: "bam_per_sample",{FormattingService.prettyFormat(it)})
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -215,7 +215,7 @@ workflow CMGGPREPROCESSING {
 
     ch_markdup_bam_bai = Channel.empty()
     ch_markdup_bam_bai = ch_markdup_bam_bai.mix(ALIGNMENT.out.bam.join(ALIGNMENT.out.bai), BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
-    ch_markdup_bam_bai.dump(tag: "markdup_bam_bai",{prettyDump(it)})
+    ch_markdup_bam_bai.dump(tag: "markdup_bam_bai",{FormattingService.prettyFormat(it)})
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -263,7 +263,7 @@ workflow CMGGPREPROCESSING {
             return [ new_meta, bam, [] ]
         })
     )
-    ch_reads_to_compress.dump(tag: "reads_to_compress", {prettyDump(it)})
+    ch_reads_to_compress.dump(tag: "reads_to_compress", {FormattingService.prettyFormat(it)})
 
     BAM_ARCHIVE(
         ch_reads_to_compress,
@@ -477,48 +477,6 @@ def gather_split_files_per_sample(ch_files) {
         return [meta, files.flatten()]
     }
 }
-
-import java.nio.file.Path
-import static groovy.json.JsonOutput.toJson
-import static groovy.json.JsonOutput.prettyPrint
-import groovy.json.*
-
-// replace Path objects with strings
-def replacePath(root, replaceNullWith = "") {
-    if (root instanceof List) {
-        root.collect {
-            if (it instanceof Map) {
-                replacePath(it, replaceNullWith)
-            } else if (it instanceof List) {
-                replacePath(it, replaceNullWith)
-            } else if (it == null) {
-                replaceNullWith
-            } else if (it instanceof Path) {
-                it.toString()
-            } else {
-                it
-            }
-        }
-    } else if (root instanceof Map) {
-        root.each {
-            if (it.value instanceof Map) {
-                replacePath(it.value, replaceNullWith)
-            } else if (it.value instanceof List) {
-                it.value = replacePath(it.value, replaceNullWith)
-            } else if (it.value == null) {
-                it.value = replaceNullWith
-            } else if (it.value instanceof Path) {
-                it.value = it.value.toString()
-            }
-        }
-    }
-}
-
-// pretty print dump values
-def prettyDump(map) {
-    return prettyPrint(toJson(replacePath(map)))
-}
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
