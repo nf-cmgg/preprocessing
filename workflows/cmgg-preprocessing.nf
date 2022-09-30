@@ -374,6 +374,7 @@ def parse_fastq_csv(row) {
     meta.readgroup    = readgroup_from_fastq(fastq_1)
     meta.readgroup.SM = meta.samplename
     meta.readgroup.LB = row.library ? row.library.toString() : ""
+    meta.readgroup.ID = meta.readgroup.ID ? meta.readgroup.ID : meta.samplename
 
     return [meta, fastq_2 ? [fastq_1, fastq_2] : [fastq_1]]
 }
