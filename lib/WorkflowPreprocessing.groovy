@@ -4,7 +4,7 @@
 
 import groovy.text.SimpleTemplateEngine
 
-class WorkflowCmgg-preprocessing {
+class WorkflowPreprocessing {
 
     //
     // Check and validate parameters

@@ -4,9 +4,6 @@
     CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
-
-    Website: https://nf-co.re/cmgg-preprocessing
-    Slack  : https://nfcore.slack.com/channels/cmgg-preprocessing
 ----------------------------------------------------------------------------------------
 */
 
@@ -39,7 +36,7 @@ include { CMGG-PREPROCESSING } from './workflows/cmgg-preprocessing'
 //
 // WORKFLOW: Run main CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing analysis pipeline
 //
-workflow NFCORE_CMGG-PREPROCESSING {
+workflow NF_CMGG-PREPROCESSING {
     CMGG-PREPROCESSING ()
 }
 
@@ -54,7 +51,7 @@ workflow NFCORE_CMGG-PREPROCESSING {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_CMGG-PREPROCESSING ()
+    NF_CMGG-PREPROCESSING ()
 }
 
 /*
