@@ -23,11 +23,11 @@
                 },
                 "cat/fastq": {
                     "branch": "master",
-                    "git_sha": "c13f2274fb9c93ad265640e0e56e6526bd4f42d4"
+                    "git_sha": "e9bc33485e420b51cfbed3cf63ac7463cd5739d3"
                 },
                 "custom/dumpsoftwareversions": {
                     "branch": "master",
-                    "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
+                    "git_sha": "82501fe6d0d12614db67751d30af98d16e63dc59"
                 },
                 "fastp": {
                     "branch": "master",
@@ -65,13 +65,21 @@
                     "branch": "master",
                     "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
                 },
+                "samtools/fastq": {
+                    "branch": "master",
+                    "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                },
                 "samtools/flagstat": {
                     "branch": "master",
                     "git_sha": "bbb99cb8d679555cc01c98766de7869f83283545"
                 },
+                "samtools/getrg": {
+                    "branch": "master",
+                    "git_sha": "b5aa12ad3bf6e1ba2fb46ae24c87f2e34ff52dba"
+                },
                 "samtools/idxstats": {
                     "branch": "master",
-                    "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
+                    "git_sha": "f0a86eaf5bf6ca73c5571193edd00c25bfa308f5"
                 },
                 "samtools/stats": {
                     "branch": "master",

@@ -1,4 +1,4 @@
-process SAMTOOLS_IDXSTATS {
+process SAMTOOLS_FASTQ {
     tag "$meta.id"
     label 'process_low'
 
@@ -8,10 +8,10 @@ process SAMTOOLS_IDXSTATS {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path("*.idxstats"), emit: idxstats
+    tuple val(meta), path("*.fastq.gz"), emit: fastq
     path  "versions.yml"               , emit: versions
 
     when:
@@ -20,13 +20,14 @@ process SAMTOOLS_IDXSTATS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-
+    def endedness = meta.single_end ? "-0 ${prefix}.fastq.gz" : "-1 ${prefix}_1.fastq.gz -2 ${prefix}_2.fastq.gz"
     """
     samtools \\
-        idxstats \\
+        fastq \\
+        $args \\
         --threads ${task.cpus-1} \\
-        $bam \\
-        > ${prefix}.idxstats
+        $endedness \\
+        $bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

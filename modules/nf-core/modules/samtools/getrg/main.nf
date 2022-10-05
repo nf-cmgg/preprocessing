@@ -1,4 +1,4 @@
-process SAMTOOLS_IDXSTATS {
+process SAMTOOLS_GETRG {
     tag "$meta.id"
     label 'process_low'
 
@@ -8,11 +8,11 @@ process SAMTOOLS_IDXSTATS {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*.idxstats"), emit: idxstats
-    path  "versions.yml"               , emit: versions
+    tuple val(meta), file("readgroups.txt"),    emit: readgroup
+    path  "versions.yml",                       emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,14 +20,25 @@ process SAMTOOLS_IDXSTATS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-
     """
     samtools \\
-        idxstats \\
-        --threads ${task.cpus-1} \\
-        $bam \\
-        > ${prefix}.idxstats
+        view \\
+        -H \\
+        $args \\
+        $input \\
+    | grep '^@RG' > readgroups.txt
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+
+    echo -e "@RG\\tID:${prefix}\\tSM:${prefix}\\tPL:ILLUMINA" > readgroups.txt
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
