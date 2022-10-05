@@ -4,7 +4,8 @@
     nf-core/cmgg-preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/nf-core/cmgg-preprocessing
-Website: https://nf-co.re/cmgg-preprocessing
+
+    Website: https://nf-co.re/cmgg-preprocessing
     Slack  : https://nfcore.slack.com/channels/cmgg-preprocessing
 ----------------------------------------------------------------------------------------
 */
