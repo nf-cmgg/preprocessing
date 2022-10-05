@@ -17,8 +17,6 @@ lint:
     - assets/email_template.txt
     - assets/sendmail_template.txt
     - docs/README.md
-    - lib/NfcoreTemplate.groovy
-    - .prettierignore
   nextflow_config:
     - manifest.name
     - manifest.homePage
