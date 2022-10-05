@@ -1,5 +1,5 @@
 //
-// This file holds several functions specific to the workflow/cmgg-preprocessing.nf in the nf-core/cmgg-preprocessing pipeline
+// This file holds several functions specific to the workflow/cmgg-preprocessing.nf in the CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline
 //
 
 import groovy.text.SimpleTemplateEngine
