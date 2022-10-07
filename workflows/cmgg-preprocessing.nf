@@ -53,12 +53,12 @@ include { BAM_TO_FASTQ} from "../subworkflows/local/bam_to_fastq/main"
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/modules/biobambam/bamsormadup/main"
-include { CAT_FASTQ                   } from '../modules/nf-core/modules/cat/fastq/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/modules/custom/dumpsoftwareversions/main"
-include { FASTP                       } from "../modules/nf-core/modules/fastp/main"
-include { FGBIO_FASTQTOBAM            } from "../modules/nf-core/modules/fgbio/fastqtobam/main"
-include { MULTIQC                     } from "../modules/nf-core/modules/multiqc/main"
+include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/biobambam/bamsormadup/main"
+include { CAT_FASTQ                   } from '../modules/nf-core/cat/fastq/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/custom/dumpsoftwareversions/main"
+include { FASTP                       } from "../modules/nf-core/fastp/main"
+include { FGBIO_FASTQTOBAM            } from "../modules/nf-core/fgbio/fastqtobam/main"
+include { MULTIQC                     } from "../modules/nf-core/multiqc/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
