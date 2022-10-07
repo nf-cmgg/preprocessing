@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
-include { SAMTOOLS_FASTQ    } from '../../../modules/nf-core/modules/samtools/fastq/main'
-include { SAMTOOLS_GETRG    } from '../../../modules/nf-core/modules/samtools/getrg/main'
+include { SAMTOOLS_FASTQ    } from '../../../modules/nf-core/samtools/fastq/main'
+include { SAMTOOLS_GETRG    } from '../../../modules/nf-core/samtools/getrg/main'
 
 workflow BAM_TO_FASTQ {
     take:

@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../modules/nf-core/modules/picard/collectmultiplemetrics/main"
+include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../modules/nf-core/picard/collectmultiplemetrics/main"
 include { BAM_STATS_SAMTOOLS            } from "../../nf-core/subworkflows/bam_stats_samtools/main"
 
 workflow BAM_QC {

@@ -6,9 +6,9 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BOWTIE2_ALIGN                     } from "../../../modules/nf-core/modules/bowtie2/align/main"
-include { BWA_MEM as BWAMEM1_MEM            } from '../../../modules/nf-core/modules/bwa/mem/main'
-include { SNAPALIGNER_ALIGN as SNAP_ALIGN   } from '../../../modules/nf-core/modules/snapaligner/align/main'
+include { BOWTIE2_ALIGN                     } from "../../../modules/nf-core/bowtie2/align/main"
+include { BWA_MEM as BWAMEM1_MEM            } from '../../../modules/nf-core/bwa/mem/main'
+include { SNAPALIGNER_ALIGN as SNAP_ALIGN   } from '../../../modules/nf-core/snapaligner/align/main'
 
 
 workflow ALIGNMENT {

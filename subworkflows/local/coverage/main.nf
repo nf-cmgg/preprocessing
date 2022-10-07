@@ -1,8 +1,8 @@
 #!/usr/bin/env nextflow
 
-include { MOSDEPTH                   } from "../../../modules/nf-core/modules/mosdepth/main"
-include { PICARD_COLLECTWGSMETRICS   } from "../../../modules/nf-core/modules/picard/collectwgsmetrics/main"
-include { PICARD_COLLECTHSMETRICS    } from "../../../modules/nf-core/modules/picard/collecthsmetrics/main"
+include { MOSDEPTH                   } from "../../../modules/nf-core/mosdepth/main"
+include { PICARD_COLLECTWGSMETRICS   } from "../../../modules/nf-core/picard/collectwgsmetrics/main"
+include { PICARD_COLLECTHSMETRICS    } from "../../../modules/nf-core/picard/collecthsmetrics/main"
 
 workflow COVERAGE {
     take:
