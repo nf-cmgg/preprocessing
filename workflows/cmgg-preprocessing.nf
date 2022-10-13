@@ -71,11 +71,12 @@ workflow CMGGPREPROCESSING {
     ch_versions      = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-
     // Gather index for mapping given the chosen aligner
-    map_index = params.aligner == "bwa"         ? params.bwa         :
-                params.aligner == "bowtie2"     ? params.bowtie2     :
-                params.aligner == "snapaligner" ? params.snapaligner :
+    map_index = params.aligner == "bowtie2" ? params.bowtie2 :
+                params.aligner == "bwamem"  ? params.bwamem  :
+                params.aligner == "bwamem2" ? params.bwamem2 :
+                params.aligner == "dragmap" ? params.dragmap :
+                params.aligner == "snap"    ? params.snap    :
                 []
     if (map_index) { ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect() } else { exit 1, "Invalid aligner index!" }
 
@@ -88,10 +89,14 @@ workflow CMGGPREPROCESSING {
         other   : true
     }
 
-    ch_inputs.fastq.dump(tag: "fastq inputs", {FormattingService.prettyFormat(it)})
-    ch_inputs.flowcell.dump(tag: "flowcell inputs", {FormattingService.prettyFormat(it)})
-    ch_inputs.reads.dump(tag: "reads inputs", {FormattingService.prettyFormat(it)})
-    ch_inputs.other.dump(tag: "other inputs", {FormattingService.prettyFormat(it)})
+    ch_inputs.fastq
+        .dump(tag: "fastq inputs"   , {FormattingService.prettyFormat(it)})
+    ch_inputs.flowcell
+        .dump(tag: "flowcell inputs", {FormattingService.prettyFormat(it)})
+    ch_inputs.reads
+        .dump(tag: "reads inputs"   , {FormattingService.prettyFormat(it)})
+    ch_inputs.other
+        .dump(tag: "other inputs"   , {FormattingService.prettyFormat(it)})
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // PROCESS FLOWCELL INPUTS
