@@ -37,12 +37,12 @@ def multiqc_report = []
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DEMULTIPLEX } from "../subworkflows/local/demultiplex/main"
-include { ALIGNMENT   } from "../subworkflows/local/alignment/main"
-include { COVERAGE    } from "../subworkflows/local/coverage/main"
-include { BAM_QC      } from "../subworkflows/local/bam_qc/main"
-include { BAM_ARCHIVE } from "../subworkflows/local/bam_archive/main"
-include { BAM_TO_FASTQ} from "../subworkflows/local/bam_to_fastq/main"
+include { DEMULTIPLEX     } from "../subworkflows/local/demultiplex/main"
+include { FASTQ_ALIGN_DNA } from '../subworkflows/nf-core/fastq_align_dna/main'
+include { COVERAGE        } from "../subworkflows/local/coverage/main"
+include { BAM_QC          } from "../subworkflows/local/bam_qc/main"
+include { BAM_ARCHIVE     } from "../subworkflows/local/bam_archive/main"
+include { BAM_TO_FASTQ    } from "../subworkflows/local/bam_to_fastq/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -160,10 +160,10 @@ workflow CMGGPREPROCESSING {
     ch_trimmed_reads.human.dump(tag: "human_reads",{FormattingService.prettyFormat(it)})
     ch_trimmed_reads.other.dump(tag: "other_reads",{FormattingService.prettyFormat(it)})
 
-    // if aliger == snapaligner, proceed
+    // if aligner == snap, proceed
     // else split into channel per chunk
 
-    ch_reads_to_map = params.aligner == "snapaligner" ? ch_trimmed_reads.human : ch_trimmed_reads.human.map{meta, reads ->
+    ch_reads_to_map = params.aligner == "snap" ? ch_trimmed_reads.human : ch_trimmed_reads.human.map{meta, reads ->
         reads_files = meta.single_end ? reads : reads.sort().collate(2)
         return [meta, reads_files]
     }.transpose()
@@ -193,11 +193,11 @@ workflow CMGGPREPROCESSING {
 
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
-    ALIGNMENT(ch_reads_to_map, ch_map_index, true)
-    ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
+    FASTQ_ALIGN_DNA(ch_reads_to_map, ch_map_index, params.aligner, true)
+    ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
     // Gather bams per sample for merging
-    ch_bam_per_sample = params.aligner == "snapaligner" ? ALIGNMENT.out.bam : gather_split_files_per_sample(ALIGNMENT.out.bam)
+    ch_bam_per_sample = params.aligner == "snapaligner" ? FASTQ_ALIGN_DNA.out.bam : gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam)
     ch_bam_per_sample.dump(tag: "bam_per_sample",{FormattingService.prettyFormat(it)})
 
     /*
@@ -214,7 +214,7 @@ workflow CMGGPREPROCESSING {
     ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
     ch_markdup_bam_bai = Channel.empty()
-    ch_markdup_bam_bai = ch_markdup_bam_bai.mix(ALIGNMENT.out.bam.join(ALIGNMENT.out.bai), BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
+    ch_markdup_bam_bai = ch_markdup_bam_bai.mix(FASTQ_ALIGN_DNA.out.bam.join(FASTQ_ALIGN_DNA.out.bai), BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
     ch_markdup_bam_bai.dump(tag: "markdup_bam_bai",{FormattingService.prettyFormat(it)})
 
     /*
