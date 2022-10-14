@@ -202,7 +202,7 @@ workflow CMGGPREPROCESSING {
     ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
     // Gather bams per sample for merging
-    ch_bam_per_sample = params.aligner == "snapaligner" ? FASTQ_ALIGN_DNA.out.bam : gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam)
+    ch_bam_per_sample = params.aligner == "snap" ? FASTQ_ALIGN_DNA.out.bam : gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam)
     ch_bam_per_sample.dump(tag: "bam_per_sample",{FormattingService.prettyFormat(it)})
 
     /*
@@ -212,7 +212,7 @@ workflow CMGGPREPROCESSING {
     */
 
     // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
-    // Should only run when alinger != snapaligner
+    // Should only run when alinger != snap
     BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, params.fasta)
     ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
     ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
