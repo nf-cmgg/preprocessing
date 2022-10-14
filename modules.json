@@ -15,11 +15,11 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "e797efb47b0d3b2124753beb55dc83ab9512bceb"
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "277f4d693a00471690b66598d167bbca78bbe232"
                     },
                     "bwamem2/mem": {
                         "branch": "master",
@@ -31,11 +31,11 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "8022c68e7403eecbd8ba9c49496f69f8c49d50f0"
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "d6363b7ea1b54715677f971a30d417790ee6a0e6"
                     },
                     "fastp": {
                         "branch": "master",
@@ -95,7 +95,7 @@
                     },
                     "snapaligner/align": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "20dd9bb4e5f41b1f6d38dd046affc79edad4b0d0"
                     },
                     "untar": {
                         "branch": "master",
@@ -111,7 +111,7 @@
                     },
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "bbf973e90705cd91c25ea23abda7edf373626c05"
+                        "git_sha": "277f4d693a00471690b66598d167bbca78bbe232"
                     }
                 }
             }
