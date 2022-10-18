@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
-include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../modules/nf-core/modules/picard/collectmultiplemetrics/main"
-include { BAM_STATS_SAMTOOLS            } from "../../nf-core/subworkflows/bam_stats_samtools/main"
+include { PICARD_COLLECTMULTIPLEMETRICS } from "../../../modules/nf-core/picard/collectmultiplemetrics/main"
+include { BAM_STATS_SAMTOOLS            } from "../../nf-core/bam_stats_samtools/main"
 
 workflow BAM_QC {
     take:
@@ -20,7 +20,7 @@ workflow BAM_QC {
         // SUBWORKFLOW: bam_stats_samtools
         // Run samtools QC modules
         // BAM_STATS_SAMTOOLS([meta, bam, bai])
-        BAM_STATS_SAMTOOLS(ch_bam_bai)
+        BAM_STATS_SAMTOOLS(ch_bam_bai, [])
         ch_metrics = ch_metrics.mix(
             BAM_STATS_SAMTOOLS.out.stats,
             BAM_STATS_SAMTOOLS.out.flagstat,
