@@ -3,7 +3,6 @@ lint:
   files_exist:
     - assets/nf-core-preprocessing_logo_light.png
     - assets/nf-core-preprocessing_logo_dark.png
-    - conf/test.config
     - docs/images/nf-core-preprocessing_logo_light.png
     - docs/images/nf-core-preprocessing_logo_dark.png
   files_unchanged:
