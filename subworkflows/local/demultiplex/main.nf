@@ -4,8 +4,8 @@
 // Demultiplex Illumina BCL data using bcl-convert
 //
 
-include { BCLCONVERT } from "../../../modules/nf-core/bclconvert/main"
-include { UNTAR      } from "../../../modules/nf-core/untar/main"
+include { BCLCONVERT } from "../../../modules/nf-core/modules/bclconvert/main"
+include { UNTAR      } from "../../../modules/nf-core/modules/untar/main"
 
 workflow DEMULTIPLEX {
     take:
