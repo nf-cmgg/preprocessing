@@ -91,7 +91,8 @@ workflow CMGGPREPROCESSING {
     if (map_index) {
         ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect().map {it -> [[id: params.genome], it]}
     } else {
-        FASTA_ALIGN_INDEX(ch_fasta, aligner)
+        // TODO: Add support for altliftover file
+        FASTA_ALIGN_INDEX(ch_fasta, Channel.value([[id: params.genome], []]),  aligner)
         ch_map_index =  FASTA_ALIGN_INDEX.out.index
     }
 
