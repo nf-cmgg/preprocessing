@@ -27,8 +27,11 @@ jobs:
           - "test_fastq"
           - "test_cram"
         aligner:
-          - "bwa"
           - "bowtie2"
+          - "bwamem"
+          - "bwamem2"
+          - "dragmap"
+          - "snap"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

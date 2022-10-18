@@ -14,7 +14,8 @@
                 "aligner": {
                     "type": "string",
                     "default": "bowtie2",
-                    "description": "Which aligner to use"
+                    "description": "Which aligner to use",
+                    "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"]
                 },
                 "run_coverage": {
                     "type": "boolean",
@@ -29,7 +30,8 @@
                     "default": true,
                     "description": "Disable Picard QC steps"
                 }
-            }
+            },
+            "required": ["aligner"]
         },
         "trimming_options": {
             "title": "Trimming Options",
@@ -155,23 +157,31 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
-                "bwa": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to BWA-mem index"
-                },
                 "bowtie2": {
                     "type": "string",
                     "default": "None",
                     "hidden": true,
                     "description": "Path to Bowtie2 index"
                 },
-                "snapaligner": {
+                "bwamem": {
                     "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to Snap aligner index"
+                    "default": null,
+                    "hidden": true
+                },
+                "bwamem2": {
+                    "type": "string",
+                    "default": null,
+                    "hidden": true
+                },
+                "dragmap": {
+                    "type": "string",
+                    "default": null,
+                    "hidden": true
+                },
+                "snap": {
+                    "type": "string",
+                    "default": null,
+                    "hidden": true
                 }
             },
             "required": ["genome"]
