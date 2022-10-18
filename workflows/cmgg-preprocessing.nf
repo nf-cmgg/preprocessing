@@ -37,12 +37,13 @@ def multiqc_report = []
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DEMULTIPLEX     } from "../subworkflows/local/demultiplex/main"
-include { FASTQ_ALIGN_DNA } from '../subworkflows/nf-core/fastq_align_dna/main'
-include { COVERAGE        } from "../subworkflows/local/coverage/main"
-include { BAM_QC          } from "../subworkflows/local/bam_qc/main"
-include { BAM_ARCHIVE     } from "../subworkflows/local/bam_archive/main"
-include { BAM_TO_FASTQ    } from "../subworkflows/local/bam_to_fastq/main"
+include { DEMULTIPLEX       } from "../subworkflows/local/demultiplex/main"
+include { FASTQ_ALIGN_DNA   } from '../subworkflows/nf-core/fastq_align_dna/main'
+include { FASTA_ALIGN_INDEX } from '../subworkflows/local/fasta_align_index/main'
+include { COVERAGE          } from "../subworkflows/local/coverage/main"
+include { BAM_QC            } from "../subworkflows/local/bam_qc/main"
+include { BAM_ARCHIVE       } from "../subworkflows/local/bam_archive/main"
+include { BAM_TO_FASTQ      } from "../subworkflows/local/bam_to_fastq/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,17 +69,31 @@ include { MULTIQC                     } from "../modules/nf-core/multiqc/main"
 
 workflow CMGGPREPROCESSING {
 
+    // input values
+    aligner = params.aligner
+
+    // input channels
+    ch_fasta     = Channel.fromPath(params.fasta, checkIfExists: true).collect().map {it -> [[id: params.genome], it]}
+    ch_map_index = Channel.empty()
+
+    // output channels
     ch_versions      = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
     // Gather index for mapping given the chosen aligner
-    map_index = params.aligner == "bowtie2" ? params.bowtie2 :
-                params.aligner == "bwamem"  ? params.bwamem  :
-                params.aligner == "bwamem2" ? params.bwamem2 :
-                params.aligner == "dragmap" ? params.dragmap :
-                params.aligner == "snap"    ? params.snap    :
+    map_index = aligner == "bowtie2" ? params.bowtie2 :
+                aligner == "bwamem"  ? params.bwamem  :
+                aligner == "bwamem2" ? params.bwamem2 :
+                aligner == "dragmap" ? params.dragmap :
+                aligner == "snap"    ? params.snap    :
                 []
-    if (map_index) { ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect().map {it -> [[id: params.genome], it]} } else { exit 1, "Invalid aligner index!" }
+
+    if (map_index) {
+        ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect().map {it -> [[id: params.genome], it]}
+    } else {
+        FASTA_ALIGN_INDEX(ch_fasta, aligner)
+        ch_map_index =  FASTA_ALIGN_INDEX.out.index
+    }
 
     // Sanitize inputs and separate input types
     // For now assume 1 bam/cram per sample
@@ -168,10 +183,15 @@ workflow CMGGPREPROCESSING {
     // if aligner == snap, proceed
     // else split into channel per chunk
 
-    ch_reads_to_map = params.aligner == "snap" ? ch_trimmed_reads.human : ch_trimmed_reads.human.map{meta, reads ->
-        reads_files = meta.single_end ? reads : reads.sort().collate(2)
-        return [meta, reads_files]
-    }.transpose()
+    ch_reads_to_map = Channel.empty()
+    if (aligner == "snap" ) {
+        ch_reads_to_map = ch_trimmed_reads.human
+    } else {
+        ch_reads_to_map = ch_trimmed_reads.human.map{meta, reads ->
+            reads_files = meta.single_end ? reads : reads.sort().collate(2)
+            return [meta, reads_files]
+        }.transpose()
+    }
     ch_reads_to_map.dump(tag: "reads_to_map",{FormattingService.prettyFormat(it)})
 
     /*
@@ -198,12 +218,8 @@ workflow CMGGPREPROCESSING {
 
     // align fastq files per sample, merge, sort and markdup.
     // ALIGNMENT([meta,fastq], index, sort)
-    FASTQ_ALIGN_DNA(ch_reads_to_map, ch_map_index, params.aligner, true)
+    FASTQ_ALIGN_DNA(ch_reads_to_map, ch_map_index, aligner, true)
     ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
-
-    // Gather bams per sample for merging
-    ch_bam_per_sample = params.aligner == "snap" ? FASTQ_ALIGN_DNA.out.bam : gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam)
-    ch_bam_per_sample.dump(tag: "bam_per_sample",{FormattingService.prettyFormat(it)})
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -211,16 +227,22 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
-    // Should only run when alinger != snap
-    BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, params.fasta)
-    ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
-    ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
-
+    // Gather bams per sample for merging and markdup
+    ch_bam_per_sample = Channel.empty()
     ch_markdup_bam_bai = Channel.empty()
-    ch_markdup_bam_bai = ch_markdup_bam_bai.mix(FASTQ_ALIGN_DNA.out.bam.join(FASTQ_ALIGN_DNA.out.bai), BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
-    ch_markdup_bam_bai.dump(tag: "markdup_bam_bai",{FormattingService.prettyFormat(it)})
+
+    if (aligner == "snap") {
+        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(FASTQ_ALIGN_DNA.out.bam.join(FASTQ_ALIGN_DNA.out.bai))
+    } else {
+        ch_bam_per_sample = ch_bam_per_sample.mix(gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam))
+                            .dump(tag: "bam_per_sample",{FormattingService.prettyFormat(it)})
+
+        // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
+        BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, params.fasta)
+        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
+        ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+        ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+    }
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
