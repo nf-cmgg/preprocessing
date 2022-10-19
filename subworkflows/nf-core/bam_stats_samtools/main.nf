@@ -14,6 +14,10 @@ workflow BAM_STATS_SAMTOOLS {
     main:
     ch_versions = Channel.empty()
 
+    bam_bai.view()
+    fasta.view()
+
+
     SAMTOOLS_STATS ( bam_bai, fasta )
     ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
 

@@ -1,0 +1,74 @@
+name: nf-test CI
+# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+  release:
+    types: [published]
+
+env:
+  NXF_ANSI_LOG: false
+
+jobs:
+  test_all:
+    name: Run pipeline with test data (complete)
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'CenterForMedicalGeneticsGhent/nf-cmgg-germline') }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nxf_ver: ["21.10.3", ""]
+        test:
+          - "subworkflows/local/bam_archive/main.nf.test"
+          - "subworkflows/local/bam_qc/main.nf.test"
+          - "subworkflows/local/bam_to_fastq/main.nf.test"
+          - "subworkflows/local/coverage/main.nf.test"
+          - "subworkflows/local/fastq_to_cram/main_bowtie2.nf.test"
+          - "subworkflows/local/fastq_to_cram/main_bwamem1.nf.test"
+          - "subworkflows/local/fastq_to_cram/main_bwamem2.nf.test"
+          - "subworkflows/local/fastq_to_cram/main_dragmap.nf.test"
+          - "subworkflows/local/fastq_to_cram/main_snap.nf.test"
+          - "subworkflows/local/fastq_to_ucram/main.nf.test"
+
+    steps:
+      - name: Free some space
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.nxf_ver }}"
+
+      - name: Install nf-test
+        run: |
+          sudo bash; mkdir /opt/nf-test; cd /opt/nf-test; wget https://github.com/askimed/nf-test/releases/download/v0.6.2/nf-test-0.6.2.tar.gz; tar xvfz nf-test-0.6.2.tar.gz; chmod +x nf-test;
+          echo "/opt/nf-test" >> $GITHUB_PATH;
+
+      - name: Run pipeline with test data
+        run: |
+          nf-test test tests/${{ matrix.test }}.test
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always .nf-test/tests/*/meta/std.{out,err}
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: nf-test-logs
+          path: |
+            .nf-test/tests/*/meta/nextflow.log
+            .nf-test/tests/*/meta/std.out
+            .nf-test/tests/*/meta/std.err
+            .nf-test/tests/*/meta/trace.csv
+            .nf-test/tests/*/work
+            .nf-test/*/output

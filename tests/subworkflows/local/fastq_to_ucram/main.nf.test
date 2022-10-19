@@ -14,13 +14,13 @@ nextflow_workflow {
             workflow {
                 """
                 // ch_fastq [meta, [fastq, fastq]]
-                input[0] = Channel.value([
+                input[0] = Channel.of([
                     [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_1_fastq_gz'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true),
                 ]),
                 // ch_fasta_fai [meta2, fasta, fai]
-                input[1] = Channel.value([
+                input[1] = Channel.of([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),

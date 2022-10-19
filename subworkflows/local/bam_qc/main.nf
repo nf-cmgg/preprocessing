@@ -25,6 +25,7 @@ workflow BAM_QC {
         // Run samtools QC modules
         // BAM_STATS_SAMTOOLS([meta, bam, bai])
         BAM_STATS_SAMTOOLS(ch_bam_bai, ch_fasta)
+
         ch_metrics = ch_metrics.mix(
             BAM_STATS_SAMTOOLS.out.stats,
             BAM_STATS_SAMTOOLS.out.flagstat,
