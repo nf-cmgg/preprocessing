@@ -39,7 +39,7 @@ def multiqc_report = []
 //
 include { DEMULTIPLEX       } from "../subworkflows/local/demultiplex/main"
 include { FASTQ_ALIGN_DNA   } from '../subworkflows/nf-core/fastq_align_dna/main'
-include { FASTA_ALIGN_INDEX } from '../subworkflows/local/fasta_align_index/main'
+include { FASTA_INDEX_DNA   } from '../subworkflows/local/fasta_index_dna/main'
 include { COVERAGE          } from "../subworkflows/local/coverage/main"
 include { BAM_QC            } from "../subworkflows/local/bam_qc/main"
 include { BAM_ARCHIVE       } from "../subworkflows/local/bam_archive/main"
