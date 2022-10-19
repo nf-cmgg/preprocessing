@@ -4,12 +4,13 @@ nextflow_workflow {
     script "subworkflows/local/bam_archive/main.nf"
     workflow "BAM_ARCHIVE"
 
-    test("bam_archive") {
+    test("bam_archive bam") {
         when {
             workflow {
+                """
                 // ch_bam_bai [meta, bam, bai]
                 input[0] = Channel.value([
-                    [id: 'test'],
+                    [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
                 ]),
@@ -19,6 +20,7 @@ nextflow_workflow {
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
                 ])
+                """
             }
         }
 

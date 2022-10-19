@@ -12,18 +12,20 @@ nextflow_workflow {
                 // outdir = "tests/results"
             }
             workflow {
+                """
                 // ch_bam_bai [meta, bam, bai]
                 input[0] = Channel.value([
-                    [id: 'test'],
+                    [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
                 ]),
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.value([
-                    [id: 'sarscov2'],
+                    [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
                 ])
+                """
             }
         }
 
@@ -41,17 +43,20 @@ nextflow_workflow {
                 // outdir = "tests/results"
             }
             workflow {
-                // ch_bam_bai [meta, cram, crai]
+                """
+                // ch_bam_bai [meta, bam, bai]
                 input[0] = Channel.value([
-                    [id: 'test'],
+                    [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
                 ]),
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.value([
-                    [id: 'sarscov2'],
+                    [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
-                    fi
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
+                ])
+                """
             }
         }
 

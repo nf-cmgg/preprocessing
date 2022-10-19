@@ -11,14 +11,13 @@ workflow BAM_ARCHIVE {
     main:
         ch_versions = Channel.empty()
 
+        ch_fasta = ch_fasta_fai.map {meta, fasta, fai -> fasta}
+        ch_fai   = ch_fasta_fai.map {meta, fasta, fai -> fai}
+
         // MODULE: samtools/convert
         // Compress bam to cram
         // SAMTOOLS CONVERT([meta, bam, bai], fasta, fai)
-        SAMTOOLS_CONVERT(
-            ch_bam_bai,
-            ch_fasta_fai.map {meta, fasta, fai -> fasta },
-            ch_fasta_fai.map {meta, fasta, fai -> fai }
-        )
+        SAMTOOLS_CONVERT(ch_bam_bai, ch_fasta, ch_fai)
         ch_versions = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
         // MODULE: MD5SUM

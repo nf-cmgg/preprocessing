@@ -1,10 +1,10 @@
 nextflow_workflow {
 
-    name "Test Workflow COVERAGE"
-    script "subworkflows/local/coverage/main.nf"
-    workflow "COVERAGE"
+    name "Test Workflow FASTQ_TO_CRAM"
+    script "subworkflows/local/fastq_to_cram/main.nf"
+    workflow "FASTQ_TO_CRAM"
 
-    test("coverage bam") {
+    test("fastq_to_cram bowtie2") {
 
         when {
             params {
@@ -13,18 +13,22 @@ nextflow_workflow {
             }
             workflow {
                 """
-                // ch_bam_bai [meta, bam, bai]
+                // ch_fastq [meta, [fastq, fastq]]
                 input[0] = Channel.value([
                     [id: 'test', single_end: false],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true),
                 ]),
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.value([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
-                ])
+                ]),
+                // aligner
+                input[2] = 'bowtie'
+                // aligner_index
+                input[3] = Channel.value(file(params.genomes['GRCh38']['bowtie2'], checkIfExists: true),)
                 """
             }
         }
@@ -35,7 +39,7 @@ nextflow_workflow {
 
     }
 
-    test("coverage cram") {
+    test("fastq_to_cram bowtie2 no_index") {
 
         when {
             params {
@@ -44,18 +48,22 @@ nextflow_workflow {
             }
             workflow {
                 """
-                // ch_bam_bai [meta, bam, bai]
+                // ch_fastq [meta, [fastq, fastq]]
                 input[0] = Channel.value([
                     [id: 'test', single_end: false],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true),
                 ]),
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.value([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
-                ])
+                ]),
+                // aligner
+                input[2] = 'bowtie'
+                // aligner_index
+                input[3] = Channel.empty()
                 """
             }
         }
