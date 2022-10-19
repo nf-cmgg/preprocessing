@@ -4,6 +4,7 @@
 // Take fastq; convert to ubam and compress
 
 // MODULES
+include { CAT_FASTQ            } from "../../../modules/nf-core/cat/fastq/main"
 include { BIOBAMBAM_BAMSORMADUP       } from "../../../modules/nf-core/biobambam/bamsormadup/main"
 include { FGBIO_FASTQTOBAM            } from "../../../modules/nf-core/fgbio/fastqtobam/main"
 
@@ -16,6 +17,9 @@ workflow FASTQ_TO_UCRAM {
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
 
     main:
+
+        ch_versions = Channel.empty()
+
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // STEP: FASTQ TO BAM CONVERSION
@@ -37,14 +41,12 @@ workflow FASTQ_TO_UCRAM {
         // COMPRESSION AND CHECKSUM
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
-        BAM_ARCHIVE(
-            ch_markdup_bam_bai,
-            ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]},
-            params.fai
-        )
+        BAM_ARCHIVE(FGBIO_FASTQTOBAM.out.bam, ch_fasta_fai)
         ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
 
     emit:
-
+        checksum  = BAM_ARCHIVE.out.checksum    // [meta, checksum]
+        cram_crai = BAM_ARCHIVE.out.cram_crai   // [meta, cram, crai]
+        versions  = ch_versions                 // versions
 
 }

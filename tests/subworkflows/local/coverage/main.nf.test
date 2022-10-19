@@ -4,7 +4,7 @@ nextflow_workflow {
     script "subworkflows/local/coverage/main.nf"
     workflow "COVERAGE"
 
-    test("coverage bam") {
+    test("coverage targetted bam") {
 
         when {
             params {
@@ -16,15 +16,19 @@ nextflow_workflow {
                 // ch_bam_bai [meta, bam, bai]
                 input[0] = Channel.of([
                     [id: 'test', single_end: false],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
                 ]),
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.of([
-                    [id: 'homo_sapiens'],
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
-                ])
+                    [id: 'sarscov2'],
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true),
+                ]),
+                // Target interval file
+                input[2] = Channel.of(file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)),
+                // Bait interval file
+                input[3] = Channel.of(file(params.test_data['sarscov2']['genome']['baits_bed'], checkIfExists: true))
                 """
             }
         }
@@ -35,35 +39,39 @@ nextflow_workflow {
 
     }
 
-    test("coverage cram") {
+    // test("coverage wgs bam") {
 
-        when {
-            params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
-            }
-            workflow {
-                """
-                // ch_bam_bai [meta, bam, bai]
-                input[0] = Channel.of([
-                    [id: 'test', single_end: false],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
-                ]),
-                // ch_fasta_fai [meta2, fasta, fai]
-                input[1] = Channel.of([
-                    [id: 'homo_sapiens'],
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
-                ])
-                """
-            }
-        }
+    //     when {
+    //         params {
+    //             // define parameters here. Example:
+    //             // outdir = "tests/results"
+    //         }
+    //         workflow {
+    //             """
+    //             // ch_bam_bai [meta, bam, bai]
+    //             input[0] = Channel.of([
+    //                 [id: 'test', single_end: false],
+    //                 file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+    //                 file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+    //             ]),
+    //             // ch_fasta_fai [meta2, fasta, fai]
+    //             input[1] = Channel.of([
+    //                 [id: 'sarscov2'],
+    //                 file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
+    //                 file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true),
+    //             ]),
+    //             // Target interval file
+    //             input[2] = [],
+    //             // Bait interval file
+    //             input[3] = []
+    //             """
+    //         }
+    //     }
 
-        then {
-            assert workflow.success
-        }
+    //     then {
+    //         assert workflow.success
+    //     }
 
-    }
+    // }
 
 }
