@@ -18,14 +18,15 @@ nextflow_workflow {
                     [id: 'test', single_end: false],
                     [
                         file(params.test_data['homo_sapiens']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-                        file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
-                ]),
+                ])
+
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.of([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
                 ])
                 """
             }
@@ -33,6 +34,18 @@ nextflow_workflow {
 
         then {
             assert workflow.success
+            with (workflow.out) {
+                assert cram_crai.size() == 1
+                assert cram_crai.get(0).size() == 3
+                assert cram_crai.get(0)[1].name.endsWith(".cram")
+                assert path(cram_crai.get(0)[1]).md5 == "f3b2b2f2f2f2f2f2f2f2f2f2f2f2f2f2"
+                assert cram_cram.get(0)[2].name.endsWith(".crai")
+                assert path(cram_crai.get(0)[2]).md5 == "f3b2b2f2f2f2f2f2f2f2f2f2f2f2f2f2"
+
+                assert checksum.get(0).size() == 2
+                assert checksum.get(0)[1].name.endsWith(".md5")
+            }
+
         }
 
     }

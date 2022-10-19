@@ -18,15 +18,18 @@ nextflow_workflow {
                     [id: 'test', single_end: false],
                     file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
                     file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
-                ]),
+                ])
+
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.of([
                     [id: 'sarscov2'],
                     file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true),
-                ]),
+                ])
+
                 // Target interval file
                 input[2] = Channel.of(file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)),
+
                 // Bait interval file
                 input[3] = Channel.of(file(params.test_data['sarscov2']['genome']['baits_bed'], checkIfExists: true))
                 """
@@ -39,39 +42,42 @@ nextflow_workflow {
 
     }
 
-    // test("coverage wgs bam") {
+    test("coverage wgs bam") {
 
-    //     when {
-    //         params {
-    //             // define parameters here. Example:
-    //             // outdir = "tests/results"
-    //         }
-    //         workflow {
-    //             """
-    //             // ch_bam_bai [meta, bam, bai]
-    //             input[0] = Channel.of([
-    //                 [id: 'test', single_end: false],
-    //                 file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-    //                 file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
-    //             ]),
-    //             // ch_fasta_fai [meta2, fasta, fai]
-    //             input[1] = Channel.of([
-    //                 [id: 'sarscov2'],
-    //                 file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
-    //                 file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true),
-    //             ]),
-    //             // Target interval file
-    //             input[2] = [],
-    //             // Bait interval file
-    //             input[3] = []
-    //             """
-    //         }
-    //     }
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                """
+                // ch_bam_bai [meta, bam, bai]
+                input[0] = Channel.of([
+                    [id: 'test', single_end: false],
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                ])
 
-    //     then {
-    //         assert workflow.success
-    //     }
+                // ch_fasta_fai [meta2, fasta, fai]
+                input[1] = Channel.of([
+                    [id: 'sarscov2'],
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true),
+                ])
 
-    // }
+                // Target interval file
+                input[2] = Channel.empty()
+
+                // Bait interval file
+                input[3] = Channel.empty()
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
 
 }

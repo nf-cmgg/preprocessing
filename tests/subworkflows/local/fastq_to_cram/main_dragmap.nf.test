@@ -4,7 +4,7 @@ nextflow_workflow {
     script "subworkflows/local/fastq_to_cram/main.nf"
     workflow "FASTQ_TO_CRAM"
 
-    test("fastq_to_cram bowtie2") {
+    test("fastq_to_cram dragmap") {
 
         when {
             params {
@@ -18,17 +18,20 @@ nextflow_workflow {
                     [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_1_fastq_gz'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true),
-                ]),
+                ])
+
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.of([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
-                ]),
+                ])
+
                 // aligner
-                input[2] = 'bowtie'
+                input[2] = 'dragmap'
+
                 // aligner_index
-                input[3] = Channel.of(file(params.genomes['GRCh38']['bowtie2'], checkIfExists: true),)
+                input[3] = Channel.of(file(params.genomes['GRCh38']['dragmap2'], checkIfExists: true),)
                 """
             }
         }
@@ -39,7 +42,7 @@ nextflow_workflow {
 
     }
 
-    test("fastq_to_cram bowtie2 no_index") {
+    test("fastq_to_cram dragmap no_index") {
 
         when {
             params {
@@ -53,15 +56,18 @@ nextflow_workflow {
                     [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_1_fastq_gz'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true),
-                ]),
+                ])
+
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.of([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
-                ]),
+                ])
+
                 // aligner
-                input[2] = 'bowtie'
+                input[2] = 'dragmap'
+
                 // aligner_index
                 input[3] = Channel.empty()
                 """

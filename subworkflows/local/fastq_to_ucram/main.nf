@@ -41,7 +41,7 @@ workflow FASTQ_TO_UCRAM {
         // COMPRESSION AND CHECKSUM
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
-        BAM_ARCHIVE(FGBIO_FASTQTOBAM.out.bam, ch_fasta_fai)
+        BAM_ARCHIVE(FGBIO_FASTQTOBAM.out.bam.map { meta,bam -> [meta, bam, []]}, ch_fasta_fai)
         ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
 
     emit:
