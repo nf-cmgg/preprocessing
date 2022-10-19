@@ -1,4 +1,4 @@
-process SAMTOOLS_FASTQ {
+process SAMTOOLS_COLLATEFASTQ {
     tag "$meta.id"
     label 'process_low'
 
@@ -8,26 +8,36 @@ process SAMTOOLS_FASTQ {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*.fastq.gz"), emit: fastq
-    path  "versions.yml"               , emit: versions
+    //TODO might be good to have ordered output of the fastq files, so we can
+    // make sure the we get the right files
+    tuple val(meta), path("*_{1,2}.fq.gz"), path("*_other.fq.gz"), path("*_singleton.fq.gz"), emit: reads
+    path "versions.yml"                                                                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
+    def args2 = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def endedness = meta.single_end ? "-0 ${prefix}.fastq.gz" : "-1 ${prefix}_1.fastq.gz -2 ${prefix}_2.fastq.gz"
     """
-    samtools \\
-        fastq \\
+    samtools collate \\
         $args \\
-        --threads ${task.cpus-1} \\
-        $endedness \\
-        $bam
+        --threads $task.cpus \\
+        -O \\
+        $input \\
+        . |
+
+    samtools fastq \\
+        $args2 \\
+        --threads $task.cpus \\
+        -1 ${prefix}_1.fq.gz \\
+        -2 ${prefix}_2.fq.gz \\
+        -0 ${prefix}_other.fq.gz \\
+        -s ${prefix}_singleton.fq.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

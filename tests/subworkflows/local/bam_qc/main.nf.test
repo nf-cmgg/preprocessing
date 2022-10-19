@@ -1,0 +1,65 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_QC"
+    script "subworkflows/local/bam_qc/main.nf"
+    workflow "BAM_QC"
+
+    test("bam_qc bam") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                // ch_bam_bai [meta, bam, bai]
+                input[0] = Channel.value([
+                    [id: 'test'],
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                ]),
+                // ch_fasta_fai [meta2, fasta, fai]
+                input[1] = Channel.value([
+                    [id: 'sarscov2'],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
+                ])
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+    test("bam_qc cram") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                // ch_bam_bai [meta, cram, crai]
+                input[0] = Channel.value([
+                    [id: 'test'],
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
+                ]),
+                // ch_fasta_fai [meta2, fasta, fai]
+                input[1] = Channel.value([
+                    [id: 'sarscov2'],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
+                ])
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+}

@@ -1,0 +1,64 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_TO_FASTQ"
+    script "subworkflows/local/bam_to_fastq/main.nf"
+    workflow "BAM_TO_FASTQ"
+
+    test("bam_to_fastq bam") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                // ch_bam_bai [meta, bam, bai]
+                input[0] = Channel.value([
+                    [id: 'test'],
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                ]),
+                // ch_fasta_fai [meta2, fasta, fai]
+                input[1] = Channel.value([
+                    [id: 'sarscov2'],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
+                ])
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+    test("bam_to_fastq cram") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                // ch_bam_bai [meta, cram, crai]
+                input[0] = Channel.value([
+                    [id: 'test'],
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
+                ]),
+                // ch_fasta_fai [meta2, fasta, fai]
+                input[1] = Channel.value([
+                    [id: 'sarscov2'],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
+                    fi
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+}

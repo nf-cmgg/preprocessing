@@ -38,11 +38,10 @@ def multiqc_report = []
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { DEMULTIPLEX       } from "../subworkflows/local/demultiplex/main"
-include { FASTQ_ALIGN_DNA   } from '../subworkflows/nf-core/fastq_align_dna/main'
-include { FASTA_INDEX_DNA   } from '../subworkflows/local/fasta_index_dna/main'
+include { FASTQ_TO_CRAM     } from "../subworkflows/local/fastq_to_cram/main"
+include { FASTQ_TO_UCRAM    } from "../subworkflows/local/fastq_to_ucram/main"
 include { COVERAGE          } from "../subworkflows/local/coverage/main"
 include { BAM_QC            } from "../subworkflows/local/bam_qc/main"
-include { BAM_ARCHIVE       } from "../subworkflows/local/bam_archive/main"
 include { BAM_TO_FASTQ      } from "../subworkflows/local/bam_to_fastq/main"
 
 /*
@@ -54,11 +53,8 @@ include { BAM_TO_FASTQ      } from "../subworkflows/local/bam_to_fastq/main"
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/biobambam/bamsormadup/main"
-include { CAT_FASTQ                   } from '../modules/nf-core/cat/fastq/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/fastp/main"
-include { FGBIO_FASTQTOBAM            } from "../modules/nf-core/fgbio/fastqtobam/main"
 include { MULTIQC                     } from "../modules/nf-core/multiqc/main"
 
 /*
@@ -74,26 +70,24 @@ workflow CMGGPREPROCESSING {
 
     // input channels
     ch_fasta     = Channel.fromPath(params.fasta, checkIfExists: true).collect().map {it -> [[id: params.genome], it]}
-    ch_map_index = Channel.empty()
+    ch_aligner_index = Channel.empty()
 
     // output channels
     ch_versions      = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
     // Gather index for mapping given the chosen aligner
-    map_index = aligner == "bowtie2" ? params.bowtie2 :
-                aligner == "bwamem"  ? params.bwamem  :
-                aligner == "bwamem2" ? params.bwamem2 :
-                aligner == "dragmap" ? params.dragmap :
-                aligner == "snap"    ? params.snap    :
-                []
+    aligner_index = aligner == "bowtie2" ? params.bowtie2 :
+                    aligner == "bwamem"  ? params.bwamem  :
+                    aligner == "bwamem2" ? params.bwamem2 :
+                    aligner == "dragmap" ? params.dragmap :
+                    aligner == "snap"    ? params.snap    :
+                    []
 
-    if (map_index) {
-        ch_map_index = Channel.fromPath(map_index, checkIfExists: true).collect().map {it -> [[id: params.genome], it]}
+    if (aligner_index) {
+        ch_aligner_index = Channel.fromPath(map_index, checkIfExists: true).collect().map {it -> [[id: params.genome], it]}
     } else {
-        // TODO: Add support for altliftover file
-        FASTA_ALIGN_INDEX(ch_fasta, Channel.value([[id: params.genome], []]),  aligner)
-        ch_map_index =  FASTA_ALIGN_INDEX.out.index
+        ch_aligner_index = Channel.empty()
     }
 
     // Sanitize inputs and separate input types
@@ -106,13 +100,13 @@ workflow CMGGPREPROCESSING {
     }
 
     ch_inputs.fastq
-        .dump(tag: "fastq inputs"   , {FormattingService.prettyFormat(it)})
+        .dump(tag: "MAIN: fastq inputs"   , {FormattingService.prettyFormat(it)})
     ch_inputs.flowcell
-        .dump(tag: "flowcell inputs", {FormattingService.prettyFormat(it)})
+        .dump(tag: "MAIN: flowcell inputs", {FormattingService.prettyFormat(it)})
     ch_inputs.reads
-        .dump(tag: "reads inputs"   , {FormattingService.prettyFormat(it)})
+        .dump(tag: "MAIN: reads inputs"   , {FormattingService.prettyFormat(it)})
     ch_inputs.other
-        .dump(tag: "other inputs"   , {FormattingService.prettyFormat(it)})
+        .dump(tag: "MAIN: other inputs"   , {FormattingService.prettyFormat(it)})
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // PROCESS FLOWCELL INPUTS
@@ -143,7 +137,7 @@ workflow CMGGPREPROCESSING {
     */
 
     // Convert bam/cram inputs to fastq
-    BAM_TO_FASTQ(ch_inputs.reads, params.fasta)
+    BAM_TO_FASTQ(ch_inputs.reads, ch_fasta.map {meta, fasta -> fasta})
     ch_converted_fastq = BAM_TO_FASTQ.out.fastq
     ch_converted_fastq.dump(tag: "converted_fastq",{FormattingService.prettyFormat(it)})
 
@@ -181,69 +175,23 @@ workflow CMGGPREPROCESSING {
     ch_trimmed_reads.human.dump(tag: "human_reads",{FormattingService.prettyFormat(it)})
     ch_trimmed_reads.other.dump(tag: "other_reads",{FormattingService.prettyFormat(it)})
 
-    // if aligner == snap, proceed
-    // else split into channel per chunk
-
-    ch_reads_to_map = Channel.empty()
-    if (aligner == "snap" ) {
-        ch_reads_to_map = ch_trimmed_reads.human
-    } else {
-        ch_reads_to_map = ch_trimmed_reads.human.map{meta, reads ->
-            reads_files = meta.single_end ? reads : reads.sort().collate(2)
-            return [meta, reads_files]
-        }.transpose()
-    }
-    ch_reads_to_map.dump(tag: "reads_to_map",{FormattingService.prettyFormat(it)})
-
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // STEP: FASTQ TO BAM CONVERSION
+    // STEP: FASTQ TO UNALIGNED CRAM CONVERSION
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // Convert non-standard fastq data (e.g. non-human, non-DNA, ...) to BAM
-    // CAT_FASTQ([meta, fastq])
-    // Merge split fastqs to simplify converting to uBAM
-    CAT_FASTQ(ch_trimmed_reads.other)
-    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions)
-
-    // FGBIO_FASTQTOBAM([meta, fastq])
-    FGBIO_FASTQTOBAM(CAT_FASTQ.out.reads)
-    ch_versions = ch_versions.mix(FGBIO_FASTQTOBAM.out.versions)
+    FASTQ_TO_UCRAM(ch_trimmed_reads.other, ch_fasta_fai)
+    ch_versions = ch_versions.mix(FASTQ_TO_UCRAM.out.versions)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // STEP: ALIGNMENT
+    // STEP: FASTQ TO ALIGNED CRAM CONVERSION
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // align fastq files per sample, merge, sort and markdup.
-    // ALIGNMENT([meta,fastq], index, sort)
-    FASTQ_ALIGN_DNA(ch_reads_to_map, ch_map_index, aligner, true)
-    ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
-
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // STEP: MARK DUPLICATES
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
-
-    // Gather bams per sample for merging and markdup
-    ch_bam_per_sample = Channel.empty()
-    ch_markdup_bam_bai = Channel.empty()
-
-    if (aligner == "snap") {
-        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(FASTQ_ALIGN_DNA.out.bam.join(FASTQ_ALIGN_DNA.out.bai))
-    } else {
-        ch_bam_per_sample = ch_bam_per_sample.mix(gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam))
-                            .dump(tag: "bam_per_sample",{FormattingService.prettyFormat(it)})
-
-        // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
-        BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, params.fasta)
-        ch_markdup_bam_bai = ch_markdup_bam_bai.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
-        ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-        ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
-    }
+    FASTQ_TO_CRAM(ch_trimmed_reads.human, ch_fasta_fai, aligner, aligner_index)
+    ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -254,8 +202,8 @@ workflow CMGGPREPROCESSING {
     // Generate coverage metrics and beds for each sample
     // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
     COVERAGE(
-        ch_markdup_bam_bai,
-        params.fasta, params.fai,
+        FASTQ_TO_CRAM.out.cram_crai,
+        ch_fasta_fai,
         [],
         []
     )
@@ -264,41 +212,17 @@ workflow CMGGPREPROCESSING {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // QC FOR BAM FILES
+    // QC FOR ALIGNMENTS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
     // Gather metrics from bam files
     BAM_QC(
-        ch_markdup_bam_bai,   // [meta, bam, bai]
+        FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai
     )
     ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ARCHIVING
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
-
-    // Compress and checksum bam files
-    ch_reads_to_compress = Channel.empty()
-    ch_reads_to_compress = ch_reads_to_compress.mix(
-        ch_markdup_bam_bai,
-        FGBIO_FASTQTOBAM.out.bam.map({ meta, bam ->
-            new_meta = meta.clone()
-            new_meta.id = "${meta.id}.unaligned"
-            return [ new_meta, bam, [] ]
-        })
-    )
-    ch_reads_to_compress.dump(tag: "reads_to_compress", {FormattingService.prettyFormat(it)})
-
-    BAM_ARCHIVE(
-        ch_reads_to_compress,
-        params.fasta,
-        params.fai
-    )
-    ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
