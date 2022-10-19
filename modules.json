@@ -129,6 +129,10 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
                     },
+                    "fasta_index_dna": {
+                        "branch": "master",
+                        "git_sha": "31e3b8c9e88d85a75bd4bf915d2897ecf6b8946c"
+                    },
                     "fastq_align_dna": {
                         "branch": "master",
                         "git_sha": "277f4d693a00471690b66598d167bbca78bbe232"

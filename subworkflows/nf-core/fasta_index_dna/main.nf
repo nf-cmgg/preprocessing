@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 //
-// FASTA_ALIGN_INDEX: Align fastq files to a reference genome
+// FASTA_INDEX_DNA: Align fastq files to a reference genome
 //
 
 include { BOWTIE2_BUILD                     } from '../../../modules/nf-core/bowtie2/build/main'
