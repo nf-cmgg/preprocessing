@@ -8,8 +8,7 @@ nextflow_workflow {
 
         when {
             params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
+                disable_picard_qc = false
             }
             workflow {
                 """
@@ -32,16 +31,16 @@ nextflow_workflow {
 
         then {
             assert workflow.success
+            assert workflow.trace.succeeded().size() == 4
+            assert workflow.out.metrics.size() == 13
         }
-
     }
 
     test("bam_qc cram") {
 
         when {
             params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
+                disable_picard_qc = false
             }
             workflow {
                 """
@@ -63,8 +62,8 @@ nextflow_workflow {
 
         then {
             assert workflow.success
+            assert workflow.trace.succeeded().size() == 4
+            assert workflow.out.metrics.size() == 13
         }
-
     }
-
 }

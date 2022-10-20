@@ -34,6 +34,6 @@ workflow BAM_QC {
         ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:
-        metrics  = ch_metrics  // [[meta, metrics], [...], ...]
-        versions = ch_versions // [versions]
+        metrics  = ch_metrics.map{ meta, metrics -> [meta, metrics.flatten()]}  // [[meta, metrics], [...], ...]
+        versions = ch_versions                                                  // [versions]
 }
