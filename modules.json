@@ -5,6 +5,10 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "bcl2fastq": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
                     "bclconvert": {
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
@@ -128,6 +132,10 @@
                     "bam_stats_samtools": {
                         "branch": "master",
                         "git_sha": "92eb5091ae5368a60cda58b3a0ced8b36d715b0f"
+                    },
+                    "bcl_demultiplex": {
+                        "branch": "master",
+                        "git_sha": "f908bcbcd652d5d487996e08e0f14ded12ea95a3"
                     },
                     "fasta_index_dna": {
                         "branch": "master",

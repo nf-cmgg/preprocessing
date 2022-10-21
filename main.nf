@@ -22,6 +22,7 @@ params.dragmap     = WorkflowMain.getGenomeAttribute(params, "dragmap")
 params.snap        = WorkflowMain.getGenomeAttribute(params, "snap"   )
 params.fai         = WorkflowMain.getGenomeAttribute(params, "fai"    )
 params.fasta       = WorkflowMain.getGenomeAttribute(params, "fasta"  )
+params.dict        = WorkflowMain.getGenomeAttribute(params, "dict"   )
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -25,6 +25,10 @@ workflow FASTQ_TO_CRAM {
 
         ch_versions = Channel.empty()
 
+        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai}
+        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}
+        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}
+
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // STEP: GENERATE ALIGNER INDEX
@@ -74,7 +78,7 @@ workflow FASTQ_TO_CRAM {
             ch_bam_per_sample = gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam).dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
 
             // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
-            BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]})
+            BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
             ch_markdup_bam_bai = ch_markdup_bam_bai.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
             ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
@@ -93,8 +97,8 @@ workflow FASTQ_TO_CRAM {
                 new_meta.id = "${meta.id}.unaligned"
                 return [ new_meta, bam, [] ]
             }),
-            ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]},
-            params.fai
+            ch_fasta,
+            ch_fai
         )
         ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
 

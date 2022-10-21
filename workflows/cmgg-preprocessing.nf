@@ -37,7 +37,7 @@ def multiqc_report = []
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DEMULTIPLEX       } from "../subworkflows/local/demultiplex/main"
+include { BCL_DEMULTIPLEX   } from "../subworkflows/nf-core/bcl_demultiplex/main"
 include { FASTQ_TO_CRAM     } from "../subworkflows/local/fastq_to_cram/main"
 include { FASTQ_TO_UCRAM    } from "../subworkflows/local/fastq_to_ucram/main"
 include { COVERAGE          } from "../subworkflows/local/coverage/main"
@@ -67,10 +67,19 @@ workflow CMGGPREPROCESSING {
 
     // input values
     aligner = params.aligner
+    genome  = params.genome
 
     // input channels
-    ch_fasta     = Channel.fromPath(params.fasta, checkIfExists: true).collect().map {it -> [[id: params.genome], it]}
+    ch_fasta = Channel.fromPath(params.fasta, checkIfExists: true).collect().map {it -> [[id: genome], it]}
+    ch_fai   = Channel.fromPath(params.fai,   checkIfExists: true).collect().map {it -> [[id: genome], it]}
+    ch_dict  = Channel.fromPath(params.dict,  checkIfExists: true).collect().map {it -> [[id: genome], it]}
     ch_aligner_index = Channel.empty()
+
+    ch_bait_regions   = params.bait_regions   ? Channel.fromPath(params.bait_regions,   checkIfExists: true) : Channel.empty()
+    ch_target_regions = params.target_regions ? Channel.fromPath(params.target_regions, checkIfExists: true) : Channel.empty()
+
+    // reference channels
+    ch_fasta_fai = ch_fasta.join(ch_fai)
 
     // output channels
     ch_versions      = Channel.empty()
@@ -83,12 +92,15 @@ workflow CMGGPREPROCESSING {
                     aligner == "dragmap" ? params.dragmap :
                     aligner == "snap"    ? params.snap    :
                     []
-
     if (aligner_index) {
-        ch_aligner_index = Channel.fromPath(map_index, checkIfExists: true).collect().map {it -> [[id: params.genome], it]}
-    } else {
-        ch_aligner_index = Channel.empty()
+        ch_aligner_index = Channel.fromPath(map_index, checkIfExists: true).collect().map {it -> [[id: genome], it]}
     }
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // INPUT PARSING
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
     // Sanitize inputs and separate input types
     // For now assume 1 bam/cram per sample
@@ -107,6 +119,7 @@ workflow CMGGPREPROCESSING {
         .dump(tag: "MAIN: reads inputs"   , {FormattingService.prettyFormat(it)})
     ch_inputs.other
         .dump(tag: "MAIN: other inputs"   , {FormattingService.prettyFormat(it)})
+
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // PROCESS FLOWCELL INPUTS
@@ -118,11 +131,14 @@ workflow CMGGPREPROCESSING {
         info : sample_info
     }
 
-    // DEMULTIPLEX([meta, samplesheet, flowcell])
-    DEMULTIPLEX(ch_flowcell.fc)
-    DEMULTIPLEX.out.bclconvert_fastq.dump(tag: "bclconvert_fastq",{FormattingService.prettyFormat(it)})
-    ch_multiqc_files = ch_multiqc_files.mix(DEMULTIPLEX.out.bclconvert_reports.map { meta, reports -> return reports} )
-    ch_versions      = ch_versions.mix(DEMULTIPLEX.out.versions)
+    // BCL_DEMULTIPLEX([meta, samplesheet, flowcell], demultiplexer)
+    BCL_DEMULTIPLEX(ch_flowcell.fc, "bclconvert")
+    BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq",{FormattingService.prettyFormat(it)})
+    ch_multiqc_files = ch_multiqc_files.mix(
+        DEMULTIPLEX.out.reports.map { meta, reports -> return reports}
+        DEMULTIPLEX.out.stats.map   { meta, stats   -> return stats  }
+    )
+    ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
 
     // Add metadata to demultiplexed fastq's
     ch_demultiplexed_fastq = merge_sample_info(
@@ -137,7 +153,7 @@ workflow CMGGPREPROCESSING {
     */
 
     // Convert bam/cram inputs to fastq
-    BAM_TO_FASTQ(ch_inputs.reads, ch_fasta.map {meta, fasta -> fasta})
+    BAM_TO_FASTQ(ch_inputs.reads, ch_fasta_fai)
     ch_converted_fastq = BAM_TO_FASTQ.out.fastq
     ch_converted_fastq.dump(tag: "converted_fastq",{FormattingService.prettyFormat(it)})
 
@@ -191,6 +207,7 @@ workflow CMGGPREPROCESSING {
     */
 
     FASTQ_TO_CRAM(ch_trimmed_reads.human, ch_fasta_fai, aligner, aligner_index)
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
     /*
@@ -204,8 +221,14 @@ workflow CMGGPREPROCESSING {
     COVERAGE(
         FASTQ_TO_CRAM.out.cram_crai,
         ch_fasta_fai,
-        [],
-        []
+        ch_dict
+        ch_target_regions,
+        ch_bait_regions
+    )
+    ch_coverage_beds = Channel.empty().mix(
+        COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
+        COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
+        COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
     )
     ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(COVERAGE.out.versions)
