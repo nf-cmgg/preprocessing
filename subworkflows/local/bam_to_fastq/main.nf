@@ -20,7 +20,7 @@ workflow BAM_TO_FASTQ {
         SAMTOOLS_COLLATEFASTQ ( ch_bam, ch_meta_fasta, false )
 
         // Only keep the R1 and R2 FASTQ files
-        ch_fastq = SAMTOOLS_COLLATEFASTQ.out.fastq)
+        ch_fastq = SAMTOOLS_COLLATEFASTQ.out.fastq
         ch_versions = ch_versions.mix(SAMTOOLS_COLLATEFASTQ.out.versions)
 
         // Get RG info from BAM/CRAM and parse into maps

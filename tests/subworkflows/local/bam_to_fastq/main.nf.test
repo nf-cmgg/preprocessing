@@ -13,11 +13,10 @@ nextflow_workflow {
             }
             workflow {
                 """
-                // ch_bam_bai [meta, bam, bai]
+                // ch_bam [meta, bam]
                 input[0] = Channel.of([
                     [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
                 ])
 
                 // ch_fasta_fai [meta2, fasta, fai]
@@ -31,9 +30,12 @@ nextflow_workflow {
         }
 
         then {
+            // workflow finished successfully
             assert workflow.success
-        }
+            // check number of processes executed
+            assert workflow.trace.succeeded().size() == 2
 
+        }
     }
 
     test("bam_to_fastq cram") {
@@ -45,11 +47,10 @@ nextflow_workflow {
             }
             workflow {
                 """
-                // ch_bam_bai [meta, bam, bai]
+                // ch_bam [meta, bam]
                 input[0] = Channel.of([
                     [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
                 ])
                 // ch_fasta_fai [meta2, fasta, fai]
                 input[1] = Channel.of([
@@ -62,9 +63,10 @@ nextflow_workflow {
         }
 
         then {
+            // workflow finished successfully
             assert workflow.success
+            // check number of processes executed
+            assert workflow.trace.succeeded().size() == 2
         }
-
     }
-
 }
