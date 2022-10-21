@@ -30,7 +30,7 @@ workflow COVERAGE {
         if (ch_bait_interval || ch_target_interval) {
             if (!ch_bait_interval) log.error("Bait interval channel is empty")
             if (!ch_target_interval) log.error("Target interval channel is empty")
-            PICARD_COLLECTHSMETRICS( ch_reads, ch_fasta, ch_fasta_fai, ch_bait_interval, ch_target_interval )
+            PICARD_COLLECTHSMETRICS( ch_reads, ch_fasta, ch_fai, ch_bait_interval, ch_target_interval )
             ch_metrics = ch_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
             ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions)
         } else {

@@ -8,8 +8,8 @@ nextflow_workflow {
 
         when {
             params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
+                run_coverage = true
+                disable_picard_qc = false
             }
             workflow {
                 """
@@ -38,6 +38,8 @@ nextflow_workflow {
 
         then {
             assert workflow.success
+            // check number of processes executed
+            assert workflow.trace.succeeded().size() == 2
         }
 
     }
@@ -46,8 +48,8 @@ nextflow_workflow {
 
         when {
             params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
+                run_coverage = true
+                disable_picard_qc = false
             }
             workflow {
                 """
@@ -76,6 +78,8 @@ nextflow_workflow {
 
         then {
             assert workflow.success
+            // check number of processes executed
+            assert workflow.trace.succeeded().size() == 2
         }
 
     }
