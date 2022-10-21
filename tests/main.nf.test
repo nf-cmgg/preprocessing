@@ -3,7 +3,7 @@ nextflow_pipeline {
     name "Test Main Workflow"
     script "main.nf"
 
-    test("Main workflow - BCL inputs") {
+    test("Main workflow - default") {
 
         when {
             params {
