@@ -27,11 +27,17 @@ nextflow_workflow {
                     file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true),
                 ])
 
+                // ch_fasta_dict [meta2, dict]
+                input[2] = Channel.of([
+                    [id: 'sarscov2'],
+                    file(params.test_data['sarscov2']['genome']['genome_dict'], checkIfExists: true),
+                ])
+
                 // Target interval file
-                input[2] = Channel.of(file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)),
+                input[3] = Channel.of(file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)),
 
                 // Bait interval file
-                input[3] = Channel.of(file(params.test_data['sarscov2']['genome']['baits_bed'], checkIfExists: true))
+                input[4] = Channel.of(file(params.test_data['sarscov2']['genome']['baits_bed'], checkIfExists: true))
                 """
             }
         }
@@ -67,11 +73,14 @@ nextflow_workflow {
                     file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true),
                 ])
 
-                // Target interval file
+                // ch_fasta_dict
                 input[2] = Channel.empty()
 
-                // Bait interval file
+                // Target interval file
                 input[3] = Channel.empty()
+
+                // Bait interval file
+                input[4] = Channel.empty()
                 """
             }
         }
