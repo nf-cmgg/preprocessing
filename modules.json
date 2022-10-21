@@ -111,7 +111,7 @@
                     },
                     "snapaligner/align": {
                         "branch": "master",
-                        "git_sha": "20dd9bb4e5f41b1f6d38dd046affc79edad4b0d0"
+                        "git_sha": "e96e121a6aaab9a84441f05d4ee2c16751587b9a"
                     },
                     "snapaligner/index": {
                         "branch": "master",
