@@ -93,7 +93,7 @@ workflow CMGGPREPROCESSING {
                     aligner == "snap"    ? params.snap    :
                     []
     if (aligner_index) {
-        ch_aligner_index = Channel.fromPath(map_index, checkIfExists: true).collect().map {it -> [[id: genome], it]}
+        ch_aligner_index = Channel.fromPath(aligner_index, checkIfExists: true).collect().map {it -> [[id: genome], it]}
     }
 
     /*
@@ -135,14 +135,14 @@ workflow CMGGPREPROCESSING {
     BCL_DEMULTIPLEX(ch_flowcell.fc, "bclconvert")
     BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq",{FormattingService.prettyFormat(it)})
     ch_multiqc_files = ch_multiqc_files.mix(
-        DEMULTIPLEX.out.reports.map { meta, reports -> return reports}
-        DEMULTIPLEX.out.stats.map   { meta, stats   -> return stats  }
+        BCL_DEMULTIPLEX.out.reports.map { meta, reports -> return reports},
+        BCL_DEMULTIPLEX.out.stats.map   { meta, stats   -> return stats  }
     )
-    ch_versions = ch_versions.mix(DEMULTIPLEX.out.versions)
+    ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
     // Add metadata to demultiplexed fastq's
     ch_demultiplexed_fastq = merge_sample_info(
-        DEMULTIPLEX.out.bclconvert_fastq,
+        BCL_DEMULTIPLEX.out.fastq,
         parse_sample_info_csv(ch_flowcell.info)
     )
 
@@ -216,35 +216,35 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // Generate coverage metrics and beds for each sample
-    // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
-    COVERAGE(
-        FASTQ_TO_CRAM.out.cram_crai,
-        ch_fasta_fai,
-        ch_dict
-        ch_target_regions,
-        ch_bait_regions
-    )
-    ch_coverage_beds = Channel.empty().mix(
-        COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
-        COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
-        COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
-    )
-    ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions      = ch_versions.mix(COVERAGE.out.versions)
+    // // Generate coverage metrics and beds for each sample
+    // // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
+    // COVERAGE(
+    //     FASTQ_TO_CRAM.out.cram_crai,
+    //     ch_fasta_fai,
+    //     ch_dict
+    //     ch_target_regions,
+    //     ch_bait_regions
+    // )
+    // ch_coverage_beds = Channel.empty().mix(
+    //     COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
+    //     COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
+    //     COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
+    // )
+    // ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
+    // ch_versions      = ch_versions.mix(COVERAGE.out.versions)
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // QC FOR ALIGNMENTS
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+    // /*
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // // QC FOR ALIGNMENTS
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // */
 
-    // Gather metrics from bam files
-    BAM_QC(
-        FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai
-    )
-    ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions      = ch_versions.mix(BAM_QC.out.versions)
+    // // Gather metrics from bam files
+    // BAM_QC(
+    //     FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai
+    // )
+    // ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
+    // ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
 
     /*

@@ -5,7 +5,7 @@
 //
 
 // MODULES
-include { BIOBAMBAM_BAMSORMADUP       } from "../modules/nf-core/biobambam/bamsormadup/main"
+include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 
 // SUBWORKFLOWS
 include { BAM_ARCHIVE       } from "../../local/bam_archive/main"
@@ -23,7 +23,8 @@ workflow FASTQ_TO_CRAM {
 
     main:
 
-        ch_versions = Channel.empty()
+        ch_versions      = Channel.empty()
+        ch_multiqc_files = Channel.empty()
 
         ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai}
         ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}
@@ -92,13 +93,8 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
         BAM_ARCHIVE(
-            FGBIO_FASTQTOBAM.out.bam.map({ meta, bam ->
-                new_meta = meta.clone()
-                new_meta.id = "${meta.id}.unaligned"
-                return [ new_meta, bam, [] ]
-            }),
-            ch_fasta,
-            ch_fai
+            ch_markdup_bam_bai,
+            ch_fasta_fai,
         )
         ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
 
