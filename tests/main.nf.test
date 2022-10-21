@@ -3,12 +3,11 @@ nextflow_pipeline {
     name "Test Main Workflow"
     script "main.nf"
 
-    test("Should run without failures") {
+    test("Main workflow - BCL inputs") {
 
         when {
             params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
+
             }
         }
 
@@ -17,5 +16,4 @@ nextflow_pipeline {
         }
 
     }
-
 }
