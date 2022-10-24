@@ -40,7 +40,7 @@ workflow FASTQ_TO_CRAM {
             ch_aligner_index = FASTA_INDEX_DNA ( ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]} )
             ch_versions = ch_versions.mix(FASTA_INDEX_DNA.out.versions)
         }
-        ch_aligner_index.dump(tag: 'FASTQ_TO_CRAM: aligner index', {FormattingService.prettyFormat(it)})
+        ch_aligner_index.dump(tag: "FASTQ_TO_CRAM: aligner index",{FormattingService.prettyFormat(it)})
 
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

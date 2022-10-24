@@ -94,6 +94,7 @@ workflow CMGGPREPROCESSING {
                     []
     if (aligner_index) {
         ch_aligner_index = Channel.fromPath(aligner_index, checkIfExists: true).collect().map {it -> [[id: genome], it]}
+        ch_aligner_index.dump(tag: "FASTQ_TO_CRAM: aligner index",{FormattingService.prettyFormat(it)})
     }
 
     /*
@@ -206,7 +207,7 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    FASTQ_TO_CRAM(ch_trimmed_reads.human, ch_fasta_fai, aligner, aligner_index)
+    FASTQ_TO_CRAM(ch_trimmed_reads.human, ch_fasta_fai, aligner, ch_aligner_index)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
@@ -216,35 +217,35 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // // Generate coverage metrics and beds for each sample
-    // // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
-    // COVERAGE(
-    //     FASTQ_TO_CRAM.out.cram_crai,
-    //     ch_fasta_fai,
-    //     ch_dict
-    //     ch_target_regions,
-    //     ch_bait_regions
-    // )
-    // ch_coverage_beds = Channel.empty().mix(
-    //     COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
-    //     COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
-    //     COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
-    // )
-    // ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
-    // ch_versions      = ch_versions.mix(COVERAGE.out.versions)
+    // Generate coverage metrics and beds for each sample
+    // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
+    COVERAGE(
+        FASTQ_TO_CRAM.out.cram_crai,
+        ch_fasta_fai,
+        ch_dict,
+        ch_target_regions,
+        ch_bait_regions
+    )
+    ch_coverage_beds = Channel.empty().mix(
+        COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
+        COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
+        COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
+    )
+    ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions      = ch_versions.mix(COVERAGE.out.versions)
 
-    // /*
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // // QC FOR ALIGNMENTS
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // */
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // QC FOR ALIGNMENTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
-    // // Gather metrics from bam files
-    // BAM_QC(
-    //     FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai
-    // )
-    // ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
-    // ch_versions      = ch_versions.mix(BAM_QC.out.versions)
+    // Gather metrics from bam files
+    BAM_QC(
+        FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai
+    )
+    ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
+    ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
 
     /*
