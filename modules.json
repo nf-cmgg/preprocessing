@@ -27,7 +27,7 @@
                     },
                     "bwa/index": {
                         "branch": "master",
-                        "git_sha": "8ddc73f0a37e6be2e852fd828d3effe9734ffa62"
+                        "git_sha": "9518fa4f65f3fb8cde24fde7d40333b39ec8fd65"
                     },
                     "bwa/mem": {
                         "branch": "master",
