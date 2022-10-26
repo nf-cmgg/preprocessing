@@ -29,7 +29,7 @@ jobs:
           - "subworkflows/local/fastq_to_cram/main_bwamem1.nf.test"
           - "subworkflows/local/fastq_to_cram/main_bwamem2.nf.test"
           - "subworkflows/local/fastq_to_cram/main_dragmap.nf.test"
-          - "subworkflows/local/fastq_to_cram/main_snap.nf.test"
+          #- "subworkflows/local/fastq_to_cram/main_snap.nf.test"
           - "subworkflows/local/fastq_to_ucram/main.nf.test"
 
     steps:
