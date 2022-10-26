@@ -53,7 +53,7 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nf-test test ${GITHUB_WORKSPACE}/tests/${{ matrix.test }}.test
+          nf-test test tests/${{ matrix.test }}.test
 
       - name: Output log on failure
         if: failure()
