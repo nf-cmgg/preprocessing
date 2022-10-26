@@ -375,7 +375,7 @@ def parse_reads_csv(row) {
     meta.samplename = row.samplename.toString()
     meta.organism   = row.organism ? row.organism.toString() : ""
     // dirty fix to have the `single_end` key in the meta map
-    meta.single_end = true
+    meta.single_end = false
 
     return [meta, bam ? bam : cram]
 }
