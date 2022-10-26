@@ -11,8 +11,8 @@ workflow BAM_ARCHIVE {
     main:
         ch_versions = Channel.empty()
 
-        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai          }.collect()
-        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta        }.collect()
+        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai  }.collect()
+        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}.collect()
 
         // MODULE: samtools/convert
         // Compress bam to cram

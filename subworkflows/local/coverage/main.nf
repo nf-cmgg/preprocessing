@@ -16,9 +16,9 @@ workflow COVERAGE {
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
-        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai          }.collect()
-        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta        }.collect()
-        ch_dict       = ch_fasta_dict.map {meta, dict      -> dict         }.collect()
+        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai  }.collect()
+        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}.collect()
+        ch_dict       = ch_fasta_dict.map {meta, dict      -> dict }.collect()
 
         MOSDEPTH(ch_reads_index, ch_target_interval, ch_fasta)
         ch_metrics = ch_metrics.mix(
