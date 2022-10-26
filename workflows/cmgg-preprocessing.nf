@@ -79,7 +79,7 @@ workflow CMGGPREPROCESSING {
     ch_target_regions = params.target_regions ? Channel.fromPath(params.target_regions, checkIfExists: true) : Channel.empty()
 
     // reference channels
-    ch_fasta_fai = ch_fasta.join(ch_fai)
+    ch_fasta_fai = ch_fasta.join(ch_fai).collect()
 
     // output channels
     ch_versions      = Channel.empty()
@@ -374,6 +374,8 @@ def parse_reads_csv(row) {
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
     meta.organism   = row.organism ? row.organism.toString() : ""
+    // dirty fix to have the `single_end` key in the meta map
+    meta.single_end = true
 
     return [meta, bam ? bam : cram]
 }
