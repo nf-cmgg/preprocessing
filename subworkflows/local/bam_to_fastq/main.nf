@@ -12,9 +12,9 @@ workflow BAM_TO_FASTQ {
         ch_versions = Channel.empty()
         ch_fastq  = Channel.empty()
 
-        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai}
-        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}
-        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}
+        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai          }.collect()
+        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta        }.collect()
+        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
 
         // Convert BAM/CRAM to FASTQ
         SAMTOOLS_COLLATEFASTQ ( ch_bam, ch_meta_fasta, false )

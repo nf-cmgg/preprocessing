@@ -26,9 +26,8 @@ workflow FASTQ_TO_CRAM {
         ch_versions      = Channel.empty()
         ch_multiqc_files = Channel.empty()
 
-        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai}
-        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}
-        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}
+        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai          }.collect()
+        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta        }.collect()
 
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
