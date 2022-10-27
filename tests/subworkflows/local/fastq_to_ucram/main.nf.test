@@ -23,7 +23,7 @@ nextflow_workflow {
                 ])
 
                 // ch_fasta_fai [meta2, fasta, fai]
-                input[1] = Channel.of([
+                input[1] = Channel.value([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)

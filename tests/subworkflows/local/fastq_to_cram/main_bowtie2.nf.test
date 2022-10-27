@@ -21,7 +21,7 @@ nextflow_workflow {
                 ])
 
                 // ch_fasta_fai [meta2, fasta, fai]
-                input[1] = Channel.of([
+                input[1] = Channel.value([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
@@ -31,7 +31,7 @@ nextflow_workflow {
                 input[2] = 'bowtie2'
 
                 // aligner_index
-                input[3] = Channel.of([
+                input[3] = Channel.value([
                     [id: 'homo_sapiens'],
                     file(params.genomes['GRCh38']['bowtie2'], checkIfExists: true)
                 ])
@@ -62,7 +62,7 @@ nextflow_workflow {
                 ])
 
                 // ch_fasta_fai [meta2, fasta, fai]
-                input[1] = Channel.of([
+                input[1] = Channel.value([
                     [id: 'homo_sapiens'],
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
                     file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
