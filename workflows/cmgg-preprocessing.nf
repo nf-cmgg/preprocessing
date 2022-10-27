@@ -70,16 +70,21 @@ workflow CMGGPREPROCESSING {
     genome  = params.genome
 
     // input channels
-    ch_fasta = Channel.value([[id:genome],file(params.fasta, checkIfExists: true)])
-    ch_fai   = Channel.value([[id:genome],file(params.fai,   checkIfExists: true)])
-    ch_dict  = Channel.value([[id:genome],file(params.dict,  checkIfExists: true)])
+    ch_fasta_fai = Channel.value([
+        [id:genome],
+        file(params.fasta, checkIfExists: true),
+        file(params.fai, checkIfExists: true)
+    ])
+
+    ch_dict  = Channel.value([[
+        id:genome],
+        file(params.dict,  checkIfExists: true)
+    ])
+
     ch_aligner_index = Channel.empty()
 
     ch_bait_regions   = params.bait_regions   ? Channel.fromPath(params.bait_regions,   checkIfExists: true) : Channel.empty()
     ch_target_regions = params.target_regions ? Channel.fromPath(params.target_regions, checkIfExists: true) : Channel.empty()
-
-    // reference channels
-    ch_fasta_fai = ch_fasta.join(ch_fai).collect()
 
     // output channels
     ch_versions      = Channel.empty()
