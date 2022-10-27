@@ -63,6 +63,8 @@ workflow FASTQ_TO_CRAM {
         FASTQ_ALIGN_DNA(ch_reads_to_map, ch_aligner_index, aligner, true)
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
+        FASTQ_ALIGN_DNA.out.bam.dump(tag: "FASTQ_TO_CRAM: aligned bam", {FormattingService.prettyFormat(it)})
+
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // STEP: MARK DUPLICATES
