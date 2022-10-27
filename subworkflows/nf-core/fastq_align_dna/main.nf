@@ -61,7 +61,10 @@ workflow FASTQ_ALIGN_DNA {
         }
 
     emit:
-        bam      = ch_bam         // channel: [ [meta], bam  ]
+        bam      = ch_bam.map{meta, bam ->
+            new_meta = meta.clone()
+            new_meta.aligner = aligner
+        }                         // channel: [ [meta], bam  ]
         bai      = ch_bai         // channel: [ [meta], bai  ]
         reports  = ch_reports     // channel: [ [meta], log  ]
         versions = ch_versions    // channel: [ versions.yml ]
