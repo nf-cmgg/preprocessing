@@ -54,7 +54,7 @@ nextflow_workflow {
                 input[0] = Channel.of([
                     [id: 'test', single_end: false],
                     file(params.test_data['homo_sapiens']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                 ])
 
                 // ch_fasta_fai [meta2, fasta, fai]

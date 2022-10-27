@@ -99,7 +99,6 @@ workflow CMGGPREPROCESSING {
                     []
     if (aligner_index) {
         ch_aligner_index = Channel.value([[id:genome],file(aligner_index, checkIfExists: true)])
-        ch_aligner_index.dump(tag: "FASTQ_TO_CRAM: aligner index",{FormattingService.prettyFormat(it)})
     }
 
     /*
