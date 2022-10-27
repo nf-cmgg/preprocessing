@@ -93,7 +93,7 @@ workflow CMGGPREPROCESSING {
                     aligner == "snap"    ? params.snap    :
                     []
     if (aligner_index) {
-        ch_aligner_index = Channel.fromPath(aligner_index, checkIfExists: true).collect().map {it -> [[id: genome], it]}
+        ch_aligner_index = Channel.value([[id:genome],file(aligner_index, checkIfExists: true)])
         ch_aligner_index.dump(tag: "FASTQ_TO_CRAM: aligner index",{FormattingService.prettyFormat(it)})
     }
 
