@@ -108,7 +108,6 @@ workflow CMGGPREPROCESSING {
                     aligner == "snap"    ? params.snap    :
                     []
     if (aligner_index) {
-        aligner_index.view()
         ch_aligner_index = Channel.value([[id:genome],file(aligner_index, checkIfExists: true)])
     } else {
         FASTA_INDEX_DNA(
