@@ -38,6 +38,7 @@ def multiqc_report = []
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { BCL_DEMULTIPLEX   } from "../subworkflows/nf-core/bcl_demultiplex/main"
+include { FASTA_INDEX_DNA   } from "../subworkflows/nf-core/fasta_index_dna/main"
 include { FASTQ_TO_CRAM     } from "../subworkflows/local/fastq_to_cram/main"
 include { FASTQ_TO_UCRAM    } from "../subworkflows/local/fastq_to_ucram/main"
 include { COVERAGE          } from "../subworkflows/local/coverage/main"
@@ -70,10 +71,19 @@ workflow CMGGPREPROCESSING {
     genome  = params.genome
 
     // input channels
+    ch_fasta     = Channel.value([
+        [id:genome],
+        file(params.fasta, checkIfExists: true)
+    ])
     ch_fasta_fai = Channel.value([
         [id:genome],
         file(params.fasta, checkIfExists: true),
         file(params.fai, checkIfExists: true)
+    ])
+    //TODO: fix this input
+    ch_altliftover = Channel.value([
+        [id:genome],
+        []
     ])
 
     ch_dict  = Channel.value([[
@@ -98,7 +108,17 @@ workflow CMGGPREPROCESSING {
                     aligner == "snap"    ? params.snap    :
                     []
     if (aligner_index) {
+        aligner_index.view()
         ch_aligner_index = Channel.value([[id:genome],file(aligner_index, checkIfExists: true)])
+    } else {
+        FASTA_INDEX_DNA(
+            ch_fasta,
+            ch_altliftover,
+            aligner
+        )
+        ch_aligner_index = FASTA_INDEX_DNA.out.index
+        ch_versions      = ch_versions.mix(FASTA_INDEX_DNA.out.versions)
+        //ch_aligner_index.dump("MAIN: aligner_index", {FormattingService.prettyFormat(it)})
     }
 
     /*
