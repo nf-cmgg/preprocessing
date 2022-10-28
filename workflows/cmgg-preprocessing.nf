@@ -118,7 +118,7 @@ workflow CMGGPREPROCESSING {
         )
         ch_aligner_index = FASTA_INDEX_DNA.out.index
         ch_versions      = ch_versions.mix(FASTA_INDEX_DNA.out.versions)
-        //ch_aligner_index.dump("MAIN: aligner_index", {FormattingService.prettyFormat(it)})
+        ch_aligner_index.dump(tag: "MAIN: aligner index" , {FormattingService.prettyFormat(it)})
     }
 
     /*

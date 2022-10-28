@@ -36,7 +36,11 @@ workflow FASTQ_TO_CRAM {
         */
         // Generate aligner index if not provided
         if ( ! ch_aligner_index ) {
-            ch_aligner_index = FASTA_INDEX_DNA ( ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]} )
+            ch_aligner_index = FASTA_INDEX_DNA (
+                ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}, // channel: [meta, fasta]
+                ch_fasta_fai.map {meta, fasta, fai -> [meta, []]},    // channel: [meta, altliftover] TODO: fix this
+                aligner,                                              // string:  aligner
+            )
             ch_versions = ch_versions.mix(FASTA_INDEX_DNA.out.versions)
         }
         ch_aligner_index.dump(tag: "FASTQ_TO_CRAM: aligner index",{FormattingService.prettyFormat(it)})
@@ -72,19 +76,13 @@ workflow FASTQ_TO_CRAM {
         */
 
         // Gather bams per sample for merging and markdup
-        ch_markdup_bam_bai = Channel.empty()
+        ch_bam_per_sample = gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam).dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
 
-        if (aligner == "snap") {
-            ch_markdup_bam_bai = ch_markdup_bam_bai.mix(FASTQ_ALIGN_DNA.out.bam.join(FASTQ_ALIGN_DNA.out.bai))
-        } else {
-            ch_bam_per_sample = gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam).dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
-
-            // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
-            BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
-            ch_markdup_bam_bai = ch_markdup_bam_bai.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index))
-            ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-            ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
-        }
+        // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
+        BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
+        ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
+        ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+        ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
 
         ch_markdup_bam_bai.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", {FormattingService.prettyFormat(it)})
 
