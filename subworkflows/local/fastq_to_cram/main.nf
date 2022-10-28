@@ -51,15 +51,11 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        ch_reads_to_map = Channel.empty()
-        if (aligner == "snap" ) {
-            ch_reads_to_map = ch_fastq_per_sample
-        } else {
-            ch_reads_to_map = ch_fastq_per_sample.map{meta, reads ->
-                reads_files = meta.single_end ? reads : reads.sort().collate(2)
-                return [meta, reads_files]
-            }.transpose()
-        }
+        ch_reads_to_map = ch_fastq_per_sample.map{meta, reads ->
+            reads_files = meta.single_end ? reads : reads.sort().collate(2)
+            return [meta, reads_files]
+        }.transpose()
+
         ch_reads_to_map.dump(tag: "FASTQ_TO_CRAM: reads to align",{FormattingService.prettyFormat(it)})
 
         // align fastq files per sample
