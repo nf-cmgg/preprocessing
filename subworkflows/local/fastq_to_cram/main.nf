@@ -113,9 +113,9 @@ def gather_split_files_per_sample(ch_files) {
         // set id to filename without lane designation
         meta, files ->
         new_meta = [
-            id: meta.samplename
-            samplename: meta.samplename
-            readgroup: meta.readgroup
+            id: meta.samplename,
+            samplename: meta.samplename,
+            readgroup: meta.readgroup,
             single_end: meta.single_end
         ]
         return [new_meta, files]
