@@ -36,7 +36,7 @@ workflow COVERAGE {
             ch_metrics = ch_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
             ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions)
         } else {
-            PICARD_COLLECTWGSMETRICS( ch_reads, ch_fasta )
+            PICARD_COLLECTWGSMETRICS( ch_reads, ch_fasta, [] )
             ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions)
             ch_metrics = ch_metrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
         }
