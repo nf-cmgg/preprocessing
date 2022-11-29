@@ -70,6 +70,9 @@ workflow CMGGPREPROCESSING {
     aligner = params.aligner
     genome  = params.genome
 
+    // input options
+    run_coverage  = params.run_coverage
+
     // input channels
     ch_fasta     = Channel.value([
         [id:genome],
@@ -242,20 +245,22 @@ workflow CMGGPREPROCESSING {
 
     // Generate coverage metrics and beds for each sample
     // COVERAGE([meta,bam, bai], fasta, fai, target, bait)
-    COVERAGE(
-        FASTQ_TO_CRAM.out.cram_crai,
-        ch_fasta_fai,
-        ch_dict,
-        ch_target_regions,
-        ch_bait_regions
-    )
-    ch_coverage_beds = Channel.empty().mix(
-        COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
-        COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
-        COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
-    )
-    ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions      = ch_versions.mix(COVERAGE.out.versions)
+    if (run_coverage){
+        COVERAGE(
+            FASTQ_TO_CRAM.out.cram_crai,
+            ch_fasta_fai,
+            ch_dict,
+            ch_target_regions,
+            ch_bait_regions
+        )
+        ch_coverage_beds = Channel.empty().mix(
+            COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
+            COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
+            COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
+        )
+        ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
+        ch_versions      = ch_versions.mix(COVERAGE.out.versions)
+    }
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

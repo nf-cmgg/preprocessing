@@ -24,11 +24,6 @@
                 "skip_trimming": {
                     "type": "boolean",
                     "description": "Skip adapter trimming"
-                },
-                "disable_picard_qc": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Disable Picard QC steps"
                 }
             },
             "required": ["aligner"]
