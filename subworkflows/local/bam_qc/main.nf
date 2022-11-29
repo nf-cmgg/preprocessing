@@ -30,7 +30,7 @@ workflow BAM_QC {
             BAM_STATS_SAMTOOLS.out.stats,
             BAM_STATS_SAMTOOLS.out.flagstat,
             BAM_STATS_SAMTOOLS.out.idxstats
-        ).groupTuple()
+        ).groupTuple().map { meta, metrics -> [meta, metrics.flatten()] }
         ch_metrics.dump(tag: "BAM QC: metrics", {FormattingService.prettyFormat(it)})
         ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
