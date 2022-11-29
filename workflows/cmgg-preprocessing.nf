@@ -202,7 +202,7 @@ workflow CMGGPREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, [], false, false)
-    FASTP.out.reads.dump(tag: "fastp_trimmed_reads",{FormattingService.prettyFormat(it)})
+    FASTP.out.reads.dump(tag: "MAIN: fastp trimmed reads",{FormattingService.prettyFormat(it)})
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
@@ -212,8 +212,8 @@ workflow CMGGPREPROCESSING {
             human: meta.organism ==~ /(?i)Homo sapiens/
             other: true
         }
-    ch_trimmed_reads.human.dump(tag: "human_reads",{FormattingService.prettyFormat(it)})
-    ch_trimmed_reads.other.dump(tag: "other_reads",{FormattingService.prettyFormat(it)})
+    ch_trimmed_reads.human.dump(tag: "MAIN: human reads",{FormattingService.prettyFormat(it)})
+    ch_trimmed_reads.other.dump(tag: "MAIN: other reads",{FormattingService.prettyFormat(it)})
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
