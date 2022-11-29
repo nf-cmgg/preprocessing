@@ -41,6 +41,8 @@ workflow COVERAGE {
             ch_metrics = ch_metrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
         }
 
+        ch_metrics.dump(tag: "COVERAGE: metrics", {FormattingService.prettyFormat(it)})
+
     emit:
         per_base_bed        = MOSDEPTH.out.per_base_bed  // [meta, bed]
         per_base_bed_csi    = MOSDEPTH.out.per_base_csi  // [meta, csi]
@@ -48,6 +50,6 @@ workflow COVERAGE {
         regions_bed_csi     = MOSDEPTH.out.regions_csi   // [meta, csi]
         quantized_bed       = MOSDEPTH.out.quantized_bed // [meta, bed]
         quantized_bed_csi   = MOSDEPTH.out.quantized_csi // [meta, csi]
-        metrics             = ch_metrics                 // [[meta, metrics],...]
+        metrics             = ch_metrics.groupTuple()    // [[meta, [metrics]]
         versions            = ch_versions                // [versions]
 }
