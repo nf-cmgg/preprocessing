@@ -39,7 +39,7 @@ Changes in module 'nf-core/picard/collecthsmetrics'
 +        ${reference_dict}
 +    done
 +
-+    picard \\du
++    picard \\
          -Xmx${avail_mem}g \\
          CollectHsMetrics \\
          $args \\

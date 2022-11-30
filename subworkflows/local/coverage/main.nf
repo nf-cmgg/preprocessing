@@ -16,9 +16,9 @@ workflow COVERAGE {
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
-        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai  }.collect()
-        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}.collect()
-        ch_dict       = ch_fasta_dict.map {meta, dict      -> dict }.collect()
+        ch_fai        = ch_fasta_fai.map  {meta, fasta, fai -> [ meta,fai   ] }.collect()
+        ch_fasta      = ch_fasta_fai.map  {meta, fasta, fai -> [ meta,fasta ] }.collect()
+        ch_dict       = ch_fasta_dict.map {meta, dict       -> [ meta, dict ] }.collect()
 
         MOSDEPTH(ch_reads_index, ch_target_interval, ch_fasta)
         ch_metrics = ch_metrics.mix(
@@ -28,15 +28,14 @@ workflow COVERAGE {
         )
         ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
 
-        ch_reads = ch_reads_index.map { meta, reads, index -> return [meta, reads]}
         if (ch_bait_interval || ch_target_interval) {
             if (!ch_bait_interval) log.error("Bait interval channel is empty")
             if (!ch_target_interval) log.error("Target interval channel is empty")
-            PICARD_COLLECTHSMETRICS( ch_reads, ch_fasta, ch_fai, ch_dict, ch_bait_interval, ch_target_interval )
+            PICARD_COLLECTHSMETRICS( ch_reads_index, ch_fasta, ch_fai, ch_dict, ch_bait_interval, ch_target_interval )
             ch_metrics = ch_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
             ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions)
         } else {
-            PICARD_COLLECTWGSMETRICS( ch_reads, ch_fasta, [] )
+            PICARD_COLLECTWGSMETRICS( ch_reads_index, ch_fasta, [] )
             ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions)
             ch_metrics = ch_metrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
         }
