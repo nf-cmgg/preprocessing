@@ -96,8 +96,8 @@ workflow CMGGPREPROCESSING {
 
     ch_aligner_index = Channel.empty()
 
-    ch_bait_regions   = params.bait_regions   ? Channel.fromPath(params.bait_regions,   checkIfExists: true) : Channel.empty()
-    ch_target_regions = params.target_regions ? Channel.fromPath(params.target_regions, checkIfExists: true) : Channel.empty()
+    ch_bait_regions   = params.bait_regions   ? Channel.fromPath(params.bait_regions,   checkIfExists: true) : Channel.value([])
+    ch_target_regions = params.target_regions ? Channel.fromPath(params.target_regions, checkIfExists: true) : Channel.value([])
 
     // output channels
     ch_versions      = Channel.empty()
