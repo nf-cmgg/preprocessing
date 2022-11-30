@@ -44,12 +44,12 @@ workflow COVERAGE {
         ch_metrics.dump(tag: "COVERAGE: metrics", {FormattingService.prettyFormat(it)})
 
     emit:
-        per_base_bed        = MOSDEPTH.out.per_base_bed  // [meta, bed]
-        per_base_bed_csi    = MOSDEPTH.out.per_base_csi  // [meta, csi]
-        regions_bed         = MOSDEPTH.out.regions_bed   // [meta, bed]
-        regions_bed_csi     = MOSDEPTH.out.regions_csi   // [meta, csi]
-        quantized_bed       = MOSDEPTH.out.quantized_bed // [meta, bed]
-        quantized_bed_csi   = MOSDEPTH.out.quantized_csi // [meta, csi]
-        metrics             = ch_metrics.groupTuple()    // [[meta, [metrics]]
-        versions            = ch_versions                // [versions]
+        per_base_bed        = MOSDEPTH.out.per_base_bed                                                     // [meta, bed]
+        per_base_bed_csi    = MOSDEPTH.out.per_base_csi                                                     // [meta, csi]
+        regions_bed         = MOSDEPTH.out.regions_bed                                                      // [meta, bed]
+        regions_bed_csi     = MOSDEPTH.out.regions_csi                                                      // [meta, csi]
+        quantized_bed       = MOSDEPTH.out.quantized_bed                                                    // [meta, bed]
+        quantized_bed_csi   = MOSDEPTH.out.quantized_csi                                                    // [meta, csi]
+        metrics             = ch_metrics.groupTuple().map { meta, metrics -> [meta, metrics.flatten()] }    // [[meta, [metrics]]
+        versions            = ch_versions                                                                   // [versions]
 }
