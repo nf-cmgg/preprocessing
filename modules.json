@@ -9,14 +9,14 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": [
-                            "modules"
+                            "bcl_demultiplex"
                         ]
                     },
                     "bclconvert": {
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": [
-                            "modules"
+                            "bcl_demultiplex"
                         ]
                     },
                     "biobambam/bamsormadup": {
@@ -28,8 +28,9 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
+                        "git_sha": "1a96d72a3a5079424bc9a9ac5c2ca72902af327f",
                         "installed_by": [
+                            "fastq_align_dna",
                             "modules"
                         ]
                     },
@@ -37,20 +38,21 @@
                         "branch": "master",
                         "git_sha": "e797efb47b0d3b2124753beb55dc83ab9512bceb",
                         "installed_by": [
-                            "modules"
+                            "fasta_index_dna"
                         ]
                     },
                     "bwa/index": {
                         "branch": "master",
                         "git_sha": "9518fa4f65f3fb8cde24fde7d40333b39ec8fd65",
                         "installed_by": [
-                            "modules"
+                            "fasta_index_dna"
                         ]
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
+                        "git_sha": "653588be2a4aadab487b530643dbc9baf7a485c4",
                         "installed_by": [
+                            "fastq_align_dna",
                             "modules"
                         ]
                     },
@@ -58,13 +60,14 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": [
-                            "modules"
+                            "fasta_index_dna"
                         ]
                     },
                     "bwamem2/mem": {
                         "branch": "master",
-                        "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
+                        "git_sha": "653588be2a4aadab487b530643dbc9baf7a485c4",
                         "installed_by": [
+                            "fastq_align_dna",
                             "modules"
                         ]
                     },
@@ -86,14 +89,14 @@
                         "branch": "master",
                         "git_sha": "6b8dc21a3afcc92c7446dbdaf27817e7874c5ddf",
                         "installed_by": [
-                            "modules"
+                            "fastq_align_dna"
                         ]
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
                         "git_sha": "6b8dc21a3afcc92c7446dbdaf27817e7874c5ddf",
                         "installed_by": [
-                            "modules"
+                            "fasta_index_dna"
                         ]
                     },
                     "fastp": {
@@ -131,9 +134,16 @@
                             "modules"
                         ]
                     },
+                    "picard/bedtointervallist": {
+                        "branch": "master",
+                        "git_sha": "38727899868c30ac049981fd7da99593dab23470",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
                     "picard/collecthsmetrics": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "f24b0232ef276882e61edbacd4e3f2f687031ef2",
                         "installed_by": [
                             "modules"
                         ],
@@ -141,14 +151,14 @@
                     },
                     "picard/collectmultiplemetrics": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "f24b0232ef276882e61edbacd4e3f2f687031ef2",
                         "installed_by": [
                             "modules"
                         ]
                     },
                     "picard/collectwgsmetrics": {
                         "branch": "master",
-                        "git_sha": "9c92f40092d7a9112953b7571f7021f65740bf7f",
+                        "git_sha": "f24b0232ef276882e61edbacd4e3f2f687031ef2",
                         "installed_by": [
                             "modules"
                         ]
@@ -171,7 +181,7 @@
                         "branch": "master",
                         "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
                         "installed_by": [
-                            "modules"
+                            "bam_stats_samtools"
                         ]
                     },
                     "samtools/getrg": {
@@ -185,35 +195,35 @@
                         "branch": "master",
                         "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
                         "installed_by": [
-                            "modules"
+                            "bam_stats_samtools"
                         ]
                     },
                     "samtools/stats": {
                         "branch": "master",
                         "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
                         "installed_by": [
-                            "modules"
+                            "bam_stats_samtools"
                         ]
                     },
                     "snapaligner/align": {
                         "branch": "master",
                         "git_sha": "e96e121a6aaab9a84441f05d4ee2c16751587b9a",
                         "installed_by": [
-                            "modules"
+                            "fastq_align_dna"
                         ]
                     },
                     "snapaligner/index": {
                         "branch": "master",
                         "git_sha": "20dd9bb4e5f41b1f6d38dd046affc79edad4b0d0",
                         "installed_by": [
-                            "modules"
+                            "fasta_index_dna"
                         ]
                     },
                     "untar": {
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": [
-                            "modules"
+                            "bcl_demultiplex"
                         ]
                     }
                 }
