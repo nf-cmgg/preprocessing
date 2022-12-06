@@ -1,0 +1,45 @@
+nextflow_workflow {
+
+    name "Test Workflow COVERAGE"
+    script "subworkflows/local/coverage/main.nf"
+    workflow "COVERAGE"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                // ch_bam_bai [meta, bam, bai]
+                input[0] = Channel.of([
+                    [id: 'test', single_end: false],
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true)
+                ])
+
+                // ch_fasta_fai [meta2, fasta, fai]
+                input[1] = Channel.of([
+                    [id: 'sarscov2'],
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                ])
+
+                // Target interval file
+                input[2] = Channel.of([])
+
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}
