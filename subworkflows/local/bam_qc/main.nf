@@ -12,12 +12,14 @@ workflow BAM_QC {
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
-        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai  }.collect()
-        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}.collect()
+        ch_fasta = ch_fasta_fai.map {meta, fasta, fai -> fasta             }.collect()
+        ch_meta_fai   = ch_fasta_fai.map {meta, fasta, fai -> [meta, fai]  }.collect()
+        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
+
 
         // Collect multiple metrics
         // PICARD_COLLECTMULTIPLEMETRICS( [meta, bam], fasta)
-        PICARD_COLLECTMULTIPLEMETRICS( ch_bam_bai.map {meta, bam, bai -> return [meta,bam]}, ch_fasta, ch_fai )
+        PICARD_COLLECTMULTIPLEMETRICS( ch_bam_bai, ch_fasta, ch_fai )
         ch_metrics  = ch_metrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
         ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions)
 
