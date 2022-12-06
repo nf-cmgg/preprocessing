@@ -1,10 +1,6 @@
 #!/usr/bin/env nextflow
 
 include { MOSDEPTH                                          } from "../../../modules/nf-core/mosdepth/main"
-include { PICARD_BEDTOINTERVALLIST as BAITTOINTERVALLIST    } from '../../../modules/nf-core/picard/bedtointervallist/main'
-include { PICARD_BEDTOINTERVALLIST as TARGETTOINTERVALLIST  } from '../../../modules/nf-core/picard/bedtointervallist/main'
-include { PICARD_COLLECTHSMETRICS                           } from "../../../modules/nf-core/picard/collecthsmetrics/main"
-include { PICARD_COLLECTWGSMETRICS                          } from "../../../modules/nf-core/picard/collectwgsmetrics/main"
 
 workflow COVERAGE {
     take:
@@ -28,32 +24,6 @@ workflow COVERAGE {
             MOSDEPTH.out.regions_txt
         )
         ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
-
-        if (ch_bait_interval || ch_target_interval) {
-            if (!ch_bait_interval) log.error("Bait interval channel is empty")
-            if (!ch_target_interval) log.error("Target interval channel is empty")
-            BAITTOINTERVALLIST(ch_bait_interval, ch_fasta_dict, [])
-            ch_versions = ch_versions.mix(BAITTOINTERVALLIST.out.versions)
-
-            TARGETTOINTERVALLIST(ch_target_interval, ch_fasta_dict,[])
-            ch_versions = ch_versions.mix(TARGETTOINTERVALLIST.out.versions)
-
-            PICARD_COLLECTHSMETRICS(
-                ch_reads_index,
-                ch_fasta,
-                ch_fai,
-                ch_dict,
-                BAITTOINTERVALLIST.out.interval_list,
-                TARGETTOINTERVALLIST.out.interval_list
-            )
-            ch_metrics = ch_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
-            ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions)
-        } else {
-            PICARD_COLLECTWGSMETRICS( ch_reads_index, ch_fasta, [] )
-            ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions)
-            ch_metrics = ch_metrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
-        }
-
         ch_metrics.dump(tag: "COVERAGE: metrics", {FormattingService.prettyFormat(it)})
 
     emit:
