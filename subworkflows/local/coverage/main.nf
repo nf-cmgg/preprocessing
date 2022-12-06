@@ -6,9 +6,7 @@ workflow COVERAGE {
     take:
         ch_reads_index      // channel: [mandatory][ meta, reads, index ]
         ch_fasta_fai        // channel: [mandatory][ meta2, fasta, fai ]
-        ch_fasta_dict       // channel: [mandatory][ meta2, dict ]
         ch_target_interval  // channel: [optional] [ target_interval_bed ]
-        ch_bait_interval    // channel: [optional] [ bai_interval_bed ]
 
     main:
         ch_versions = Channel.empty()

@@ -38,7 +38,7 @@ workflow BAM_QC {
 
         // SUBWORKFLOW: bam_qc_picard
         // Run Picard QC modules
-        // BAM_QC_PICARD([meta, bam, bai], [meta2, fasta], [meta2, fai], [bait_interval], [target])
+        // BAM_QC_PICARD([meta, bam, bai], [meta2, fasta], [meta2, fai], [bait_interval], [target_interval])
         BAM_QC_PICARD( ch_bam_bai, ch_meta_fasta, ch_meta_fai, ch_bait_interval_list, ch_target_interval_list )
         ch_metrics  = ch_metrics.mix(BAM_QC_PICARD.out.coverage_metrics, BAM_QC_PICARD.out.multiple_metrics)
         ch_versions = ch_versions.mix(BAM_QC_PICARD.out.versions)
