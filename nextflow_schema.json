@@ -15,7 +15,13 @@
                     "type": "string",
                     "default": "bowtie2",
                     "description": "Which aligner to use",
-                    "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"]
+                    "enum": [
+                        "bowtie2",
+                        "bwamem",
+                        "bwamem2",
+                        "dragmap",
+                        "snap"
+                    ]
                 },
                 "run_coverage": {
                     "type": "boolean",
@@ -26,7 +32,9 @@
                     "description": "Skip adapter trimming"
                 }
             },
-            "required": ["aligner"]
+            "required": [
+                "aligner"
+            ]
         },
         "trimming_options": {
             "title": "Trimming Options",
@@ -61,7 +69,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -116,7 +127,7 @@
                 },
                 "dict": {
                     "type": "string",
-                    "default": null,
+                    "default": "None",
                     "hidden": true
                 },
                 "fai": {
@@ -131,11 +142,11 @@
                 },
                 "bait_regions": {
                     "type": "string",
-                    "default": null
+                    "default": "None"
                 },
                 "target_regions": {
                     "type": "string",
-                    "default": null
+                    "default": "None"
                 },
                 "genomes_base": {
                     "type": "string",
@@ -174,25 +185,34 @@
                 "bwamem": {
                     "type": "string",
                     "default": "None",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Path to BWA index"
                 },
                 "bwamem2": {
                     "type": "string",
                     "default": "None",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Path to BWAMEM2 index"
                 },
                 "dragmap": {
                     "type": "string",
                     "default": "None",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Path to Dragmap index"
                 },
                 "snap": {
                     "type": "string",
                     "default": "None",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Path to SNAP aligner index"
                 }
             },
-            "required": ["genome", "fasta", "dict", "fai"]
+            "required": [
+                "genome",
+                "fasta",
+                "dict",
+                "fai"
+            ]
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -239,6 +259,16 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
+                },
+                "cmgg_config_version": {
+                    "type": "string",
+                    "default": "main",
+                    "description": "Git commit id for CMGG configs"
+                },
+                "cmgg_config_base": {
+                    "type": "string",
+                    "default": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-config/main",
+                    "description": "Base directory for Institutional configs."
                 }
             }
         },
@@ -296,7 +326,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
@@ -342,7 +379,8 @@
                 },
                 "multiqc_logo": {
                     "type": "string",
-                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png"
+                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png",
+                    "description": "Custom MultiQC logo"
                 },
                 "tracedir": {
                     "type": "string",
