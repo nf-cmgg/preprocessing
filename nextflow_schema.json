@@ -19,11 +19,17 @@
                 },
                 "run_coverage": {
                     "type": "boolean",
-                    "description": "Run coverage analysis steps"
+                    "description": "Run coverage analysis steps",
+                    "default": false
                 },
                 "skip_trimming": {
                     "type": "boolean",
                     "description": "Skip adapter trimming"
+                },
+                "disable_picard_metrics": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Disable the calculation of (slow) Picard metrics"
                 }
             },
             "required": ["aligner"]
@@ -411,5 +417,6 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {}
 }
