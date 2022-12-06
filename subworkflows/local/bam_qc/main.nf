@@ -18,8 +18,8 @@ workflow BAM_QC {
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
-        ch_bait_interval_list = Channel.empty()
-        ch_target_interval_list = Channel.empty()
+        ch_bait_interval_list = Channel.value([])
+        ch_target_interval_list = Channel.value([])
 
         ch_fasta = ch_fasta_fai.map {meta, fasta, fai -> fasta             }.collect()
         ch_meta_fai   = ch_fasta_fai.map {meta, fasta, fai -> [meta, fai]  }.collect()
@@ -28,12 +28,12 @@ workflow BAM_QC {
         if ( ch_bait_interval && (ch_bait_interval.collect().toString() ==~ ".*bed.*" )) {
             BAITTOINTERVALLIST(ch_bait_interval, ch_fasta_dict, [])
             ch_versions = ch_versions.mix(BAITTOINTERVALLIST.out.versions)
-            ch_bait_interval_list = BAITTOINTERVALLIST.out.interval_list
+            ch_bait_interval_list = BAITTOINTERVALLIST.out.interval_list.collect()
         }
         if ( ch_target_interval && (ch_target_interval.collect().toString() ==~ ".*bed.*" )) {
             TARGETTOINTERVALLIST(ch_target_interval, ch_fasta_dict,[])
             ch_versions = ch_versions.mix(TARGETTOINTERVALLIST.out.versions)
-            ch_target_interval_list = TARGETTOINTERVALLIST.out.interval_list
+            ch_target_interval_list = TARGETTOINTERVALLIST.out.interval_list.collect()
         }
 
         // SUBWORKFLOW: bam_qc_picard
