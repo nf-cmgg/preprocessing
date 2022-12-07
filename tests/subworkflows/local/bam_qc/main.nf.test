@@ -124,10 +124,10 @@ nextflow_workflow {
                     ])
 
                 // ch_target_interval
-                input[3] = Channel.of([])
+                input[3] = Channel.empty()
 
                 // ch_bait_interval
-                input[4] = Channel.of([])
+                input[4] = Channel.empty()
                 """
             }
         }
