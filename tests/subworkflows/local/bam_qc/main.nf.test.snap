@@ -1,0 +1,33 @@
+{
+    "QC - Picard WGS metrics": {
+        "content": [
+            {
+                "versions": [
+                    "versions.yml:md5,c679001d803dacd120a83e77ce7ebf7c",
+                    "versions.yml:md5,3fe0fb0d490cf1bf4adef6054a996aaa",
+                    "versions.yml:md5,807bb6c5f45f7f79747bf0ac76b4b1d3",
+                    "versions.yml:md5,88ef3b5bbeff0dcac96fb5a6371d5b37"
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15",
+                            "test.flagstat:md5,a53f3d26e2e9851f7d528442bbfe9781",
+                            "test.stats:md5,e40e4071746db8b5eed5012c59b3304a",
+                            "test.CollectMultipleMetrics.alignment_summary_metrics:md5,37140daed05c6055ad2ce374016b6380",
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle_metrics:md5,1d380d44c3e8850d8a6aa2b110e143f2",
+                            "test.CollectMultipleMetrics.insert_size_metrics:md5,e1ec34b2728108568d3037674192c3e5",
+                            "test.CollectMultipleMetrics.quality_by_cycle_metrics:md5,c00773b5b19ff34c1c0ac424305e1455",
+                            "test.CollectMultipleMetrics.quality_distribution_metrics:md5,87ff3689c629545af9be5e8adea7dd9d"
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2022-12-06T14:40:10+0000"
+    }
+}
