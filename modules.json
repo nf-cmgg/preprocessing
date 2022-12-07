@@ -102,18 +102,17 @@
                     },
                     "picard/collecthsmetrics": {
                         "branch": "master",
-                        "git_sha": "f24b0232ef276882e61edbacd4e3f2f687031ef2",
-                        "installed_by": ["bam_qc_picard", "modules"],
-                        "patch": "modules/nf-core/picard/collecthsmetrics/picard-collecthsmetrics.diff"
+                        "git_sha": "71961a0773491b49dd96c197877db3434bfc82c6",
+                        "installed_by": ["bam_qc_picard", "modules"]
                     },
                     "picard/collectmultiplemetrics": {
                         "branch": "master",
-                        "git_sha": "f24b0232ef276882e61edbacd4e3f2f687031ef2",
+                        "git_sha": "71961a0773491b49dd96c197877db3434bfc82c6",
                         "installed_by": ["bam_qc_picard", "modules"]
                     },
                     "picard/collectwgsmetrics": {
                         "branch": "master",
-                        "git_sha": "f24b0232ef276882e61edbacd4e3f2f687031ef2",
+                        "git_sha": "71961a0773491b49dd96c197877db3434bfc82c6",
                         "installed_by": ["bam_qc_picard", "modules"]
                     },
                     "samtools/collatefastq": {
@@ -138,7 +137,7 @@
                     },
                     "samtools/idxstats": {
                         "branch": "master",
-                        "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
+                        "git_sha": "71961a0773491b49dd96c197877db3434bfc82c6",
                         "installed_by": ["bam_stats_samtools"]
                     },
                     "samtools/stats": {
