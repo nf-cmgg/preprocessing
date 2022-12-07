@@ -18,8 +18,8 @@ workflow BAM_QC {
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
-        ch_bait_interval_list = Channel.empty()
-        ch_target_interval_list = Channel.empty()
+        ch_bait_interval_list = []
+        ch_target_interval_list = []
 
         ch_fasta = ch_fasta_fai.map {meta, fasta, fai -> fasta             }.collect()
         ch_meta_fai   = ch_fasta_fai.map {meta, fasta, fai -> [meta, fai]  }.collect()
