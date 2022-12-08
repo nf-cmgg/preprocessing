@@ -31,7 +31,7 @@ jobs:
           - "bwamem"
           - "bwamem2"
           - "dragmap"
-          - "snap"
+          #- "snap"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

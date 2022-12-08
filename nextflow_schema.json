@@ -19,16 +19,17 @@
                 },
                 "run_coverage": {
                     "type": "boolean",
-                    "description": "Run coverage analysis steps"
+                    "description": "Run coverage analysis steps",
+                    "default": false
                 },
                 "skip_trimming": {
                     "type": "boolean",
                     "description": "Skip adapter trimming"
                 },
-                "disable_picard_qc": {
+                "disable_picard_metrics": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Disable Picard QC steps"
+                    "description": "Disable the calculation of (slow) Picard metrics"
                 }
             },
             "required": ["aligner"]
@@ -119,6 +120,11 @@
                     "fa_icon": "far fa-file-code",
                     "hidden": true
                 },
+                "dict": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true
+                },
                 "fai": {
                     "type": "string",
                     "format": "file-path",
@@ -128,6 +134,14 @@
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
                     "fa_icon": "far fa-file-code",
                     "hidden": true
+                },
+                "bait_regions": {
+                    "type": "string",
+                    "default": "None"
+                },
+                "target_regions": {
+                    "type": "string",
+                    "default": "None"
                 },
                 "genomes_base": {
                     "type": "string",
@@ -165,26 +179,30 @@
                 },
                 "bwamem": {
                     "type": "string",
-                    "default": null,
-                    "hidden": true
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to BWA index"
                 },
                 "bwamem2": {
                     "type": "string",
-                    "default": null,
-                    "hidden": true
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to BWAMEM2 index"
                 },
                 "dragmap": {
                     "type": "string",
-                    "default": null,
-                    "hidden": true
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to Dragmap index"
                 },
                 "snap": {
                     "type": "string",
-                    "default": null,
-                    "hidden": true
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to SNAP aligner index"
                 }
             },
-            "required": ["genome"]
+            "required": ["genome", "fasta", "dict", "fai"]
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -231,6 +249,16 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
+                },
+                "cmgg_config_version": {
+                    "type": "string",
+                    "default": "main",
+                    "description": "Git commit id for CMGG configs"
+                },
+                "cmgg_config_base": {
+                    "type": "string",
+                    "default": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-config/main",
+                    "description": "Base directory for Institutional configs."
                 }
             }
         },
@@ -334,7 +362,8 @@
                 },
                 "multiqc_logo": {
                     "type": "string",
-                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png"
+                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png",
+                    "description": "Custom MultiQC logo"
                 },
                 "tracedir": {
                     "type": "string",
@@ -388,5 +417,6 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {}
 }

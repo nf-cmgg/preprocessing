@@ -1,21 +1,27 @@
 #!/usr/bin/env nextflow
 
-include { SAMTOOLS_FASTQ    } from '../../../modules/nf-core/samtools/fastq/main'
-include { SAMTOOLS_GETRG    } from '../../../modules/nf-core/samtools/getrg/main'
+include { SAMTOOLS_COLLATEFASTQ } from '../../../modules/nf-core/samtools/collatefastq/main'
+include { SAMTOOLS_GETRG        } from '../../../modules/nf-core/samtools/getrg/main'
 
 workflow BAM_TO_FASTQ {
     take:
-        ch_bam      // [meta, bam]
-        ch_fasta    // fasta
+        ch_bam       // channel: [mandatory] [meta, bam]
+        ch_fasta_fai // channel: [mandatory] [meta2, fasta, fai]
 
     main:
         ch_versions = Channel.empty()
         ch_fastq  = Channel.empty()
 
+        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai          }.collect()
+        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta        }.collect()
+        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
+
         // Convert BAM/CRAM to FASTQ
-        SAMTOOLS_FASTQ ( ch_bam )
-        ch_fastq = SAMTOOLS_FASTQ.out.fastq
-        ch_versions = ch_versions.mix(SAMTOOLS_FASTQ.out.versions)
+        SAMTOOLS_COLLATEFASTQ ( ch_bam, ch_meta_fasta, false )
+
+        // Only keep the R1 and R2 FASTQ files
+        ch_fastq = SAMTOOLS_COLLATEFASTQ.out.fastq
+        ch_versions = ch_versions.mix(SAMTOOLS_COLLATEFASTQ.out.versions)
 
         // Get RG info from BAM/CRAM and parse into maps
         SAMTOOLS_GETRG (ch_bam)
@@ -23,7 +29,7 @@ workflow BAM_TO_FASTQ {
             .splitText()
             .map{ meta, rg ->
                 meta.readgroup = rg.stripTrailing().split('\t').tail().collectEntries{ [it.split(':')[0], it.split(':')[1]] }
-                meta.readgroup['SM'] = meta.samplename
+                meta.readgroup['SM'] = meta.samplename ?: meta.id
                 return [meta]
             }
         ch_versions = ch_versions.mix(SAMTOOLS_GETRG.out.versions)
@@ -32,6 +38,6 @@ workflow BAM_TO_FASTQ {
         // thanks to @Midnighter for the utility function
         ch_fastq_with_rg = CustomChannelOperators.joinOnKeys(ch_rg, ch_fastq, "samplename").dump(tag: 'fastq with RG', {FormattingService.prettyFormat(it)})
     emit:
-        fastq    = ch_fastq_with_rg    // [[meta, [fastq1, (fastq2)]]]
-        versions = ch_versions // [versions]
+        fastq    = ch_fastq_with_rg // [meta, [fastq1, (fastq2)]]
+        versions = ch_versions      // [versions]
 }
