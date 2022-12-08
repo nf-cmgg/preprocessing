@@ -42,7 +42,7 @@
                     },
                     "bwamem2/index": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "f849bac4c13fef0f6b7fc66e34565aa07ea4c6a7",
                         "installed_by": ["fasta_index_dna"]
                     },
                     "bwamem2/mem": {
@@ -112,7 +112,7 @@
                     },
                     "picard/collectwgsmetrics": {
                         "branch": "master",
-                        "git_sha": "71961a0773491b49dd96c197877db3434bfc82c6",
+                        "git_sha": "0e47e3c4b3860536181ed0f12def0b314d4e39b6",
                         "installed_by": ["bam_qc_picard", "modules"]
                     },
                     "samtools/collatefastq": {
@@ -166,7 +166,7 @@
                 "nf-core": {
                     "bam_qc_picard": {
                         "branch": "master",
-                        "git_sha": "f24b0232ef276882e61edbacd4e3f2f687031ef2",
+                        "git_sha": "0e47e3c4b3860536181ed0f12def0b314d4e39b6",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_stats_samtools": {
@@ -181,7 +181,7 @@
                     },
                     "fasta_index_dna": {
                         "branch": "master",
-                        "git_sha": "31e3b8c9e88d85a75bd4bf915d2897ecf6b8946c",
+                        "git_sha": "e1f53dfd48e8c8da6557e520cbe6abe869874808",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_align_dna": {
