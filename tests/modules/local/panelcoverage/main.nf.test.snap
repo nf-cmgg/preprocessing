@@ -1,0 +1,21 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "versions": [
+                    "versions.yml:md5,cdc869a829c25bc6ddf9068f63941798"
+                ],
+                "regions_txt": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.region.dist.txt:md5,c1163eb5af9994f92a07dc3ba827cccc"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2022-12-12T07:39:01+0000"
+    }
+}
