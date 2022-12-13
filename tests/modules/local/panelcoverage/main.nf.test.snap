@@ -11,11 +11,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.region.dist.txt:md5,c1163eb5af9994f92a07dc3ba827cccc"
+                        "test.region.dist.txt:md5,7e17344d515fc7738c420de1ffeb9595"
                     ]
                 ]
             }
         ],
-        "timestamp": "2022-12-12T07:39:01+0000"
+        "timestamp": "2022-12-13T10:14:14+0000"
     }
 }
