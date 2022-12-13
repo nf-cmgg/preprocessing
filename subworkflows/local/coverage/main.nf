@@ -14,8 +14,9 @@ workflow COVERAGE {
         ch_panels           // channel: [optional] [ panel_bed, ... ]
 
     main:
-        ch_versions = Channel.empty()
-        ch_metrics  = Channel.empty()
+        ch_versions             = Channel.empty()
+        ch_metrics              = Channel.empty()
+        ch_coverage_mqc_files   = Channel.empty()
 
         ch_fasta      = ch_fasta_fai.map  {meta, fasta, fai -> fasta }.collect()
 
@@ -33,19 +34,30 @@ workflow COVERAGE {
         ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
         ch_metrics.dump(tag: "COVERAGE: metrics", {FormattingService.prettyFormat(it)})
 
-        // Couple per-base bed to each panel bed
-        MOSDEPTH.out.per_base_bed
-            .combine(ch_panels)
-            .dump(tag: "COVERAGE: per-base panel combination", {FormattingService.prettyFormat(it)})
-            .set { ch_per_base_bed_panel }
+        if (ch_panels) {
+            // Transform list into channel
+            ch_bed_per_panel = ch_panels.transpose()
 
-        // Generate intersection
-        BEDTOOLS_INTERSECT(ch_per_base_bed_panel, ch_fasta_fai)
-        ch_versions = ch_versions.mix(BEDTOOLS_INTERSECT.out.versions)
+            // Couple per-base bed to each panel bed
+            MOSDEPTH.out.per_base_bed
+                .combine(ch_bed_per_panel)
+                .dump(tag: "COVERAGE: per-base panel combination", {FormattingService.prettyFormat(it)})
+                .set { ch_per_base_bed_panel }
 
-        // Mock Mosdepth distribution output
+            // Generate intersection
+            BEDTOOLS_INTERSECT(ch_per_base_bed_panel, ch_fasta_fai)
+            ch_versions = ch_versions.mix(BEDTOOLS_INTERSECT.out.versions)
 
-        // Generate Coverage MultiQC
+            // Mock Mosdepth distribution output
+            PANELCOVERAGE(BEDTOOLS_INTERSECT.out.intersect_bed))
+            ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions)
+            ch_coverage_mqc_files = ch_coverage_mqc_files.mix(PANELCOVERAGE.out.mqc_files).collect()
+
+            // Generate Coverage MultiQC
+            COVERAGE_MQC(ch_coverage_mqc_files)
+            ch_versions = ch_versions.mix(MULTIQC.out.versions)
+        }
+
 
     emit:
         per_base_bed        = MOSDEPTH.out.per_base_bed         // [meta, bed]
