@@ -4,7 +4,7 @@
 
 import groovy.text.SimpleTemplateEngine
 
-class WorkflowCenterformedicalgeneticsghent-nf-cmgg-preprocessing {
+class WorkflowCmggpreprocessing {
 
     //
     // Check and validate parameters
