@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/centerformedicalgeneticsghent-nf-cmgg-preprocessing/master/nextflow_schema.json",
-    "title": "CenterForMedicalGeneticsGhent/centerformedicalgeneticsghent-nf-cmgg-preprocessing pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/nextflow_schema.json",
+    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline parameters",
     "description": "Preprocessing workflow for sequencing data at CMGG",
     "type": "object",
     "definitions": {

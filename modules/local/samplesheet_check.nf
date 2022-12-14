@@ -17,7 +17,7 @@ process SAMPLESHEET_CHECK {
     when:
     task.ext.when == null || task.ext.when
 
-    script: // This script is bundled with the pipeline, in CenterForMedicalGeneticsGhent/centerformedicalgeneticsghent-nf-cmgg-preprocessing/bin/
+    script: // This script is bundled with the pipeline, in CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/bin/
     """
     check_samplesheet.py \\
         $samplesheet \\
