@@ -2,12 +2,10 @@ process BCLCONVERT {
     tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
     label 'process_high'
 
-    container "nfcore/bclconvert:4.0.3"
-
-    // Exit if running this module with -profile conda / -profile mamba
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "BCLCONVERT module does not support Conda. Please use Docker / Singularity / Podman instead."
+    if (params.enable_conda) {
+        exit 1, "Conda environments cannot be used when using bcl-convert. Please use docker or singularity containers."
     }
+    container "nfcore/bclconvert:4.0.3"
 
     input:
     tuple val(meta), path(samplesheet), path(run_dir)

@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/nextflow_schema.json",
-    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline parameters",
+    "title": "cmgg/preprocessing pipeline parameters",
     "description": "Preprocessing workflow for sequencing data at CMGG",
     "type": "object",
     "definitions": {
@@ -19,7 +19,8 @@
                 },
                 "run_coverage": {
                     "type": "boolean",
-                    "description": "Run coverage analysis steps"
+                    "description": "Run coverage analysis steps",
+                    "default": false
                 },
                 "skip_trimming": {
                     "type": "boolean",
@@ -122,8 +123,7 @@
                 "dict": {
                     "type": "string",
                     "default": "None",
-                    "hidden": true,
-                    "description": "Path to FASTA genome dict."
+                    "hidden": true
                 },
                 "fai": {
                     "type": "string",
@@ -137,13 +137,11 @@
                 },
                 "bait_regions": {
                     "type": "string",
-                    "default": "None",
-                    "description": "Path to bait regions file"
+                    "default": "None"
                 },
                 "target_regions": {
                     "type": "string",
-                    "default": "None",
-                    "description": "Path to target regions file"
+                    "default": "None"
                 },
                 "genomes_base": {
                     "type": "string",
@@ -173,17 +171,17 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
-                "bwamem": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to BWA-mem index"
-                },
                 "bowtie2": {
                     "type": "string",
                     "default": "None",
                     "hidden": true,
                     "description": "Path to Bowtie2 index"
+                },
+                "bwamem": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to BWA index"
                 },
                 "bwamem2": {
                     "type": "string",
@@ -419,5 +417,6 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {}
 }

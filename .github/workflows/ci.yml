@@ -11,10 +11,6 @@ on:
 env:
   NXF_ANSI_LOG: false
 
-concurrency:
-  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
-  cancel-in-progress: true
-
 jobs:
   test:
     name: Run pipeline with test data
@@ -27,12 +23,18 @@ jobs:
           - "21.10.3"
           - "latest-everything"
         test:
+          - "test_flowcell"
           - "test_fastq"
+          - "test_cram"
         aligner:
           - "bowtie2"
+          - "bwamem"
+          - "bwamem2"
+          - "dragmap"
+          #- "snap"
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
@@ -41,4 +43,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test }},docker  --aligner ${{ matrix.aligner }} --outdir ./results

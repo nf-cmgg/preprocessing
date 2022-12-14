@@ -22,10 +22,8 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, "inputs sheet
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+multiqc_config = params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+multiqc_logo   = params.multiqc_logo ? file(params.multiqc_logo, checkIfExists: true) : file("$projectDir/assets/CMGG_logo.png", checkIfExists: true)
 
 // Info required for completion email and summary
 def multiqc_report = []
@@ -132,9 +130,12 @@ workflow CMGGPREPROCESSING {
     */
 
     // Sanitize inputs and separate input types
+    // For now assume 1 bam/cram per sample
     ch_inputs = extract_csv(ch_input).branch {
-        fastq   : it.size() == 2
-        flowcell: it.size() == 4
+        fastq   : (it.size() == 2 && it[1] instanceof List)
+        flowcell: (it.size() == 4 && it[1].toString().endsWith(".csv"))
+        reads   : (it.size() == 2 && (it[1].toString().endsWith(".bam") || it[1].toString().endsWith(".cram")))
+        other   : true
     }
 
     ch_inputs.fastq
@@ -192,11 +193,14 @@ workflow CMGGPREPROCESSING {
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
-    ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq)
+    ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq)
 
-    //*
-    // STEP: FASTQ TRIMMING AND QC
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // FASTQ TRIMMING AND QC
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // MODULE: fastp
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
@@ -271,14 +275,15 @@ workflow CMGGPREPROCESSING {
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
 
-    //*
-    // STEP: POST QC
-    //*
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // REPORTING
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     // Gather software versions for QC report
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique{ it.text }.collectFile(name: 'collated_versions.yml')
-    )
+    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
     // MODULE: MULTIQC
@@ -286,20 +291,15 @@ workflow CMGGPREPROCESSING {
     workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowCmggpreprocessing.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
-    ch_methods_description = Channel.value(methods_description)
-
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(
+        ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml"),
+    )
 
     MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList()
+        ch_multiqc_files.collect(), multiqc_config, [], multiqc_logo
     )
     multiqc_report = MULTIQC.out.report.toList()
+    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*
@@ -321,11 +321,15 @@ def extract_csv(csv_file) {
         }
         // check for invalid fastq input
         if(row.fastq_1 && !(row.samplename)){
-            log.error "Flowcell input requires both samplesheet and flowcell"
+            log.error "Fastq input requires both samplename and fastq"
+        }
+        // check for invalid bam/cram input
+        if((row.bam || row.cram) && !(row.samplename)){
+            log.error "BAM/CRAM input requires both samplename and bam/cram"
         }
         // check for mixed input
         if(row.flowcell && row.fastq_1){
-            log.error "Cannot mix flowcell and fastq inputs"
+            log.error "Cannot mix flowcell and fastq/cram inputs"
         }
         // valid flowcell input
         if(row.flowcell && row.samplesheet){
@@ -334,6 +338,10 @@ def extract_csv(csv_file) {
         // valid fastq input
         if(row.fastq_1 && row.samplename){
             return parse_fastq_csv(row)
+        }
+        // valid bam/cram input
+        if((row.bam || row.cram) && row.samplename){
+            return parse_reads_csv(row)
         }
     }
 }
@@ -369,6 +377,7 @@ def parse_fastq_csv(row) {
     meta.readgroup    = readgroup_from_fastq(fastq_1)
     meta.readgroup.SM = meta.samplename
     meta.readgroup.LB = row.library ? row.library.toString() : ""
+    meta.readgroup.ID = meta.readgroup.ID ? meta.readgroup.ID : meta.samplename
 
     return [meta, fastq_2 ? [fastq_1, fastq_2] : [fastq_1]]
 }
@@ -475,48 +484,6 @@ def gather_split_files_per_sample(ch_files) {
     }
 }
 
-import java.nio.file.Path
-import static groovy.json.JsonOutput.toJson
-import static groovy.json.JsonOutput.prettyPrint
-import groovy.json.*
-
-// replace Path objects with strings
-def replacePath(root, replaceNullWith = "") {
-    if (root instanceof List) {
-        root.collect {
-            if (it instanceof Map) {
-                replacePath(it, replaceNullWith)
-            } else if (it instanceof List) {
-                replacePath(it, replaceNullWith)
-            } else if (it == null) {
-                replaceNullWith
-            } else if (it instanceof Path) {
-                it.toString()
-            } else {
-                it
-            }
-        }
-    } else if (root instanceof Map) {
-        root.each {
-            if (it.value instanceof Map) {
-                replacePath(it.value, replaceNullWith)
-            } else if (it.value instanceof List) {
-                it.value = replacePath(it.value, replaceNullWith)
-            } else if (it.value == null) {
-                it.value = replaceNullWith
-            } else if (it.value instanceof Path) {
-                it.value = it.value.toString()
-            }
-        }
-    }
-}
-
-// pretty print dump values
-def prettyDump(map) {
-    return prettyPrint(toJson(replacePath(map)))
-}
-
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     COMPLETION EMAIL AND SUMMARY
@@ -527,10 +494,10 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
-    NfcoreTemplate.summary(workflow, params, log)
     if (params.hook_url) {
-        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+        NfcoreTemplate.adaptivecard(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
+    NfcoreTemplate.summary(workflow, params, log)
 }
 
 /*
