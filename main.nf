@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+    CenterForMedicalGeneticsGhent/centerformedicalgeneticsghent-nf-cmgg-preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+    Github : https://github.com/CenterForMedicalGeneticsGhent/centerformedicalgeneticsghent-nf-cmgg-preprocessing
 ----------------------------------------------------------------------------------------
 */
 
@@ -38,13 +38,13 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { CMGGPREPROCESSING } from "./workflows/cmgg-preprocessing"
+include { CENTERFORMEDICALGENETICSGHENT-NF-CMGG-PREPROCESSING } from './workflows/centerformedicalgeneticsghent-nf-cmgg-preprocessing'
 
 //
-// WORKFLOW: Run main CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing analysis pipeline
+// WORKFLOW: Run main CenterForMedicalGeneticsGhent/centerformedicalgeneticsghent-nf-cmgg-preprocessing analysis pipeline
 //
-workflow CMGG_CMGGPREPROCESSING {
-    CMGGPREPROCESSING ()
+workflow CENTERFORMEDICALGENETICSGHENT_CENTERFORMEDICALGENETICSGHENT-NF-CMGG-PREPROCESSING {
+    CENTERFORMEDICALGENETICSGHENT-NF-CMGG-PREPROCESSING ()
 }
 
 /*
@@ -58,7 +58,7 @@ workflow CMGG_CMGGPREPROCESSING {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    CMGG_CMGGPREPROCESSING ()
+    CENTERFORMEDICALGENETICSGHENT_CENTERFORMEDICALGENETICSGHENT-NF-CMGG-PREPROCESSING ()
 }
 
 /*
