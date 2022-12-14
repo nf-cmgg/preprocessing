@@ -1,3 +1,0 @@
-id,samplename,organism,cram
-test1,test1,Homo sapiens,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram
-test2,test2,Homo sapiens,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/cram/test2.paired_end.sorted.cram

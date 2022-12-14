@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
-include { SAMTOOLS_CONVERT } from "../../../modules/nf-core/samtools/convert/main"
-include { MD5SUM           } from "../../../modules/nf-core/md5sum/main"
+include { SAMTOOLS_CONVERT } from "../../../modules/nf-core/modules/samtools/convert/main"
+include { MD5SUM           } from "../../../modules/nf-core/modules/md5sum/main"
 
 workflow BAM_ARCHIVE {
     take:

@@ -132,12 +132,9 @@ workflow CMGGPREPROCESSING {
     */
 
     // Sanitize inputs and separate input types
-    // For now assume 1 bam/cram per sample
     ch_inputs = extract_csv(ch_input).branch {
-        fastq   : (it.size() == 2 && it[1] instanceof List)
-        flowcell: (it.size() == 4 && it[1].toString().endsWith(".csv"))
-        reads   : (it.size() == 2 && (it[1].toString().endsWith(".bam") || it[1].toString().endsWith(".cram")))
-        other   : true
+        fastq   : it.size() == 2
+        flowcell: it.size() == 4
     }
 
     ch_inputs.fastq
@@ -195,14 +192,11 @@ workflow CMGGPREPROCESSING {
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
-    ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq)
+    ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq)
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // FASTQ TRIMMING AND QC
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
-
+    //*
+    // STEP: FASTQ TRIMMING AND QC
+    //*
     // MODULE: fastp
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
@@ -277,12 +271,9 @@ workflow CMGGPREPROCESSING {
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // REPORTING
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
-
+    //*
+    // STEP: POST QC
+    //*
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     // Gather software versions for QC report
     CUSTOM_DUMPSOFTWAREVERSIONS (
@@ -330,15 +321,11 @@ def extract_csv(csv_file) {
         }
         // check for invalid fastq input
         if(row.fastq_1 && !(row.samplename)){
-            log.error "Fastq input requires both samplename and fastq"
-        }
-        // check for invalid bam/cram input
-        if((row.bam || row.cram) && !(row.samplename)){
-            log.error "BAM/CRAM input requires both samplename and bam/cram"
+            log.error "Flowcell input requires both samplesheet and flowcell"
         }
         // check for mixed input
         if(row.flowcell && row.fastq_1){
-            log.error "Cannot mix flowcell and fastq/cram inputs"
+            log.error "Cannot mix flowcell and fastq inputs"
         }
         // valid flowcell input
         if(row.flowcell && row.samplesheet){
@@ -347,10 +334,6 @@ def extract_csv(csv_file) {
         // valid fastq input
         if(row.fastq_1 && row.samplename){
             return parse_fastq_csv(row)
-        }
-        // valid bam/cram input
-        if((row.bam || row.cram) && row.samplename){
-            return parse_reads_csv(row)
         }
     }
 }
@@ -386,7 +369,6 @@ def parse_fastq_csv(row) {
     meta.readgroup    = readgroup_from_fastq(fastq_1)
     meta.readgroup.SM = meta.samplename
     meta.readgroup.LB = row.library ? row.library.toString() : ""
-    meta.readgroup.ID = meta.readgroup.ID ? meta.readgroup.ID : meta.samplename
 
     return [meta, fastq_2 ? [fastq_1, fastq_2] : [fastq_1]]
 }
@@ -492,6 +474,48 @@ def gather_split_files_per_sample(ch_files) {
         return [meta, files.flatten()]
     }
 }
+
+import java.nio.file.Path
+import static groovy.json.JsonOutput.toJson
+import static groovy.json.JsonOutput.prettyPrint
+import groovy.json.*
+
+// replace Path objects with strings
+def replacePath(root, replaceNullWith = "") {
+    if (root instanceof List) {
+        root.collect {
+            if (it instanceof Map) {
+                replacePath(it, replaceNullWith)
+            } else if (it instanceof List) {
+                replacePath(it, replaceNullWith)
+            } else if (it == null) {
+                replaceNullWith
+            } else if (it instanceof Path) {
+                it.toString()
+            } else {
+                it
+            }
+        }
+    } else if (root instanceof Map) {
+        root.each {
+            if (it.value instanceof Map) {
+                replacePath(it.value, replaceNullWith)
+            } else if (it.value instanceof List) {
+                it.value = replacePath(it.value, replaceNullWith)
+            } else if (it.value == null) {
+                it.value = replaceNullWith
+            } else if (it.value instanceof Path) {
+                it.value = it.value.toString()
+            }
+        }
+    }
+}
+
+// pretty print dump values
+def prettyDump(map) {
+    return prettyPrint(toJson(replacePath(map)))
+}
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,8 +1,9 @@
 {
-    "name": "cmgg/preprocessing",
+    "name": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
     "homePage": "https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
     "repos": {
-        "https://github.com/nf-core/modules.git": {
+        "nf-core/modules": {
+            "git_url": "https://github.com/nf-core/modules.git",
             "modules": {
                 "nf-core": {
                     "bcl2fastq": {

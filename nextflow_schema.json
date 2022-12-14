@@ -184,13 +184,19 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
+                "bwa": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to BWA-mem index"
+                },
                 "bowtie2": {
                     "type": "string",
                     "default": "None",
                     "hidden": true,
                     "description": "Path to Bowtie2 index"
                 },
-                "bwamem": {
+                "snapaligner": {
                     "type": "string",
                     "default": "None",
                     "hidden": true,
