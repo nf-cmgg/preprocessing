@@ -27,15 +27,9 @@ jobs:
           - "21.10.3"
           - "latest-everything"
         test:
-          - "test_flowcell"
           - "test_fastq"
-          - "test_cram"
         aligner:
           - "bowtie2"
-          - "bwamem"
-          - "bwamem2"
-          - "dragmap"
-          #- "snap"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
