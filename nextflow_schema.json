@@ -196,12 +196,6 @@
                     "hidden": true,
                     "description": "Path to Bowtie2 index"
                 },
-                "snapaligner": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to BWA index"
-                },
                 "bwamem2": {
                     "type": "string",
                     "default": "None",
