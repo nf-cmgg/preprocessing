@@ -15,6 +15,11 @@
                         "git_sha": "c62b41a07a00fee11ec73e2a0d4a1aec771a742b",
                         "installed_by": ["bcl_demultiplex"]
                     },
+                    "bedtools/intersect": {
+                        "branch": "master",
+                        "git_sha": "4bb1d4e362a38642e877afe41aaf58ded9e56c86",
+                        "installed_by": ["modules"]
+                    },
                     "biobambam/bamsormadup": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
