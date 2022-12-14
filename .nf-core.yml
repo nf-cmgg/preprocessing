@@ -1,15 +1,15 @@
 repository_type: pipeline
 lint:
   files_exist:
-    - CODE_OF_CONDUCT.md
-    - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
-    - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
-    - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
-    - .github/ISSUE_TEMPLATE/config.yml
-    - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
+    - .github/workflows/awstest.yml
+    - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
+    - CODE_OF_CONDUCT.md
+    - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
+    - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
+    - conf/test_full.config
   nextflow_config:
-    - manifest.name
     - manifest.homePage
+    - manifest.name
   multiqc_config:
     - report_comment
