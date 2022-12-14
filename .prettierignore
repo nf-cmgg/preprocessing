@@ -1,7 +1,7 @@
 email_template.html
-adaptivecard_template.json
+adaptivecard.json
+slackreport.json
 .nextflow*
-.nf-test
 work/
 data/
 results/
@@ -9,3 +9,4 @@ results/
 testing/
 testing*
 *.pyc
+bin/
