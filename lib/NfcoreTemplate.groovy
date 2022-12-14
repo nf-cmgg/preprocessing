@@ -3,7 +3,6 @@
 //
 
 import org.yaml.snakeyaml.Yaml
-import static groovy.json.JsonOutput.toJson
 
 class NfcoreTemplate {
 

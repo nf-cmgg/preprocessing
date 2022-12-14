@@ -23,7 +23,7 @@
                     "bowtie2/align": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "fastq_align_dna"]
                     },
                     "bowtie2/build": {
                         "branch": "master",
@@ -38,7 +38,7 @@
                     "bwa/mem": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "fastq_align_dna"]
                     },
                     "bwamem2/index": {
                         "branch": "master",
@@ -48,7 +48,7 @@
                     "bwamem2/mem": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "fastq_align_dna"]
                     },
                     "cat/fastq": {
                         "branch": "master",
@@ -63,7 +63,7 @@
                     "dragmap/align": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "fastq_align_dna"]
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
@@ -148,7 +148,7 @@
                     "snapaligner/align": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "fastq_align_dna"]
                     },
                     "snapaligner/index": {
                         "branch": "master",
@@ -182,6 +182,11 @@
                     "fasta_index_dna": {
                         "branch": "master",
                         "git_sha": "e1f53dfd48e8c8da6557e520cbe6abe869874808",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "fastq_align_dna": {
+                        "branch": "master",
+                        "git_sha": "277f4d693a00471690b66598d167bbca78bbe232",
                         "installed_by": ["subworkflows"]
                     }
                 }
