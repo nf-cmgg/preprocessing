@@ -1,5 +1,6 @@
 repository_type: pipeline
 lint:
+  actions_ci: false
   files_exist:
     - .github/workflows/awsfulltest.yml
     - .github/workflows/awstest.yml
@@ -11,6 +12,7 @@ lint:
   files_unchanged:
     - .github/ISSUE_TEMPLATE/feature_request.yml
     - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/workflows/linting.yml
     - .gitignore
     - docs/README.md
   nextflow_config:
