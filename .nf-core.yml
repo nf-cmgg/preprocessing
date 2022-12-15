@@ -1,6 +1,5 @@
 repository_type: pipeline
 lint:
-  actions_ci: false
   files_exist:
     - .github/workflows/awsfulltest.yml
     - .github/workflows/awstest.yml
