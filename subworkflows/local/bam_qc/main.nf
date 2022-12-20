@@ -26,14 +26,22 @@ workflow BAM_QC {
         ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
 
         if ( ch_bait_interval ) {
-            BAITTOINTERVALLIST(ch_bait_interval.map{[[id:"bait"], it ]}, ch_fasta_dict, [])
+            BAITTOINTERVALLIST(
+                ch_bait_interval.map{it -> return [[id:"bait"], it ]},
+                ch_fasta_dict,
+                []
+            )
             ch_versions = ch_versions.mix(BAITTOINTERVALLIST.out.versions)
-            ch_bait_interval_list = BAITTOINTERVALLIST.out.interval_list.collect()
+            ch_bait_interval_list = BAITTOINTERVALLIST.out.interval_list.map{meta, list -> list}.collect()
         }
         if ( ch_target_interval ) {
-            TARGETTOINTERVALLIST(ch_target_interval.map{[[id:"target"], it ]}, ch_fasta_dict,[])
+            TARGETTOINTERVALLIST(
+                ch_target_interval.map{[[id:"target"], it ]},
+                ch_fasta_dict,
+                []
+            )
             ch_versions = ch_versions.mix(TARGETTOINTERVALLIST.out.versions)
-            ch_target_interval_list = TARGETTOINTERVALLIST.out.interval_list.collect()
+            ch_target_interval_list = TARGETTOINTERVALLIST.out.interval_list.map{meta, list -> list}.collect()
         }
 
         // SUBWORKFLOW: bam_qc_picard
