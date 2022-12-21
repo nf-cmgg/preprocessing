@@ -52,6 +52,7 @@ workflow FASTQ_TO_CRAM {
         */
 
         ch_reads_to_map = ch_fastq_per_sample.map{meta, reads ->
+            meta.count = reads.size()
             reads_files = meta.single_end ? reads : reads.sort().collate(2)
             return [meta, reads_files]
         }.transpose()
@@ -122,7 +123,7 @@ def gather_split_files_per_sample(ch_files) {
             tag: meta.tag,
             vivar_project: meta.vivar_project,
         ]
-        return [new_meta, files]
+        return [groupKey(new_meta, meta.count), files]
     }
     .groupTuple( by: [0])
     .map { meta, files ->
