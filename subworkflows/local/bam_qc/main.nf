@@ -13,6 +13,7 @@ workflow BAM_QC {
         ch_fasta_dict       // channel: [mandatory][ meta2, dict ]
         ch_target_interval  // channel: [optional] [ target_interval_bed ]
         ch_bait_interval    // channel: [optional] [ bai_interval_bed ]
+        disable_picard      // boolean: [optional] [ true ]
 
     main:
         ch_versions = Channel.empty()
@@ -25,31 +26,33 @@ workflow BAM_QC {
         ch_meta_fai   = ch_fasta_fai.map {meta, fasta, fai -> [meta, fai]  }.collect()
         ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
 
-        if ( ch_bait_interval ) {
-            BAITTOINTERVALLIST(
-                ch_bait_interval.map{it -> return [[id:"bait"], it ]},
-                ch_fasta_dict,
-                []
-            )
-            ch_versions = ch_versions.mix(BAITTOINTERVALLIST.out.versions)
-            ch_bait_interval_list = BAITTOINTERVALLIST.out.interval_list.map{meta, list -> list}.collect()
-        }
-        if ( ch_target_interval ) {
-            TARGETTOINTERVALLIST(
-                ch_target_interval.map{[[id:"target"], it ]},
-                ch_fasta_dict,
-                []
-            )
-            ch_versions = ch_versions.mix(TARGETTOINTERVALLIST.out.versions)
-            ch_target_interval_list = TARGETTOINTERVALLIST.out.interval_list.map{meta, list -> list}.collect()
-        }
+        if (!disable_picard) {
+            if ( ch_bait_interval ) {
+                BAITTOINTERVALLIST(
+                    ch_bait_interval.map{it -> return [[id:"bait"], it ]},
+                    ch_fasta_dict,
+                    []
+                )
+                ch_versions = ch_versions.mix(BAITTOINTERVALLIST.out.versions)
+                ch_bait_interval_list = BAITTOINTERVALLIST.out.interval_list.map{meta, list -> list}.collect()
+            }
+            if ( ch_target_interval ) {
+                TARGETTOINTERVALLIST(
+                    ch_target_interval.map{[[id:"target"], it ]},
+                    ch_fasta_dict,
+                    []
+                )
+                ch_versions = ch_versions.mix(TARGETTOINTERVALLIST.out.versions)
+                ch_target_interval_list = TARGETTOINTERVALLIST.out.interval_list.map{meta, list -> list}.collect()
+            }
 
-        // SUBWORKFLOW: bam_qc_picard
-        // Run Picard QC modules
-        // BAM_QC_PICARD([meta, bam, bai], [meta2, fasta], [meta2, fai], [bait_interval], [target_interval])
-        BAM_QC_PICARD( ch_bam_bai, ch_meta_fasta, ch_meta_fai, ch_bait_interval_list, ch_target_interval_list )
-        ch_metrics  = ch_metrics.mix(BAM_QC_PICARD.out.coverage_metrics, BAM_QC_PICARD.out.multiple_metrics)
-        ch_versions = ch_versions.mix(BAM_QC_PICARD.out.versions)
+            // SUBWORKFLOW: bam_qc_picard
+            // Run Picard QC modules
+            // BAM_QC_PICARD([meta, bam, bai], [meta2, fasta], [meta2, fai], [bait_interval], [target_interval])
+            BAM_QC_PICARD( ch_bam_bai, ch_meta_fasta, ch_meta_fai, ch_bait_interval_list, ch_target_interval_list )
+            ch_metrics  = ch_metrics.mix(BAM_QC_PICARD.out.coverage_metrics, BAM_QC_PICARD.out.multiple_metrics)
+            ch_versions = ch_versions.mix(BAM_QC_PICARD.out.versions)
+        }
 
         // SUBWORKFLOW: bam_stats_samtools
         // Run samtools QC modules
