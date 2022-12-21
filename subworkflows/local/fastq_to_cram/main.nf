@@ -52,9 +52,13 @@ workflow FASTQ_TO_CRAM {
         */
 
         ch_reads_to_map = ch_fastq_per_sample.map{meta, reads ->
-            meta.count = reads.size()
-            reads_files = meta.single_end ? reads : reads.sort().collate(2)
-            return [meta, reads_files]
+            // add to meta map
+            // https://nfcore.slack.com/archives/C027CM7P08M/p1660308862381359
+
+            return [
+                meta + [ count: files.size() ],
+                meta.single_end ? reads : reads.sort().collate(2)
+            ]
         }.transpose()
 
         ch_reads_to_map.dump(tag: "FASTQ_TO_CRAM: reads to align",{FormattingService.prettyFormat(it)})
@@ -125,7 +129,9 @@ def gather_split_files_per_sample(ch_files) {
         ]
         return [groupKey(new_meta, meta.count), files]
     }
+    .view()
     .groupTuple( by: [0])
+    .view()
     .map { meta, files ->
         return [meta, files.flatten()]
     }
