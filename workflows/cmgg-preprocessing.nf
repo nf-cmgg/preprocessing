@@ -477,7 +477,8 @@ def gather_split_files_per_sample(ch_files) {
         meta, files ->
         new_meta = meta.clone()
         new_meta.id = meta.samplename
-        return [new_meta, files]
+        count = files.size()
+        return [groupKey(new_meta, count), files]
     }
     .groupTuple( by: [0])
     .map { meta, files ->
