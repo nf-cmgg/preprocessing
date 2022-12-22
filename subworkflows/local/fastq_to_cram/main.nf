@@ -5,7 +5,8 @@
 //
 
 // MODULES
-include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
+include { ELPREP_SFM            } from "../../../modules/local/elprep/sfm/main.nf"
+include { SAMTOOLS_INDEX        } from "../../../modules/nf-core/samtools/index/main.nf"
 
 // SUBWORKFLOWS
 include { BAM_ARCHIVE       } from "../../local/bam_archive/main"
@@ -79,12 +80,16 @@ workflow FASTQ_TO_CRAM {
         // Gather bams per sample for merging and markdup
         ch_bam_per_sample = gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam).dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
 
-        // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
-        BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
-        ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
-        ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-        ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+        // ELPREP_SFM([meta, bam]
+        ELPREP_SFM(ch_bam_per_sample)
+        ch_multiqc_files = ch_multiqc_files.mix( ELPREP_SFM.out.metrics.map { meta, metrics -> return metrics} )
+        ch_versions = ch_versions.mix(ELPREP_SFM.out.versions)
 
+        // SAMTOOLS_INDEX([meta, bam])
+        SAMTOOLS_INDEX(ELPREP_SFM.out.bam)
+        ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
+
+        ch_markdup_bam_bai = ELPREP_SFM.out.bam.join(SAMTOOLS_INDEX.out.bai)
         ch_markdup_bam_bai.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", {FormattingService.prettyFormat(it)})
 
         /*
