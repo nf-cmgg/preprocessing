@@ -210,12 +210,21 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
-    // merge FASTP.out.reads in channel per sample and split samples into human and non human data
-    ch_trimmed_reads = gather_split_files_per_sample(FASTP.out.reads)
-        .branch { meta, reads ->
-            human: meta.organism ==~ /(?i)Homo sapiens/
-            other: true
-        }
+    // edit meta.id to match sample name
+    ch_trimmed_reads = FASTP.out.reads
+    .map { meta, reads ->
+        meta.id = meta.samplename
+        return [meta,reads]
+    }
+    // group fastq by sample
+    .groupTuple( by: [0])
+    // flatten fastq list
+    .map{ meta, reads -> return [meta, reads.flatten()]}
+    // split samples into human and non human data
+    .branch { meta, reads ->
+        human: meta.organism ==~ /(?i)Homo sapiens/
+        other: true
+    }
     ch_trimmed_reads.human.dump(tag: "MAIN: human reads",{FormattingService.prettyFormat(it)})
     ch_trimmed_reads.other.dump(tag: "MAIN: other reads",{FormattingService.prettyFormat(it)})
 
@@ -467,22 +476,6 @@ def readgroup_from_fastq(path) {
         rg.ID = fcid
     }
     return rg
-}
-
-// Gather split files per sample
-def gather_split_files_per_sample(ch_files) {
-    // Gather bam files per sample based on id
-    ch_files.map {
-        // set id to filename without lane designation
-        meta, files ->
-        new_meta = meta.clone()
-        new_meta.id = meta.samplename
-        return [new_meta, files]
-    }
-    .groupTuple( by: [0])
-    .map { meta, files ->
-        return [meta, files.flatten()]
-    }
 }
 
 /*
