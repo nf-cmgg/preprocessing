@@ -213,8 +213,9 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        meta.id = meta.samplename
-        return [meta,reads]
+        new_meta = meta.clone()
+        new_meta.id = meta.samplename
+        return [new_meta, reads]
     }
     // group fastq by sample
     .groupTuple( by: [0])
