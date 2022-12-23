@@ -132,7 +132,7 @@ def gather_split_files_per_sample(ch_files) {
             tag: meta.tag,
             vivar_project: meta.vivar_project,
         ]
-        return [groupKey(new_meta, meta.count), files]
+        return [groupKey(new_meta, meta.count.toInteger()), files]
     }
     .groupTuple( by: [0])
     .map { meta, files ->
