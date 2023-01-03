@@ -1,7 +1,6 @@
 #!/usr/bin/env nextflow
 
 include { MOSDEPTH                  } from "../../../modules/nf-core/mosdepth/main"
-include { BEDTOOLS_INTERSECT        } from "../../../modules/nf-core/bedtools/intersect/main"
 include { MULTIQC as COVERAGE_MQC   } from "../../../modules/nf-core/multiqc/main"
 
 include { PANELCOVERAGE             } from "../../../modules/local/panelcoverage/main"
