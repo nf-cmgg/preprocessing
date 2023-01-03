@@ -9,8 +9,8 @@ process MOSDEPTH {
 
     input:
     tuple val(meta), path(bam), path(bai)
-    path  bed
-    path  fasta
+    tuple val(meta), path(bed)
+    tuple val(meta), path(fasta)
 
     output:
     tuple val(meta), path('*.global.dist.txt')      , emit: global_txt

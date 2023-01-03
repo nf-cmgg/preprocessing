@@ -31,6 +31,8 @@ nextflow_workflow {
                 // Target interval file
                 input[2] = []
 
+                // Panels directory
+                input[3] = []
                 """
             }
         }
@@ -67,7 +69,10 @@ nextflow_workflow {
                     ])
 
                 // ch_target_interval
-                input[2] = Channel.of( file(params.test_data['homo_sapiens']['illumina']['roi_bed'], checkIfExists: true))
+                input[2] = Channel.of([
+                    [id:"test"],
+                    file(params.test_data['homo_sapiens']['illumina']['roi_bed'], checkIfExists: true)
+                    ])
 
                 """
             }

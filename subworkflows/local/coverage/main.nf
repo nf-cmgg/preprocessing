@@ -9,8 +9,8 @@ include { PANELCOVERAGE             } from "../../../modules/local/panelcoverage
 workflow COVERAGE {
     take:
         ch_reads_index      // channel: [mandatory][ meta, reads, index ]
-        ch_fasta_fai        // channel: [mandatory][ meta2, fasta, fai ]
-        ch_roi              // channel: [optional] [ roi_bed ]
+        ch_fasta_fai        // channel: [mandatory][ meta, fasta, fai ]
+        ch_roi              // channel: [optional] [ meta, roi_bed ]
         ch_panels           // channel: [optional] [ panel_bed, ... ]
 
     main:
@@ -18,7 +18,7 @@ workflow COVERAGE {
         ch_metrics              = Channel.empty()
         ch_coverage_mqc_files   = Channel.empty()
 
-        ch_fasta      = ch_fasta_fai.map  {meta, fasta, fai -> fasta }.collect()
+        ch_fasta      = ch_fasta_fai.map  {meta, fasta, fai -> [meta, fasta] }.collect()
 
         // Get per base coverage
         MOSDEPTH(ch_reads_index, ch_roi, ch_fasta)
@@ -35,21 +35,8 @@ workflow COVERAGE {
         ch_metrics.dump(tag: "COVERAGE: metrics", {FormattingService.prettyFormat(it)})
 
         if (ch_panels) {
-            // Transform list into channel
-            ch_bed_per_panel = ch_panels.transpose()
-
-            // Couple per-base bed to each panel bed
-            MOSDEPTH.out.per_base_bed
-                .combine(ch_bed_per_panel)
-                .dump(tag: "COVERAGE: per-base panel combination", {FormattingService.prettyFormat(it)})
-                .set { ch_per_base_bed_panel }
-
-            // Generate intersection
-            BEDTOOLS_INTERSECT(ch_per_base_bed_panel, ch_fasta_fai)
-            ch_versions = ch_versions.mix(BEDTOOLS_INTERSECT.out.versions)
-
             // Mock Mosdepth distribution output
-            PANELCOVERAGE(BEDTOOLS_INTERSECT.out.intersect_bed))
+            PANELCOVERAGE(MOSDEPTH.out.per_base_bed, ch_panels)
             ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions)
             ch_coverage_mqc_files = ch_coverage_mqc_files.mix(PANELCOVERAGE.out.mqc_files).collect()
 
