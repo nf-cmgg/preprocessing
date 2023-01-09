@@ -1,7 +1,6 @@
 #!/usr/bin/env nextflow
 
 include { MOSDEPTH                  } from "../../../modules/nf-core/mosdepth/main"
-include { MULTIQC as COVERAGE_MQC   } from "../../../modules/nf-core/multiqc/main"
 
 include { PANELCOVERAGE             } from "../../../modules/local/panelcoverage/main"
 
@@ -38,10 +37,6 @@ workflow COVERAGE {
             PANELCOVERAGE(MOSDEPTH.out.per_base_bed, ch_panels)
             ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions)
             ch_coverage_mqc_files = ch_coverage_mqc_files.mix(PANELCOVERAGE.out.mqc_files).collect()
-
-            // Generate Coverage MultiQC
-            COVERAGE_MQC(ch_coverage_mqc_files)
-            ch_versions = ch_versions.mix(MULTIQC.out.versions)
         }
 
 
@@ -53,5 +48,6 @@ workflow COVERAGE {
         quantized_bed       = MOSDEPTH.out.quantized_bed        // [meta, bed]
         quantized_bed_csi   = MOSDEPTH.out.quantized_csi        // [meta, csi]
         metrics             = ch_metrics                        // [[meta, [metrics]]
+        panel_metrics       = ch_coverage_mqc_files             // [[meta, [metrics]]
         versions            = ch_versions                       // [versions]
 }

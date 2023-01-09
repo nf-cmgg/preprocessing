@@ -57,6 +57,7 @@ include { BAM_TO_FASTQ      } from "../subworkflows/local/bam_to_fastq/main"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/fastp/main"
 include { MULTIQC                     } from "../modules/nf-core/multiqc/main"
+include { MULTIQC as COVERAGE_MQC     } from "../../../modules/nf-core/multiqc/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -251,6 +252,8 @@ workflow CMGGPREPROCESSING {
             ch_fasta_fai,
             ch_target_regions,
         )
+        COVERAGE_MQC(COVERAGE.out.panel_metrics.collect(), multiqc_config, [], multiqc_logo)
+
         ch_coverage_beds = Channel.empty().mix(
             COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
             COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
