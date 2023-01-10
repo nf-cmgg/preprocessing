@@ -30,9 +30,9 @@ jobs:
           #- "test_cram"
         aligner:
           #- "bowtie2"
-          #- "bwamem"
+          - "bwamem"
           #- "bwamem2"
-          - "dragmap"
+          #- "dragmap"
           #- "snap"
     steps:
       - name: Check out pipeline code
