@@ -90,15 +90,15 @@ workflow CMGGPREPROCESSING {
         []
     ])
 
-    ch_dict  = Channel.value([[
-        id:genome],
+    ch_dict  = Channel.value([
+        [id:genome],
         file(params.dict,  checkIfExists: true)
     ])
 
     ch_aligner_index = Channel.empty()
 
-    ch_bait_regions   = params.bait_regions   ? Channel.fromPath(params.bait_regions,   checkIfExists: true) : []
-    ch_target_regions = params.target_regions ? Channel.fromPath(params.target_regions, checkIfExists: true) : []
+    ch_bait_regions   = params.bait_regions   ? Channel.value([[:], file(params.bait_regions, checkIfExists: true)])   : [[:],[]]
+    ch_target_regions = params.target_regions ? Channel.value([[:], file(params.target_regions, checkIfExists: true)]) : [[:],[]]
 
     // output channels
     ch_versions      = Channel.empty()
