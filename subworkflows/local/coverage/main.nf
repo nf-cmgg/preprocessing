@@ -7,8 +7,8 @@ include { PANELCOVERAGE             } from "../../../modules/local/panelcoverage
 workflow COVERAGE {
     take:
         ch_reads_index      // channel: [mandatory][ meta, reads, index ]
-        ch_fasta_fai        // channel: [mandatory][ meta, fasta, fai ]
-        ch_roi              // channel: [optional] [ meta, roi_bed ]
+        ch_fasta_fai        // channel: [mandatory][ meta2, fasta, fai ]
+        ch_roi              // channel: [optional] [ meta3, roi_bed ]
         ch_panels           // channel: [optional] [ panel_bed, ... ]
 
     main:

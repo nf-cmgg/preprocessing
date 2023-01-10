@@ -72,7 +72,8 @@ workflow CMGGPREPROCESSING {
     genome  = params.genome
 
     // input options
-    run_coverage  = params.run_coverage
+    run_coverage   = params.run_coverage
+    disable_picard = params.disable_picard_metrics
 
     // input channels
     ch_fasta     = Channel.value([
@@ -90,15 +91,15 @@ workflow CMGGPREPROCESSING {
         []
     ])
 
-    ch_dict  = Channel.value([[
-        id:genome],
+    ch_dict  = Channel.value([
+        [id:genome],
         file(params.dict,  checkIfExists: true)
     ])
 
     ch_aligner_index = Channel.empty()
 
-    ch_bait_regions   = params.bait_regions   ? Channel.fromPath(params.bait_regions,   checkIfExists: true) : []
-    ch_target_regions = params.target_regions ? Channel.fromPath(params.target_regions, checkIfExists: true) : []
+    ch_bait_regions   = params.bait_regions   ? Channel.value([[:], file(params.bait_regions, checkIfExists: true)])   : [[:],[]]
+    ch_target_regions = params.target_regions ? Channel.value([[:], file(params.target_regions, checkIfExists: true)]) : [[:],[]]
 
     // output channels
     ch_versions      = Channel.empty()
@@ -210,12 +211,22 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
-    // merge FASTP.out.reads in channel per sample and split samples into human and non human data
-    ch_trimmed_reads = gather_split_files_per_sample(FASTP.out.reads)
-        .branch { meta, reads ->
-            human: meta.organism ==~ /(?i)Homo sapiens/
-            other: true
-        }
+    // edit meta.id to match sample name
+    ch_trimmed_reads = FASTP.out.reads
+    .map { meta, reads ->
+        new_meta = meta.clone()
+        new_meta.id = meta.samplename
+        return [new_meta, reads]
+    }
+    // group fastq by sample
+    .groupTuple( by: [0])
+    // flatten fastq list
+    .map{ meta, reads -> return [meta, reads.flatten()]}
+    // split samples into human and non human data
+    .branch { meta, reads ->
+        human: meta.organism ==~ /(?i)Homo sapiens/
+        other: true
+    }
     ch_trimmed_reads.human.dump(tag: "MAIN: human reads",{FormattingService.prettyFormat(it)})
     ch_trimmed_reads.other.dump(tag: "MAIN: other reads",{FormattingService.prettyFormat(it)})
 
@@ -272,7 +283,7 @@ workflow CMGGPREPROCESSING {
     // Gather metrics from bam files
     // BAM_QC([meta, bam, bai], [meta2, fasta, fai], [meta2, dict], [target], [bait])
     BAM_QC(
-        FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai, ch_dict, ch_target_regions, ch_bait_regions
+        FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai, ch_dict, ch_target_regions, ch_bait_regions, disable_picard
     )
     ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
@@ -471,22 +482,6 @@ def readgroup_from_fastq(path) {
     return rg
 }
 
-// Gather split files per sample
-def gather_split_files_per_sample(ch_files) {
-    // Gather bam files per sample based on id
-    ch_files.map {
-        // set id to filename without lane designation
-        meta, files ->
-        new_meta = meta.clone()
-        new_meta.id = meta.samplename
-        return [new_meta, files]
-    }
-    .groupTuple( by: [0])
-    .map { meta, files ->
-        return [meta, files.flatten()]
-    }
-}
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     COMPLETION EMAIL AND SUMMARY
@@ -498,7 +493,7 @@ workflow.onComplete {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
     if (params.hook_url) {
-        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log, multiqc_report)
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
     }
     NfcoreTemplate.summary(workflow, params, log)
 }
