@@ -303,11 +303,12 @@ workflow CMGGPREPROCESSING {
     ch_workflow_summary = Channel.value(workflow_summary)
 
     ch_multiqc_files = ch_multiqc_files.mix(
-        ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml"),
-    )
+        ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
+    ).collect()
+    ch_multiqc_files.dump(tag: "MAIN: multiqc files",{FormattingService.prettyFormat(it)})
 
     MULTIQC (
-        ch_multiqc_files.collect(), multiqc_config, [], multiqc_logo
+        ch_multiqc_files, multiqc_config, [], multiqc_logo
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
