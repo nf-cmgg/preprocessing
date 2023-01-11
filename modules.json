@@ -147,12 +147,12 @@
                     },
                     "snapaligner/align": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "9e192b8c71dd9a11d8a5397a400c0719357563f7",
                         "installed_by": ["fastq_align_dna"]
                     },
                     "snapaligner/index": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "9e192b8c71dd9a11d8a5397a400c0719357563f7",
                         "installed_by": ["fasta_index_dna"]
                     },
                     "untar": {
