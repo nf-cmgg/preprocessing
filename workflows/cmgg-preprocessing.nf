@@ -57,7 +57,7 @@ include { BAM_TO_FASTQ      } from "../subworkflows/local/bam_to_fastq/main"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/fastp/main"
 include { MULTIQC                     } from "../modules/nf-core/multiqc/main"
-include { MULTIQC as COVERAGE_MQC     } from "../../../modules/nf-core/multiqc/main"
+include { MULTIQC as COVERAGE_MQC     } from "../modules/nf-core/multiqc/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -100,6 +100,7 @@ workflow CMGGPREPROCESSING {
 
     ch_bait_regions   = params.bait_regions   ? Channel.value([[:], file(params.bait_regions, checkIfExists: true)])   : [[:],[]]
     ch_target_regions = params.target_regions ? Channel.value([[:], file(params.target_regions, checkIfExists: true)]) : [[:],[]]
+    ch_panel_bed      = params.panel_bed      ? Channel.value([[:], file(params.panel_bed, checkIfExists: true)])      : [[:],[]]
 
     // output channels
     ch_versions      = Channel.empty()
@@ -214,7 +215,7 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        new_meta = meta.clone()
+        new_meta = meta.findAll{true}
         new_meta.id = meta.samplename
         return [new_meta, reads]
     }
@@ -262,6 +263,7 @@ workflow CMGGPREPROCESSING {
             FASTQ_TO_CRAM.out.cram_crai,
             ch_fasta_fai,
             ch_target_regions,
+            ch_panel_bed
         )
         COVERAGE_MQC(COVERAGE.out.panel_metrics.collect(), multiqc_config, [], multiqc_logo)
 

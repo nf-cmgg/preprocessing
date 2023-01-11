@@ -23,6 +23,7 @@ params.snap        = WorkflowMain.getGenomeAttribute(params, "snap"   )
 params.fai         = WorkflowMain.getGenomeAttribute(params, "fai"    )
 params.fasta       = WorkflowMain.getGenomeAttribute(params, "fasta"  )
 params.dict        = WorkflowMain.getGenomeAttribute(params, "dict"   )
+params.panel_bed   = WorkflowMain.getGenomeAttribute(params, "panel_bed")
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

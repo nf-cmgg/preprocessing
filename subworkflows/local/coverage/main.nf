@@ -26,7 +26,7 @@ workflow COVERAGE {
                 MOSDEPTH.out.global_txt,
                 MOSDEPTH.out.regions_txt
             )
-            .groupTuple()
+            .groupTuple(size: 3)
             .map { meta, metrics -> [meta, metrics.flatten()] }
 
         ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
@@ -36,7 +36,7 @@ workflow COVERAGE {
             // Mock Mosdepth distribution output
             PANELCOVERAGE(MOSDEPTH.out.per_base_bed, ch_panels)
             ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions)
-            ch_coverage_mqc_files = ch_coverage_mqc_files.mix(PANELCOVERAGE.out.mqc_files).collect()
+            ch_coverage_mqc_files = ch_coverage_mqc_files.mix(PANELCOVERAGE.out.regions_txt).collect()
         }
 
 
