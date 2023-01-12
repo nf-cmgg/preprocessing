@@ -97,8 +97,8 @@ workflow CMGGPREPROCESSING {
 
     ch_aligner_index = Channel.empty()
 
-    ch_bait_regions   = params.bait_regions   ? Channel.value([[:], file(params.bait_regions, checkIfExists: true)])   : [[:],[]]
-    ch_target_regions = params.target_regions ? Channel.value([[:], file(params.target_regions, checkIfExists: true)]) : [[:],[]]
+    ch_bait_regions   = params.bait_regions   ? Channel.value(file(params.bait_regions, checkIfExists: true))   : Channel.value([])
+    ch_target_regions = params.target_regions ? Channel.value(file(params.target_regions, checkIfExists: true)) : Channel.value([])
 
     // output channels
     ch_versions      = Channel.empty()
@@ -213,7 +213,7 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        new_meta = meta.clone()
+        new_meta = meta.findAll{true}
         new_meta.id = meta.samplename
         return [new_meta, reads]
     }
