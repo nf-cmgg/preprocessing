@@ -10,10 +10,10 @@ workflow BAM_QC {
     take:
         ch_bam_bai          // channel: [mandatory] [meta, bam, bai]
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
-        ch_fasta_dict       // channel: [mandatory][ meta2, dict ]
-        ch_target_interval  // channel: [optional] [ meta3, target_interval_bed ]
-        ch_bait_interval    // channel: [optional] [ meta4, bait_interval_bed ]
-        disable_picard      // boolean: [optional] [ true ]
+        ch_fasta_dict       // channel: [mandatory] [meta2, dict]
+        ch_target_interval  // channel: [optional]  [meta3, target_interval_bed]
+        ch_bait_interval    // channel: [optional]  [meta4, bait_interval_bed]
+        disable_picard      // boolean: [optional]  [true]
 
     main:
         ch_versions = Channel.empty()
@@ -29,7 +29,7 @@ workflow BAM_QC {
         if (!disable_picard) {
             if ( ch_bait_interval ) {
                 BAITTOINTERVALLIST(
-                    ch_bait_interval,
+                    ch_bait_interval.map{[[:], it]},
                     ch_fasta_dict,
                     []
                 )
@@ -38,7 +38,7 @@ workflow BAM_QC {
             }
             if ( ch_target_interval ) {
                 TARGETTOINTERVALLIST(
-                    ch_target_interval,
+                    ch_target_interval.map{[[:], it]},
                     ch_fasta_dict,
                     []
                 )
