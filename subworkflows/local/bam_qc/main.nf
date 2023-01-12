@@ -11,8 +11,8 @@ workflow BAM_QC {
         ch_bam_bai          // channel: [mandatory] [meta, bam, bai]
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
         ch_fasta_dict       // channel: [mandatory] [meta2, dict]
-        ch_target_interval  // channel: [optional]  [meta3, target_interval_bed]
-        ch_bait_interval    // channel: [optional]  [meta4, bait_interval_bed]
+        ch_target_interval  // channel: [optional]  [target_interval_bed]
+        ch_bait_interval    // channel: [optional]  [bait_interval_bed]
         disable_picard      // boolean: [optional]  [true]
 
     main:

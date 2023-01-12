@@ -97,8 +97,8 @@ workflow CMGGPREPROCESSING {
 
     ch_aligner_index = Channel.empty()
 
-    ch_bait_regions   = params.bait_regions   ? Channel.value(file(params.bait_regions, checkIfExists: true))   : Channel.value([])
-    ch_target_regions = params.target_regions ? Channel.value(file(params.target_regions, checkIfExists: true)) : Channel.value([])
+    ch_bait_regions   = params.bait_regions   ? Channel.value(file(params.bait_regions, checkIfExists: true))   : []
+    ch_target_regions = params.target_regions ? Channel.value(file(params.target_regions, checkIfExists: true)) : []
 
     // output channels
     ch_versions      = Channel.empty()
@@ -422,7 +422,7 @@ def merge_sample_info(ch_fastq, ch_sample_info) {
     ch_fastq
     .combine(ch_sample_info)
     .map { meta1, fastq, meta2 ->
-        def meta = meta1.clone()
+        def meta = meta1.findAll{true}
         if ( meta2 && (meta1.samplename == meta2.samplename)) {
             meta = meta1 + meta2
             meta.readgroup    = [:]
