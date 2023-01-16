@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/nextflow_schema.json",
-    "title": "cmgg/preprocessing pipeline parameters",
+    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline parameters",
     "description": "Preprocessing workflow for sequencing data at CMGG",
     "type": "object",
     "definitions": {
@@ -14,22 +14,25 @@
                 "aligner": {
                     "type": "string",
                     "default": "bowtie2",
-                    "description": "Which aligner to use"
+                    "description": "Which aligner to use",
+                    "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"]
                 },
                 "run_coverage": {
                     "type": "boolean",
-                    "description": "Run coverage analysis steps"
+                    "description": "Run coverage analysis steps",
+                    "default": false
                 },
                 "skip_trimming": {
                     "type": "boolean",
                     "description": "Skip adapter trimming"
                 },
-                "disable_picard_qc": {
+                "disable_picard_metrics": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Disable Picard QC steps"
+                    "description": "Disable the calculation of (slow) Picard metrics"
                 }
-            }
+            },
+            "required": ["aligner"]
         },
         "trimming_options": {
             "title": "Trimming Options",
@@ -117,6 +120,14 @@
                     "fa_icon": "far fa-file-code",
                     "hidden": true
                 },
+                "dict": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.dict$",
+                    "description": "Path to FASTA genome dict file.",
+                    "hidden": true
+                },
                 "fai": {
                     "type": "string",
                     "format": "file-path",
@@ -126,6 +137,20 @@
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
                     "fa_icon": "far fa-file-code",
                     "hidden": true
+                },
+                "bait_regions": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.bed$",
+                    "description": "Path to bait regions bed file."
+                },
+                "target_regions": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.bed$",
+                    "description": "Path to target regions bed file."
                 },
                 "genomes_base": {
                     "type": "string",
@@ -155,26 +180,38 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
-                "bwa": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to BWA-mem index"
-                },
                 "bowtie2": {
                     "type": "string",
                     "default": "None",
                     "hidden": true,
                     "description": "Path to Bowtie2 index"
                 },
-                "snapaligner": {
+                "bwamem": {
                     "type": "string",
                     "default": "None",
                     "hidden": true,
-                    "description": "Path to Snap aligner index"
+                    "description": "Path to BWA index"
+                },
+                "bwamem2": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to BWAMEM2 index"
+                },
+                "dragmap": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to Dragmap index"
+                },
+                "snap": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to SNAP aligner index"
                 }
             },
-            "required": ["genome"]
+            "required": ["genome", "fasta", "dict", "fai"]
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -221,6 +258,16 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
+                },
+                "cmgg_config_version": {
+                    "type": "string",
+                    "default": "main",
+                    "description": "Git commit id for CMGG configs"
+                },
+                "cmgg_config_base": {
+                    "type": "string",
+                    "default": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-config/main",
+                    "description": "Base directory for Institutional configs."
                 }
             }
         },
@@ -324,7 +371,8 @@
                 },
                 "multiqc_logo": {
                     "type": "string",
-                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png"
+                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png",
+                    "description": "Custom MultiQC logo"
                 },
                 "tracedir": {
                     "type": "string",
@@ -346,12 +394,6 @@
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
                 }
             }
         }
@@ -378,5 +420,6 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {}
 }

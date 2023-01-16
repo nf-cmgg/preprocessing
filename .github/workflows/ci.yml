@@ -10,6 +10,8 @@ on:
 
 env:
   NXF_ANSI_LOG: false
+  AWS_ACCESS_KEY_ID: ${{ secrets.UGENT_S3_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.UGENT_S3_SECRET_KEY }}
 
 jobs:
   test:
@@ -20,8 +22,18 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "21.10.3"
-          - "latest-everything"
+          - "22.10.4"
+          #- "latest-everything"
+        test:
+          - "test_flowcell"
+          #- "test_fastq"
+          #- "test_cram"
+        aligner:
+          #- "bowtie2"
+          - "bwamem"
+          #- "bwamem2"
+          #- "dragmap"
+          #- "snap"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -33,4 +45,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test }},docker  --aligner ${{ matrix.aligner }} --outdir ./results

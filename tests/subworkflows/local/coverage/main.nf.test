@@ -1,0 +1,83 @@
+nextflow_workflow {
+
+    name "Test Workflow COVERAGE"
+    script "subworkflows/local/coverage/main.nf"
+    workflow "COVERAGE"
+
+    test("COVERAGE - No target interval file") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                // ch_bam_bai [meta, bam, bai]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_cram_index'], checkIfExists: true)
+                ])
+
+                // ch_fasta_fai
+                input[1] = Channel.of([
+                    [id:'genome'],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
+                    ])
+
+                // Target interval file
+                input[2] = []
+
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+    test("COVERAGE - Target interval file") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                // ch_bam_bai [meta, bam, bai]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_cram_index'], checkIfExists: true)
+                ])
+
+                // ch_fasta_fai
+                input[1] = Channel.of([
+                    [id:'genome'],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
+                    ])
+
+                // ch_target_interval
+                input[2] = Channel.of( file(params.test_data['homo_sapiens']['illumina']['roi_bed'], checkIfExists: true))
+
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}
