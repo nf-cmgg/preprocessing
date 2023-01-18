@@ -119,7 +119,7 @@ def gather_split_files_per_sample(ch_files) {
         meta, files ->
         return [
             groupKey(
-                meta - subMap('id', 'readgroup', 'count') + [id: meta.samplename],
+                meta - meta.subMap('id', 'readgroup', 'count') + [id: meta.samplename],
                 meta.count.toInteger()
             ),
             files
