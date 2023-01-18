@@ -115,19 +115,15 @@ workflow FASTQ_TO_CRAM {
 def gather_split_files_per_sample(ch_files) {
     // Gather bam files per sample based on id
     ch_files.map {
-        // set id to filename without lane designation
+        // set id to samplename, drop readgroup and count meta values
         meta, files ->
-        new_meta = [
-            binsize: meta.binsize,
-            id: meta.samplename,
-            organism: meta.organism,
-            panels: meta.panels,
-            samplename: meta.samplename,
-            single_end: meta.single_end,
-            tag: meta.tag,
-            vivar_project: meta.vivar_project,
+        return [
+            groupKey(
+                meta - meta.subMap('id', 'readgroup', 'count') + [id: meta.samplename],
+                meta.count.toInteger()
+            ),
+            files
         ]
-        return [groupKey(new_meta, meta.count.toInteger()), files]
     }
     .groupTuple( by: [0])
     .map { meta, files ->
