@@ -131,10 +131,13 @@ workflow FASTQ_TO_CRAM {
 def gather_split_files_per_sample(ch_files) {
     // Gather bam files per sample based on id
     ch_files.map {
-        // set id to samplename, drop readgroup
+        // set id to samplename, drop readgroup and count meta values
         meta, files ->
         return [
-            meta - meta.subMap('id', 'readgroup') + [id: meta.samplename],
+            groupKey(
+                meta - subMap('id', 'readgroup', 'count') + [id: meta.samplename],
+                meta.count.toInteger()
+            ),
             files
         ]
     }

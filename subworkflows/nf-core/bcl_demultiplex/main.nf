@@ -92,8 +92,7 @@ def generate_fastq_meta(ch_reads) {
             "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
             "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
             "readgroup": [:],
-            "fcid": fc_meta.id,
-            "lane": fc_meta.lane
+            "fcid": fc_meta.id
         ]
         meta.readgroup = readgroup_from_fastq(fastq)
         meta.readgroup.SM = meta.samplename
