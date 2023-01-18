@@ -213,14 +213,11 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        new_meta = meta.findAll{true}
-        new_meta.id = meta.samplename
-        return [new_meta, reads]
+        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+        return [ meta + [ size:read_files.size() ], read_files ]
     }
-    // group fastq by sample
-    .groupTuple( by: [0])
-    // flatten fastq list
-    .map{ meta, reads -> return [meta, reads.flatten()]}
+    // transpose to get read pairs
+    .transpose()
     // split samples into human and non human data
     .branch { meta, reads ->
         human: meta.organism ==~ /(?i)Homo sapiens/
@@ -248,68 +245,68 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // COVERAGE ANALYSIS
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+    // /*
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // // COVERAGE ANALYSIS
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // */
 
-    // Generate coverage metrics and beds for each sample
-    // COVERAGE([meta,bam, bai], [meta2, fasta, fai], target)
-    if (run_coverage){
-        COVERAGE(
-            FASTQ_TO_CRAM.out.cram_crai,
-            ch_fasta_fai,
-            ch_target_regions,
-        )
-        ch_coverage_beds = Channel.empty().mix(
-            COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
-            COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
-            COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
-        )
-        ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
-        ch_versions      = ch_versions.mix(COVERAGE.out.versions)
-    }
+    // // Generate coverage metrics and beds for each sample
+    // // COVERAGE([meta,bam, bai], [meta2, fasta, fai], target)
+    // if (run_coverage){
+    //     COVERAGE(
+    //         FASTQ_TO_CRAM.out.cram_crai,
+    //         ch_fasta_fai,
+    //         ch_target_regions,
+    //     )
+    //     ch_coverage_beds = Channel.empty().mix(
+    //         COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
+    //         COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
+    //         COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
+    //     )
+    //     ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
+    //     ch_versions      = ch_versions.mix(COVERAGE.out.versions)
+    // }
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // QC FOR ALIGNMENTS
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+    // /*
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // // QC FOR ALIGNMENTS
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // */
 
-    // Gather metrics from bam files
-    // BAM_QC([meta, bam, bai], [meta2, fasta, fai], [meta2, dict], [target], [bait])
-    BAM_QC( FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai, ch_dict, ch_target_regions, ch_bait_regions, disable_picard)
-    ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
-    ch_versions      = ch_versions.mix(BAM_QC.out.versions)
+    // // Gather metrics from bam files
+    // // BAM_QC([meta, bam, bai], [meta2, fasta, fai], [meta2, dict], [target], [bait])
+    // BAM_QC( FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai, ch_dict, ch_target_regions, ch_bait_regions, disable_picard)
+    // ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
+    // ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // REPORTING
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+    // /*
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // // REPORTING
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // */
 
-    // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
-    // Gather software versions for QC report
-    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    // // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
+    // // Gather software versions for QC report
+    // CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
+    // ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
-    // MODULE: MULTIQC
-    // Generate aggregate QC report
-    workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
+    // // MODULE: MULTIQC
+    // // Generate aggregate QC report
+    // workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
+    // ch_workflow_summary = Channel.value(workflow_summary)
 
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
-    ).collect()
-    ch_multiqc_files.dump(tag: "MAIN: multiqc files",{FormattingService.prettyFormat(it)})
+    // ch_multiqc_files = ch_multiqc_files.mix(
+    //     ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
+    // ).collect()
+    // ch_multiqc_files.dump(tag: "MAIN: multiqc files",{FormattingService.prettyFormat(it)})
 
-    MULTIQC (
-        ch_multiqc_files, multiqc_config, [], multiqc_logo
-    )
-    multiqc_report = MULTIQC.out.report.toList()
-    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
+    // MULTIQC (
+    //     ch_multiqc_files, multiqc_config, [], multiqc_logo
+    // )
+    // multiqc_report = MULTIQC.out.report.toList()
+    // ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*

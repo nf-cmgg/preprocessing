@@ -17,7 +17,7 @@ include { FASTA_INDEX_DNA   } from '../../nf-core/fasta_index_dna/main'
 
 workflow FASTQ_TO_CRAM {
     take:
-        ch_fastq_per_sample // channel: [mandatory] [meta, [fastq, ...]]
+        ch_fastq            // channel: [mandatory] [meta, [fastq, ...]]
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
         aligner             // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
         ch_aligner_index    // channel: [optional ] [meta2, aligner_index]
@@ -52,7 +52,7 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        ch_reads_to_map = ch_fastq_per_sample.map{meta, reads ->
+        ch_reads_to_map = ch_fastq.map{meta, reads ->
             // add to meta map
             // https://nfcore.slack.com/archives/C027CM7P08M/p1660308862381359
             file_count = reads.size()
@@ -80,16 +80,27 @@ workflow FASTQ_TO_CRAM {
         // Gather bams per sample for merging and markdup
         ch_bam_per_sample = gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam).dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
 
-        // ELPREP_SFM([meta, bam]
-        ELPREP_SFM(ch_bam_per_sample)
-        ch_multiqc_files = ch_multiqc_files.mix( ELPREP_SFM.out.metrics.map { meta, metrics -> return metrics} )
-        ch_versions = ch_versions.mix(ELPREP_SFM.out.versions)
+        ch_markdup_bam_bai = Channel.empty()
+        def postprocessor = "elprep"
+        switch (postprocessor) {
+            case "elprep":
+                // ELPREP_SFM([meta, bam]
+                ELPREP_SFM(ch_bam_per_sample)
+                ch_multiqc_files = ch_multiqc_files.mix( ELPREP_SFM.out.metrics.map { meta, metrics -> return metrics} )
+                ch_versions = ch_versions.mix(ELPREP_SFM.out.versions)
 
-        // SAMTOOLS_INDEX([meta, bam])
-        SAMTOOLS_INDEX(ELPREP_SFM.out.bam)
-        ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
-
-        ch_markdup_bam_bai = ELPREP_SFM.out.bam.join(SAMTOOLS_INDEX.out.bai)
+                // SAMTOOLS_INDEX([meta, bam])
+                SAMTOOLS_INDEX(ELPREP_SFM.out.bam)
+                ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
+                break
+            case "bamsormadup":
+                // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
+                BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
+                ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
+                ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+                ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+                break
+        }
         ch_markdup_bam_bai.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", {FormattingService.prettyFormat(it)})
 
         /*
@@ -120,21 +131,14 @@ workflow FASTQ_TO_CRAM {
 def gather_split_files_per_sample(ch_files) {
     // Gather bam files per sample based on id
     ch_files.map {
-        // set id to filename without lane designation
+        // set id to samplename, drop readgroup
         meta, files ->
-        new_meta = [
-            binsize: meta.binsize,
-            id: meta.samplename,
-            organism: meta.organism,
-            panels: meta.panels,
-            samplename: meta.samplename,
-            single_end: meta.single_end,
-            tag: meta.tag,
-            vivar_project: meta.vivar_project,
+        return [
+            meta - meta.subMap('id', 'readgroup') + [id: meta.samplename],
+            files
         ]
-        return [groupKey(new_meta, meta.count.toInteger()), files]
     }
-    .groupTuple( by: [0])
+    .groupTuple()
     .map { meta, files ->
         return [meta, files.flatten()]
     }
