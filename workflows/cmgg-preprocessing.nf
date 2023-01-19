@@ -195,7 +195,7 @@ workflow CMGGPREPROCESSING {
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
-    ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq)
+    ch_sample_fastqs = count_samples(ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq))
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -316,6 +316,26 @@ workflow CMGGPREPROCESSING {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+// Count number of samples with the same samplename
+def count_samples(ch_samples) {
+    ch_samples.map { meta, fastq ->
+        return [meta.samplename, [meta, fastq]]
+    }
+    // this should group per samplename
+    .groupTuple()
+    // Count the number of samples per samplename
+    .map { samplename, meta_fastq ->
+        count = meta_fastq.size()
+        return [meta_fastq,count]
+    }
+    // split the meta_fastq list into channel items
+    .transpose()
+    // add the count variable to meta
+    .map{ meta_fastq, count ->
+        return [meta_fastq[0] + [count:count], meta_fastq[1]]
+    }
+}
 
 // Extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
