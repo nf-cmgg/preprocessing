@@ -126,7 +126,7 @@ def gather_split_files_per_sample(ch_files) {
         return [
             groupKey(
                 meta - meta.subMap('id', 'readgroup', 'chunks', 'lane') + [id: meta.samplename],
-                meta.count ?: 1 * meta.chunks?: 1
+                meta.count ?: 1 * meta.chunks ?: 1
             ),
             files
         ]
