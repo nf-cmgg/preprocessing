@@ -124,14 +124,11 @@ def gather_split_files_per_sample(ch_files) {
         // set id to samplename, drop readgroup and count meta values
         meta, files ->
         return [
-            groupKey(
-                meta - meta.subMap('id', 'readgroup', 'count', 'chunks') + [id: meta.samplename],
-                meta.count.toInteger()
-            ),
+            meta - meta.subMap('id', 'readgroup', 'chunks', 'lane') + [id: meta.samplename],
             files
         ]
     }
-    .groupTuple()
+    .groupTuple(by:[0])
     .map { meta, files ->
         return [meta, files.flatten()]
     }
