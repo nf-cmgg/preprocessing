@@ -7,7 +7,7 @@
 // MODULES
 include { ELPREP_SFM            } from "../../../modules/local/elprep/sfm/main.nf"
 include { SAMTOOLS_INDEX        } from "../../../modules/nf-core/samtools/index/main.nf"
-
+include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 // SUBWORKFLOWS
 include { BAM_ARCHIVE       } from "../../local/bam_archive/main"
 include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
