@@ -21,6 +21,7 @@ workflow FASTQ_TO_CRAM {
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
         aligner             // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
         ch_aligner_index    // channel: [optional ] [meta2, aligner_index]
+        postprocessor       // string:  [optional ] postprocessor [elprep, bamsormadup]
 
     main:
 
@@ -52,21 +53,11 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        ch_reads_to_map = ch_fastq.map{meta, reads ->
-            // add to meta map
-            // https://nfcore.slack.com/archives/C027CM7P08M/p1660308862381359
-            file_count = reads.size()
-            return [
-                meta + [ count: meta.single_end ? file_count : file_count / 2 ],
-                meta.single_end ? reads : reads.sort().collate(2)
-            ]
-        }.transpose()
-
-        ch_reads_to_map.dump(tag: "FASTQ_TO_CRAM: reads to align",{FormattingService.prettyFormat(it)})
+        ch_fastq.dump(tag: "FASTQ_TO_CRAM: reads to align",{FormattingService.prettyFormat(it)})
 
         // align fastq files per sample
         // ALIGNMENT([meta,fastq], index, sort)
-        FASTQ_ALIGN_DNA(ch_reads_to_map, ch_aligner_index, aligner, true)
+        FASTQ_ALIGN_DNA(ch_fastq, ch_aligner_index, aligner, true)
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
         FASTQ_ALIGN_DNA.out.bam.dump(tag: "FASTQ_TO_CRAM: aligned bam", {FormattingService.prettyFormat(it)})
@@ -81,7 +72,6 @@ workflow FASTQ_TO_CRAM {
         ch_bam_per_sample = gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam).dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
 
         ch_markdup_bam_bai = Channel.empty()
-        def postprocessor = "elprep"
         switch (postprocessor) {
             case "elprep":
                 // ELPREP_SFM([meta, bam]
@@ -135,7 +125,7 @@ def gather_split_files_per_sample(ch_files) {
         meta, files ->
         return [
             groupKey(
-                meta - meta.subMap('id', 'readgroup', 'count') + [id: meta.samplename],
+                meta - meta.subMap('id', 'readgroup', 'count', 'chunks') + [id: meta.samplename],
                 meta.count.toInteger()
             ),
             files

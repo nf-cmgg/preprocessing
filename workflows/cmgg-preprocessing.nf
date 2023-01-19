@@ -68,6 +68,7 @@ workflow CMGGPREPROCESSING {
 
     // input values
     aligner = params.aligner
+    postprocessor = params.postprocessor
     genome  = params.genome
 
     // input options
@@ -214,7 +215,7 @@ workflow CMGGPREPROCESSING {
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
         read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-        return [ meta + [ size:read_files.size() ], read_files ]
+        return [ meta + [ chunks:read_files.size() ], read_files ]
     }
     // transpose to get read pairs
     .transpose()
@@ -241,7 +242,7 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    FASTQ_TO_CRAM(ch_trimmed_reads.human, ch_fasta_fai, aligner, ch_aligner_index)
+    FASTQ_TO_CRAM(ch_trimmed_reads.human, ch_fasta_fai, aligner, ch_aligner_index, postprocessor)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
