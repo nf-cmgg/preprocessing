@@ -214,8 +214,9 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-        return [ meta + [ chunks:read_files.size() ], read_files ]
+        reads_list = reads instanceof List ? reads : [reads]
+        read_files = reads_list.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+        return [ meta + [ chunks:read_files.size() ], reads_list ]
     }
     // transpose to get read pairs
     .transpose()
@@ -466,8 +467,8 @@ def readgroup_from_fastq(path) {
         lane             = fields[3]
         index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
-        rg.ID = fcid
-        rg.PU = [fcid, index].findAll().join(".")
+        rg.ID = [fcid,lane].join(".")
+        rg.PU = [fcid, lane, index].findAll().join(".")
         rg.PL = "ILLUMINA"
     } else if (fields.size() == 5) {
         fcid = fields[0]

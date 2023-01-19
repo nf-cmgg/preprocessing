@@ -92,7 +92,8 @@ def generate_fastq_meta(ch_reads) {
             "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
             "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
             "readgroup": [:],
-            "fcid": fc_meta.id
+            "fcid": fc_meta.id,
+            "lane": fc_meta.lane
         ]
         meta.readgroup = readgroup_from_fastq(fastq)
         meta.readgroup.SM = meta.samplename
@@ -139,8 +140,8 @@ def readgroup_from_fastq(path) {
     lane             = fields[3]
     index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
-    rg.ID = fcid
-    rg.PU = [fcid, index].findAll().join(".")
+    rg.ID = [fcid,lane].join(".")
+    rg.PU = [fcid, lane, index].findAll().join(".")
     rg.PL = "ILLUMINA"
 
     return rg
