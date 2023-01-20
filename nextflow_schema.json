@@ -19,7 +19,7 @@
                 },
                 "postprocessor": {
                     "type": "string",
-                    "default": "elprep",
+                    "default": "bamsormadup",
                     "description": "Which alignment postprocessor to use",
                     "enum": ["elprep", "bamsormadup"]
                 },
