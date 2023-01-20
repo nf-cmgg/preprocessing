@@ -214,9 +214,11 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        sorted_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }
-        read_files = meta.single_end ? sorted_files : sorted_files.collate(2)
-        return [ meta + [ chunks:read_files.size() ], read_files ]
+        read_files = meta.single_end ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+        return [
+            meta + [ chunks: read_files instanceof List ? read_files.size() : [read_files].size() ],
+            read_files
+        ]
     }
     // transpose to get read pairs
     .transpose()
