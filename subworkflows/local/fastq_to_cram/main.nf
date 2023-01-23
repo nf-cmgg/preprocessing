@@ -76,12 +76,16 @@ workflow FASTQ_TO_CRAM {
             case "elprep":
                 // ELPREP_SFM([meta, bam]
                 ELPREP_SFM(ch_bam_per_sample)
-                ch_multiqc_files = ch_multiqc_files.mix( ELPREP_SFM.out.metrics.map { meta, metrics -> return metrics} )
-                ch_versions = ch_versions.mix(ELPREP_SFM.out.versions)
 
                 // SAMTOOLS_INDEX([meta, bam])
                 SAMTOOLS_INDEX(ELPREP_SFM.out.bam)
-                ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
+
+                ch_markdup_bam_bai = ELPREP_SFM.out.bam.join(SAMTOOLS_INDEX.out.bai)
+                ch_multiqc_files = ch_multiqc_files.mix( ELPREP_SFM.out.metrics.map { meta, metrics -> return metrics} )
+                ch_versions = ch_versions.mix(
+                    ELPREP_SFM.out.versions,
+                    SAMTOOLS_INDEX.out.versions
+                )
                 break
             case "bamsormadup":
                 // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
