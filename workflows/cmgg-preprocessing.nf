@@ -245,7 +245,11 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    FASTQ_TO_CRAM(ch_trimmed_reads.human, ch_fasta_fai, aligner, ch_aligner_index, postprocessor)
+    FASTQ_TO_CRAM(
+        ch_trimmed_reads.human.map{ meta, reads -> [meta - meta.subMap('organism'), reads]},
+        ch_fasta_fai, aligner,
+        ch_aligner_index, postprocessor
+    )
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
