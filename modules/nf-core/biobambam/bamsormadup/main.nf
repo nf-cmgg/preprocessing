@@ -41,6 +41,7 @@ process BIOBAMBAM_BAMSORMADUP {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         bamcat: \$(echo \$(bamcat --version 2>&1) | sed 's/^This is biobambam2 version //; s/..biobambam2 is .*\$//' )
+        bamcollate2: \$(echo \$(bamcat --version 2>&1) | sed 's/^This is biobambam2 version //; s/..biobambam2 is .*\$//' )
         bamsormadup: \$(echo \$(bamsormadup --version 2>&1) | sed 's/^This is biobambam2 version //; s/..biobambam2 is .*\$//' )
     END_VERSIONS
     """
