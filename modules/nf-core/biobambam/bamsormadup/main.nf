@@ -29,6 +29,8 @@ process BIOBAMBAM_BAMSORMADUP {
     bamcat \\
         I=${input_string} \\
         level=0 \\
+    | bamcollate2 \\
+        level=0 \\
     | bamsormadup \\
         $args \\
         M=${prefix}.metrics.txt \\
