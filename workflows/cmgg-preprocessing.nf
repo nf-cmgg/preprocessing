@@ -195,7 +195,13 @@ workflow CMGGPREPROCESSING {
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
-    ch_sample_fastqs = count_samples(ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq))
+    ch_sample_fastqs = count_samples(
+        ch_sample_fastqs.mix(
+                ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq
+        )
+    ).map { meta, reads ->
+        return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
+    }
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
