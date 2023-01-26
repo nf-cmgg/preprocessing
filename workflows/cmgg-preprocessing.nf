@@ -228,6 +228,14 @@ workflow CMGGPREPROCESSING {
     }
     // transpose to get read pairs
     .transpose()
+    // set new meta.id to include split number
+    .map { meta, reads ->
+        new_id = reads instanceof List ? reads[0].getName() - ~/_1.fastp.*/ : reads.getName() - ~/.fastp.*/
+        return [
+            meta - meta.subMap('id') + [ id: new_id ],
+            reads
+        ]
+    }
     // split samples into human and non human data
     .branch { meta, reads ->
         human: meta.organism ==~ /(?i)Homo sapiens/
