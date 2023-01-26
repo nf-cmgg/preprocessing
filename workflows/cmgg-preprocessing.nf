@@ -220,7 +220,7 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        read_files = meta.single_end ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+        def read_files = meta.single_end ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
         return [
             meta + [ chunks: read_files instanceof List ? read_files.size() : [read_files].size() ],
             read_files
@@ -230,7 +230,7 @@ workflow CMGGPREPROCESSING {
     .transpose()
     // set new meta.id to include split number
     .map { meta, reads ->
-        new_id = reads instanceof List ? reads[0].getName() - ~/_1.fastp.*/ : reads.getName() - ~/.fastp.*/
+        def new_id = reads instanceof List ? reads[0].getName() - ~/_1.fastp.*/ : reads.getName() - ~/.fastp.*/
         return [
             meta - meta.subMap('id') + [ id: new_id ],
             reads
