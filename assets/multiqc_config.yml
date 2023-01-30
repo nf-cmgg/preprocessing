@@ -12,3 +12,5 @@ report_section_order:
 export_plots: true
 bclconvert:
   create_undetermined_barcode_barplots: true
+extra_fn_clean_exts:
+  - ".cram"
