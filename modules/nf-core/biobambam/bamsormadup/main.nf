@@ -31,7 +31,7 @@ process BIOBAMBAM_BAMSORMADUP {
         level=0 \\
     | bamcollate2 \\
         level=0 \\
-        exclude="" \\
+        exclude=QCFAIL \\
     | bamsormadup \\
         $args \\
         M=${prefix}.metrics.txt \\
