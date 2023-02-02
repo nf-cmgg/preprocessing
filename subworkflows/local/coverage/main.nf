@@ -20,7 +20,7 @@ workflow COVERAGE {
             MOSDEPTH.out.summary_txt,
             MOSDEPTH.out.global_txt,
             MOSDEPTH.out.regions_txt
-        ).groupTuple().map{ meta, metrics -> return [meta, metrics.flatten()]}
+        )
 
         ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
         ch_metrics.dump(tag: "COVERAGE: metrics", {FormattingService.prettyFormat(it)})
