@@ -57,7 +57,7 @@ workflow FASTQ_TO_CRAM {
 
         // align fastq files per sample
         // ALIGNMENT([meta,fastq], index, sort)
-        FASTQ_ALIGN_DNA(ch_fastq, ch_aligner_index, aligner, true)
+        FASTQ_ALIGN_DNA(ch_fastq, ch_aligner_index, aligner, false)
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
         FASTQ_ALIGN_DNA.out.bam.dump(tag: "FASTQ_TO_CRAM: aligned bam", {FormattingService.prettyFormat(it)})
