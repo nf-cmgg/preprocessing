@@ -5,8 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.1.2
 
-- Add support for Elprep alignment postprocessing
-- Improve groupKey magic before and after alignment
+- Support for bamprocessing with ELPREP
+- Improved sample grouping
+- Meta value clean up
+- bump modules
+- fix multiqc report to include all results
+- fix duplicate marking with bamsormadup
+- drop post alignment sorting, doesn't make sense as we do sort/markdup afterwards
+- Add option to use elprep for alignment postprocessing
 
 ## v1.0.2dev
 
