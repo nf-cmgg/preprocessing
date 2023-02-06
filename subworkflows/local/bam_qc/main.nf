@@ -29,7 +29,7 @@ workflow BAM_QC {
         if (!disable_picard) {
             if ( ch_bait_interval ) {
                 BAITTOINTERVALLIST(
-                    ch_bait_interval.map{[[:], it]},
+                    ch_bait_interval.map{[[id:"bait"], it]},
                     ch_fasta_dict,
                     []
                 )
@@ -38,7 +38,7 @@ workflow BAM_QC {
             }
             if ( ch_target_interval ) {
                 TARGETTOINTERVALLIST(
-                    ch_target_interval.map{[[:], it]},
+                    ch_target_interval.map{[[id:"target"], it]},
                     ch_fasta_dict,
                     []
                 )
@@ -63,7 +63,7 @@ workflow BAM_QC {
             BAM_STATS_SAMTOOLS.out.stats,
             BAM_STATS_SAMTOOLS.out.flagstat,
             BAM_STATS_SAMTOOLS.out.idxstats
-        ).groupTuple().map { meta, metrics -> [meta, metrics.flatten()] }
+        )
         ch_metrics.dump(tag: "BAM QC: metrics", {FormattingService.prettyFormat(it)})
         ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 

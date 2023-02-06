@@ -17,6 +17,12 @@
                     "description": "Which aligner to use",
                     "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"]
                 },
+                "postprocessor": {
+                    "type": "string",
+                    "default": "bamsormadup",
+                    "description": "Which alignment postprocessor to use",
+                    "enum": ["elprep", "bamsormadup"]
+                },
                 "run_coverage": {
                     "type": "boolean",
                     "description": "Run coverage analysis steps",

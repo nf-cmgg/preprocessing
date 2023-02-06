@@ -7,18 +7,19 @@
                 "nf-core": {
                     "bcl2fastq": {
                         "branch": "master",
-                        "git_sha": "c62b41a07a00fee11ec73e2a0d4a1aec771a742b",
+                        "git_sha": "100f641b272ff7e309bfbb86d0c3f63d7b6c6a9b",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "c62b41a07a00fee11ec73e2a0d4a1aec771a742b",
+                        "git_sha": "100f641b272ff7e309bfbb86d0c3f63d7b6c6a9b",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "biobambam/bamsormadup": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
+                        "git_sha": "ea421dc46ceaad39d637f8793e87193061804868",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/biobambam/bamsormadup/biobambam-bamsormadup.diff"
                     },
                     "bowtie2/align": {
                         "branch": "master",
@@ -62,7 +63,7 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "5cef12bb8a747ce018bb351871bdfe118bd28dd7",
                         "installed_by": ["fastq_align_dna"]
                     },
                     "dragmap/hashtable": {
@@ -140,6 +141,11 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["bam_stats_samtools"]
                     },
+                    "samtools/index": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["modules"]
+                    },
                     "samtools/stats": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
@@ -157,7 +163,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "cc1f997fab6d8fde5dc0e6e2a310814df5b53ce7",
                         "installed_by": ["bcl_demultiplex"]
                     }
                 }

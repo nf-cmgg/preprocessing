@@ -68,6 +68,7 @@ workflow CMGGPREPROCESSING {
 
     // input values
     aligner = params.aligner
+    postprocessor = params.postprocessor
     genome  = params.genome
 
     // input options
@@ -194,7 +195,13 @@ workflow CMGGPREPROCESSING {
 
     // "Gather" fastq's from demultiplex and fastq inputs
     ch_sample_fastqs = Channel.empty()
-    ch_sample_fastqs = ch_sample_fastqs.mix(ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq)
+    ch_sample_fastqs = count_samples(
+        ch_sample_fastqs.mix(
+                ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq
+        )
+    ).map { meta, reads ->
+        return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
+    }
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -213,14 +220,22 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        new_meta = meta.findAll{true}
-        new_meta.id = meta.samplename
-        return [new_meta, reads]
+        def read_files = meta.single_end ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+        return [
+            meta + [ chunks: read_files instanceof List ? read_files.size() : [read_files].size() ],
+            read_files
+        ]
     }
-    // group fastq by sample
-    .groupTuple( by: [0])
-    // flatten fastq list
-    .map{ meta, reads -> return [meta, reads.flatten()]}
+    // transpose to get read pairs
+    .transpose()
+    // set new meta.id to include split number
+    .map { meta, reads ->
+        def new_id = reads instanceof List ? reads[0].getName() - ~/_1.fastp.*/ : reads.getName() - ~/.fastp.*/
+        return [
+            meta - meta.subMap('id') + [ id: new_id ],
+            reads
+        ]
+    }
     // split samples into human and non human data
     .branch { meta, reads ->
         human: meta.organism ==~ /(?i)Homo sapiens/
@@ -244,7 +259,11 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    FASTQ_TO_CRAM(ch_trimmed_reads.human, ch_fasta_fai, aligner, ch_aligner_index)
+    FASTQ_TO_CRAM(
+        ch_trimmed_reads.human.map{ meta, reads -> [meta - meta.subMap('organism'), reads]},
+        ch_fasta_fai, aligner,
+        ch_aligner_index, postprocessor
+    )
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
@@ -317,6 +336,26 @@ workflow CMGGPREPROCESSING {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+// Count number of samples with the same samplename
+def count_samples(ch_samples) {
+    ch_samples.map { meta, fastq ->
+        return [meta.samplename, [meta, fastq]]
+    }
+    // this should group per samplename
+    .groupTuple()
+    // Count the number of samples per samplename
+    .map { samplename, meta_fastq ->
+        count = meta_fastq.size()
+        return [meta_fastq,count]
+    }
+    // split the meta_fastq list into channel items
+    .transpose()
+    // add the count variable to meta
+    .map{ meta_fastq, count ->
+        return [meta_fastq[0] + [count:count], meta_fastq[1]]
+    }
+}
 
 // Extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
@@ -468,8 +507,8 @@ def readgroup_from_fastq(path) {
         lane             = fields[3]
         index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
-        rg.ID = fcid
-        rg.PU = [fcid, index].findAll().join(".")
+        rg.ID = [fcid,lane].join(".")
+        rg.PU = [fcid, lane, index].findAll().join(".")
         rg.PL = "ILLUMINA"
     } else if (fields.size() == 5) {
         fcid = fields[0]

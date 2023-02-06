@@ -29,6 +29,9 @@ process BIOBAMBAM_BAMSORMADUP {
     bamcat \\
         I=${input_string} \\
         level=0 \\
+    | bamcollate2 \\
+        level=0 \\
+        exclude=QCFAIL \\
     | bamsormadup \\
         $args \\
         M=${prefix}.metrics.txt \\
@@ -39,6 +42,7 @@ process BIOBAMBAM_BAMSORMADUP {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         bamcat: \$(echo \$(bamcat --version 2>&1) | sed 's/^This is biobambam2 version //; s/..biobambam2 is .*\$//' )
+        bamcollate2: \$(echo \$(bamcollate2 --version 2>&1) | sed 's/^This is biobambam2 version //; s/..biobambam2 is .*\$//' )
         bamsormadup: \$(echo \$(bamsormadup --version 2>&1) | sed 's/^This is biobambam2 version //; s/..biobambam2 is .*\$//' )
     END_VERSIONS
     """
