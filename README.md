@@ -20,6 +20,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 5. Coverage analysis
 6. Compression
 
+![](docs/img/nf-cmgg-preprocessing.png)
+
 ## Quick Start
 
 1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=22.10.0`)
