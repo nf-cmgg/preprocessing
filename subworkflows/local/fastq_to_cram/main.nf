@@ -68,8 +68,39 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        // Gather bams per sample for merging and markdup
-        ch_bam_per_sample = gather_split_files_per_sample(FASTQ_ALIGN_DNA.out.bam).dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
+        FASTQ_ALIGN_DNA.out.bam.map {
+            // set id to samplename, drop readgroup and count meta values
+            meta, files ->
+            def gk = (meta.chunks ?: 1)
+            return [
+                groupKey(
+                    // replace id by samplename, drop readgroup meta and chunks
+                    meta - meta.subMap('id', 'readgroup', 'chunks') + [id: meta.samplename],
+                    gk
+                ),
+                files
+            ]
+        }
+        .groupTuple(by:[0])
+        .dump(tag: "FASTQ_TO_CRAM: bam per replicate",{FormattingService.prettyFormat(it)})
+        .map {
+            meta, files ->
+            def gk = (meta.count ?: 1)
+            return [
+                groupKey(
+                    // drop count
+                    meta - meta.subMap('count'),
+                    gk
+                ),
+                files
+            ]
+        }
+        .groupTuple(by:[0])
+        .dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
+        .map { meta, files ->
+            return [meta, files.flatten()]
+        }
+        .set{ch_bam_per_sample}
 
         ch_markdup_bam_bai = Channel.empty()
         switch (postprocessor) {
@@ -113,32 +144,4 @@ workflow FASTQ_TO_CRAM {
         checksum        = BAM_ARCHIVE.out.checksum
         multiqc_files   = ch_multiqc_files
         versions        = ch_versions
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// Gather split files per sample
-def gather_split_files_per_sample(ch_files) {
-    // Gather bam files per sample based on id
-    ch_files.map {
-        // set id to samplename, drop readgroup and count meta values
-        meta, files ->
-        gk = (meta.count ?: 1) * (meta.chunks ?: 1)
-        return [
-            groupKey(
-                // replace id by samplename, drop readgroup meta, drop count and chunks
-                meta - meta.subMap('id', 'readgroup', 'count', 'chunks') + [id: meta.samplename],
-                gk
-            ),
-            files
-        ]
-    }
-    .groupTuple(by:[0])
-    .map { meta, files ->
-        return [meta, files.flatten()]
-    }
 }
