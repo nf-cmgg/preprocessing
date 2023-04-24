@@ -135,7 +135,7 @@ workflow FASTQ_TO_CRAM {
                  // SAMTOOLS_INDEX([meta, bam])
                 SAMTOOLS_INDEX(SAMTOOLS_SORMADUP.out.bam)
 
-                ch_markdup_bam_bai = SAMTOOLS_SORMADUP.out.bam.join(SAMTOOLS_INDEX.out.bai)
+                ch_markdup_bam_bai = SAMTOOLS_SORMADUP.out.bam.join(SAMTOOLS_INDEX.out.bai, failOnMismatch:true, failOnDuplicate:true)
                 ch_multiqc_files = ch_multiqc_files.mix( SAMTOOLS_SORMADUP.out.metrics.map { meta, metrics -> return metrics} )
                 ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions, SAMTOOLS_INDEX.out.versions)
                 break
