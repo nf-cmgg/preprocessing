@@ -21,7 +21,7 @@
                     "type": "string",
                     "default": "bamsormadup",
                     "description": "Which alignment postprocessor to use",
-                    "enum": ["elprep", "bamsormadup"]
+                    "enum": ["elprep", "bamsormadup","samtools"]
                 },
                 "run_coverage": {
                     "type": "boolean",
