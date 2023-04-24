@@ -12,10 +12,10 @@ workflow COVERAGE {
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
-        ch_fasta    = ch_fasta_fai.map  {meta, fasta, fai -> [meta, fasta] }.collect()
-        ch_meta_target_interval = ch_target_interval ? ch_target_interval.map { it -> [[:],it] } : [[:],[]]
+        ch_meta_fasta    = ch_fasta_fai.map  {meta, fasta, fai -> [meta, fasta] }.collect()
+        ch_reads_index_target = ch_reads_index.combine(ch_target_interval)
 
-        MOSDEPTH(ch_reads_index, ch_meta_target_interval, ch_fasta)
+        MOSDEPTH(ch_reads_index_target, ch_meta_fasta)
         ch_metrics = ch_metrics.mix(
             MOSDEPTH.out.summary_txt,
             MOSDEPTH.out.global_txt,
