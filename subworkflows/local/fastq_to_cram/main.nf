@@ -6,6 +6,7 @@
 
 // MODULES
 include { ELPREP_SFM            } from "../../../modules/local/elprep/sfm/main.nf"
+include { SAMTOOLS_SORMADUP     } from "../../../modules/local/samtools/sormadup/main.nf"
 include { SAMTOOLS_INDEX        } from "../../../modules/nf-core/samtools/index/main.nf"
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 // SUBWORKFLOWS
@@ -21,15 +22,16 @@ workflow FASTQ_TO_CRAM {
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
         aligner             // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
         ch_aligner_index    // channel: [optional ] [meta2, aligner_index]
-        postprocessor       // string:  [optional ] postprocessor [elprep, bamsormadup]
+        postprocessor       // string:  [optional ] postprocessor [elprep, bamsormadup, samtools]
 
     main:
 
         ch_versions      = Channel.empty()
         ch_multiqc_files = Channel.empty()
 
-        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai  }.collect()
-        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta}.collect()
+        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai           }.collect()
+        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta         }.collect()
+        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta] }.collect()
 
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -124,6 +126,18 @@ workflow FASTQ_TO_CRAM {
                 ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
                 ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
                 ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+                break
+
+            case "samtools":
+                // SAMTOOLS_SORMADUP([meta, [bam, bam]], fasta)
+                SAMTOOLS_SORMADUP(ch_bam_per_sample, ch_meta_fasta)
+
+                 // SAMTOOLS_INDEX([meta, bam])
+                SAMTOOLS_INDEX(SAMTOOLS_SORMADUP.out.bam)
+
+                ch_markdup_bam_bai = SAMTOOLS_SORMADUP.out.bam.join(SAMTOOLS_INDEX.out.bai, failOnMismatch:true, failOnDuplicate:true)
+                ch_multiqc_files = ch_multiqc_files.mix( SAMTOOLS_SORMADUP.out.metrics.map { meta, metrics -> return metrics} )
+                ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions, SAMTOOLS_INDEX.out.versions)
                 break
         }
         ch_markdup_bam_bai.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", {FormattingService.prettyFormat(it)})
