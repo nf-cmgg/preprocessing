@@ -284,7 +284,7 @@ workflow CMGGPREPROCESSING {
                 return it + [[]]
             }
     ch_cram_crai_target = ch_cram_crai_branch.bed
-        .mix(ch_cram_crai_target.nobed)
+        .mix(ch_cram_crai_branch.nobed)
         .dump(tag: "MAIN: cram_crai_target",{FormattingService.prettyFormat(it)})
 
     if (run_coverage){
