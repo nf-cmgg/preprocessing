@@ -2,6 +2,8 @@
 // This file holds several functions specific to the main.nf workflow in the CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline
 //
 
+import nextflow.Nextflow
+
 class WorkflowMain {
 
     //
@@ -9,16 +11,19 @@ class WorkflowMain {
     //
     public static String citation(workflow) {
         return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
+            // TODO nf-core: Add Zenodo DOI for pipeline after first release
+            //"* The pipeline\n" +
+            //"  https://doi.org/10.5281/zenodo.XXXXXXX\n\n" +
             "* The nf-core framework\n" +
             "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
             "* Software dependencies\n" +
-            "  ${workflow.manifest.homePage}/blob/master/CITATIONS.md"
+            "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
 
     //
-    // Print help to screen if required
+    // Generate help string
     //
-    public static String help(workflow, params, log) {
+    public static String help(workflow, params) {
         def command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
         def help_string = ''
         help_string += NfcoreTemplate.logo(workflow, params.monochrome_logs)
@@ -29,9 +34,9 @@ class WorkflowMain {
     }
 
     //
-    // Print parameter summary log to screen
+    // Generate parameter summary log string
     //
-    public static String paramsSummaryLog(workflow, params, log) {
+    public static String paramsSummaryLog(workflow, params) {
         def summary_log = ''
         summary_log += NfcoreTemplate.logo(workflow, params.monochrome_logs)
         summary_log += NfcoreSchema.paramsSummaryLog(workflow, params)
@@ -46,17 +51,24 @@ class WorkflowMain {
     public static void initialise(workflow, params, log) {
         // Print help to screen if required
         if (params.help) {
-            log.info help(workflow, params, log)
+            log.info help(workflow, params)
             System.exit(0)
         }
+
+        // Print workflow version and exit on --version
+        if (params.version) {
+            String workflow_version = NfcoreTemplate.version(workflow)
+            log.info "${workflow.manifest.name} ${workflow_version}"
+            System.exit(0)
+        }
+
+        // Print parameter summary log to screen
+        log.info paramsSummaryLog(workflow, params)
 
         // Validate workflow parameters via the JSON schema
         if (params.validate_params) {
             NfcoreSchema.validateParameters(workflow, params, log)
         }
-
-        // Print parameter summary log to screen
-        log.info paramsSummaryLog(workflow, params, log)
 
         // Check that a -profile or Nextflow config has been provided to run the pipeline
         NfcoreTemplate.checkConfigProvided(workflow, log)
@@ -71,11 +83,9 @@ class WorkflowMain {
 
         // Check input has been provided
         if (!params.input) {
-            log.error "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
-            System.exit(1)
+            Nextflow.error("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
         }
     }
-
     //
     // Get attribute from genome config file e.g. fasta
     //
