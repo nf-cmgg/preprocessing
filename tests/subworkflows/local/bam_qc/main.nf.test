@@ -127,10 +127,10 @@ nextflow_workflow {
                     ])
 
                 // ch_target_interval
-                input[3] = []
+                input[3] = Channel.value([])
 
                 // ch_bait_interval
-                input[4] = []
+                input[4] = Channel.value([])
 
                 // disable_picard
                 input[5] = params.disable_picard_metrics

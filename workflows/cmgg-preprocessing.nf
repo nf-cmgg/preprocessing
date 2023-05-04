@@ -98,8 +98,8 @@ workflow CMGGPREPROCESSING {
 
     ch_aligner_index = Channel.empty()
 
-    ch_bait_regions   = params.bait_regions   ? Channel.value(file(params.bait_regions, checkIfExists: true))   : []
-    ch_target_regions = params.target_regions ? Channel.value(file(params.target_regions, checkIfExists: true)) : []
+    ch_bait_regions   = params.bait_regions   ? Channel.value(file(params.bait_regions, checkIfExists: true))   : Channel.value([])
+    ch_target_regions = params.target_regions ? Channel.value(file(params.target_regions, checkIfExists: true)) : Channel.value([])
 
     // output channels
     ch_versions      = Channel.empty()
@@ -275,12 +275,20 @@ workflow CMGGPREPROCESSING {
 
     // Generate coverage metrics and beds for each sample
     // COVERAGE([meta,bam, bai], [meta2, fasta, fai], target)
+    ch_cram_crai_branch = FASTQ_TO_CRAM.out.cram_crai
+        .combine(ch_target_regions)
+        .branch {
+            bed: it.size() == 4
+                return it
+            nobed: it.size() == 3
+                return it + [[]]
+            }
+    ch_cram_crai_target = ch_cram_crai_branch.bed
+        .mix(ch_cram_crai_branch.nobed)
+        .dump(tag: "MAIN: cram_crai_target",{FormattingService.prettyFormat(it)})
+
     if (run_coverage){
-        COVERAGE(
-            FASTQ_TO_CRAM.out.cram_crai,
-            ch_fasta_fai,
-            ch_target_regions,
-        )
+        COVERAGE(ch_cram_crai_target, ch_fasta_fai)
         ch_coverage_beds = Channel.empty().mix(
             COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
             COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
@@ -297,8 +305,8 @@ workflow CMGGPREPROCESSING {
     */
 
     // Gather metrics from bam files
-    // BAM_QC([meta, bam, bai], [meta2, fasta, fai], [meta2, dict], [target], [bait])
-    BAM_QC( FASTQ_TO_CRAM.out.cram_crai, ch_fasta_fai, ch_dict, ch_target_regions, ch_bait_regions, disable_picard)
+    // BAM_QC([meta, bam, bai, target], [meta2, fasta, fai], [meta2, dict])
+    BAM_QC( ch_cram_crai_target, ch_fasta_fai, ch_dict, disable_picard)
     ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 

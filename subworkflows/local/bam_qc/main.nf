@@ -1,18 +1,17 @@
 #!/usr/bin/env nextflow
 
-include { BAM_QC_PICARD         } from '../../nf-core/bam_qc_picard/main'
-include { BAM_STATS_SAMTOOLS    } from "../../nf-core/bam_stats_samtools/main"
+include { BAM_STATS_SAMTOOLS        } from "../../nf-core/bam_stats_samtools/main"
 
-include { PICARD_BEDTOINTERVALLIST as BAITTOINTERVALLIST    } from '../../../modules/nf-core/picard/bedtointervallist/main'
-include { PICARD_BEDTOINTERVALLIST as TARGETTOINTERVALLIST  } from '../../../modules/nf-core/picard/bedtointervallist/main'
+include { PICARD_COLLECTMULTIPLEMETRICS } from '../../../modules/nf-core/picard/collectmultiplemetrics/main'
+include { PICARD_COLLECTHSMETRICS       } from '../../../modules/nf-core/picard/collecthsmetrics/main'
+include { PICARD_COLLECTWGSMETRICS      } from '../../../modules/nf-core/picard/collectwgsmetrics/main'
+
 
 workflow BAM_QC {
     take:
-        ch_bam_bai          // channel: [mandatory] [meta, bam, bai]
+        ch_bam_bai_target   // channel: [mandatory] [meta, bam, bai, target]
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
         ch_fasta_dict       // channel: [mandatory] [meta2, dict]
-        ch_target_interval  // channel: [optional]  [target_interval_bed]
-        ch_bait_interval    // channel: [optional]  [bait_interval_bed]
         disable_picard      // boolean: [optional]  [true]
 
     main:
@@ -26,32 +25,37 @@ workflow BAM_QC {
         ch_meta_fai   = ch_fasta_fai.map {meta, fasta, fai -> [meta, fai]  }.collect()
         ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
 
+        ch_bam_bai = ch_bam_bai_target.map{ meta, bam, bai, bed -> [meta, bam, bai]}
+
         if (!disable_picard) {
-            if ( ch_bait_interval ) {
-                BAITTOINTERVALLIST(
-                    ch_bait_interval.map{[[id:"bait"], it]},
-                    ch_fasta_dict,
-                    []
-                )
-                ch_versions = ch_versions.mix(BAITTOINTERVALLIST.out.versions)
-                ch_bait_interval_list = BAITTOINTERVALLIST.out.interval_list.map{meta, list -> list}.collect()
-            }
-            if ( ch_target_interval ) {
-                TARGETTOINTERVALLIST(
-                    ch_target_interval.map{[[id:"target"], it]},
-                    ch_fasta_dict,
-                    []
-                )
-                ch_versions = ch_versions.mix(TARGETTOINTERVALLIST.out.versions)
-                ch_target_interval_list = TARGETTOINTERVALLIST.out.interval_list.map{meta, list -> list}.collect()
+
+            PICARD_COLLECTMULTIPLEMETRICS(
+                ch_bam_bai,
+                ch_meta_fasta,
+                ch_meta_fai
+            )
+            ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
+            ch_metrics = ch_metrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
+
+
+            ch_bam_bai_target_branched = ch_bam_bai_target.branch {
+                hsmetrics  : it.size == 4 && it[3] != []
+                    return it
+                wgsmetrics : true
+                    return [ it[0], it[1], it[2] ]
             }
 
-            // SUBWORKFLOW: bam_qc_picard
-            // Run Picard QC modules
-            // BAM_QC_PICARD([meta, bam, bai], [meta2, fasta], [meta2, fai], [bait_interval], [target_interval])
-            BAM_QC_PICARD( ch_bam_bai, ch_meta_fasta, ch_meta_fai, ch_bait_interval_list, ch_target_interval_list )
-            ch_metrics  = ch_metrics.mix(BAM_QC_PICARD.out.coverage_metrics, BAM_QC_PICARD.out.multiple_metrics)
-            ch_versions = ch_versions.mix(BAM_QC_PICARD.out.versions)
+            // WGS metrics
+            PICARD_COLLECTWGSMETRICS( ch_bam_bai_target_branched.wgsmetrics, ch_meta_fasta, ch_meta_fai, [] )
+            ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions.first())
+            ch_metrics = ch_metrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
+
+            // HS metrics
+            PICARD_COLLECTHSMETRICS( ch_bam_bai_target_branched.hsmetrics, ch_meta_fasta, ch_meta_fai, ch_fasta_dict)
+            ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
+            ch_metrics = ch_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
+
+
         }
 
         // SUBWORKFLOW: bam_stats_samtools

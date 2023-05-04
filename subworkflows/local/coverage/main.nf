@@ -4,18 +4,16 @@ include { MOSDEPTH } from "../../../modules/nf-core/mosdepth/main"
 
 workflow COVERAGE {
     take:
-        ch_reads_index      // channel: [mandatory][ meta,  reads, index ]
-        ch_fasta_fai        // channel: [mandatory][ meta2, fasta, fai ]
-        ch_target_interval  // channel: [optional] [ target_interval_bed ]
+        ch_reads_index_target   // channel: [mandatory][ meta,  reads, index, target_bed ]
+        ch_fasta_fai            // channel: [mandatory][ meta2, fasta, fai ]
 
     main:
         ch_versions = Channel.empty()
         ch_metrics  = Channel.empty()
 
-        ch_fasta    = ch_fasta_fai.map  {meta, fasta, fai -> [meta, fasta] }.collect()
-        ch_meta_target_interval = ch_target_interval ? ch_target_interval.map { it -> [[:],it] } : [[:],[]]
+        ch_meta_fasta    = ch_fasta_fai.map  {meta, fasta, fai -> [meta, fasta] }.collect()
 
-        MOSDEPTH(ch_reads_index, ch_meta_target_interval, ch_fasta)
+        MOSDEPTH(ch_reads_index_target, ch_meta_fasta)
         ch_metrics = ch_metrics.mix(
             MOSDEPTH.out.summary_txt,
             MOSDEPTH.out.global_txt,
