@@ -31,8 +31,8 @@ workflow BAM_QC {
 
             PICARD_COLLECTMULTIPLEMETRICS(
                 ch_bam_bai,
-                ch_fasta,
-                ch_fasta_fai
+                ch_meta_fasta,
+                ch_meta_fai
             )
             ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
             ch_metrics = ch_metrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
@@ -46,12 +46,12 @@ workflow BAM_QC {
             }
 
             // WGS metrics
-            PICARD_COLLECTWGSMETRICS( ch_bam_bai_target_branched.wgsmetrics, ch_fasta, ch_fasta_fai, [] )
+            PICARD_COLLECTWGSMETRICS( ch_bam_bai_target_branched.wgsmetrics, ch_meta_fasta, ch_meta_fai, [] )
             ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions.first())
             ch_metrics = ch_metrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
 
             // HS metrics
-            PICARD_COLLECTHSMETRICS( ch_bam_bai_target_branched.hsmetrics, ch_fasta, ch_fasta_fai, ch_fasta_dict)
+            PICARD_COLLECTHSMETRICS( ch_bam_bai_target_branched.hsmetrics, ch_meta_fasta, ch_meta_fai, ch_fasta_dict)
             ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
             ch_metrics = ch_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
 
