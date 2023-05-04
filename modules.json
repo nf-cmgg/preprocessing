@@ -96,25 +96,21 @@
                         "git_sha": "f2d63bd5b68925f98f572eed70993d205cc694b7",
                         "installed_by": ["modules"]
                     },
-                    "picard/bedtointervallist": {
-                        "branch": "master",
-                        "git_sha": "75027bf77472b1f4fd2cdd7e46f83119dfb0f2c6",
-                        "installed_by": ["modules"]
-                    },
                     "picard/collecthsmetrics": {
                         "branch": "master",
                         "git_sha": "da39e9cb25555b238a6e0542c9ae1d3bd08be139",
-                        "installed_by": ["bam_qc_picard", "modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/picard/collecthsmetrics/picard-collecthsmetrics.diff"
                     },
                     "picard/collectmultiplemetrics": {
                         "branch": "master",
                         "git_sha": "75027bf77472b1f4fd2cdd7e46f83119dfb0f2c6",
-                        "installed_by": ["bam_qc_picard", "modules"]
+                        "installed_by": ["modules"]
                     },
                     "picard/collectwgsmetrics": {
                         "branch": "master",
                         "git_sha": "75027bf77472b1f4fd2cdd7e46f83119dfb0f2c6",
-                        "installed_by": ["bam_qc_picard", "modules"]
+                        "installed_by": ["modules"]
                     },
                     "samtools/collatefastq": {
                         "branch": "master",
@@ -170,11 +166,6 @@
             },
             "subworkflows": {
                 "nf-core": {
-                    "bam_qc_picard": {
-                        "branch": "master",
-                        "git_sha": "da39e9cb25555b238a6e0542c9ae1d3bd08be139",
-                        "installed_by": ["subworkflows"]
-                    },
                     "bam_stats_samtools": {
                         "branch": "master",
                         "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
