@@ -1,9 +1,11 @@
 #!/usr/bin/env nextflow
 
-include { BAM_QC_PICARD             } from '../../nf-core/bam_qc_picard/main'
 include { BAM_STATS_SAMTOOLS        } from "../../nf-core/bam_stats_samtools/main"
 
-include { PICARD_BEDTOINTERVALLIST  } from '../../../modules/nf-core/picard/bedtointervallist/main'
+include { PICARD_COLLECTMULTIPLEMETRICS } from '../../../modules/nf-core/picard/collectmultiplemetrics/main'
+include { PICARD_COLLECTHSMETRICS       } from '../../../modules/nf-core/picard/collecthsmetrics/main'
+include { PICARD_COLLECTWGSMETRICS      } from '../../../modules/nf-core/picard/collectwgsmetrics/main'
+
 
 workflow BAM_QC {
     take:
@@ -23,9 +25,15 @@ workflow BAM_QC {
         ch_meta_fai   = ch_fasta_fai.map {meta, fasta, fai -> [meta, fai]  }.collect()
         ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
 
+        ch_bam_bai = ch_bam_bai_target.map{ meta, bam, bai, bed -> [meta, bam, bai]}
+
         if (!disable_picard) {
 
-            PICARD_COLLECTMULTIPLEMETRICS( ch_bam_bai, ch_fasta, ch_fasta_fai )
+            PICARD_COLLECTMULTIPLEMETRICS(
+                ch_bam_bai,
+                ch_fasta,
+                ch_fasta_fai
+            )
             ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
             ch_metrics = ch_metrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
 
@@ -44,8 +52,8 @@ workflow BAM_QC {
 
             // HS metrics
             PICARD_COLLECTHSMETRICS( ch_bam_bai_target_branched.hsmetrics, ch_fasta, ch_fasta_fai, ch_fasta_dict)
-            ch_coverage_metrics = ch_coverage_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
             ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
+            ch_metrics = ch_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
 
 
         }
