@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "latest-everything"
+          - 22.10.0
         test:
           - "test_flowcell"
           #- "test_fastq"
