@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add fix for sample replicates with different split sizes
 - Add option to use samtools for duplicate marking
 - Updated modules
+- Updated to nf-core template v2.8
 
 ## v1.1.2
 

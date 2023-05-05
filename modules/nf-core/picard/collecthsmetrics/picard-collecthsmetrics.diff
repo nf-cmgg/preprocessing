@@ -60,10 +60,5 @@ Changes in module 'nf-core/picard/collecthsmetrics'
          --INPUT $bam \\
          --OUTPUT ${prefix}.CollectHsMetrics.coverage_metrics
  
-@@ -58,4 +94,4 @@
-         picard: \$(echo \$(picard CollectHsMetrics --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d:)
-     END_VERSIONS
-     """
--}
-+}
+
 ************************************************************
