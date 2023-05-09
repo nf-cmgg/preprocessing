@@ -23,7 +23,7 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
                         "installed_by": ["modules", "fastq_align_dna"]
                     },
                     "bowtie2/build": {
@@ -38,7 +38,7 @@
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
                         "installed_by": ["modules", "fastq_align_dna"]
                     },
                     "bwamem2/index": {
@@ -48,12 +48,12 @@
                     },
                     "bwamem2/mem": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
                         "installed_by": ["modules", "fastq_align_dna"]
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "38b16706fa3a9d4ee2bf46fa5805e7397e275cdd",
+                        "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
                         "installed_by": ["modules"]
                     },
                     "custom/dumpsoftwareversions": {
@@ -63,7 +63,7 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
                         "installed_by": ["fastq_align_dna"]
                     },
                     "dragmap/hashtable": {
@@ -83,7 +83,7 @@
                     },
                     "md5sum": {
                         "branch": "master",
-                        "git_sha": "38b16706fa3a9d4ee2bf46fa5805e7397e275cdd",
+                        "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
@@ -98,7 +98,7 @@
                     },
                     "picard/collecthsmetrics": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "0ce3ab0ac301f160225b22254fa238478b4389f2",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collecthsmetrics/picard-collecthsmetrics.diff"
                     },
@@ -159,7 +159,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "38b16706fa3a9d4ee2bf46fa5805e7397e275cdd",
+                        "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
                         "installed_by": ["bcl_demultiplex"]
                     }
                 }
