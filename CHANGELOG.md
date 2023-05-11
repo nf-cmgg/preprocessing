@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add option to use samtools for duplicate marking
 - Updated modules
 - Updated to nf-core template v2.8
+- Fix issue where unaligned samples were not merged and fixed naming
 
 ## v1.1.2
 
