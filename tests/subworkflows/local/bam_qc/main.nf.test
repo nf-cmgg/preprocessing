@@ -35,11 +35,8 @@ nextflow_workflow {
                 // ch_target_interval
                 input[3] = Channel.fromPath(params.test_data['homo_sapiens']['illumina']['roi_bed'])
 
-                // ch_bait_interval
-                input[4] = Channel.fromPath(params.test_data['homo_sapiens']['illumina']['roi_bed'])
-
                 // disable_picard
-                input[5] = params.disable_picard_metrics
+                input[4] = params.disable_picard_metrics
                 """
             }
         }
@@ -82,11 +79,8 @@ nextflow_workflow {
                 // ch_target_interval
                 input[3] = Channel.fromPath(params.test_data['homo_sapiens']['illumina']['roi_bed'])
 
-                // ch_bait_interval
-                input[4] = Channel.fromPath(params.test_data['homo_sapiens']['illumina']['roi_bed'])
-
                 // disable_picard
-                input[5] = params.disable_picard_metrics
+                input[4] = params.disable_picard_metrics
                 """
             }
         }
@@ -129,11 +123,8 @@ nextflow_workflow {
                 // ch_target_interval
                 input[3] = Channel.value([])
 
-                // ch_bait_interval
-                input[4] = Channel.value([])
-
                 // disable_picard
-                input[5] = params.disable_picard_metrics
+                input[3] = params.disable_picard_metrics
                 """
             }
         }
