@@ -1,4 +1,5 @@
 process PANEL_COVERAGE {
+    tag "$meta.id"
     label 'process_single'
 
     conda "bioconda::pybedtools=0.9.0"

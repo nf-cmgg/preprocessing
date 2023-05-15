@@ -125,7 +125,7 @@ workflow CMGGPREPROCESSING {
     }
 
     // Genelists
-    ch_genelists = Channel.fromPath(params.genelists + "/*.bed")
+    ch_genelists = Channel.fromPath(params.genelists + "/*.bed", checkIfExists:true)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

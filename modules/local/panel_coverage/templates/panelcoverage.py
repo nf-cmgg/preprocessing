@@ -1,4 +1,5 @@
-import argparse
+#!/usr/bin/env python
+
 import pybedtools
 import pandas as pd
 from pathlib import Path
@@ -6,13 +7,13 @@ import uuid
 import csv
 
 
-def main(per_base_bed: Path, panel_bed: Path) -> None:
+def main(per_base_bed, panel_bed) -> None:
     # create temporary intersection file
-    panel_coverage_tmp = f"{uuid.uuid4()}.tmp"
+    panel_coverage_tmp = str(uuid.uuid4()) + ".tmp"
     pybedtools.BedTool(per_base_bed).intersect(pybedtools.BedTool(panel_bed)).moveto(panel_coverage_tmp)
 
     # create dataframe
-    df = pd.read_csv(panel_coverage_tmp, sep="\t", lineterminator="\n", names=["chr", "start", "stop", "depth"])
+    df = pd.read_csv(panel_coverage_tmp, sep="\\t", lineterminator="\\n", names=["chr", "start", "stop", "depth"])
 
     # remove temporary file
     Path(panel_coverage_tmp).unlink()
@@ -31,9 +32,11 @@ def main(per_base_bed: Path, panel_bed: Path) -> None:
 
     # print output + add missing values for every depth
     # 3 decimals (= more specific than real mosdepth dist.txt file)
-    cum_region_dist = open(f'${meta.id}_${genelist_name}.region.dist.txt', 'w')
+    sample_id = "${meta.id}"
+    genelist_name = panel_bed.rstrip(".bed").split("/")[-1]
+    cum_region_dist = open(sample_id + '_' + genelist_name + '.region.dist.txt', 'w')
     with cum_region_dist as f:
-        writer = csv.writer(f, delimiter='\t', lineterminator='\n')
+        writer = csv.writer(f, delimiter='\\t', lineterminator='\\n')
         for value in list(reversed(range(0, df2.index.tolist()[0]+1,1))):
             try:
                 running_cum_percent = df2.loc[value, 'cum_percent']
@@ -43,4 +46,4 @@ def main(per_base_bed: Path, panel_bed: Path) -> None:
 
 
 if __name__ == '__main__':
-    main(per_base_bed="$per_base_bed", panel_bed="$panel_bed")
+    main(per_base_bed="$per_base_bed", panel_bed="$genelist_bed")
