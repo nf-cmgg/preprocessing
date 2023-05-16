@@ -34,7 +34,7 @@ def main(per_base_bed, panel_bed) -> None:
     # 3 decimals (= more specific than real mosdepth dist.txt file)
     sample_id = "${meta.id}"
     genelist_name = panel_bed.rstrip(".bed").split("/")[-1]
-    cum_region_dist = open(sample_id + '_' + genelist_name + '.region.dist.txt', 'w')
+    cum_region_dist = open(sample_id + '_' + genelist_name + '.mosdepth.region.dist.txt', 'w')
     with cum_region_dist as f:
         writer = csv.writer(f, delimiter='\\t', lineterminator='\\n')
         for value in list(reversed(range(0, df2.index.tolist()[0]+1,1))):

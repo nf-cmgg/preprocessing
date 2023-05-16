@@ -1,7 +1,8 @@
 #!/usr/bin/env nextflow
 
-include { MOSDEPTH          } from "../../../modules/nf-core/mosdepth/main"
-include { PANEL_COVERAGE    } from "../../../modules/local/panel_coverage/main"
+include { MOSDEPTH              } from "../../../modules/nf-core/mosdepth/main"
+include { PANEL_COVERAGE        } from "../../../modules/local/panel_coverage/main"
+include { MULTIQC as COVERAGEQC } from "../../../modules/nf-core/multiqc/main"
 
 workflow COVERAGE {
     take:
@@ -30,15 +31,17 @@ workflow COVERAGE {
 
         //PANEL_COVERAGE(per_base_genelist)
         PANEL_COVERAGE(ch_per_base_genelist)
-        ch_regions_dist = PANEL_COVERAGE.out.region_dist.collect()
-        ch_regions_dist.dump(tag: "COVERAGE: sample region dist", {FormattingService.prettyFormat(it)})
+
+        ch_regions_dist = PANEL_COVERAGE.out.region_dist.map{ meta, files -> files}.collect()
+
+        COVERAGEQC(ch_regions_dist, [], [], [])
 
     emit:
         per_base_bed        = MOSDEPTH.out.per_base_bed     // [meta, bed]
         per_base_bed_csi    = MOSDEPTH.out.per_base_csi     // [meta, csi]
         regions_bed         = MOSDEPTH.out.regions_bed      // [meta, bed]
         regions_bed_csi     = MOSDEPTH.out.regions_csi      // [meta, csi]
-        regions_dist        = ch_regions_dist               // [meta, [dist,dist,...]]
+        regions_dist        = PANEL_COVERAGE.out.region_dist// [meta, [dist,dist,...]]
         quantized_bed       = MOSDEPTH.out.quantized_bed    // [meta, bed]
         quantized_bed_csi   = MOSDEPTH.out.quantized_csi    // [meta, csi]
         metrics             = ch_metrics                    // [[meta, [metrics]]
