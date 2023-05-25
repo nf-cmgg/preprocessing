@@ -214,7 +214,7 @@
                     "default": "None",
                     "hidden": true,
                     "description": "Path to directory containing genelist bed"
-                },
+                }
             },
             "required": ["genome", "fasta", "dict", "fai"]
         },
