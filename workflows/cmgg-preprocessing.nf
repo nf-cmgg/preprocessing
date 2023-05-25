@@ -435,7 +435,7 @@ def parse_fastq_csv(row) {
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
     meta.organism   = row.organism ? row.organism.toString() : ""
-    meta.tag        = row.tag ? row.tag.toString().split(",") : []
+    meta.tag        = row.tag ? row.tag.toString() : ""
     meta.single_end = fastq_2      ? false : true
     // Set readgroup info
     meta.readgroup    = [:]
@@ -466,7 +466,7 @@ def parse_reads_csv(row) {
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
     meta.organism   = row.organism ? row.organism.toString() : ""
-    meta.tag        = row.tag ? row.tag.toString().split(",") : []
+    meta.tag        = row.tag ? row.tag.toString() : ""
     // dirty fix to have the `single_end` key in the meta map
     meta.single_end = false
 
