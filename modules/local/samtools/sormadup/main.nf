@@ -23,7 +23,7 @@ process SAMTOOLS_SORMADUP {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def reference = fasta ? "--reference ${fasta}" : ""
-    def sort_memory = (task.memory.mega/task.cpus).intValue()
+    def sort_memory = (task.memory.mega/task.cpus*0.75).intValue()
 
     """
     samtools cat \\
