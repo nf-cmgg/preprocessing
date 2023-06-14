@@ -1,0 +1,47 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_ARCHIVE"
+    script "subworkflows/local/bam_archive/main.nf"
+    workflow "BAM_ARCHIVE"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test_cram', single_end:false ], // meta map
+                        file(params.test_data['homo_sapiens']['illumina']['test_cram'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_cram_index'], checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test_bam', single_end:false ], // meta map
+                        file(params.test_data['homo_sapiens']['illumina']['test_bam'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_bam_index'], checkIfExists: true)
+                    ]
+                )
+
+                input[1] = Channel.value(
+                    [
+                        [ id:'test_fasta' ], // meta map
+                        file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}
