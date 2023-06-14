@@ -7,6 +7,7 @@
 // MODULES
 include { SAMTOOLS_SORMADUP     } from "../../../modules/local/samtools/sormadup/main.nf"
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
+include { SAMTOOLS_SORTMERGE    } from "../../../modules/local/samtools/sortmerge/main"
 // SUBWORKFLOWS
 include { BAM_ARCHIVE       } from "../../local/bam_archive/main"
 include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
@@ -20,7 +21,7 @@ workflow FASTQ_TO_CRAM {
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
         aligner             // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
         ch_aligner_index    // channel: [optional ] [meta2, aligner_index]
-        postprocessor       // string:  [optional ] postprocessor [bamsormadup, samtools]
+        postprocessor       // string:  [optional ] postprocessor [bamsormadup, samtools, false]
 
     main:
 
@@ -119,6 +120,15 @@ workflow FASTQ_TO_CRAM {
                 ch_multiqc_files = ch_multiqc_files.mix( SAMTOOLS_SORMADUP.out.metrics.map { meta, metrics -> return metrics} )
                 ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions)
                 break
+
+            case "false":
+                // Merge bam files and compress
+                // SAMTOOLS_MERGE([meta, [bam, bam]])
+                SAMTOOLS_MERGE(ch_bam_per_sample)
+                ch_markdup_bam_bai = SAMTOOLS_MERGE.out.bam.join(SAMTOOLS_MERGE.out.bam_index, failOnMismatch:true, failOnDuplicate:true)
+                ch_versions = ch_versions.mix(SAMTOOLS_MERGE.out.versions)
+                break
+
         }
         ch_markdup_bam_bai.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", {FormattingService.prettyFormat(it)})
 

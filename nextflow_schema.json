@@ -17,11 +17,11 @@
                     "description": "Which aligner to use",
                     "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"]
                 },
-                "postprocessor": {
+                "markdup": {
                     "type": "string",
                     "default": "bamsormadup",
                     "description": "Which alignment postprocessor to use",
-                    "enum": ["bamsormadup", "samtools"]
+                    "enum": ["bamsormadup", "samtools", "false"]
                 },
                 "run_coverage": {
                     "type": "boolean",

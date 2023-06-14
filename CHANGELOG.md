@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make BAM_ARCHIVE accept channels with cram files
 - Drop ELPREP support
 - Add support for cram and index outputs in SAMTOOLS_SORMADUP
+- Add option to disable marking duplicates
 
 ## v1.1.2
 
