@@ -144,13 +144,6 @@
                     "fa_icon": "far fa-file-code",
                     "hidden": true
                 },
-                "bait_regions": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.bed$",
-                    "description": "Path to bait regions bed file."
-                },
                 "target_regions": {
                     "type": "string",
                     "format": "file-path",
@@ -215,6 +208,12 @@
                     "default": "None",
                     "hidden": true,
                     "description": "Path to SNAP aligner index"
+                },
+                "genelists": {
+                    "type": "string",
+                    "default": "None",
+                    "hidden": true,
+                    "description": "Path to directory containing genelist bed"
                 }
             },
             "required": ["genome", "fasta", "dict", "fai"]

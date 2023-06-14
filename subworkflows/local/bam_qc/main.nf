@@ -21,7 +21,6 @@ workflow BAM_QC {
         ch_bait_interval_list = []
         ch_target_interval_list = []
 
-        ch_fasta = ch_fasta_fai.map {meta, fasta, fai -> fasta             }.collect()
         ch_meta_fai   = ch_fasta_fai.map {meta, fasta, fai -> [meta, fai]  }.collect()
         ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
 
@@ -61,7 +60,7 @@ workflow BAM_QC {
         // SUBWORKFLOW: bam_stats_samtools
         // Run samtools QC modules
         // BAM_STATS_SAMTOOLS([meta, bam, bai])
-        BAM_STATS_SAMTOOLS(ch_bam_bai, ch_fasta)
+        BAM_STATS_SAMTOOLS(ch_bam_bai, ch_meta_fasta)
 
         ch_metrics = ch_metrics.mix(
             BAM_STATS_SAMTOOLS.out.stats,

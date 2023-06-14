@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated modules
 - Updated to nf-core template v2.8
 - Fix issue where unaligned samples were not merged and fixed naming
+- Add minimal support for sample "tags" in sample sheet
+- Add panel coverage analysis
+- Limit panel coverage analyses to samples with WES/WGS tags
 
 ## v1.1.2
 

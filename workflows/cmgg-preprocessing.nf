@@ -98,7 +98,6 @@ workflow CMGGPREPROCESSING {
 
     ch_aligner_index = Channel.empty()
 
-    ch_bait_regions   = params.bait_regions   ? Channel.value(file(params.bait_regions, checkIfExists: true))   : Channel.value([])
     ch_target_regions = params.target_regions ? Channel.value(file(params.target_regions, checkIfExists: true)) : Channel.value([])
 
     // output channels
@@ -124,6 +123,9 @@ workflow CMGGPREPROCESSING {
         ch_versions      = ch_versions.mix(FASTA_INDEX_DNA.out.versions)
         ch_aligner_index.dump(tag: "MAIN: aligner index" , {FormattingService.prettyFormat(it)})
     }
+
+    // Genelists
+    ch_genelists = Channel.fromPath(params.genelists + "/*.bed", checkIfExists:true)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -293,7 +295,7 @@ workflow CMGGPREPROCESSING {
         .dump(tag: "MAIN: cram_crai_target",{FormattingService.prettyFormat(it)})
 
     if (run_coverage){
-        COVERAGE(ch_cram_crai_target, ch_fasta_fai)
+        COVERAGE(ch_cram_crai_target, ch_fasta_fai, ch_genelists)
         ch_coverage_beds = Channel.empty().mix(
             COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
             COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
@@ -433,6 +435,7 @@ def parse_fastq_csv(row) {
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
     meta.organism   = row.organism ? row.organism.toString() : ""
+    meta.tag        = row.tag ? row.tag.toString() : ""
     meta.single_end = fastq_2      ? false : true
     // Set readgroup info
     meta.readgroup    = [:]
@@ -463,6 +466,7 @@ def parse_reads_csv(row) {
     meta.id         = row.id.toString()
     meta.samplename = row.samplename.toString()
     meta.organism   = row.organism ? row.organism.toString() : ""
+    meta.tag        = row.tag ? row.tag.toString() : ""
     // dirty fix to have the `single_end` key in the meta map
     meta.single_end = false
 
