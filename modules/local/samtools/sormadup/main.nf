@@ -1,6 +1,6 @@
 process SAMTOOLS_SORMADUP {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_medium'
 
     conda "bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
