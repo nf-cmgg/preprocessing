@@ -12,9 +12,10 @@ process SAMTOOLS_SORMADUP {
     tuple val(meta2), path(fasta)
 
     output:
-    tuple val(meta), path("*.bam")    , emit: bam
-    tuple val(meta), path("*.metrics"), emit: metrics
-    path "versions.yml"               , emit: versions
+    tuple val(meta), path("*.{bam,cram}")   , emit: bam
+    tuple val(meta), path("*.{bai,crai}")   , optional:true, emit: bam_index
+    tuple val(meta), path("*.metrics")      , emit: metrics
+    path "versions.yml"                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,6 +23,10 @@ process SAMTOOLS_SORMADUP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def extension = args.contains("--output-fmt sam") ? "sam" :
+                    args.contains("--output-fmt bam") ? "bam" :
+                    args.contains("--output-fmt cram") ? "cram" :
+                    "bam"
     def reference = fasta ? "--reference ${fasta}" : ""
     def sort_memory = (task.memory.mega/task.cpus*0.75).intValue()
 
@@ -55,9 +60,10 @@ process SAMTOOLS_SORMADUP {
         -T ${prefix} \\
         -f ${prefix}.metrics \\
         --threads $task.cpus \\
+        --write-index \\
         $args \\
         - \\
-        ${prefix}.bam
+        ${prefix}.${extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

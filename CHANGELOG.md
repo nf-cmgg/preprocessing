@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Limit panel coverage analyses to samples with WES/WGS tags
 - Make BAM_ARCHIVE accept channels with cram files
 - Drop ELPREP support
+- Add support for cram and index outputs in SAMTOOLS_SORMADUP
 
 ## v1.1.2
 

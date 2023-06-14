@@ -6,7 +6,6 @@
 
 // MODULES
 include { SAMTOOLS_SORMADUP     } from "../../../modules/local/samtools/sormadup/main.nf"
-include { SAMTOOLS_INDEX        } from "../../../modules/nf-core/samtools/index/main.nf"
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 // SUBWORKFLOWS
 include { BAM_ARCHIVE       } from "../../local/bam_archive/main"
@@ -108,7 +107,7 @@ workflow FASTQ_TO_CRAM {
             case "bamsormadup":
                 // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
                 BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
-                ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index)
+                ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index, failOnMismatch:true, failOnDuplicate:true)
                 ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
                 ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
                 break
@@ -116,13 +115,9 @@ workflow FASTQ_TO_CRAM {
             case "samtools":
                 // SAMTOOLS_SORMADUP([meta, [bam, bam]], fasta)
                 SAMTOOLS_SORMADUP(ch_bam_per_sample, ch_meta_fasta)
-
-                 // SAMTOOLS_INDEX([meta, bam])
-                SAMTOOLS_INDEX(SAMTOOLS_SORMADUP.out.bam)
-
-                ch_markdup_bam_bai = SAMTOOLS_SORMADUP.out.bam.join(SAMTOOLS_INDEX.out.bai, failOnMismatch:true, failOnDuplicate:true)
+                ch_markdup_bam_bai = SAMTOOLS_SORMADUP.out.bam.join(SAMTOOLS_SORMADUP.out.bam_index, failOnMismatch:true, failOnDuplicate:true)
                 ch_multiqc_files = ch_multiqc_files.mix( SAMTOOLS_SORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-                ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions, SAMTOOLS_INDEX.out.versions)
+                ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions)
                 break
         }
         ch_markdup_bam_bai.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", {FormattingService.prettyFormat(it)})
