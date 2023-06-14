@@ -38,6 +38,7 @@ process SAMTOOLS_SORMADUP {
     samtools collate \\
         -O \\
         -u \\
+        -T ${prefix} \\
         --threads $task.cpus \\
         ${reference} \\
         - \\
