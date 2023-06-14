@@ -21,7 +21,7 @@ workflow FASTQ_TO_CRAM {
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
         aligner             // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
         ch_aligner_index    // channel: [optional ] [meta2, aligner_index]
-        postprocessor       // string:  [optional ] postprocessor [bamsormadup, samtools, false]
+        markdup             // string:  [optional ] markdup [bamsormadup, samtools, false]
 
     main:
 
@@ -104,7 +104,7 @@ workflow FASTQ_TO_CRAM {
         .set{ch_bam_per_sample}
 
         ch_markdup_bam_bai = Channel.empty()
-        switch (postprocessor) {
+        switch (markdup) {
             case "bamsormadup":
                 // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
                 BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
@@ -124,9 +124,9 @@ workflow FASTQ_TO_CRAM {
             case "false":
                 // Merge bam files and compress
                 // SAMTOOLS_MERGE([meta, [bam, bam]])
-                SAMTOOLS_MERGE(ch_bam_per_sample)
-                ch_markdup_bam_bai = SAMTOOLS_MERGE.out.bam.join(SAMTOOLS_MERGE.out.bam_index, failOnMismatch:true, failOnDuplicate:true)
-                ch_versions = ch_versions.mix(SAMTOOLS_MERGE.out.versions)
+                SAMTOOLS_SORTMERGE(ch_bam_per_sample)
+                ch_markdup_bam_bai = SAMTOOLS_MERGE.out.bam.join(SAMTOOLS_SORTMERGE.out.bam_index, failOnMismatch:true, failOnDuplicate:true)
+                ch_versions = ch_versions.mix(SAMTOOLS_SORTMERGE.out.versions)
                 break
 
         }

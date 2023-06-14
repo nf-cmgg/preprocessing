@@ -68,7 +68,7 @@ workflow CMGGPREPROCESSING {
 
     // input values
     aligner = params.aligner
-    postprocessor = params.postprocessor
+    markdup = params.markdup
     genome  = params.genome
 
     // input options
@@ -269,7 +269,7 @@ workflow CMGGPREPROCESSING {
         ch_fasta_fai,
         aligner,
         ch_aligner_index,
-        postprocessor
+        markdup
     )
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
