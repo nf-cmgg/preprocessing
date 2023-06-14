@@ -1,4 +1,4 @@
-process SAMTOOLS_SORMADUP {
+process SAMTOOLS_SORTMERGE {
     tag "$meta.id"
     label 'process_low'
 
