@@ -5,7 +5,6 @@
 //
 
 // MODULES
-include { ELPREP_SFM            } from "../../../modules/local/elprep/sfm/main.nf"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/local/samtools/sormadup/main.nf"
 include { SAMTOOLS_INDEX        } from "../../../modules/nf-core/samtools/index/main.nf"
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
@@ -22,7 +21,7 @@ workflow FASTQ_TO_CRAM {
         ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
         aligner             // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
         ch_aligner_index    // channel: [optional ] [meta2, aligner_index]
-        postprocessor       // string:  [optional ] postprocessor [elprep, bamsormadup, samtools]
+        postprocessor       // string:  [optional ] postprocessor [bamsormadup, samtools]
 
     main:
 
@@ -106,20 +105,6 @@ workflow FASTQ_TO_CRAM {
 
         ch_markdup_bam_bai = Channel.empty()
         switch (postprocessor) {
-            case "elprep":
-                // ELPREP_SFM([meta, bam]
-                ELPREP_SFM(ch_bam_per_sample)
-
-                // SAMTOOLS_INDEX([meta, bam])
-                SAMTOOLS_INDEX(ELPREP_SFM.out.bam)
-
-                ch_markdup_bam_bai = ELPREP_SFM.out.bam.join(SAMTOOLS_INDEX.out.bai)
-                ch_multiqc_files = ch_multiqc_files.mix( ELPREP_SFM.out.metrics.map { meta, metrics -> return metrics} )
-                ch_versions = ch_versions.mix(
-                    ELPREP_SFM.out.versions,
-                    SAMTOOLS_INDEX.out.versions
-                )
-                break
             case "bamsormadup":
                 // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
                 BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
