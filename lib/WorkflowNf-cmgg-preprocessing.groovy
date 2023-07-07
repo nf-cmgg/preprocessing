@@ -5,12 +5,13 @@
 import nextflow.Nextflow
 import groovy.text.SimpleTemplateEngine
 
-class WorkflowCmggpreprocessing {
+class WorkflowNf-cmgg-preprocessing {
 
     //
     // Check and validate parameters
     //
     public static void initialise(params, log) {
+
         genomeExistsError(params, log)
 
 
