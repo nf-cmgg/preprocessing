@@ -1,11 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/cmggpreprocessing
+    CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/cmggpreprocessing
-    Website: https://nf-co.re/cmggpreprocessing
-    Slack  : https://nfcore.slack.com/channels/cmggpreprocessing
+    Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
 ----------------------------------------------------------------------------------------
 */
 
@@ -25,6 +23,22 @@ params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { validateParameters; paramsHelp } from 'plugin/nf-validation'
+
+// Print help message if needed
+if (params.help) {
+    def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+    def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
+    log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
+    System.exit(0)
+}
+
+// Validate input parameters
+if (params.validate_params) {
+    validateParameters()
+}
+
 WorkflowMain.initialise(workflow, params, log)
 
 /*
@@ -33,13 +47,13 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { CMGGPREPROCESSING } from './workflows/cmggpreprocessing'
+include { NF-CMGG-PREPROCESSING } from './workflows/nf-cmgg-preprocessing'
 
 //
-// WORKFLOW: Run main nf-core/cmggpreprocessing analysis pipeline
+// WORKFLOW: Run main CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing analysis pipeline
 //
-workflow NFCORE_CMGGPREPROCESSING {
-    CMGGPREPROCESSING ()
+workflow CENTERFORMEDICALGENETICSGHENT_NF-CMGG-PREPROCESSING {
+    NF-CMGG-PREPROCESSING ()
 }
 
 /*
@@ -53,7 +67,7 @@ workflow NFCORE_CMGGPREPROCESSING {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_CMGGPREPROCESSING ()
+    CENTERFORMEDICALGENETICSGHENT_NF-CMGG-PREPROCESSING ()
 }
 
 /*

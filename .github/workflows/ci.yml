@@ -19,12 +19,12 @@ jobs:
   test:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/cmggpreprocessing') }}"
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing') }}"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         NXF_VER:
-          - "22.10.1"
+          - "23.04.0"
           - "latest-everything"
     steps:
       - name: Check out pipeline code
