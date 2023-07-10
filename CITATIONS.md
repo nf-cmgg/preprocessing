@@ -15,9 +15,11 @@
 - [Biobambam2](https://gitlab.com/german.tischler/biobambam2)
   > Tischler, G., Leonard, S. biobambam: tools for read pair collation based algorithms on BAM files. Source Code Biol Med 9, 13 (2014). <https://doi.org/10.1186/1751-0473-9-13>
 - [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
+
   > - Langmead B, Wilks C., Antonescu V., Charles R. Scaling read aligners to hundreds of threads on general-purpose processors. Bioinformatics. bty648.
   > - Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
   > - Langmead B, Trapnell C, Pop M, Salzberg SL. Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. Genome Biology 10:R25.
+
 - [BWA](http://bio-bwa.sourceforge.net/)
   > Li H. and Durbin R. (2009) Fast and accurate short read alignment with Burrows-Wheeler Transform. Bioinformatics, 25:1754-60. [PMID: 19451168]
 - [FastP](https://github.com/OpenGene/fastp)
@@ -33,8 +35,13 @@
   > Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies, Heng Li
   > GigaScience, Volume 10, Issue 2, February 2021, giab008, <https://doi.org/10.1093/gigascience/giab008>
 - [Snap](http://snap.cs.berkeley.edu)
+
   > - Faster and More Accurate Sequence Alignment with SNAP. Matei Zaharia, William J. Bolosky, Kristal Curtis, Armando Fox, David Patterson, Scott Shenker, Ion Stoica, Richard M. Karp, and Taylor Sittler. arXiv:1111.5572v1, November 2011.
   > - Fuzzy set intersection based paired-end short-read alignment. William J. Bolosky, Arun Subramaniyan, Matei Zaharia, Ravi Pandya, Taylor Sittler, and David Patterson. BioRxiv, November 2021.
+
+- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+
+  > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
 ## Software packaging/containerisation tools
 
@@ -52,5 +59,8 @@
 
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 
+  > Merkel, D. (2014). Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
+
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
+
   > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.
