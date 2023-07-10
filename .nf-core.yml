@@ -3,6 +3,8 @@ lint:
   files_exist:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
+    - conf/test.config
+    - conf/test_full.config
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
     - .github/ISSUE_TEMPLATE/config.yml
@@ -14,6 +16,7 @@ lint:
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
     - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .gitignore
   nextflow_config:
     - manifest.name
     - manifest.homePage
