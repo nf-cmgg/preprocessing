@@ -1,4 +1,0 @@
-author: matthdsm
-description: Preprocessing workflow for sequencing data at CMGG
-name: nf-cmgg-preprocessing
-prefix: CenterForMedicalGeneticsGhent
