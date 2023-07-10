@@ -19,7 +19,6 @@
                         "color": "<% if (success) { %>Good<% } else { %>Attention<%} %>",
                         "text": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing v${version} - ${runName}",
                         "wrap": true
-
                     },
                     {
                         "type": "TextBlock",

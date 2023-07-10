@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drop ELPREP support
 - Add support for cram and index outputs in SAMTOOLS_SORMADUP
 - Add option to disable marking duplicates
+- Update to nf-core template v2.9
 
 ## v1.1.2
 

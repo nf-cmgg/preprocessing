@@ -1,5 +1,5 @@
 {
-    "name": "cmgg/preprocessing",
+    "name": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
     "homePage": "https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing",
     "repos": {
         "https://github.com/nf-core/modules.git": {
@@ -24,7 +24,7 @@
                     "bowtie2/align": {
                         "branch": "master",
                         "git_sha": "fe54581f8bed20e4c4a51c616c93fd3379d89820",
-                        "installed_by": ["modules", "fastq_align_dna"]
+                        "installed_by": ["fastq_align_dna"]
                     },
                     "bowtie2/build": {
                         "branch": "master",
@@ -39,7 +39,7 @@
                     "bwa/mem": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
-                        "installed_by": ["modules", "fastq_align_dna"]
+                        "installed_by": ["fastq_align_dna"]
                     },
                     "bwamem2/index": {
                         "branch": "master",
@@ -49,7 +49,7 @@
                     "bwamem2/mem": {
                         "branch": "master",
                         "git_sha": "0460d316170f75f323111b4a2c0a2989f0c32013",
-                        "installed_by": ["modules", "fastq_align_dna"]
+                        "installed_by": ["fastq_align_dna"]
                     },
                     "cat/fastq": {
                         "branch": "master",
@@ -99,8 +99,7 @@
                     "picard/collecthsmetrics": {
                         "branch": "master",
                         "git_sha": "0ce3ab0ac301f160225b22254fa238478b4389f2",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/picard/collecthsmetrics/picard-collecthsmetrics.diff"
+                        "installed_by": ["modules"]
                     },
                     "picard/collectmultiplemetrics": {
                         "branch": "master",
@@ -165,7 +164,7 @@
                     "untar": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
-                        "installed_by": ["bcl_demultiplex"]
+                        "installed_by": ["modules"]
                     }
                 }
             },

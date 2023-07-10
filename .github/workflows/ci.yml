@@ -13,6 +13,10 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.UGENT_S3_ACCESS_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.UGENT_S3_SECRET_KEY }}
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Run pipeline with test data
@@ -22,7 +26,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - 22.10.0
+          - 23.04.0
         test:
           - "test_flowcell"
           #- "test_fastq"
@@ -35,7 +39,7 @@ jobs:
           #- "snap"
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
