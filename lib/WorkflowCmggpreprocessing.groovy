@@ -5,7 +5,7 @@
 import nextflow.Nextflow
 import groovy.text.SimpleTemplateEngine
 
-class WorkflowNf-cmgg-preprocessing {
+class WorkflowCmggpreprocessing {
 
     //
     // Check and validate parameters
