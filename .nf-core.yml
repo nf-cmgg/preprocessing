@@ -18,6 +18,7 @@ lint:
     - .github/ISSUE_TEMPLATE/bug_report.yml
     - .gitignore
   nextflow_config:
+    - params.input
     - manifest.name
     - manifest.homePage
   multiqc_config:

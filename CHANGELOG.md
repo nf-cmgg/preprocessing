@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.1.3dev
+## v2.0.0dev
 
 - Add fix for sample replicates with different split sizes
 - Add option to use samtools for duplicate marking
@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for cram and index outputs in SAMTOOLS_SORMADUP
 - Add option to disable marking duplicates
 - Update to nf-core template v2.9
+- Start using nf-validation for input parsing
 
 ## v1.1.2
 
