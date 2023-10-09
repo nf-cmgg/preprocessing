@@ -178,7 +178,7 @@ workflow CMGGPREPROCESSING {
         rg = readgroup_from_fastq(fastq_1)
         rg = rg + [ 'SM': meta.samplename,
                     'LB': meta.library ?: "",
-                    'PL': meta.platform ?: "",
+                    'PL': meta.platform ?: rg.PL,
                     'ID': meta.readgroup ?: rg.ID
                 ]
 
