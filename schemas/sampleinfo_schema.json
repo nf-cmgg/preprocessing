@@ -47,9 +47,5 @@
             }
         }
     },
-    "required": [
-        "samplename",
-        "tag",
-        "organism"
-    ]
+    "required": ["samplename", "tag", "organism"]
 }

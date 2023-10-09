@@ -8,45 +8,33 @@
         "type": "object",
         "properties": {
             "id": {
-                "meta": [
-                    "id"
-                ],
+                "meta": ["id"],
                 "unique": true,
                 "type": "string",
                 "description": "Unique sample ID",
                 "pattern": "^[a-zA-Z0-9_]+$"
             },
             "samplename": {
-                "meta": [
-                    "samplename"
-                ],
-                "unique": [
-                    "id"
-                ],
+                "meta": ["samplename"],
+                "unique": ["id"],
                 "type": "string",
                 "description": "Sample name",
                 "pattern": "^[a-zA-Z0-9_]+$"
             },
             "organism": {
-                "meta": [
-                    "organism"
-                ],
+                "meta": ["organism"],
                 "type": "string",
                 "description": "Sample organism",
                 "pattern": "^[a-zA-Z0-9_]+$"
             },
             "tag": {
-                "meta": [
-                    "tag"
-                ],
+                "meta": ["tag"],
                 "type": "string",
                 "description": "Sample tag",
                 "pattern": "^[a-zA-Z0-9_]+$"
             },
             "single_end": {
-                "meta": [
-                    "single_end"
-                ],
+                "meta": ["single_end"],
                 "description": "Whether the sample is single end data or not",
                 "type": "boolean",
                 "default": false
