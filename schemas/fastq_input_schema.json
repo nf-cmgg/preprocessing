@@ -8,33 +8,21 @@
         "type": "object",
         "properties": {
             "id": {
-                "meta": [
-                    "id"
-                ],
+                "meta": ["id"],
                 "unique": true
             },
             "samplename": {
-                "meta": [
-                    "samplename"
-                ],
-                "unique": [
-                    "id"
-                ]
+                "meta": ["samplename"],
+                "unique": ["id"]
             },
             "organism": {
-                "meta": [
-                    "organism"
-                ]
+                "meta": ["organism"]
             },
             "tag": {
-                "meta": [
-                    "tag"
-                ]
+                "meta": ["tag"]
             },
             "library": {
-                "meta": [
-                    "library"
-                ],
+                "meta": ["library"],
                 "type": "string",
                 "pattern": "^[a-zA-Z0-9_]+$"
             },

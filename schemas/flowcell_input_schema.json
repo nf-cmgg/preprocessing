@@ -8,21 +8,15 @@
         "type": "object",
         "properties": {
             "id": {
-                "meta": [
-                    "id"
-                ],
+                "meta": ["id"],
                 "type": "string",
                 "pattern": "^[A-Za-z0-9_\\-]+$",
                 "description": "Unique flowcell ID"
             },
             "lane": {
                 "type": "integer",
-                "meta": [
-                    "lane"
-                ],
-                "unique": [
-                    "id"
-                ],
+                "meta": ["lane"],
+                "unique": ["id"],
                 "description": "Flowcell lane number"
             },
             "samplesheet": {

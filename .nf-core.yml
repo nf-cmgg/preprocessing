@@ -1,5 +1,3 @@
-repository_type: pipeline
-prefix: CenterForMedicalGeneticsGhent
 lint:
   files_exist:
     - CODE_OF_CONDUCT.md
@@ -18,9 +16,15 @@ lint:
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
     - .github/ISSUE_TEMPLATE/bug_report.yml
     - .gitignore
+  multiqc_config:
+    - report_comment
   nextflow_config:
     - params.input
     - manifest.name
     - manifest.homePage
-  multiqc_config:
-    - report_comment
+repository_type: pipeline
+template:
+  author: matthdsm
+  description: Preprocessing workflow for sequencing data at CMGG
+  name: nf-cmgg-preprocessing
+  prefix: CenterForMedicalGeneticsGhent
