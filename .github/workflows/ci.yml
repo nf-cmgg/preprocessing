@@ -27,10 +27,6 @@ jobs:
       matrix:
         NXF_VER:
           - 23.04.0
-        test:
-          - "test_flowcell"
-          #- "test_fastq"
-          #- "test_cram"
         aligner:
           #- "bowtie2"
           - "bwamem"
@@ -48,4 +44,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test }},docker  --aligner ${{ matrix.aligner }} --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker  --aligner ${{ matrix.aligner }} --outdir ./results
