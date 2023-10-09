@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add option to disable marking duplicates
 - Update to nf-core template v2.9
 - Start using nf-validation for input parsing
+- Drop support for generating aligner indices
 
 ## v1.1.2
 
