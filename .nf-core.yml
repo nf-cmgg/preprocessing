@@ -1,3 +1,5 @@
+repository_type: pipeline
+prefix: CenterForMedicalGeneticsGhent
 lint:
   files_exist:
     - CODE_OF_CONDUCT.md
@@ -20,9 +22,5 @@ lint:
     - params.input
     - manifest.name
     - manifest.homePage
-repository_type: pipeline
-template:
-  author: matthdsm
-  description: Preprocessing workflow for sequencing data at CMGG
-  name: nf-cmgg-preprocessing
-  prefix: CenterForMedicalGeneticsGhent
+  multiqc_config:
+    - report_comment
