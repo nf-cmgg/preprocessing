@@ -135,11 +135,6 @@
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["fastq_align_dna"]
-                    },
-                    "untar": {
-                        "branch": "master",
-                        "git_sha": "d0b4fc03af52a1cc8c6fb4493b921b57352b1dd8",
-                        "installed_by": ["modules"]
                     }
                 }
             },
