@@ -26,25 +26,10 @@
                         "git_sha": "fe54581f8bed20e4c4a51c616c93fd3379d89820",
                         "installed_by": ["fastq_align_dna"]
                     },
-                    "bowtie2/build": {
-                        "branch": "master",
-                        "git_sha": "6a24fbe314bb2e6fe6306c29a63076ea87e8eb3c",
-                        "installed_by": ["fasta_index_dna"]
-                    },
-                    "bwa/index": {
-                        "branch": "master",
-                        "git_sha": "bfed129da5134b4439b1821c917972570d44d39c",
-                        "installed_by": ["fasta_index_dna"]
-                    },
                     "bwa/mem": {
                         "branch": "master",
                         "git_sha": "3dc300ddcaa563c1e3503477557c0e0def6df2ce",
                         "installed_by": ["fastq_align_dna"]
-                    },
-                    "bwamem2/index": {
-                        "branch": "master",
-                        "git_sha": "bfed129da5134b4439b1821c917972570d44d39c",
-                        "installed_by": ["fasta_index_dna"]
                     },
                     "bwamem2/mem": {
                         "branch": "master",
@@ -65,11 +50,6 @@
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
                         "installed_by": ["fastq_align_dna"]
-                    },
-                    "dragmap/hashtable": {
-                        "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["fasta_index_dna"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -156,11 +136,6 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["fastq_align_dna"]
                     },
-                    "snapaligner/index": {
-                        "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["fasta_index_dna"]
-                    },
                     "untar": {
                         "branch": "master",
                         "git_sha": "d0b4fc03af52a1cc8c6fb4493b921b57352b1dd8",
@@ -178,11 +153,6 @@
                     "bcl_demultiplex": {
                         "branch": "master",
                         "git_sha": "dedc0e31087f3306101c38835d051bf49789445a",
-                        "installed_by": ["subworkflows"]
-                    },
-                    "fasta_index_dna": {
-                        "branch": "master",
-                        "git_sha": "cf67a6d7d043e2bd6a3099be84c72046fc71508f",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_align_dna": {

@@ -11,8 +11,6 @@ include { SAMTOOLS_SORTMERGE    } from "../../../modules/local/samtools/sortmerg
 // SUBWORKFLOWS
 include { BAM_ARCHIVE       } from "../../local/bam_archive/main"
 include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
-include { FASTA_INDEX_DNA   } from '../../nf-core/fasta_index_dna/main'
-
 
 
 workflow FASTQ_TO_CRAM {
@@ -31,22 +29,6 @@ workflow FASTQ_TO_CRAM {
         ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai           }.collect()
         ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta         }.collect()
         ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta] }.collect()
-
-        /*
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // STEP: GENERATE ALIGNER INDEX
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        */
-        // Generate aligner index if not provided
-        if ( ! ch_aligner_index ) {
-            ch_aligner_index = FASTA_INDEX_DNA (
-                ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}, // channel: [meta, fasta]
-                ch_fasta_fai.map {meta, fasta, fai -> [meta, []]},    // channel: [meta, altliftover] TODO: fix this
-                aligner,                                              // string:  aligner
-            )
-            ch_versions = ch_versions.mix(FASTA_INDEX_DNA.out.versions)
-        }
-        ch_aligner_index.dump(tag: "FASTQ_TO_CRAM: aligner index",{FormattingService.prettyFormat(it)})
 
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
