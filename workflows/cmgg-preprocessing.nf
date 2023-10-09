@@ -1,10 +1,14 @@
+#!/usr/bin/env nextflow
+
+import nextflow.Nextflow
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     PRINT PARAMS SUMMARY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
+include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
 
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
@@ -16,24 +20,16 @@ log.info logo + paramsSummaryLog(workflow) + citation
 // Validate input parameters
 WorkflowCmggpreprocessing.initialise(params, log)
 
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.fai ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-// Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, "inputs sheet not specified!" }
-
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-multiqc_config = params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-multiqc_logo   = params.multiqc_logo ? file(params.multiqc_logo, checkIfExists: true) : file("$projectDir/assets/CMGG_logo.png", checkIfExists: true)
-
-// Info required for completion email and summary
-def multiqc_report = []
+ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,7 +67,16 @@ include { MULTIQC                     } from "../modules/nf-core/multiqc/main"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// Info required for completion email and summary
+def multiqc_report = []
+
 workflow CMGGPREPROCESSING {
+
+    // input channels
+    ch_input_fastq      = params.fastq    ? Channel.fromSamplesheet('fastq')    : Channel.empty()
+    ch_input_flowcell   = params.flowcell ? Channel.fromSamplesheet('flowcell') : Channel.empty()
+    ch_input_bam        = params.bam      ? Channel.fromSamplesheet('bam')      : Channel.empty()
+    ch_input_cram       = params.cram     ? Channel.fromSamplesheet('cram')     : Channel.empty()
 
     // input values
     aligner = params.aligner
@@ -82,7 +87,7 @@ workflow CMGGPREPROCESSING {
     run_coverage   = params.run_coverage
     disable_picard = params.disable_picard_metrics
 
-    // input channels
+    // reference channels
     ch_fasta     = Channel.value([
         [id:genome],
         file(params.fasta, checkIfExists: true)
@@ -136,35 +141,11 @@ workflow CMGGPREPROCESSING {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // INPUT PARSING
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
-
-    // Sanitize inputs and separate input types
-    // For now assume 1 bam/cram per sample
-    ch_inputs = extract_csv(ch_input).branch {
-        fastq   : (it.size() == 2 && it[1] instanceof List)
-        flowcell: (it.size() == 4 && it[1].toString().endsWith(".csv"))
-        reads   : (it.size() == 2 && (it[1].toString().endsWith(".bam") || it[1].toString().endsWith(".cram")))
-        other   : true
-    }
-
-    ch_inputs.fastq
-        .dump(tag: "MAIN: fastq inputs"   , {FormattingService.prettyFormat(it)})
-    ch_inputs.flowcell
-        .dump(tag: "MAIN: flowcell inputs", {FormattingService.prettyFormat(it)})
-    ch_inputs.reads
-        .dump(tag: "MAIN: reads inputs"   , {FormattingService.prettyFormat(it)})
-    ch_inputs.other
-        .dump(tag: "MAIN: other inputs"   , {FormattingService.prettyFormat(it)})
-
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // PROCESS FLOWCELL INPUTS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    ch_flowcell = ch_inputs.flowcell.multiMap { meta, samplesheet, flowcell, sample_info ->
+    ch_flowcell = ch_input_flowcell.multiMap { meta, samplesheet, flowcell, sample_info ->
         fc   : [meta, samplesheet, flowcell]
         info : sample_info
     }
@@ -191,7 +172,7 @@ workflow CMGGPREPROCESSING {
     */
 
     // Convert bam/cram inputs to fastq
-    BAM_TO_FASTQ(ch_inputs.reads, ch_fasta_fai)
+    BAM_TO_FASTQ(ch_input_bam.mix(ch_input_cram), ch_fasta_fai)
     ch_converted_fastq = BAM_TO_FASTQ.out.fastq
     ch_converted_fastq.dump(tag: "converted_fastq",{FormattingService.prettyFormat(it)})
 
@@ -202,12 +183,27 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
+    // sanitize fastq inputs
+    ch_input_fastq = ch_input_fastq.map { meta, fastq_1, fastq_2 ->
+        // if no fastq_2, then single-end
+        single_end = fastq_2 ? false : true
+        // add readgroup metadata
+        rg = readgroup_from_fastq(fastq_1)
+        rg = rg + [ 'SM': meta.samplename,
+                    'LB': meta.library ?: "",
+                    'PL': meta.platform ?: "",
+                    'ID': meta.readgroup ?: rg.ID
+                ]
+
+        meta_with_readgroup = meta - meta.subMap('library', 'platform', 'readgroup') + ['single_end': single_end, 'readgroup': rg]
+        reads = single_end ? fastq_1 : [fastq_1, fastq_2]
+
+        return [meta_with_readgroup, reads]
+    }
+
     // "Gather" fastq's from demultiplex and fastq inputs
-    ch_sample_fastqs = Channel.empty()
     ch_sample_fastqs = count_samples(
-        ch_sample_fastqs.mix(
-                ch_inputs.fastq, ch_demultiplexed_fastq, ch_converted_fastq
-        )
+        ch_input_fastq.mix(ch_demultiplexed_fastq, ch_converted_fastq)
     ).map { meta, reads ->
         return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
     }
@@ -336,21 +332,27 @@ workflow CMGGPREPROCESSING {
     CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: "collated_versions.yml"))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
-    // MODULE: MULTIQC
-    // Generate aggregate QC report
+    //
+    // MODULE: MultiQC
+    //
     workflow_summary    = WorkflowCmggpreprocessing.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
-    ).collect()
-    ch_multiqc_files.dump(tag: "MAIN: multiqc files",{FormattingService.prettyFormat(it)})
+    methods_description    = WorkflowCmggpreprocessing.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+    ch_methods_description = Channel.value(methods_description)
+
+    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
     MULTIQC (
-        ch_multiqc_files, multiqc_config, [], multiqc_logo
+        ch_multiqc_files.collect(),
+        ch_multiqc_config.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList()
     )
     multiqc_report = MULTIQC.out.report.toList()
-    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*
@@ -379,81 +381,6 @@ def count_samples(ch_samples) {
     }
 }
 
-// Extract information (meta data + file(s)) from csv file(s)
-def extract_csv(csv_file) {
-    Channel.value(csv_file).splitCsv(header: true, strip: true).map { row ->
-        // check common mandatory fields
-        if(!(row.id)){
-            log.error "Missing id field in input csv file"
-        }
-        // check for invalid flowcell input
-        if(row.flowcell && !(row.samplesheet)){
-            log.error "Flowcell input requires both samplesheet and flowcell"
-        }
-        // check for invalid fastq input
-        if(row.fastq_1 && !(row.samplename)){
-            log.error "Fastq input requires both samplename and fastq"
-        }
-        // check for invalid bam/cram input
-        if((row.bam || row.cram) && !(row.samplename)){
-            log.error "BAM/CRAM input requires both samplename and bam/cram"
-        }
-        // check for mixed input
-        if(row.flowcell && row.fastq_1){
-            log.error "Cannot mix flowcell and fastq/cram inputs"
-        }
-        // valid flowcell input
-        if(row.flowcell && row.samplesheet){
-            return parse_flowcell_csv(row)
-        }
-        // valid fastq input
-        if(row.fastq_1 && row.samplename){
-            return parse_fastq_csv(row)
-        }
-        // valid bam/cram input
-        if((row.bam || row.cram) && row.samplename){
-            return parse_reads_csv(row)
-        }
-    }
-}
-
-// Parse flowcell input map
-def parse_flowcell_csv(row) {
-    def meta = [:]
-    meta.id   = row.id.toString()
-    meta.lane = null
-    if (row.containsKey("lane") && row.lane ) {
-        meta.lane = row.lane.toInteger()
-    }
-
-    def flowcell        = file(row.flowcell, checkIfExists: true)
-    def samplesheet     = file(row.samplesheet, checkIfExists: true)
-    if (!(row.sample_info)) log.error "Sample info csv not defined"
-    def sample_info_csv = file(row.sample_info, checkIfExists: true)
-    return [meta, samplesheet, flowcell, sample_info_csv]
-}
-
-// Parse fastq input map
-def parse_fastq_csv(row) {
-    def fastq_1 = file(row.fastq_1, checkIfExists: true)
-    def fastq_2 = row.fastq_2 ? file(row.fastq_2, checkIfExists: true) : null
-
-    def meta = [:]
-    meta.id         = row.id.toString()
-    meta.samplename = row.samplename.toString()
-    meta.organism   = row.organism ? row.organism.toString() : ""
-    meta.tag        = row.tag ? row.tag.toString() : ""
-    meta.single_end = fastq_2      ? false : true
-    // Set readgroup info
-    meta.readgroup    = [:]
-    meta.readgroup    = readgroup_from_fastq(fastq_1)
-    meta.readgroup.SM = meta.samplename
-    meta.readgroup.LB = row.library ? row.library.toString() : ""
-    meta.readgroup.ID = meta.readgroup.ID ? meta.readgroup.ID : meta.samplename
-
-    return [meta, fastq_2 ? [fastq_1, fastq_2] : [fastq_1]]
-}
-
 // Parse sample info input map
 def parse_sample_info_csv(csv_file) {
     csv_file.splitCsv(header: true, strip: true).map { row ->
@@ -461,23 +388,6 @@ def parse_sample_info_csv(csv_file) {
         if (!(row.samplename)) log.error "Missing samplename field in sample info file"
         return row
     }
-}
-
-// Parse bam/cram input map
-def parse_reads_csv(row) {
-    def cram = row.cram ? file(row.cram, checkIfExists: true) : null
-
-    def bam = row.bam ? file(row.bam, checkIfExists: true) : null
-
-    def meta = [:]
-    meta.id         = row.id.toString()
-    meta.samplename = row.samplename.toString()
-    meta.organism   = row.organism ? row.organism.toString() : ""
-    meta.tag        = row.tag ? row.tag.toString() : ""
-    // dirty fix to have the `single_end` key in the meta map
-    meta.single_end = false
-
-    return [meta, bam ? bam : cram]
 }
 
 // Merge fastq meta with sample info

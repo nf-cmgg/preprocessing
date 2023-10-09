@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/samplesheet_schema.json",
+    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "meta": [
+                    "id"
+                ],
+                "unique": true
+            },
+            "lane": {
+                "type": "integer",
+                "meta": [
+                    "lane"
+                ]
+            },
+            "samplesheet": {
+                "type": "string",
+                "format": "file-path",
+                "pattern": "^\\S+\\.csv$"
+            },
+            "flowcell": {
+                "type": "string",
+                "format": "file-path"
+            },
+            "sample_info": {
+                "schema": "schemas/sampleinfo.json",
+                "type": "string",
+                "format": "file-path",
+                "pattern": "^\\S+\\.csv$",
+                "description": "CSV file with sample information, must contain columns 'samplename', 'organism' and 'tag'"
+            }
+        }
+    }
+}
