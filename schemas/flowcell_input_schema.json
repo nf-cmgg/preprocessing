@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/samplesheet_schema.json",
-    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing params.input schema",
-    "description": "Schema for the file provided with params.input",
+    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing params.flowcell schema",
+    "description": "Schema for the file provided with params.flowcell",
     "type": "array",
     "items": {
         "type": "object",
@@ -11,22 +11,30 @@
                 "meta": [
                     "id"
                 ],
-                "unique": true
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_\\-]+$",
+                "description": "Unique flowcell ID"
             },
             "lane": {
                 "type": "integer",
                 "meta": [
                     "lane"
-                ]
+                ],
+                "unique": [
+                    "id"
+                ],
+                "description": "Flowcell lane number"
             },
             "samplesheet": {
                 "type": "string",
                 "format": "file-path",
-                "pattern": "^\\S+\\.csv$"
+                "pattern": "^\\S+\\.csv$",
+                "description": "Illumina samplesheet for the flowcell lane"
             },
             "flowcell": {
                 "type": "string",
-                "format": "file-path"
+                "format": "file-path",
+                "description": "Illumina flowcell directory"
             },
             "sample_info": {
                 "schema": "schemas/sampleinfo.json",
