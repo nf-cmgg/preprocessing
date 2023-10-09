@@ -1,15 +1,7 @@
-repository_type: pipeline
-template:
-  name: nf-cmgg-preprocessing
-  description: Preprocessing workflow for sequencing data at CMGG
-  author: matthdsm
-  prefix: CenterForMedicalGeneticsGhent
 lint:
   files_exist:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
-    - conf/test.config
-    - conf/test_full.config
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
     - .github/ISSUE_TEMPLATE/config.yml
@@ -21,10 +13,14 @@ lint:
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
     - .github/ISSUE_TEMPLATE/bug_report.yml
-    - .gitignore
-  nextflow_config:
-    - params.input
-    - manifest.name
-    - manifest.homePage
   multiqc_config:
     - report_comment
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage
+repository_type: pipeline
+template:
+  author: matthdsm
+  description: Preprocessing workflow for sequencing data at CMGG
+  name: nf-cmgg-preprocessing
+  prefix: CenterForMedicalGeneticsGhent
