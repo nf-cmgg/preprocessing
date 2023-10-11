@@ -163,7 +163,6 @@ workflow CMGGPREPROCESSING {
     ch_converted_fastq = BAM_TO_FASTQ.out.fastq
     ch_converted_fastq.dump(tag: "converted_fastq",pretty: true)
 
-
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // GATHER PROCESSED INPUTS
@@ -188,10 +187,26 @@ workflow CMGGPREPROCESSING {
         return [meta_with_readgroup, reads]
     }
 
-    // "Gather" fastq's from demultiplex and fastq inputs
-    ch_sample_fastqs = count_samples(
-        ch_input_fastq.mix(ch_demultiplexed_fastq, ch_converted_fastq)
-    ).map { meta, reads ->
+    // "Gather" fastq's from demultiplex, cramtofastq and fastq inputs
+    ch_sample_fastqs = ch_input_fastq.mix(ch_demultiplexed_fastq, ch_converted_fastq)
+    // count the number of samples per samplename
+    | map { meta, fastq ->
+        return [meta.samplename, [meta, fastq]]
+    }
+    // this should group per samplename
+    | groupTuple()
+    // Count the number of samples per samplename
+    | map { samplename, meta_fastq ->
+        count = meta_fastq.size()
+        return [meta_fastq,count]
+    }
+    // split the meta_fastq list into channel items
+    | transpose()
+    // add the count variable to meta
+    | map { meta_fastq, count ->
+        return [meta_fastq[0] + [count:count], meta_fastq[1]]
+    }
+    | map { meta, reads ->
         return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
     }
 
@@ -212,7 +227,7 @@ workflow CMGGPREPROCESSING {
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        def read_files = meta.single_end ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+        def read_files = meta.single_end.toBoolean() ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
         return [
             meta + [ chunks: read_files instanceof List ? read_files.size() : [read_files].size() ],
             read_files
@@ -347,26 +362,6 @@ workflow CMGGPREPROCESSING {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-// Count number of samples with the same samplename
-def count_samples(ch_samples) {
-    ch_samples.map { meta, fastq ->
-        return [meta.samplename, [meta, fastq]]
-    }
-    // this should group per samplename
-    .groupTuple()
-    // Count the number of samples per samplename
-    .map { samplename, meta_fastq ->
-        count = meta_fastq.size()
-        return [meta_fastq,count]
-    }
-    // split the meta_fastq list into channel items
-    .transpose()
-    // add the count variable to meta
-    .map{ meta_fastq, count ->
-        return [meta_fastq[0] + [count:count], meta_fastq[1]]
-    }
-}
 
 // Parse sample info input map
 def parse_sample_info_csv(csv_file) {
