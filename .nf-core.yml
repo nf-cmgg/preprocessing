@@ -24,5 +24,3 @@ lint:
     - params.input
     - manifest.name
     - manifest.homePage
-  multiqc_config:
-    - report_comment
