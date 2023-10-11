@@ -2,10 +2,12 @@ repository_type: pipeline
 prefix: CenterForMedicalGeneticsGhent
 lint:
   files_exist:
-    - CODE_OF_CONDUCT.md
     - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
+    - conf/test.config
+    - conf/test_full.config
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
+    - lib/nfcore_external_java_deps.jar
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
