@@ -36,14 +36,14 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        ch_fastq.dump(tag: "FASTQ_TO_CRAM: reads to align",{FormattingService.prettyFormat(it)})
+        ch_fastq.dump(tag: "FASTQ_TO_CRAM: reads to align",pretty: true)
 
         // align fastq files per sample
         // ALIGNMENT([meta,fastq], index, sort)
         FASTQ_ALIGN_DNA(ch_fastq, ch_aligner_index, aligner, false)
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
-        FASTQ_ALIGN_DNA.out.bam.dump(tag: "FASTQ_TO_CRAM: aligned bam", {FormattingService.prettyFormat(it)})
+        FASTQ_ALIGN_DNA.out.bam.dump(tag: "FASTQ_TO_CRAM: aligned bam", pretty: true)
 
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,7 +65,7 @@ workflow FASTQ_TO_CRAM {
             ]
         }
         .groupTuple(by:[0])
-        .dump(tag: "FASTQ_TO_CRAM: bam per replicate",{FormattingService.prettyFormat(it)})
+        .dump(tag: "FASTQ_TO_CRAM: bam per replicate",pretty: true)
         .map {
             meta, files ->
             def gk = (meta.count ?: 1)
@@ -79,7 +79,7 @@ workflow FASTQ_TO_CRAM {
             ]
         }
         .groupTuple(by:[0])
-        .dump(tag: "FASTQ_TO_CRAM: bam per sample",{FormattingService.prettyFormat(it)})
+        .dump(tag: "FASTQ_TO_CRAM: bam per sample",pretty: true)
         .map { meta, files ->
             return [meta, files.flatten()]
         }
@@ -112,7 +112,7 @@ workflow FASTQ_TO_CRAM {
                 break
 
         }
-        ch_markdup_bam_bai.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", {FormattingService.prettyFormat(it)})
+        ch_markdup_bam_bai.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", pretty: true)
 
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

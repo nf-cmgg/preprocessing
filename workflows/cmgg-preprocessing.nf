@@ -139,7 +139,7 @@ workflow CMGGPREPROCESSING {
 
     // BCL_DEMULTIPLEX([meta, samplesheet, flowcell], demultiplexer)
     BCL_DEMULTIPLEX(ch_flowcell.fc, "bclconvert")
-    BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq",{FormattingService.prettyFormat(it)})
+    BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq",pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(
         BCL_DEMULTIPLEX.out.reports.map { meta, reports -> return reports},
         BCL_DEMULTIPLEX.out.stats.map   { meta, stats   -> return stats  }
@@ -161,7 +161,7 @@ workflow CMGGPREPROCESSING {
     // Convert bam/cram inputs to fastq
     BAM_TO_FASTQ(ch_input_bam.mix(ch_input_cram), ch_fasta_fai)
     ch_converted_fastq = BAM_TO_FASTQ.out.fastq
-    ch_converted_fastq.dump(tag: "converted_fastq",{FormattingService.prettyFormat(it)})
+    ch_converted_fastq.dump(tag: "converted_fastq",pretty: true)
 
 
     /*
@@ -205,7 +205,7 @@ workflow CMGGPREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, [], false, false)
-    FASTP.out.reads.dump(tag: "MAIN: fastp trimmed reads",{FormattingService.prettyFormat(it)})
+    FASTP.out.reads.dump(tag: "MAIN: fastp trimmed reads",pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
@@ -233,8 +233,8 @@ workflow CMGGPREPROCESSING {
         human: meta.organism ==~ /(?i)Homo sapiens/
         other: true
     }
-    ch_trimmed_reads.human.dump(tag: "MAIN: human reads",{FormattingService.prettyFormat(it)})
-    ch_trimmed_reads.other.dump(tag: "MAIN: other reads",{FormattingService.prettyFormat(it)})
+    ch_trimmed_reads.human.dump(tag: "MAIN: human reads",pretty: true)
+    ch_trimmed_reads.other.dump(tag: "MAIN: other reads",pretty: true)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -282,7 +282,7 @@ workflow CMGGPREPROCESSING {
             }
     ch_cram_crai_target = ch_cram_crai_branch.bed
         .mix(ch_cram_crai_branch.nobed)
-        .dump(tag: "MAIN: cram_crai_target",{FormattingService.prettyFormat(it)})
+        .dump(tag: "MAIN: cram_crai_target",pretty: true)
 
     if (run_coverage){
         COVERAGE(ch_cram_crai_target, ch_fasta_fai, ch_genelists)

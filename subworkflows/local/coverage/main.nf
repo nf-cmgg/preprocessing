@@ -24,7 +24,7 @@ workflow COVERAGE {
         )
 
         ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
-        ch_metrics.dump(tag: "COVERAGE: metrics", {FormattingService.prettyFormat(it)})
+        ch_metrics.dump(tag: "COVERAGE: metrics", pretty: true)
 
         // separate WES/WGS samples to run genelist coverage on them
         ch_per_base_bed = MOSDEPTH.out.per_base_bed.branch{
@@ -33,7 +33,7 @@ workflow COVERAGE {
         }
 
         ch_per_base_genelist = ch_per_base_bed.genelist_coverage.combine(ch_genelists)
-        ch_per_base_genelist.dump(tag: "COVERAGE: per base bed with genelist", {FormattingService.prettyFormat(it)})
+        ch_per_base_genelist.dump(tag: "COVERAGE: per base bed with genelist", pretty: true)
 
         //PANEL_COVERAGE(per_base_genelist)
         PANEL_COVERAGE(ch_per_base_genelist)

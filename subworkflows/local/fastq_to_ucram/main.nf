@@ -26,7 +26,7 @@ workflow FASTQ_TO_UCRAM {
         */
 
         ch_fastq
-            .dump(tag: "FASTQ_TO_UCRAM: reads to convert",{FormattingService.prettyFormat(it)})
+            .dump(tag: "FASTQ_TO_UCRAM: reads to convert",pretty: true)
 
         // FGBIO_FASTQTOBAM([meta, fastq])
         FGBIO_FASTQTOBAM(ch_fastq)
@@ -46,7 +46,7 @@ workflow FASTQ_TO_UCRAM {
             ]
         }
         .groupTuple(by:[0])
-        .dump(tag: "FASTQ_TO_UCRAM: unaligned bam per replicate",{FormattingService.prettyFormat(it)})
+        .dump(tag: "FASTQ_TO_UCRAM: unaligned bam per replicate",pretty: true)
         .map {
             meta, files ->
             def gk = (meta.count ?: 1)
@@ -63,7 +63,7 @@ workflow FASTQ_TO_UCRAM {
         .map { meta, files ->
             return [meta, files.flatten()]
         }
-        .dump(tag: "FASTQ_TO_UCRAM: unaligned bam per sample",{FormattingService.prettyFormat(it)})
+        .dump(tag: "FASTQ_TO_UCRAM: unaligned bam per sample",pretty: true)
         .set{ch_ubam_per_sample}
 
         // Merge bam files per sample
