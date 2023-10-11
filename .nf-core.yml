@@ -1,10 +1,13 @@
 repository_type: pipeline
 prefix: CenterForMedicalGeneticsGhent
+name: preprocessing
+author: matthdsm
 lint:
   files_exist:
     - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
     - conf/test.config
     - conf/test_full.config
+    - CODE_OF_CONDUCT.md
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
     - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
     - lib/nfcore_external_java_deps.jar
