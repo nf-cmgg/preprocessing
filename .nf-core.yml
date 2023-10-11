@@ -1,7 +1,9 @@
 repository_type: pipeline
-prefix: CenterForMedicalGeneticsGhent
-name: preprocessing
-author: matthdsm
+template:
+  name: nf-cmgg-preprocessing
+  description: Preprocessing workflow for sequencing data at CMGG
+  author: matthdsm
+  prefix: CenterForMedicalGeneticsGhent
 lint:
   files_exist:
     - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
