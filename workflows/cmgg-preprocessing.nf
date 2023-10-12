@@ -151,6 +151,32 @@ workflow CMGGPREPROCESSING {
         BCL_DEMULTIPLEX.out.fastq,
         parse_sample_info_csv(ch_flowcell.info)
     )
+    .map { meta, reads ->
+        return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
+    }
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // PROCESS FASTQ INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
+    ch_input_fastq = ch_input_fastq.map { meta, fastq_1, fastq_2 ->
+        // if no fastq_2, then single-end
+        single_end = fastq_2 ? false : true
+        // add readgroup metadata
+        rg = readgroup_from_fastq(fastq_1)
+        rg = rg + [ 'SM': meta.samplename,
+                    'LB': meta.library ?: "",
+                    'PL': meta.platform ?: rg.PL,
+                    'ID': meta.readgroup ?: rg.ID
+                ]
+
+        meta_with_readgroup = meta - meta.subMap('library', 'platform', 'readgroup') + ['single_end': single_end, 'readgroup': rg]
+        reads = single_end ? fastq_1 : [fastq_1, fastq_2]
+
+        return [meta_with_readgroup, reads]
+    }
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,24 +194,6 @@ workflow CMGGPREPROCESSING {
     // GATHER PROCESSED INPUTS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-
-    // sanitize fastq inputs
-    ch_input_fastq = ch_input_fastq.map { meta, fastq_1, fastq_2 ->
-        // if no fastq_2, then single-end
-        single_end = fastq_2 ? false : true
-        // add readgroup metadata
-        rg = readgroup_from_fastq(fastq_1)
-        rg = rg + [ 'SM': meta.samplename,
-                    'LB': meta.library ?: "",
-                    'PL': meta.platform ?: rg.PL,
-                    'ID': meta.readgroup ?: rg.ID
-                ]
-
-        meta_with_readgroup = meta - meta.subMap('library', 'platform', 'readgroup') + ['single_end': single_end, 'readgroup': rg]
-        reads = single_end ? fastq_1 : [fastq_1, fastq_2]
-
-        return [meta_with_readgroup, reads]
-    }
 
     // "Gather" fastq's from demultiplex, cramtofastq and fastq inputs
     ch_sample_fastqs = ch_input_fastq.mix(ch_demultiplexed_fastq, ch_converted_fastq)
@@ -205,9 +213,6 @@ workflow CMGGPREPROCESSING {
     // add the count variable to meta
     | map { meta_fastq, count ->
         return [meta_fastq[0] + [count:count], meta_fastq[1]]
-    }
-    | map { meta, reads ->
-        return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
     }
 
     /*
@@ -258,7 +263,7 @@ workflow CMGGPREPROCESSING {
     */
 
     FASTQ_TO_UCRAM(
-        ch_trimmed_reads.other.map{ meta, reads -> [meta - meta.subMap('organism'), reads]},
+        ch_trimmed_reads.other,
         ch_fasta_fai
     )
     ch_versions = ch_versions.mix(FASTQ_TO_UCRAM.out.versions)
@@ -270,7 +275,7 @@ workflow CMGGPREPROCESSING {
     */
 
     FASTQ_TO_CRAM(
-        ch_trimmed_reads.human.map{ meta, reads -> [meta - meta.subMap('organism'), reads]},
+        ch_trimmed_reads.human,
         ch_fasta_fai,
         aligner,
         ch_aligner_index,
