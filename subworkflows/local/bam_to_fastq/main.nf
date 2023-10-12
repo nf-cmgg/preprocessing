@@ -36,7 +36,7 @@ workflow BAM_TO_FASTQ {
 
         // Add RG data to fastq meta
         // thanks to @Midnighter for the utility function
-        ch_fastq_with_rg = CustomChannelOperators.joinOnKeys(ch_rg, ch_fastq, "samplename").dump(tag: 'fastq with RG', {FormattingService.prettyFormat(it)})
+        ch_fastq_with_rg = CustomChannelOperators.joinOnKeys(ch_rg, ch_fastq, "samplename").dump(tag: 'fastq with RG', pretty: true)
     emit:
         fastq    = ch_fastq_with_rg // [meta, [fastq1, (fastq2)]]
         versions = ch_versions      // [versions]

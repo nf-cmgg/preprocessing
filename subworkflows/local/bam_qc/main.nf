@@ -67,7 +67,7 @@ workflow BAM_QC {
             BAM_STATS_SAMTOOLS.out.flagstat,
             BAM_STATS_SAMTOOLS.out.idxstats
         )
-        ch_metrics.dump(tag: "BAM QC: metrics", {FormattingService.prettyFormat(it)})
+        ch_metrics.dump(tag: "BAM QC: metrics", pretty: true)
         ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:

@@ -139,7 +139,7 @@ workflow CMGGPREPROCESSING {
 
     // BCL_DEMULTIPLEX([meta, samplesheet, flowcell], demultiplexer)
     BCL_DEMULTIPLEX(ch_flowcell.fc, "bclconvert")
-    BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq",{FormattingService.prettyFormat(it)})
+    BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq",pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(
         BCL_DEMULTIPLEX.out.reports.map { meta, reports -> return reports},
         BCL_DEMULTIPLEX.out.stats.map   { meta, stats   -> return stats  }
@@ -151,26 +151,16 @@ workflow CMGGPREPROCESSING {
         BCL_DEMULTIPLEX.out.fastq,
         parse_sample_info_csv(ch_flowcell.info)
     )
+    .map { meta, reads ->
+        return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
+    }
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // PROCESS BAM/CRAM INPUTS
+    // PROCESS FASTQ INPUTS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // Convert bam/cram inputs to fastq
-    BAM_TO_FASTQ(ch_input_bam.mix(ch_input_cram), ch_fasta_fai)
-    ch_converted_fastq = BAM_TO_FASTQ.out.fastq
-    ch_converted_fastq.dump(tag: "converted_fastq",{FormattingService.prettyFormat(it)})
-
-
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // GATHER PROCESSED INPUTS
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
-
-    // sanitize fastq inputs
     ch_input_fastq = ch_input_fastq.map { meta, fastq_1, fastq_2 ->
         // if no fastq_2, then single-end
         single_end = fastq_2 ? false : true
@@ -188,11 +178,41 @@ workflow CMGGPREPROCESSING {
         return [meta_with_readgroup, reads]
     }
 
-    // "Gather" fastq's from demultiplex and fastq inputs
-    ch_sample_fastqs = count_samples(
-        ch_input_fastq.mix(ch_demultiplexed_fastq, ch_converted_fastq)
-    ).map { meta, reads ->
-        return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // PROCESS BAM/CRAM INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
+    // Convert bam/cram inputs to fastq
+    BAM_TO_FASTQ(ch_input_bam.mix(ch_input_cram), ch_fasta_fai)
+    ch_converted_fastq = BAM_TO_FASTQ.out.fastq
+    ch_converted_fastq.dump(tag: "converted_fastq",pretty: true)
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // GATHER PROCESSED INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
+    // "Gather" fastq's from demultiplex, cramtofastq and fastq inputs
+    ch_sample_fastqs = ch_input_fastq.mix(ch_demultiplexed_fastq, ch_converted_fastq)
+    // count the number of samples per samplename
+    | map { meta, fastq ->
+        return [meta.samplename, [meta, fastq]]
+    }
+    // this should group per samplename
+    | groupTuple()
+    // Count the number of samples per samplename
+    | map { samplename, meta_fastq ->
+        count = meta_fastq.size()
+        return [meta_fastq,count]
+    }
+    // split the meta_fastq list into channel items
+    | transpose()
+    // add the count variable to meta
+    | map { meta_fastq, count ->
+        return [meta_fastq[0] + [count:count], meta_fastq[1]]
     }
 
     /*
@@ -205,14 +225,14 @@ workflow CMGGPREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, [], false, false)
-    FASTP.out.reads.dump(tag: "MAIN: fastp trimmed reads",{FormattingService.prettyFormat(it)})
+    FASTP.out.reads.dump(tag: "MAIN: fastp trimmed reads",pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
     // edit meta.id to match sample name
     ch_trimmed_reads = FASTP.out.reads
     .map { meta, reads ->
-        def read_files = meta.single_end ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+        def read_files = meta.single_end.toBoolean() ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
         return [
             meta + [ chunks: read_files instanceof List ? read_files.size() : [read_files].size() ],
             read_files
@@ -233,8 +253,8 @@ workflow CMGGPREPROCESSING {
         human: meta.organism ==~ /(?i)Homo sapiens/
         other: true
     }
-    ch_trimmed_reads.human.dump(tag: "MAIN: human reads",{FormattingService.prettyFormat(it)})
-    ch_trimmed_reads.other.dump(tag: "MAIN: other reads",{FormattingService.prettyFormat(it)})
+    ch_trimmed_reads.human.dump(tag: "MAIN: human reads",pretty: true)
+    ch_trimmed_reads.other.dump(tag: "MAIN: other reads",pretty: true)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -243,7 +263,7 @@ workflow CMGGPREPROCESSING {
     */
 
     FASTQ_TO_UCRAM(
-        ch_trimmed_reads.other.map{ meta, reads -> [meta - meta.subMap('organism'), reads]},
+        ch_trimmed_reads.other,
         ch_fasta_fai
     )
     ch_versions = ch_versions.mix(FASTQ_TO_UCRAM.out.versions)
@@ -255,7 +275,7 @@ workflow CMGGPREPROCESSING {
     */
 
     FASTQ_TO_CRAM(
-        ch_trimmed_reads.human.map{ meta, reads -> [meta - meta.subMap('organism'), reads]},
+        ch_trimmed_reads.human,
         ch_fasta_fai,
         aligner,
         ch_aligner_index,
@@ -282,7 +302,7 @@ workflow CMGGPREPROCESSING {
             }
     ch_cram_crai_target = ch_cram_crai_branch.bed
         .mix(ch_cram_crai_branch.nobed)
-        .dump(tag: "MAIN: cram_crai_target",{FormattingService.prettyFormat(it)})
+        .dump(tag: "MAIN: cram_crai_target",pretty: true)
 
     if (run_coverage){
         COVERAGE(ch_cram_crai_target, ch_fasta_fai, ch_genelists)
@@ -347,26 +367,6 @@ workflow CMGGPREPROCESSING {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-// Count number of samples with the same samplename
-def count_samples(ch_samples) {
-    ch_samples.map { meta, fastq ->
-        return [meta.samplename, [meta, fastq]]
-    }
-    // this should group per samplename
-    .groupTuple()
-    // Count the number of samples per samplename
-    .map { samplename, meta_fastq ->
-        count = meta_fastq.size()
-        return [meta_fastq,count]
-    }
-    // split the meta_fastq list into channel items
-    .transpose()
-    // add the count variable to meta
-    .map{ meta_fastq, count ->
-        return [meta_fastq[0] + [count:count], meta_fastq[1]]
-    }
-}
 
 // Parse sample info input map
 def parse_sample_info_csv(csv_file) {
