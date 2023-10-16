@@ -5,15 +5,12 @@
 
 // MODULES
 include { SAMTOOLS_CAT      } from '../../../modules/nf-core/samtools/cat/main'
-include { FGBIO_FASTQTOBAM  } from "../../../modules/nf-core/fgbio/fastqtobam/main"
-
-// SUBWORKFLOWS
-include { BAM_ARCHIVE       } from "../../local/bam_archive/main"
+include { SAMTOOLS_IMPORT   } from "../../../modules/nf-core/samtools/import/main"
+include { MD5SUM            } from "../../../modules/nf-core/md5sum/main"
 
 workflow FASTQ_TO_UCRAM {
     take:
         ch_fastq        // channel: [mandatory] [meta, [fastq, ...]]
-        ch_fasta_fai    // channel: [mandatory] [meta2, fasta, fai]
 
     main:
 
@@ -28,14 +25,16 @@ workflow FASTQ_TO_UCRAM {
         ch_fastq
             .dump(tag: "FASTQ_TO_UCRAM: reads to convert",pretty: true)
 
-        // FGBIO_FASTQTOBAM([meta, fastq])
-        FGBIO_FASTQTOBAM(ch_fastq)
-        ch_versions = ch_versions.mix(FGBIO_FASTQTOBAM.out.versions)
+        // SAMTOOLS_IMPORT([meta, fastq])
+        SAMTOOLS_IMPORT(ch_fastq)
+        ch_versions = ch_versions.mix(SAMTOOLS_IMPORT.out.versions)
 
-        FGBIO_FASTQTOBAM.out.bam.map {
+        SAMTOOLS_IMPORT.out.cram
+        .view()
+        .map {
             // set id to samplename, drop readgroup and count meta values
             meta, files ->
-            def gk = (meta.chunks ?: 1)
+            def gk = (meta.chunks as Integer ?: 1)
             return [
                 groupKey(
                     // replace id by samplename, drop readgroup meta and chunks
@@ -49,7 +48,7 @@ workflow FASTQ_TO_UCRAM {
         .dump(tag: "FASTQ_TO_UCRAM: unaligned bam per replicate",pretty: true)
         .map {
             meta, files ->
-            def gk = (meta.count ?: 1)
+            def gk = (meta.count as Integer ?: 1)
             return [
                 groupKey(
                     // drop count
@@ -68,18 +67,18 @@ workflow FASTQ_TO_UCRAM {
 
         // Merge bam files per sample
         SAMTOOLS_CAT(ch_ubam_per_sample)
+        ch_versions = ch_versions.mix(SAMTOOLS_CAT.out.versions)
 
-        /*
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // COMPRESSION AND CHECKSUM
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        */
-        BAM_ARCHIVE(SAMTOOLS_CAT.out.bam.map { meta,bam -> [meta, bam, []]}, ch_fasta_fai)
-        ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
+
+        // MODULE: MD5SUM
+        // Generate md5sum for cram file
+        // MD5SUM([meta, cram])
+        MD5SUM(SAMTOOLS_CAT.out.cram)
+        ch_versions = ch_versions.mix(MD5SUM.out.versions)
 
     emit:
-        checksum  = BAM_ARCHIVE.out.checksum    // [meta, checksum]
-        cram_crai = BAM_ARCHIVE.out.cram_crai   // [meta, cram, crai]
-        versions  = ch_versions                 // versions
+        checksum  = MD5SUM.out.checksum      // [meta, checksum]
+        cram_crai = SAMTOOLS_CAT.out.cram    // [meta, cram]
+        versions  = ch_versions              // versions
 
 }
