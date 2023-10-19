@@ -25,7 +25,7 @@
                 "meta": ["organism"],
                 "type": "string",
                 "description": "Sample organism",
-                "pattern": "^[a-zA-Z0-9_]+$"
+                "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "tag": {
                 "meta": ["tag"],
@@ -43,7 +43,7 @@
                 "type": "string",
                 "pattern": "^\\S+(cram)$",
                 "format": "file-path",
-                "errorMessage": "CRAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
+                "errorMessage": "CRAM file must be provided, cannot contain spaces and must have extension '.cram'"
             }
         }
     }

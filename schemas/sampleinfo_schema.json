@@ -24,8 +24,8 @@
             },
             "organism": {
                 "type": "string",
-                "description": "Sample source organism",
-                "pattern": "^[a-zA-Z0-9_]+$"
+                "description": "Sample organism",
+                "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "vivar_project": {
                 "type": "string",

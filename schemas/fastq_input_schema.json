@@ -16,7 +16,12 @@
                 "unique": ["id"]
             },
             "organism": {
-                "meta": ["organism"]
+                "meta": [
+                    "organism"
+                ],
+                "type": "string",
+                "description": "Sample organism",
+                "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "tag": {
                 "meta": ["tag"]
