@@ -152,18 +152,12 @@
                     "pattern": "^\\S+\\.bed$",
                     "description": "Path to target regions bed file."
                 },
-                "genomes_base": {
+                "igenomes_base": {
                     "type": "string",
                     "default": "/references/",
                     "hidden": true,
                     "description": "Directory base for CMGG reference store",
                     "fa_icon": "fas fa-download"
-                },
-                "genomes_ignore": {
-                    "type": "boolean",
-                    "hidden": true,
-                    "description": "Do not load the local references",
-                    "fa_icon": "fas fa-ban"
                 },
                 "igenomes_ignore": {
                     "type": "boolean",
