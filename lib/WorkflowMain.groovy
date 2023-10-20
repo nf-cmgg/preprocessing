@@ -52,11 +52,11 @@ class WorkflowMain {
     //
     // Get attribute from genome config file e.g. fasta
     //
-    public static Object getGenomeAttribute(params, attribute) {
-        if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-            if (params.genomes[ params.genome ].containsKey(attribute)) {
-                return params.genomes[ params.genome ][ attribute ]
-            }
+    public static Object getGenomeAttribute(genome, attribute) {
+        if (genome.containsKey(attribute)) {
+            return Nextflow.file(genome[attribute], checkIfExists: true)
+        } else {
+            Nextflow.error("Genome config does not contain attribute ${attribute}")
         }
         return null
     }
