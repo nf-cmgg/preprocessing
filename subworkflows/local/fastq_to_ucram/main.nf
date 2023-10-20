@@ -30,7 +30,6 @@ workflow FASTQ_TO_UCRAM {
         ch_versions = ch_versions.mix(SAMTOOLS_IMPORT.out.versions)
 
         SAMTOOLS_IMPORT.out.cram
-        .view()
         .map {
             // set id to samplename, drop readgroup and count meta values
             meta, files ->
@@ -69,15 +68,7 @@ workflow FASTQ_TO_UCRAM {
         SAMTOOLS_CAT(ch_ubam_per_sample)
         ch_versions = ch_versions.mix(SAMTOOLS_CAT.out.versions)
 
-
-        // MODULE: MD5SUM
-        // Generate md5sum for cram file
-        // MD5SUM([meta, cram])
-        MD5SUM(SAMTOOLS_CAT.out.cram)
-        ch_versions = ch_versions.mix(MD5SUM.out.versions)
-
     emit:
-        checksum  = MD5SUM.out.checksum      // [meta, checksum]
         cram_crai = SAMTOOLS_CAT.out.cram    // [meta, cram]
         versions  = ch_versions              // versions
 

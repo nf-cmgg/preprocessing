@@ -5,33 +5,44 @@ include { SAMTOOLS_GETRG        } from '../../../modules/nf-core/samtools/getrg/
 
 workflow BAM_TO_FASTQ {
     take:
-        ch_bam       // channel: [mandatory] [meta, bam]
-        ch_fasta_fai // channel: [mandatory] [meta2, fasta, fai]
+        ch_meta_bam_fasta_fai       // channel: [mandatory] [meta, bam, fasta, fai]
 
     main:
         ch_versions = Channel.empty()
         ch_fastq  = Channel.empty()
 
-        ch_fai        = ch_fasta_fai.map {meta, fasta, fai -> fai          }.collect()
-        ch_fasta      = ch_fasta_fai.map {meta, fasta, fai -> fasta        }.collect()
-        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
+        // Split the input channel into two channels
+        ch_meta_bam_fasta_fai
+        | multiMap { meta, bam, fasta, fai ->
+            meta_bam: [meta, bam]
+            meta_fasta: [meta, fasta]
+        }
+        | set { ch_meta_bam_fasta_fai}
 
         // Convert BAM/CRAM to FASTQ
-        SAMTOOLS_COLLATEFASTQ ( ch_bam, ch_meta_fasta, false )
+        SAMTOOLS_COLLATEFASTQ (
+            ch_meta_bam_fasta_fai.meta_bam,
+            ch_meta_bam_fasta_fai.meta_fasta,
+            false
+        )
 
         // Only keep the R1 and R2 FASTQ files
         ch_fastq = SAMTOOLS_COLLATEFASTQ.out.fastq
         ch_versions = ch_versions.mix(SAMTOOLS_COLLATEFASTQ.out.versions)
 
         // Get RG info from BAM/CRAM and parse into maps
-        SAMTOOLS_GETRG (ch_bam)
-        ch_rg = SAMTOOLS_GETRG.out.readgroup
-            .splitText()
-            .map{ meta, rg ->
-                meta.readgroup = rg.stripTrailing().split('\t').tail().collectEntries{ [it.split(':')[0], it.split(':')[1]] }
-                meta.readgroup['SM'] = meta.samplename ?: meta.id
+        SAMTOOLS_GETRG (
+            ch_meta_bam_fasta_fai.meta_bam,
+        )
+
+        SAMTOOLS_GETRG.out.readgroup
+        | splitText()
+        | map{ meta, rg ->
+                meta = meta + ["readgroup": rg.stripTrailing().split('\t').tail().collectEntries{ [it.split(':')[0], it.split(':')[1]] }]
+                meta.readgroup = meta.readgroup + ['SM': meta.samplename ?: meta.id]
                 return [meta]
-            }
+        }
+        | set { ch_rg }
         ch_versions = ch_versions.mix(SAMTOOLS_GETRG.out.versions)
 
         // Add RG data to fastq meta

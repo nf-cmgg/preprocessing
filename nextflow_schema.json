@@ -145,42 +145,6 @@
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "default": "GRCh38",
-                    "description": "Reference genome build",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code",
-                    "hidden": true
-                },
-                "dict": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.dict$",
-                    "description": "Path to FASTA genome dict file.",
-                    "hidden": true
-                },
-                "fai": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fai$",
-                    "description": "Path to FASTA genome index file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
-                    "fa_icon": "far fa-file-code",
-                    "hidden": true
-                },
                 "target_regions": {
                     "type": "string",
                     "format": "file-path",
@@ -207,45 +171,8 @@
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
-                },
-                "bowtie2": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to Bowtie2 index"
-                },
-                "bwamem": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to BWA index"
-                },
-                "bwamem2": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to BWAMEM2 index"
-                },
-                "dragmap": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to Dragmap index"
-                },
-                "snap": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to SNAP aligner index"
-                },
-                "genelists": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to directory containing genelist bed"
                 }
-            },
-            "required": ["genome", "fasta", "dict", "fai"]
+            }
         },
         "institutional_config_options": {
             "title": "Institutional config options",

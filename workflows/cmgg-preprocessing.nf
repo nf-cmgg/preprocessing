@@ -80,51 +80,19 @@ workflow CMGGPREPROCESSING {
     // input values
     aligner = params.aligner
     markdup = params.markdup
-    genome  = params.genome
+    genomes = params.genomes
 
     // input options
     run_coverage   = params.run_coverage
     disable_picard = params.disable_picard_metrics
 
-    // reference channels
-    ch_fasta     = Channel.value([
-        [id:genome],
-        file(params.fasta, checkIfExists: true)
-    ])
-    ch_fasta_fai = Channel.value([
-        [id:genome],
-        file(params.fasta, checkIfExists: true),
-        file(params.fai, checkIfExists: true)
-    ])
-
-    ch_dict  = Channel.value([
-        [id:genome],
-        file(params.dict,  checkIfExists: true)
-    ])
-
-    ch_aligner_index = Channel.empty()
-
-    ch_target_regions = params.target_regions ? Channel.value(file(params.target_regions, checkIfExists: true)) : Channel.value([])
-
     // output channels
     ch_versions      = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    // Gather index for mapping given the chosen aligner
-    aligner_index = aligner == "bowtie2" ? params.bowtie2 :
-                    aligner == "bwamem"  ? params.bwamem  :
-                    aligner == "bwamem2" ? params.bwamem2 :
-                    aligner == "dragmap" ? params.dragmap :
-                    aligner == "snap"    ? params.snap    :
-                    []
-    if (aligner_index) {
-        ch_aligner_index = Channel.value([[id:genome],file(aligner_index, checkIfExists: true)])
-    } else {
-        log.error "No index found for aligner: ${aligner}"
-    }
-
     // Genelists
-    ch_genelists = Channel.fromPath(params.genelists + "/*.bed", checkIfExists:true)
+    // ch_genelists = Channel.fromPath(params.genelists + "/*.bed", checkIfExists:true)
+
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -132,10 +100,12 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    ch_flowcell = ch_input_flowcell.multiMap { meta, samplesheet, flowcell, sample_info ->
+    ch_input_flowcell
+    | multiMap { meta, samplesheet, flowcell, sample_info ->
         fc   : [meta, samplesheet, flowcell]
         info : sample_info
     }
+    | set { ch_flowcell }
 
     // BCL_DEMULTIPLEX([meta, samplesheet, flowcell], demultiplexer)
     BCL_DEMULTIPLEX(ch_flowcell.fc, "bclconvert")
@@ -147,13 +117,14 @@ workflow CMGGPREPROCESSING {
     ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
     // Add metadata to demultiplexed fastq's
-    ch_demultiplexed_fastq = merge_sample_info(
+    merge_sample_info(
         BCL_DEMULTIPLEX.out.fastq,
         parse_sample_info_csv(ch_flowcell.info)
     )
-    .map { meta, reads ->
+    | map { meta, reads ->
         return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
     }
+    | set {ch_demultiplexed_fastq}
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -161,7 +132,8 @@ workflow CMGGPREPROCESSING {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    ch_input_fastq = ch_input_fastq.map { meta, fastq_1, fastq_2 ->
+    ch_input_fastq
+    | map { meta, fastq_1, fastq_2 ->
         // if no fastq_2, then single-end
         single_end = fastq_2 ? false : true
         // add readgroup metadata
@@ -177,26 +149,74 @@ workflow CMGGPREPROCESSING {
 
         return [meta_with_readgroup, reads]
     }
+    | set {ch_input_fastq}
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // PROCESS BAM/CRAM INPUTS
+    // ASSOCIATE CORRECT GENOME TO SAMPLES
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    ch_input_fastq
+    | mix(ch_demultiplexed_fastq, ch_input_bam, ch_input_cram)
+    | map { meta, reads ->
+        // set genome based on organism key
+        if (meta.organism && !meta.genome) {
+            switch (meta.organism) {
+                case ~/(?i)Homo[\s_]sapiens/:
+                    meta = meta + ["genome":"GRCh38"]
+                    break
+                case ~/(?i)Mus[\s_]musculus/:
+                    meta = meta + ["genome":"GRCm39"]
+                    break
+                case ~/(?i)Danio[\s_]rerio/:
+                    meta = meta + ["genome":"GRCz11"]
+                    break
+                default:
+                    meta = meta + ["genome": null ]
+                    break
+            }
+        }
+        if (genomes && genomes[meta.genome]){
+            meta = meta + ["genome": genomes[meta.genome]]
+        }
+        return [meta, reads]
+    }
+    | branch {meta, reads ->
+        fastq   : (reads instanceof List && reads[0] ==~ /.*.f(ast)?q\.gz$/) || (reads ==~ /.*.f(ast)?q\.gz$/)
+        aligned : (reads instanceof List && reads[0] ==~ /.*.(b|cr)am$)/ )   || (reads ==~ /.*.(b|cr)am$/)
+    }
+    | set {ch_inputs}
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // STEP: PROCESS BAM/CRAM INPUTS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
     // Convert bam/cram inputs to fastq
-    BAM_TO_FASTQ(ch_input_bam.mix(ch_input_cram), ch_fasta_fai)
+    ch_inputs.aligned
+    | map { meta, bam ->
+        return [
+            meta,
+            bam,
+            WorkflowMain.getGenomeAttribute(meta.genome, "fasta"),
+            WorkflowMain.getGenomeAttribute(meta.genome, "fai")]
+    }
+    | set { ch_meta_reads_fasta_fai }
+
+    BAM_TO_FASTQ(ch_meta_reads_fasta_fai)
+
     ch_converted_fastq = BAM_TO_FASTQ.out.fastq
-    ch_converted_fastq.dump(tag: "converted_fastq",pretty: true)
+    ch_converted_fastq.dump(tag: "MAIN: converted_fastq",pretty: true)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // GATHER PROCESSED INPUTS
+    // STEP:GATHER PROCESSED INPUTS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
     // "Gather" fastq's from demultiplex, cramtofastq and fastq inputs
-    ch_sample_fastqs = ch_input_fastq.mix(ch_demultiplexed_fastq, ch_converted_fastq)
+    ch_inputs.fastq.mix(ch_converted_fastq)
     // count the number of samples per samplename
     | map { meta, fastq ->
         return [meta.samplename, [meta, fastq]]
@@ -214,24 +234,25 @@ workflow CMGGPREPROCESSING {
     | map { meta_fastq, count ->
         return [meta_fastq[0] + [count:count], meta_fastq[1]]
     }
+    | set { ch_sample_fastqs }
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // FASTQ TRIMMING AND QC
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// FASTQ TRIMMING AND QC
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
     // MODULE: fastp
     // Run QC, trimming and adapter removal
-    // FASTP([meta, fastq], save_trimmed, save_merged)
+    // FASTP([meta, fastq], adapter_fasta, save_trimmed, save_merged)
     FASTP(ch_sample_fastqs, [], false, false)
     FASTP.out.reads.dump(tag: "MAIN: fastp trimmed reads",pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
     // edit meta.id to match sample name
-    ch_trimmed_reads = FASTP.out.reads
-    .map { meta, reads ->
+    FASTP.out.reads
+    | map { meta, reads ->
         def read_files = meta.single_end.toBoolean() ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
         return [
             meta + [ chunks: read_files instanceof List ? read_files.size() : [read_files].size() ],
@@ -239,9 +260,9 @@ workflow CMGGPREPROCESSING {
         ]
     }
     // transpose to get read pairs
-    .transpose()
+    | transpose()
     // set new meta.id to include split number
-    .map { meta, reads ->
+    | map { meta, reads ->
         def new_id = reads instanceof List ? reads[0].getName() - ~/_1.fastp.*/ : reads.getName() - ~/.fastp.*/
         return [
             meta - meta.subMap('id') + [ id: new_id ],
@@ -249,46 +270,42 @@ workflow CMGGPREPROCESSING {
         ]
     }
     // split samples into human and non human data
-    .branch { meta, reads ->
-        human: meta.organism ==~ /(?i)Homo sapiens/
+    | branch { meta, reads ->
+        supported: meta.genome
         other: true
     }
-    ch_trimmed_reads.human.dump(tag: "MAIN: human reads",pretty: true)
-    ch_trimmed_reads.other.dump(tag: "MAIN: other reads",pretty: true)
+    | set { ch_trimmed_reads }
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // STEP: FASTQ TO UNALIGNED CRAM CONVERSION
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: FASTQ TO UNALIGNED CRAM CONVERSION
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
-    FASTQ_TO_UCRAM(
-        ch_trimmed_reads.other,
-        ch_fasta_fai
-    )
+    FASTQ_TO_UCRAM(ch_trimmed_reads.other)
     ch_versions = ch_versions.mix(FASTQ_TO_UCRAM.out.versions)
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // STEP: FASTQ TO ALIGNED CRAM CONVERSION
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: FASTQ TO ALIGNED CRAM CONVERSION
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
     FASTQ_TO_CRAM(
-        ch_trimmed_reads.human,
-        ch_fasta_fai,
+        ch_trimmed_reads.supported,
         aligner,
-        ch_aligner_index,
         markdup
     )
+    return
+
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // COVERAGE ANALYSIS
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: COVERAGE ANALYSIS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
     // Generate coverage metrics and beds for each sample
     // COVERAGE([meta,bam, bai], [meta2, fasta, fai], target)
@@ -315,11 +332,11 @@ workflow CMGGPREPROCESSING {
         ch_versions      = ch_versions.mix(COVERAGE.out.versions)
     }
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // QC FOR ALIGNMENTS
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: QC FOR ALIGNMENTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
     // Gather metrics from bam files
     // BAM_QC([meta, bam, bai, target], [meta2, fasta, fai], [meta2, dict])
@@ -327,12 +344,11 @@ workflow CMGGPREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
-
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // REPORTING
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: REPORTING
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     // Gather software versions for QC report
