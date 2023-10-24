@@ -58,6 +58,7 @@ include { BAM_TO_FASTQ      } from "../subworkflows/local/bam_to_fastq/main"
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from "../modules/nf-core/custom/dumpsoftwareversions/main"
 include { FASTP                       } from "../modules/nf-core/fastp/main"
+include { MOSDEPTH                    } from "../modules/nf-core/mosdepth/main"
 include { MULTIQC                     } from "../modules/nf-core/multiqc/main"
 
 /*
@@ -89,10 +90,6 @@ workflow CMGGPREPROCESSING {
     // output channels
     ch_versions      = Channel.empty()
     ch_multiqc_files = Channel.empty()
-
-    // Genelists
-    // ch_genelists = Channel.fromPath(params.genelists + "/*.bed", checkIfExists:true)
-
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -296,7 +293,6 @@ workflow CMGGPREPROCESSING {
         aligner,
         markdup
     )
-    return
 
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
@@ -308,28 +304,44 @@ workflow CMGGPREPROCESSING {
 */
 
     // Generate coverage metrics and beds for each sample
-    // COVERAGE([meta,bam, bai], [meta2, fasta, fai], target)
-    ch_cram_crai_branch = FASTQ_TO_CRAM.out.cram_crai
-        .combine(ch_target_regions)
-        .branch {
-            bed: it.size() == 4
-                return it
-            nobed: it.size() == 3
-                return it + [[]]
-            }
-    ch_cram_crai_target = ch_cram_crai_branch.bed
-        .mix(ch_cram_crai_branch.nobed)
-        .dump(tag: "MAIN: cram_crai_target",pretty: true)
+    FASTQ_TO_CRAM.out.cram_crai
+    | map { meta, cram, crai ->
+        if (meta.roi) {
+            return [
+                meta,
+                cram,
+                crai,
+                file(meta.roi, checkIfExists:true)
+            ]
+        } else {
+            return [
+                meta,
+                cram,
+                crai,
+                []
+            ]
+        }
+    }
+    | set {ch_cram_crai_roi }
 
     if (run_coverage){
-        COVERAGE(ch_cram_crai_target, ch_fasta_fai, ch_genelists)
-        ch_coverage_beds = Channel.empty().mix(
-            COVERAGE.out.per_base_bed.join(COVERAGE.out.per_base_bed_csi),
-            COVERAGE.out.regions_bed_csi.join(COVERAGE.out.regions_bed_csi),
-            COVERAGE.out.quantized_bed.join(COVERAGE.out.quantized_bed_csi),
+        ch_cram_crai_roi
+        | multiMap { meta, cram, crai, roi ->
+            meta_cram_crai_roi : [meta, cram, crai, roi]
+            meta_fasta: [meta, WorkflowMain.getGenomeAttribute(meta.genome, "fasta")]
+        }
+        | set {ch_to_mosdepth}
+
+        MOSDEPTH(
+            ch_to_mosdepth.meta_cram_crai_roi,
+            ch_to_mosdepth.meta_fasta
         )
-        ch_multiqc_files = ch_multiqc_files.mix( COVERAGE.out.metrics.map { meta, metrics -> return metrics} )
-        ch_versions      = ch_versions.mix(COVERAGE.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix(
+            MOSDEPTH.out.summary_txt,
+            MOSDEPTH.out.global_txt,
+            MOSDEPTH.out.regions_txt
+        )
+        ch_versions = ch_versions.mix(MOSDEPTH.out.versions).first()
     }
 
 /*
@@ -339,8 +351,8 @@ workflow CMGGPREPROCESSING {
 */
 
     // Gather metrics from bam files
-    // BAM_QC([meta, bam, bai, target], [meta2, fasta, fai], [meta2, dict])
-    BAM_QC( ch_cram_crai_target, ch_fasta_fai, ch_dict, disable_picard)
+    // BAM_QC([meta, bam, bai], disable_picard)
+    BAM_QC( FASTQ_TO_CRAM.out.cram_crai, disable_picard)
     ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 

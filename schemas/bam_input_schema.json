@@ -44,6 +44,16 @@
                 "pattern": "^\\S+(bam)$",
                 "format": "file-path",
                 "errorMessage": "BAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
+            },
+            "roi": {
+                "meta": [
+                    "roi"
+                ],
+                "type": "string",
+                "format": "file-path",
+                "description": "Region of interest BED file for coverage analysis",
+                "pattern": "^[a-zA-Z0-9_]+.bed$",
+                "default": null
             }
         }
     }

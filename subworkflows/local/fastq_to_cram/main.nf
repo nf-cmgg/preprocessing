@@ -5,11 +5,12 @@
 //
 
 // MODULES
-include { SAMTOOLS_SORMADUP     } from "../../../modules/local/samtools/sormadup/main.nf"
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
+include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
+include { SAMTOOLS_SORMADUP     } from "../../../modules/local/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORTMERGE    } from "../../../modules/local/samtools/sortmerge/main"
+
 // SUBWORKFLOWS
-include { BAM_ARCHIVE       } from "../../local/bam_archive/main"
 include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
 
 
@@ -49,8 +50,6 @@ workflow FASTQ_TO_CRAM {
         )
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
-        FASTQ_ALIGN_DNA.out.bam.dump(tag: "FASTQ_TO_CRAM: aligned bam", pretty: true)
-
         /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // STEP: MARK DUPLICATES
@@ -87,8 +86,8 @@ workflow FASTQ_TO_CRAM {
         | map { meta, files ->
             return [meta, files.flatten()]
         }
-        multiMap { meta, bam ->
-            bam: [meta, bam]
+        | multiMap { meta, bam ->
+            bam:   [meta, bam]
             fasta: [meta, WorkflowMain.getGenomeAttribute(meta.genome, 'fasta')]
         }
         | set{ch_bam_per_sample}
@@ -128,15 +127,31 @@ workflow FASTQ_TO_CRAM {
         // COMPRESSION AND CHECKSUM
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
-        // BAM_ARCHIVE(
-        //     ch_markdup_bam_bai,
-        //     ch_fasta_fai,
-        // )
-        // ch_versions = ch_versions.mix(BAM_ARCHIVE.out.versions)
+
+        ch_markdup_bam_bai
+        | branch { meta, reads, index ->
+            bam: reads.getExtension() == "bam"
+                return [meta, reads, index]
+            cram: reads.getExtension() == "cram"
+                return [meta, reads, index]
+        }
+        | set {ch_markdup_bam_bai}
+
+        ch_markdup_bam_bai.bam
+        | multiMap { meta, bam, bai ->
+            bam_bai: [meta, bam, bai]
+            fasta: WorkflowMain.getGenomeAttribute(meta.genome, 'fasta')
+            fai: WorkflowMain.getGenomeAttribute(meta.genome, 'fai')
+        }
+        | set {ch_to_compress}
+
+        SAMTOOLS_CONVERT(ch_to_compress.bam_bai, ch_to_compress.fasta, ch_to_compress.fai)
+
+        ch_cram_crai = ch_markdup_bam_bai.cram.mix(SAMTOOLS_CONVERT.out.alignment_index)
+
 
     emit:
-        cram_crai       = BAM_ARCHIVE.out.cram_crai
-        //checksum        = BAM_ARCHIVE.out.checksum
+        cram_crai       = ch_cram_crai
         multiqc_files   = ch_multiqc_files
         versions        = ch_versions
 }

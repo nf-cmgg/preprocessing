@@ -44,6 +44,16 @@
                 "pattern": "^\\S+(cram)$",
                 "format": "file-path",
                 "errorMessage": "CRAM file must be provided, cannot contain spaces and must have extension '.cram'"
+            },
+            "roi": {
+                "meta": [
+                    "roi"
+                ],
+                "type": "string",
+                "format": "file-path",
+                "description": "Region of interest BED file for coverage analysis",
+                "pattern": "^[a-zA-Z0-9_]+.bed$",
+                "default": null
             }
         }
     }
