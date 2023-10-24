@@ -46,9 +46,7 @@
                 "errorMessage": "CRAM file must be provided, cannot contain spaces and must have extension '.cram'"
             },
             "roi": {
-                "meta": [
-                    "roi"
-                ],
+                "meta": ["roi"],
                 "type": "string",
                 "format": "file-path",
                 "description": "Region of interest BED file for coverage analysis",

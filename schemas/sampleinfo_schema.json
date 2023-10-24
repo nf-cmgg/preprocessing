@@ -46,9 +46,7 @@
                 }
             },
             "roi": {
-                "meta": [
-                    "roi"
-                ],
+                "meta": ["roi"],
                 "type": "string",
                 "format": "file-path",
                 "description": "Region of interest BED file for coverage analysis",

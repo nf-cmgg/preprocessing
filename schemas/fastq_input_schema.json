@@ -16,9 +16,7 @@
                 "unique": ["id"]
             },
             "organism": {
-                "meta": [
-                    "organism"
-                ],
+                "meta": ["organism"],
                 "type": "string",
                 "description": "Sample organism",
                 "pattern": "^[a-zA-Z0-9_\\s]+$"
@@ -52,9 +50,7 @@
                 ]
             },
             "roi": {
-                "meta": [
-                    "roi"
-                ],
+                "meta": ["roi"],
                 "type": "string",
                 "format": "file-path",
                 "description": "Region of interest BED file for coverage analysis",
