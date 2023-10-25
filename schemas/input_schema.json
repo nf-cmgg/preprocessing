@@ -1,0 +1,145 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/samplesheet_schema.json",
+    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing params.cram schema",
+    "description": "Schema for the file provided with params.cram",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "meta": ["id"],
+                "unique": true,
+                "type": "string",
+                "description": "Unique sample/flowcell ID",
+                "pattern": "^[a-zA-Z0-9_-]+$"
+            },
+            "samplename": {
+                "meta": ["samplename"],
+                "unique": ["id"],
+                "type": "string",
+                "description": "Sample name",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "organism": {
+                "meta": ["organism"],
+                "type": "string",
+                "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus and Danio rerio",
+                "pattern": "^[a-zA-Z0-9_\\s]+$"
+            },
+            "genome": {
+                "meta": ["genome"],
+                "type": "string",
+                "description": "Genome build. Currently supported genomes include GRCh38, GRCm39 and GRCz11",
+                "pattern": "^[a-zA-Z0-9_]+$",
+                "default": null
+            },
+            "tag": {
+                "meta": ["tag"],
+                "type": "string",
+                "description": "Sample tag",
+                "pattern": "^[a-zA-Z0-9_-]+$",
+                "enum": [null, "WES", "WGS", "coPGT-M"]
+            },
+            "library": {
+                "meta": ["library"],
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_]+$",
+                "description": "Sample library name"
+            },
+            "single_end": {
+                "meta": ["single_end"],
+                "description": "Whether the sample is single end data or not",
+                "type": "boolean",
+                "default": false
+            },
+            "roi": {
+                "meta": ["roi"],
+                "type": "string",
+                "format": "file-path",
+                "description": "Region of interest BED file for coverage analysis",
+                "pattern": "^[a-zA-Z0-9_]+.bed$",
+                "default": null
+            },
+            "lane": {
+                "type": "integer",
+                "meta": ["lane"],
+                "unique": ["id"],
+                "description": "Flowcell lane number"
+            },
+            "bam": {
+                "type": "string",
+                "pattern": "^\\S+(bam)$",
+                "format": "file-path",
+                "errorMessage": "BAM file must be provided, cannot contain spaces and must have extension '.bam'"
+            },
+            "cram": {
+                "type": "string",
+                "pattern": "^\\S+(cram)$",
+                "format": "file-path",
+                "errorMessage": "CRAM file must be provided, cannot contain spaces and must have extension '.cram'"
+            },
+            "fastq_1": {
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "format": "file-path",
+                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+            },
+            "fastq_2": {
+                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                        "format": "file-path"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "samplesheet": {
+                "type": "string",
+                "format": "file-path",
+                "pattern": "^\\S+\\.csv$",
+                "description": "Illumina samplesheet for the flowcell lane"
+            },
+            "sample_info": {
+                "schema": "schemas/sampleinfo.json",
+                "type": "string",
+                "format": "file-path",
+                "pattern": "^\\S+\\.csv$",
+                "description": "CSV file with sample information, must contain columns 'samplename', 'organism' and 'tag'"
+            },
+            "flowcell": {
+                "type": "string",
+                "format": "file-path",
+                "description": "Illumina flowcell directory"
+            }
+        }
+    },
+    "anyOf": [
+        {
+            "required": ["id", "samplename", "organism", "tag", "bam"]
+        },
+        {
+            "required": ["id", "samplename", "genome", "tag", "bam"]
+        },
+        {
+            "required": ["id", "samplename", "organism", "tag", "cram"]
+        },
+        {
+            "required": ["id", "samplename", "genome", "tag", "cram"]
+        },
+        {
+            "required": ["id", "samplename", "organism", "tag", "fastq_1", "fastq_2"]
+        },
+        {
+            "required": ["id", "samplename", "genome", "tag", "fastq_1", "fastq_2"]
+        },
+        {
+            "required": ["id", "samplesheet", "sample_info", "flowcell"]
+        }
+    ]
+}

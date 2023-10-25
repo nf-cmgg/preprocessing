@@ -1,0 +1,47 @@
+---
+# fastq inputs
+-
+    id: fastq_paired1_L001
+    samplename: fastq_paired1
+    library: test
+    organism: Homo sapiens
+    tag: WES
+    fastq_1: https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz
+    fastq_2: https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz
+-
+    id: fastq_paired1_L002
+    samplename: fastq_paired1
+    library: test
+    organism: Homo sapiens
+    tag: WES
+    fastq_1: https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz
+    fastq_2: https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz
+-
+    id: sarscov2_paired
+    samplename: sarscov2_paired
+    library: test
+    organism: SarsCov2
+    tag: null
+    fastq_1: https://github.com/nf-core/test-datasets/raw/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz
+    fastq_2: https://github.com/nf-core/test-datasets/raw/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz
+# bam input
+-
+    id: bam1
+    samplename: bam1
+    organism: Homo sapiens
+    tag: WES
+    bam: https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-test-datasets/raw/main/data/genomics/homo_sapiens/illumina/bam/test.bam
+# cram input
+-
+    id: cram1
+    samplename: cram1
+    organism: Homo sapiens
+    tag: WES
+    cram: https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-test-datasets/raw/main/data/genomics/homo_sapiens/illumina/cram/test.cram
+# flowcell input
+-
+    id: 220422_M11111_0222_000000000-K9H97
+    samplesheet: tests/samplesheets/flowcell/SampleSheet.csv
+    lane: 1
+    flowcell: https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/MiSeq/220422_M11111_0222_000000000-K9H97.tar.gz
+    sample_info: tests/samplesheets/flowcell/sample_info.csv

@@ -73,10 +73,7 @@ def multiqc_report = []
 workflow CMGGPREPROCESSING {
 
     // input channels
-    ch_input_fastq      = params.fastq    ? Channel.fromSamplesheet('fastq')    : Channel.empty()
-    ch_input_flowcell   = params.flowcell ? Channel.fromSamplesheet('flowcell') : Channel.empty()
-    ch_input_bam        = params.bam      ? Channel.fromSamplesheet('bam')      : Channel.empty()
-    ch_input_cram       = params.cram     ? Channel.fromSamplesheet('cram')     : Channel.empty()
+    ch_input = params.input ? Channel.fromSamplesheet('input') : Channel.empty()
 
     // input values
     aligner = params.aligner
@@ -93,14 +90,32 @@ workflow CMGGPREPROCESSING {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // PROCESS FLOWCELL INPUTS
+    // PROCESS INPUT CHANNEL
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
+    ch_input
+    | branch {meta, bam, cram, fastq_1, fastq_2, samplesheet, sampleinfo, flowcell ->
+        fc      : (flowcell && samplesheet && sampleinfo) && !(bam || cram || fastq_1 || fastq_2)
+            return [meta, samplesheet, sampleinfo, flowcell]
+        fastq   : (fastq_1) && !(bam || cram || flowcell || samplesheet || sampleinfo)
+            return [meta, [fastq_1, fastq_2].findAll()]
+        aligned : (bam || cram) && !(fastq_1 || fastq_2 || flowcell || samplesheet || sampleinfo)
+            return [meta, [bam, cram].find()]
+        other: true
+            error "Unable to determine input type, please check inputs"
+    }
+    | set { ch_input }
 
-    ch_input_flowcell
-    | multiMap { meta, samplesheet, flowcell, sample_info ->
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// PROCESS FLOWCELL INPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+    ch_input.fc
+    | multiMap { meta, samplesheet, sampleinfo, flowcell ->
         fc   : [meta, samplesheet, flowcell]
-        info : sample_info
+        info : sampleinfo
     }
     | set { ch_flowcell }
 
@@ -118,43 +133,39 @@ workflow CMGGPREPROCESSING {
         BCL_DEMULTIPLEX.out.fastq,
         parse_sample_info_csv(ch_flowcell.info)
     )
-    | map { meta, reads ->
-        return [meta - meta.subMap('fcid', 'lane', 'library'), reads]
-    }
     | set {ch_demultiplexed_fastq}
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // PROCESS FASTQ INPUTS
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// PROCESS FASTQ INPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
-    ch_input_fastq
-    | map { meta, fastq_1, fastq_2 ->
+    ch_input.fastq
+    | map { meta, fastq ->
         // if no fastq_2, then single-end
-        single_end = fastq_2 ? false : true
+        single_end = fastq[1] ? false : true
         // add readgroup metadata
-        rg = readgroup_from_fastq(fastq_1)
+        rg = readgroup_from_fastq(fastq[0])
         rg = rg + [ 'SM': meta.samplename,
                     'LB': meta.library ?: "",
                     'PL': meta.platform ?: rg.PL,
                     'ID': meta.readgroup ?: rg.ID
                 ]
 
-        meta_with_readgroup = meta - meta.subMap('library', 'platform', 'readgroup') + ['single_end': single_end, 'readgroup': rg]
-        reads = single_end ? fastq_1 : [fastq_1, fastq_2]
+        meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
 
-        return [meta_with_readgroup, reads]
+        return [meta_with_readgroup, fastq]
     }
     | set {ch_input_fastq}
 
-    /*
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ASSOCIATE CORRECT GENOME TO SAMPLES
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    */
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ASSOCIATE CORRECT GENOME TO SAMPLES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
     ch_input_fastq
-    | mix(ch_demultiplexed_fastq, ch_input_bam, ch_input_cram)
+    | mix(ch_demultiplexed_fastq, ch_input.aligned)
     | map { meta, reads ->
         // set genome based on organism key
         if (meta.organism && !meta.genome) {
@@ -196,8 +207,9 @@ workflow CMGGPREPROCESSING {
         return [
             meta,
             bam,
-            WorkflowMain.getGenomeAttribute(meta.genome, "fasta"),
-            WorkflowMain.getGenomeAttribute(meta.genome, "fai")]
+            WorkflowMain.getGenomeAttribute(meta.genome, "fasta") ? WorkflowMain.getGenomeAttribute(meta.genome, "fasta") : [],
+            WorkflowMain.getGenomeAttribute(meta.genome, "fai") ? WorkflowMain.getGenomeAttribute(meta.genome, "fai") : []
+        ]
     }
     | set { ch_meta_reads_fasta_fai }
 
