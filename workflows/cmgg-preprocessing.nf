@@ -364,7 +364,7 @@ workflow CMGGPREPROCESSING {
 
     // Gather metrics from bam files
     // BAM_QC([meta, bam, bai], disable_picard)
-    BAM_QC( FASTQ_TO_CRAM.out.cram_crai, disable_picard)
+    BAM_QC(FASTQ_TO_CRAM.out.cram_crai, disable_picard)
     ch_multiqc_files = ch_multiqc_files.mix( BAM_QC.out.metrics.map { meta, metrics -> return metrics} )
     ch_versions      = ch_versions.mix(BAM_QC.out.versions)
 
