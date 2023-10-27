@@ -37,20 +37,21 @@ workflow BAM_QC {
 
 
             ch_to_qc.meta_reads_index
-            | branch {
-                hsmetrics  : meta.roi != null || meta.roi != []  // if roi is defined,
-                    return it
-                wgsmetrics : true
-                    return it
+            | branch { meta, reads, index ->
+                hsmetrics  : meta.roi != null // if roi is defined,
+                    return [meta, reads, index]
+                wgsmetrics : meta.roi == null // if roi is not defined,
+                    return [meta, reads, index]
             }
             | set {ch_for_picard}
 
+
             // WGS metrics
             ch_for_picard.wgsmetrics
-            | multiMap { meta, bam, bai ->
-                meta_bam_bai:   [meta, bam, bai]
-                meta_fasta:     WorkflowMain.getGenomeAttribute(meta.genome, 'fasta')
-                meta_fai:       WorkflowMain.getGenomeAttribute(meta.genome, 'fai')
+            | multiMap { meta, reads, index ->
+                meta_bam_bai:   [meta, reads, index]
+                meta_fasta:     [meta, WorkflowMain.getGenomeAttribute(meta.genome, 'fasta')]
+                meta_fai:       [meta, WorkflowMain.getGenomeAttribute(meta.genome, 'fai')]
                 interval_list:  []
             }
             | PICARD_COLLECTWGSMETRICS
@@ -59,8 +60,8 @@ workflow BAM_QC {
 
             // HS metrics
             ch_for_picard.hsmetrics
-            | multiMap { meta, bam, bai ->
-                meta_bam_bai_bait_target: [meta, bam, bai, meta.roi, meta.roi]
+            | multiMap { meta, reads, index ->
+                meta_bam_bai_bait_target: [meta, reads, index, meta.roi, meta.roi]
                 meta_fasta: [meta, WorkflowMain.getGenomeAttribute(meta.genome, 'fasta')]
                 meta_fai:   [meta, WorkflowMain.getGenomeAttribute(meta.genome, 'fai')]
                 meta_dict:  [meta, WorkflowMain.getGenomeAttribute(meta.genome, 'dict')]
