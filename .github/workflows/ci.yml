@@ -44,4 +44,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker  --aligner ${{ matrix.aligner }} --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker,s3_ugent  --aligner ${{ matrix.aligner }} --outdir ./results --igenomes_base s3://reference-data/genomes
