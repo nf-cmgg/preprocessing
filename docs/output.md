@@ -6,36 +6,30 @@ This document describes the output produced by the pipeline. Most of the plots a
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
-<!-- TODO nf-core: Write this documentation describing your workflow's output -->
-
-## Pipeline overview
-
-The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
-
-- [FastQC](#fastqc) - Raw read QC
-- [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
-- [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
-
-### FastQC
+### Sample Directories
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
-
+- `sample_id/`
+  - `*.CollectMultipleMetrics.*`: Picard CollectMultipleMetrics output files.
+  - `*.CollectWgsMetrics.*`: Picard CollectWgsMetrics output files.
+  - `*.cram`: sample CRAM file.
+  - `*.cram.crai`: sample CRAM index file.
+  - `*.fastp.html`: FastP HTML report.
+  - `*.fastp.json`: FastP JSON report.
+  - `*.flagstat`: samtools flagstat output.
+  - `*idxstats`: samtools idxstats output.
+  - `*.stats` : samtools stats output.
+  - `*.duplicate_metrics.txt`: BioBamBam Bamsormadup duplicates output.
+  - `*.mosdepth.*`: Mosdepth metrics files.
+  - `*.per-base.bed.gz`: Mosdepth per-base BED files.
+  - `*.per-base.bed.gz.csi`: Mosdepth per-base BED index files.
+  - `*.quantized.bed.gz`: Mosdepth quantized BED file.
+  - `*.quantized.bed.gz.csi`: Mosdepth quantized BED index file.
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
-
-![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
-
-![MultiQC - FastQC mean quality scores plot](images/mqc_fastqc_quality.png)
-
-![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
-
-> **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
+The sample directory contains all the output files for a single sample. The directory name is the sample name as specified in the sample sheet.
 
 ### MultiQC
 

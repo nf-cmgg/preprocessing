@@ -2,7 +2,7 @@
 
 [![GitHub Actions CI Status](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/workflows/nf-core%20CI/badge.svg)](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/actions?query=workflow%3A%22nf-core+CI%22)
 [![GitHub Actions Linting Status](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/workflows/nf-core%20linting/badge.svg)](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/actions?query=workflow%3A%22nf-core+linting%22)
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.0-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 
 ## Introduction
 
@@ -20,11 +20,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 5. Coverage analysis
 6. Compression
 
-![](docs/img/nf-cmgg-preprocessing.png)
-
 ## Quick Start
 
-1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=22.10.0`)
+1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=23.04.0`)
 
 2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
 
@@ -44,7 +42,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 4. Start running your own analysis!
 
    ```console
-   nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing --input flowcells.csv --samples samples.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
+   nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing --input samplesheet<.csv/.yaml> --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
    ```
 
 ## Flowchart
@@ -56,7 +54,7 @@ flowchart TB
 FC(["Flowcell (BCL)"])                          --> DEMULTIPLEX
 SS([SampleSheet])                               --> DEMULTIPLEX
 
-subgraph DEMULTIPLEX[Demultiplex]
+subgraph DEMULTIPLEX[Basecalling & Demultiplex]
     direction LR
     SAMPLESHEET([SampleSheet])                  --> BCLCONVERT[bcl-convert]
     FLOWCELL([Flowcell])                        --Split by LANE--> BCLCONVERT[bcl-convert]
@@ -66,21 +64,24 @@ end
 
 DEMULTIPLEX                                     --> FASTP[FastP: Trimming and QC]
 DEMULTIPLEX                                     --> DEMUX_REPORTS
-FASTP                                           --> IS_HUMAN{Human data?}
+FASTQ                                           --> FASTP
+BAM/CRAM                                        --> BAMTOFASTQ[Samtool collate/fastq]
+BAMTOFASTQ                                      --> FASTP
+FASTP                                           --> IS_HUMAN{Supported genome?}
 IS_HUMAN                                        --YES--> ALIGNMENT
 IS_HUMAN                                        --NO--> FASTQTOSAM
-FASTQTOSAM[Picard FastqToSam]                   --> UNALIGNED_BAM([Unaligned BAM]) --> A_CRAM
+FASTQTOSAM[Samtools import]                     --> A_CRAM
 
 subgraph ALIGNMENT
     direction TB
 
     subgraph ALIGNER
         direction LR
-        BOWTIE2[bowtie2-align] & SNAP[snap-aligner] --> SORT[Sorting]
+        BOWTIE2[bowtie2] & BWA[bwa-mem] & BWAMEM2[bwamem2] & DRAGMAP[DragMap] & SNAP[snap-aligner] --> SORT[Sorting]
     end
 
-    ALIGNER --> BamSorMaDUP
-    BamSorMaDUP                                 --> SORTBAM[Sorted/markdup bam] & MARKDUP_METRICS([Markduplicates Metrics])
+    ALIGNER --> SORTMARKDUP[Sort/Merge/Mark Duplicates]
+    SORTMARKDUP                                 --> SORTBAM[Sorted/markdup bam] & MARKDUP_METRICS([Markduplicates Metrics])
     SORTBAM                                     -->  ALN_CRAM([CRAM]) & MOSDEPTH[Mosdepth] & BAMQC[BAM QC Tools]
     MOSDEPTH                                    -->  COVERAGE_BED([Coverage BEDs]) & COVERAGE_METRICS([Coverage Metrics])
     BAMQC & MARKDUP_METRICS & COVERAGE_METRICS  -->  ALN_MULTIQC[MultiQC]

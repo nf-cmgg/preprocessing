@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix issue where unaligned samples were not merged and fixed naming
 - Add minimal support for sample "tags" in sample sheet
 - Add panel coverage analysis
-- Limit panel coverage analyses to samples with WES/WGS tags
 - Make BAM_ARCHIVE accept channels with cram files
 - Drop ELPREP support
 - Add support for cram and index outputs in SAMTOOLS_SORMADUP
@@ -20,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update to nf-core template v2.9
 - Start using nf-validation for input parsing
 - Drop support for generating aligner indices
+- Update to nf-core template v2.10
+- Add support for per-sample ROI BED files
+- Add support for yaml samplesheets
 
 ## v1.1.2
 
