@@ -51,51 +51,62 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 flowchart TB
 
-FC(["Flowcell (BCL)"])                          --> DEMULTIPLEX
-SS([SampleSheet])                               --> DEMULTIPLEX
-
 subgraph DEMULTIPLEX[Basecalling & Demultiplex]
     direction LR
-    SAMPLESHEET([SampleSheet])                  --> BCLCONVERT[bcl-convert]
-    FLOWCELL([Flowcell])                        --Split by LANE--> BCLCONVERT[bcl-convert]
-    BCLCONVERT                                  --> DEMUX_FASTQ([Fastq])
-    BCLCONVERT                                  --> DEMULTIPLEX_STATS([Demultiplex Reports])
+    SampleSheet --> BCL-convert
+    FlowCell    --Split by LANE--> BCL-convert
+    BCL-convert --> DEMULTIPLEX_STATS([Demultiplex Reports])
+    BCL-convert --> DEMUX_FASTQ([FastQ])
 end
 
-DEMULTIPLEX                                     --> FASTP[FastP: Trimming and QC]
-DEMULTIPLEX                                     --> DEMUX_REPORTS
-FASTQ                                           --> FASTP
-BAM/CRAM                                        --> BAMTOFASTQ[Samtool collate/fastq]
-BAMTOFASTQ                                      --> FASTP
-FASTP                                           --> IS_HUMAN{Supported genome?}
-IS_HUMAN                                        --YES--> ALIGNMENT
-IS_HUMAN                                        --NO--> FASTQTOSAM
-FASTQTOSAM[Samtools import]                     --> A_CRAM
+subgraph DEALIGNMENT[BAM/CRAM to FastQ]
+  direction TB
+  BAM/CRAM --> SAMTOOLS_COLLATE[Samtools Collate] --> SAMTOOLS_FASTQ[Samtools Fastq] --> DEALIGNED_FASTQ([FastQ])
+end
 
 subgraph ALIGNMENT
-    direction TB
-
+    direction LR
     subgraph ALIGNER
-        direction LR
-        BOWTIE2[bowtie2] & BWA[bwa-mem] & BWAMEM2[bwamem2] & DRAGMAP[DragMap] & SNAP[snap-aligner] --> SORT[Sorting]
+      direction TB
+      BWA-mem --> BAM
+      BWAmem2 --> BAM
+      DragMap --> BAM
+      Bowtie2 --> BAM
+      Snap    --> BAM
     end
-
-    ALIGNER --> SORTMARKDUP[Sort/Merge/Mark Duplicates]
-    SORTMARKDUP                                 --> SORTBAM[Sorted/markdup bam] & MARKDUP_METRICS([Markduplicates Metrics])
-    SORTBAM                                     -->  ALN_CRAM([CRAM]) & MOSDEPTH[Mosdepth] & BAMQC[BAM QC Tools]
-    MOSDEPTH                                    -->  COVERAGE_BED([Coverage BEDs]) & COVERAGE_METRICS([Coverage Metrics])
-    BAMQC & MARKDUP_METRICS & COVERAGE_METRICS  -->  ALN_MULTIQC[MultiQC]
+    FQ_TO_ALIGN([FastQ]) --> ALIGNER
+    ALIGNER --> Merge/Sort/MarkDuplicates --> Cram([Cram])
 end
 
-ALIGNMENT                                       --> A_CRAM([CRAM])
-ALIGNMENT                                       --> A_BAM_METRICS([BAM metrics])
-ALIGNMENT                                       --> A_COVERAGE_METRICS([Coverage metrics])
-ALIGNMENT                                       --> A_COVERAGE_BED([Coverage BED])
+subgraph FQtoUCRAM
+    direction TB
+    FQ_TO_CONVERT([FastQ])
+    --> Samtools_import
+    --> Unaligned_CRAM([Unaligned CRAM])
+end
 
-A_BAM_METRICS                                   --> MQC([Run MultiQC Report])
-A_COVERAGE_METRICS                              --> MQC
-FASTP                                           --> MQC
-DEMUX_REPORTS                                   --> MQC
+subgraph QC
+    direction TB
+    CRAM_TO_QC([Cram]) --> SAMTOOLS --> stats & idxstats & Flagstat
+    CRAM_TO_QC --> PICARD --> CollectWGSmetrics/CollectHsMetrics & CollectMultipleMetrics
+end
+
+subgraph COVERAGE
+    direction TB
+    CRAM_TO_COVERAGE([Cram]) --> Mosdepth --> BED([Coverage BED])
+end
+
+FQ_INPUT([FastQ Input]) --> SUPPORTED{Supported Genome?}
+DEMULTIPLEX --> SUPPORTED{Supported Genome?}
+DEALIGNMENT --> SUPPORTED{Supported Genome?}
+
+SUPPORTED{Supported Genome?} --> |Yes| ALIGNMENT
+SUPPORTED{Supported Genome?} --> |No| FQtoUCRAM
+
+ALIGNMENT --> QC
+ALIGNMENT --> COVERAGE
+COVERAGE --> MQC[MultiQC]
+QC --> MQC
 
 ```
 
