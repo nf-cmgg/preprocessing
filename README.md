@@ -59,12 +59,12 @@ subgraph DEMULTIPLEX[Basecalling & Demultiplex]
     BCL-convert --> DEMUX_FASTQ([FastQ])
 end
 
-subgraph DEALIGNMENT[BAM/CRAM to FastQ]
+subgraph DEALIGNMENT[Bam/Cram to FastQ Conversion]
   direction TB
   BAM/CRAM --> SAMTOOLS_COLLATE[Samtools Collate] --> SAMTOOLS_FASTQ[Samtools Fastq] --> DEALIGNED_FASTQ([FastQ])
 end
 
-subgraph ALIGNMENT
+subgraph ALIGNMENT[Alignment]
     direction LR
     subgraph ALIGNER
       direction TB
@@ -78,27 +78,28 @@ subgraph ALIGNMENT
     ALIGNER --> Merge/Sort/MarkDuplicates --> Cram([Cram])
 end
 
-subgraph FQtoUCRAM
+subgraph FQtoUCRAM[FastQ to Unaligned CRAM conversion]
     direction TB
     FQ_TO_CONVERT([FastQ])
     --> Samtools_import
     --> Unaligned_CRAM([Unaligned CRAM])
 end
 
-subgraph QC
+subgraph QC[Quality Assessment]
     direction TB
     CRAM_TO_QC([Cram]) --> SAMTOOLS --> stats & idxstats & Flagstat
     CRAM_TO_QC --> PICARD --> CollectWGSmetrics/CollectHsMetrics & CollectMultipleMetrics
 end
 
-subgraph COVERAGE
+subgraph COVERAGE[Coverage Analysis]
     direction TB
     CRAM_TO_COVERAGE([Cram]) --> Mosdepth --> BED([Coverage BED])
 end
 
 FQ_INPUT([FastQ Input]) --> SUPPORTED{Supported Genome?}
-DEMULTIPLEX --> SUPPORTED{Supported Genome?}
-DEALIGNMENT --> SUPPORTED{Supported Genome?}
+
+FC_INPUT([Flowcell Input]) --> DEMULTIPLEX --> SUPPORTED{Supported Genome?}
+BAMCRAM_INPUT([Bam/Cram Input]) --> DEALIGNMENT --> SUPPORTED{Supported Genome?}
 
 SUPPORTED{Supported Genome?} --> |Yes| ALIGNMENT
 SUPPORTED{Supported Genome?} --> |No| FQtoUCRAM
