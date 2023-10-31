@@ -53,8 +53,8 @@ flowchart TB
 
 subgraph DEMULTIPLEX[Basecalling & Demultiplex]
     direction LR
-    SampleSheet --> BCL-convert
-    FlowCell    --Split by LANE--> BCL-convert
+    SampleSheet([SampleSheet]) --> BCL-convert
+    FlowCell([Flowcell])    --Split by LANE--> BCL-convert
     BCL-convert --> DEMULTIPLEX_STATS([Demultiplex Reports])
     BCL-convert --> DEMUX_FASTQ([FastQ])
 end
@@ -66,16 +66,17 @@ end
 
 subgraph ALIGNMENT[Alignment]
     direction LR
-    subgraph ALIGNER
-      direction TB
-      BWA-mem --> BAM
-      BWAmem2 --> BAM
-      DragMap --> BAM
-      Bowtie2 --> BAM
-      Snap    --> BAM
-    end
-    FQ_TO_ALIGN([FastQ]) --> ALIGNER
-    ALIGNER --> Merge/Sort/MarkDuplicates --> Cram([Cram])
+
+      FQ_TO_ALIGN([FastQ]) --> Aligner{Aligner?}
+      Aligner{Aligner?} --> |BWA-mem| MarkDup
+      Aligner{Aligner?} --> |BWAmem2| MarkDup
+      Aligner{Aligner?} --> |DragMap| MarkDup
+      Aligner{Aligner?} --> |Bowtie2| MarkDup
+      Aligner{Aligner?} --> |Snap   | MarkDup
+
+      MarkDup{Mark Duplicates?} --> |BamSorMaDup| Cram([Cram])
+      MarkDup{Mark Duplicates?} --> |Samtools MarkDup| Cram([Cram])
+      MarkDup{Mark Duplicates?} --> |Samtools Merge| Cram([Cram])
 end
 
 subgraph FQtoUCRAM[FastQ to Unaligned CRAM conversion]
@@ -98,7 +99,9 @@ end
 
 FQ_INPUT([FastQ Input]) --> SUPPORTED{Supported Genome?}
 
-FC_INPUT([Flowcell Input]) --> DEMULTIPLEX --> SUPPORTED{Supported Genome?}
+FC_INPUT([Flowcell Input]) --> DEMULTIPLEX
+DEMULTIPLEX -->|FastQ| SUPPORTED{Supported Genome?}
+DEMULTIPLEX -->|Reports| MQC[MultiQC]
 BAMCRAM_INPUT([Bam/Cram Input]) --> DEALIGNMENT --> SUPPORTED{Supported Genome?}
 
 SUPPORTED{Supported Genome?} --> |Yes| ALIGNMENT
