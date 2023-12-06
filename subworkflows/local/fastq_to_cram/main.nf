@@ -89,7 +89,7 @@ workflow FASTQ_TO_CRAM {
         switch (markdup) {
             case "bamsormadup":
                 // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
-                BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_fasta)
+                BIOBAMBAM_BAMSORMADUP(ch_bam_per_sample, ch_meta_fasta)
                 ch_markdup_bam_bai = BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index, failOnMismatch:true, failOnDuplicate:true)
                 ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
                 ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
