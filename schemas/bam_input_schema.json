@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/samplesheet_schema.json",
+    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing params.bam schema",
+    "description": "Schema for the file provided with params.bam",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "meta": ["id"],
+                "unique": true,
+                "type": "string",
+                "description": "Unique sample ID",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "samplename": {
+                "meta": ["samplename"],
+                "unique": ["id"],
+                "type": "string",
+                "description": "Sample name",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "organism": {
+                "meta": ["organism"],
+                "type": "string",
+                "description": "Sample organism",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "tag": {
+                "meta": ["tag"],
+                "type": "string",
+                "description": "Sample tag",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "single_end": {
+                "meta": ["single_end"],
+                "description": "Whether the sample is single end data or not",
+                "type": "boolean",
+                "default": false
+            },
+            "bam": {
+                "type": "string",
+                "pattern": "^\\S+(bam)$",
+                "format": "file-path",
+                "errorMessage": "BAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
+            }
+        }
+    }
+}

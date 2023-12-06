@@ -1,0 +1,2 @@
+id,samplesheet,lane,flowcell,sample_info
+220422_M11111_0222_000000000-K9H97,tests/samplesheets/flowcell/SampleSheet.csv,1,https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/MiSeq/220422_M11111_0222_000000000-K9H97.tar.gz,tests/samplesheets/flowcell/sample_info.csv

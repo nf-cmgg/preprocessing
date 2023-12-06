@@ -3,6 +3,24 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.0
+
+- Add fix for sample replicates with different split sizes
+- Add option to use samtools for duplicate marking
+- Updated modules
+- Updated to nf-core template v2.8
+- Fix issue where unaligned samples were not merged and fixed naming
+- Add minimal support for sample "tags" in sample sheet
+- Add panel coverage analysis
+- Limit panel coverage analyses to samples with WES/WGS tags
+- Make BAM_ARCHIVE accept channels with cram files
+- Drop ELPREP support
+- Add support for cram and index outputs in SAMTOOLS_SORMADUP
+- Add option to disable marking duplicates
+- Update to nf-core template v2.9
+- Start using nf-validation for input parsing
+- Drop support for generating aligner indices
+
 ## v1.1.2
 
 - Support for bamprocessing with ELPREP
