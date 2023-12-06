@@ -2,10 +2,10 @@ process PANEL_COVERAGE {
     tag "$meta.id"
     label 'process_single'
 
-    conda "bioconda::pybedtools=0.9.0"
+    conda "bioconda::pybedtools=0.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pybedtools:0.9.0--py310h590eda1_1' :
-        'biocontainers/pybedtools:0.9.0--py310h590eda1_1' }"
+        'https://depot.galaxyproject.org/singularity/pybedtools:0.9.1--py38he0f268d_0' :
+        'biocontainers/pybedtools:0.9.1--py38he0f268d_0' }"
 
     input:
     tuple val(meta), path(per_base_bed), path(genelist_bed)
