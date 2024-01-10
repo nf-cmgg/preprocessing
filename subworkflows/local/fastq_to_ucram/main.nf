@@ -35,7 +35,7 @@ workflow FASTQ_TO_UCRAM {
         FGBIO_FASTQTOBAM.out.bam.map {
             // set id to samplename, drop readgroup and count meta values
             meta, files ->
-            def gk = (meta.chunks ?: 1)
+            def gk = (meta.chunks as Integer ?: 1)
             return [
                 groupKey(
                     // replace id by samplename, drop readgroup meta and chunks
@@ -49,7 +49,7 @@ workflow FASTQ_TO_UCRAM {
         .dump(tag: "FASTQ_TO_UCRAM: unaligned bam per replicate",pretty: true)
         .map {
             meta, files ->
-            def gk = (meta.count ?: 1)
+            def gk = (meta.count as Integer ?: 1)
             return [
                 groupKey(
                     // drop count
