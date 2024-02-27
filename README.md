@@ -1,12 +1,12 @@
-# CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+# nf-cmgg/preprocessing
 
-[![GitHub Actions CI Status](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/workflows/nf-core%20CI/badge.svg)](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/actions?query=workflow%3A%22nf-core+CI%22)
-[![GitHub Actions Linting Status](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/workflows/nf-core%20linting/badge.svg)](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/actions?query=workflow%3A%22nf-core+linting%22)
+[![GitHub Actions CI Status](https://github.com/nf-cmgg/preprocessing/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions?query=workflow%3A%22nf-core+CI%22)
+[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions?query=workflow%3A%22nf-core+linting%22)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.0-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 
 ## Introduction
 
-**CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing** is a bioinformatics best-practice analysis pipeline for sequencing data preprocessing at CMGG.
+**nf-cmgg/preprocessing** is a bioinformatics best-practice analysis pipeline for sequencing data preprocessing at CMGG.
 This workflow handles demultiplexing, alignment, qc and archiving.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
@@ -20,7 +20,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 5. Coverage analysis
 6. Compression
 
-![](docs/img/nf-cmgg-preprocessing.png)
+![](docs/img/preprocessing.png)
 
 ## Quick Start
 
@@ -31,7 +31,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
    ```console
-   nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing -profile test,YOURPROFILE --outdir <OUTDIR>
+   nextflow run nf-cmgg/preprocessing -profile test,YOURPROFILE --outdir <OUTDIR>
    ```
 
    Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
@@ -44,7 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 4. Start running your own analysis!
 
    ```console
-   nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing --input flowcells.csv --samples samples.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
+   nextflow run nf-cmgg/preprocessing --input flowcells.csv --samples samples.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
    ```
 
 ## Flowchart
@@ -100,7 +100,7 @@ DEMUX_REPORTS                                   --> MQC
 
 ## Credits
 
-CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing was originally written by Matthias De Smet.
+nf-cmgg/preprocessing was originally written by Matthias De Smet.
 
 ## Contributions and Support
 
@@ -109,7 +109,7 @@ If you would like to contribute to this pipeline, please see the [contributing g
 ## Citations
 
 <!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use  CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+<!-- If you use  nf-cmgg/preprocessing for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
 
 <!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 

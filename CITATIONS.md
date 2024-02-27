@@ -1,4 +1,4 @@
-# CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing: Citations
+# nf-cmgg/preprocessing: Citations
 
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 

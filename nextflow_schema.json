@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/nextflow_schema.json",
-    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/nf-cmgg/preprocessing/master/nextflow_schema.json",
+    "title": "nf-cmgg/preprocessing pipeline parameters",
     "description": "Preprocessing workflow for sequencing data at CMGG",
     "type": "object",
     "definitions": {
@@ -300,7 +300,7 @@
                 },
                 "cmgg_config_base": {
                     "type": "string",
-                    "default": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-config/main",
+                    "default": "https://raw.githubusercontent.com/nf-cmgg/nf-cmgg-config/main",
                     "description": "Base directory for Institutional configs."
                 }
             }
@@ -412,7 +412,7 @@
                 },
                 "multiqc_logo": {
                     "type": "string",
-                    "default": "/Users/matdsmet/Projects/nf-cmgg-preprocessing/assets/CMGG_logo.png",
+                    "default": "/Users/matdsmet/Projects/preprocessing/assets/CMGG_logo.png",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
                     "hidden": true

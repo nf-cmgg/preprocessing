@@ -55,8 +55,8 @@
                             "id": "test_cram",
                             "single_end": false
                         },
-                        "/CenterForMedicalGeneticsGhent/nf-cmgg-test-datasets/main/data/genomics/homo_sapiens/illumina/cram/test.cram",
-                        "/CenterForMedicalGeneticsGhent/nf-cmgg-test-datasets/main/data/genomics/homo_sapiens/illumina/cram/test.cram.crai"
+                        "/nf-cmgg/nf-cmgg-test-datasets/main/data/genomics/homo_sapiens/illumina/cram/test.cram",
+                        "/nf-cmgg/nf-cmgg-test-datasets/main/data/genomics/homo_sapiens/illumina/cram/test.cram.crai"
                     ],
                     [
                         {

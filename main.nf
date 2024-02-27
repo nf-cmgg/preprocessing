@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+    nf-cmgg/preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+    Github : https://github.com/nf-cmgg/preprocessing
 ----------------------------------------------------------------------------------------
 */
 
@@ -59,7 +59,7 @@ WorkflowMain.initialise(workflow, params, log)
 include { CMGGPREPROCESSING } from "./workflows/cmgg-preprocessing"
 
 //
-// WORKFLOW: Run main CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing analysis pipeline
+// WORKFLOW: Run main nf-cmgg/preprocessing analysis pipeline
 //
 workflow CMGG_CMGGPREPROCESSING {
     CMGGPREPROCESSING ()

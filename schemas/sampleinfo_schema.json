@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/master/sampleinfo_schema.json",
-    "title": "CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing sample info schema",
+    "$id": "https://raw.githubusercontent.com/nf-cmgg/preprocessing/master/sampleinfo_schema.json",
+    "title": "nf-cmgg/preprocessing sample info schema",
     "description": "Schema for the file provided with under the sample_info key of params.flowcell",
     "type": "array",
     "items": {

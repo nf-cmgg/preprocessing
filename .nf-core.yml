@@ -1,26 +1,26 @@
 repository_type: pipeline
 template:
-  name: nf-cmgg-preprocessing
+  name: preprocessing
   description: Preprocessing workflow for sequencing data at CMGG
   author: matthdsm
-  prefix: CenterForMedicalGeneticsGhent
+  prefix: nf-cmgg
 lint:
   files_exist:
-    - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
+    - assets/nf-core-preprocessing_logo_light.png
     - conf/test.config
     - conf/test_full.config
     - CODE_OF_CONDUCT.md
-    - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
-    - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
+    - docs/images/nf-core-preprocessing_logo_light.png
+    - docs/images/nf-core-preprocessing_logo_dark.png
     - lib/nfcore_external_java_deps.jar
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
   files_unchanged:
     - CODE_OF_CONDUCT.md
-    - assets/nf-core-nf-cmgg-preprocessing_logo_light.png
-    - docs/images/nf-core-nf-cmgg-preprocessing_logo_light.png
-    - docs/images/nf-core-nf-cmgg-preprocessing_logo_dark.png
+    - assets/nf-core-preprocessing_logo_light.png
+    - docs/images/nf-core-preprocessing_logo_light.png
+    - docs/images/nf-core-preprocessing_logo_dark.png
     - .github/ISSUE_TEMPLATE/bug_report.yml
     - .gitignore
   multiqc_config:

@@ -1,5 +1,5 @@
 //
-// This file holds several functions specific to the workflow/cmgg-preprocessing.nf in the CenterForMedicalGenetics/nf-cmgg-preprocessing pipeline
+// This file holds several functions specific to the workflow/cmgg-preprocessing.nf in the CenterForMedicalGenetics/preprocessing pipeline
 //
 
 import nextflow.Nextflow
