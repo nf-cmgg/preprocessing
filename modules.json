@@ -143,6 +143,12 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/sormadup/samtools-sormadup.diff"
                     },
+                    "samtools/sort": {
+                        "branch": "master",
+                        "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/samtools/sort/samtools-sort.diff"
+                    },
                     "samtools/stats": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",

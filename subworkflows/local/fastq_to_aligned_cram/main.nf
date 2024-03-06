@@ -8,7 +8,7 @@
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
-include { SAMTOOLS_MULTISORT    } from "../../../modules/local/samtools/multisort/main"
+include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
 
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
@@ -102,10 +102,10 @@ workflow FASTQ_TO_CRAM {
 
             case ["false", false]:
                 // Merge bam files and compress
-                // SAMTOOLS_MULTISORT([meta, [bam, bam], fasta])
-                SAMTOOLS_MULTISORT(ch_bam_fasta)
-                ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_MULTISORT.out.cram.join(SAMTOOLS_MULTISORT.out.crai, failOnMismatch:true, failOnDuplicate:true))
-                ch_versions = ch_versions.mix(SAMTOOLS_MULTISORT.out.versions)
+                // SAMTOOLS_SORT([meta, [bam, bam], fasta])
+                SAMTOOLS_SORT(ch_bam_fasta)
+                ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch:true, failOnDuplicate:true))
+                ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
                 break
             default:
                 error "markdup: ${markdup} not supported"
