@@ -51,23 +51,13 @@
                     "type": "string",
                     "default": "bowtie2",
                     "description": "Which aligner to use",
-                    "enum": [
-                        "bowtie2",
-                        "bwamem",
-                        "bwamem2",
-                        "dragmap",
-                        "snap"
-                    ]
+                    "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"]
                 },
                 "markdup": {
                     "type": "string",
                     "default": "bamsormadup",
                     "description": "Which alignment postprocessor to use",
-                    "enum": [
-                        "bamsormadup",
-                        "samtools",
-                        "false"
-                    ]
+                    "enum": ["bamsormadup", "samtools", "false"]
                 },
                 "run_coverage": {
                     "type": "boolean",
@@ -85,9 +75,7 @@
                     "description": "Disable the calculation of (slow) Picard metrics"
                 }
             },
-            "required": [
-                "aligner"
-            ]
+            "required": ["aligner"]
         },
         "reference_genome_options": {
             "title": "Reference genome options",
