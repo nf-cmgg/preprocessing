@@ -1,3 +1,0 @@
-id,samplename,organism,tag,cram
-cram1,cram1,Homo sapiens,WES,https://github.com/nf-cmgg/nf-cmgg-test-datasets/raw/main/data/genomics/homo_sapiens/illumina/cram/test.cram
-cram2,cram2,Homo sapiens,WES,https://github.com/nf-cmgg/nf-cmgg-test-datasets/raw/main/data/genomics/homo_sapiens/illumina/cram/test2.cram

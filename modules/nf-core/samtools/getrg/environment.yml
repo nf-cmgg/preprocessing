@@ -1,7 +1,0 @@
-name: samtools_getrg
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-dependencies:
-  - bioconda::samtools=1.18

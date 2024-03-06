@@ -1,7 +1,0 @@
-name: snapaligner_align
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-dependencies:
-  - bioconda::snap-aligner=2.0.3
