@@ -1,28 +1,51 @@
 [![GitHub Actions CI Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
-
+[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-cmgg/preprocessing)
 
 ## Introduction
 
-**nf-cmgg/preprocessing** is a bioinformatics pipeline that ...
+**nf-cmgg/preprocessing** is a bioinformatics pipeline that demultiplexes and aligns raw sequencing data.
+It also performs basic QC and coverage analysis.
+The pipeline is built using Nextflow, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
+Steps inlcude:
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+1. Demultiplexing using [`BCLconvert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
+2. Read QC and trimming using [`fastp`](https://github.com/OpenGene/fastp)
+3. Alignment using either [`bwa`](), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bowtie2`](https://github.com/BenLangmead/bowtie2) or [`snap`](https://github.com/amplab/snap)
+4. Duplicate marking using [`bamsormadup`](https://gitlab.com/german.tischler/biobambam2) or [`samtools markdup`](http://www.htslib.org/doc/samtools-markdup.html)
+5. Coverage analysis using [`mosdepth`](https://github.com/brentp/mosdepth) and [`samtools coverage`](http://www.htslib.org/doc/samtools-coverage.html)
+6. Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`picard CollecHsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectHsMetrics), [`picard CollectWgsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics), [`picard CollectMultipleMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics)
+7. QC aggregation using [`multiqc`](https://multiqc.info/)
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+```mermaid
+---
+title: "nf-cmgg/preprocessing"
+---
+flowchart TD
+    A[Demultiplexing] -->|BCLconvert| B[Demultiplexed fastq]
+    B -->|fastp| C[Trimmed fastq]
+    C -->|bwa| D[Aligned bam]
+    C -->|bwa-mem2| D
+    C -->|bowtie2| D
+    C -->|snap| D
+    D -->|bamsormadup| E[Marked bam]
+    D -->|samtools markdup| E
+    E -->|mosdepth| F[Coverage]
+    E -->|samtools coverage| F
+    E -->|samtools flagstat| G[Alignment QC]
+    E -->|samtools stats| G
+    E -->|samtools idxstats| G
+    E -->|picard CollecHsMetrics| G
+    E -->|picard CollectWgsMetrics| G
+    E -->|picard CollectMultipleMetrics| G
+    F -->|multiqc| H[QC report]
+    G -->|multiqc| H
+
+```
 
 ## Usage
 
@@ -52,6 +75,7 @@ Now, you can run the pipeline using:
 ```bash
 nextflow run nf-cmgg/preprocessing \
    -profile <docker/singularity/.../institute> \
+   --igenomes_base /path/to/genomes \
    --input samplesheet.csv \
    --outdir <OUTDIR>
 ```
@@ -62,24 +86,9 @@ nextflow run nf-cmgg/preprocessing \
 
 ## Credits
 
-nf-cmgg/preprocessing was originally written by CMGG ICT team.
+nf-cmgg/preprocessing was originally written by the CMGG ICT team.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
-
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
-
-## Contributions and Support
-
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
-
-## Citations
-
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use nf-cmgg/preprocessing for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
-
-An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
+## Support
 
 This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
 

@@ -1,6 +1,7 @@
 lint:
   files_exist:
     - CODE_OF_CONDUCT.md
+    - CITATIONS.md
     - assets/nf-core-preprocessing_logo_light.png
     - docs/images/nf-core-preprocessing_logo_light.png
     - docs/images/nf-core-preprocessing_logo_dark.png
