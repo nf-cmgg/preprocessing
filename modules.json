@@ -102,7 +102,7 @@
                     },
                     "samtools/convert": {
                         "branch": "master",
-                        "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
+                        "git_sha": "1b93e06140e6807cc408519759f68bd26da63a00",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/convert/samtools-convert.diff"
                     },

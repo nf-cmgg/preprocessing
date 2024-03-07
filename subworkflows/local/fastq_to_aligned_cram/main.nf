@@ -136,7 +136,11 @@ workflow FASTQ_TO_CRAM {
 
         SAMTOOLS_CONVERT(ch_bam_bai_fasta_fai)
 
-        ch_cram_crai = ch_markdup_index.cram.mix(SAMTOOLS_CONVERT.out.alignment_index)
+        ch_markdup_index.cram
+        .mix(
+            SAMTOOLS_CONVERT.out.cram.join(SAMTOOLS_CONVERT.out.crai, failOnMismatch:true, failOnDuplicate:true)
+        )
+        .set{ch_cram_crai}
         ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
     emit:

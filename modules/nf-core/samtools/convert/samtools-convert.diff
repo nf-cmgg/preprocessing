@@ -19,6 +19,6 @@ Changes in module 'nf-core/samtools/convert'
 +    tuple val(meta), path(input), path(index), path(fasta), path(fai)
  
      output:
-     tuple val(meta), path("*.{cram,bam}"), path("*.{crai,bai}") , emit: alignment_index
+     tuple val(meta), path("*.bam")  , emit: bam ,   optional: true
 
 ************************************************************
