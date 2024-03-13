@@ -66,7 +66,7 @@ workflow FASTQ_TO_UCRAM {
 
         // Merge bam files per sample
         SAMTOOLS_CAT(ch_ubam_per_sample)
-        ch_versions = ch_versions.mix(SAMTOOLS_CAT.out.versions.first())
+        ch_versions = ch_versions.mix(SAMTOOLS_CAT.out.versions)
 
     emit:
         cram_crai = SAMTOOLS_CAT.out.cram    // [meta, cram]

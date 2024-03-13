@@ -22,7 +22,7 @@ workflow BAM_QC {
     .set{ ch_bam_bai_fasta }
 
     SAMTOOLS_STATS ( ch_bam_bai_fasta )
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(SAMTOOLS_STATS.out.stats)
 
     ch_bam_bai_fasta
@@ -30,11 +30,11 @@ workflow BAM_QC {
     .set{ ch_bam_bai }
 
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )
-    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(SAMTOOLS_FLAGSTAT.out.flagstat)
 
     SAMTOOLS_IDXSTATS ( ch_bam_bai )
-    ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(SAMTOOLS_IDXSTATS.out.idxstats)
 
     if (!disable_picard) {
@@ -44,7 +44,7 @@ workflow BAM_QC {
         .set{ ch_bam_bai_fasta_fai }
 
         PICARD_COLLECTMULTIPLEMETRICS ( ch_bam_bai_fasta_fai )
-        ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
+        ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions)
         ch_multiqc_files = ch_multiqc_files.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
 
         ch_bam_bai_roi_fasta_fai_dict
@@ -57,11 +57,11 @@ workflow BAM_QC {
         .set{ch_picard}
 
         PICARD_COLLECTWGSMETRICS ( ch_picard.wgsmetrics, [] )
-        ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions.first())
+        ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions)
         ch_multiqc_files = ch_multiqc_files.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
 
         PICARD_COLLECTHSMETRICS ( ch_picard.hsmetrics )
-        ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
+        ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions)
         ch_multiqc_files = ch_multiqc_files.mix(PICARD_COLLECTHSMETRICS.out.metrics)
     }
 
