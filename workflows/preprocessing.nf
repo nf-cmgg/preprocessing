@@ -162,7 +162,7 @@ workflow PREPROCESSING {
     // FASTP([meta, fastq], adapter_fasta, save_trimmed, save_merged)
     FASTP(ch_fastq_per_sample, [], false, false)
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
-    ch_versions      = ch_versions.mix(FASTP.out.versions)
+    ch_versions      = ch_versions.mix(FASTP.out.versions.first())
 
     // edit meta.id to match sample name
     FASTP.out.reads
@@ -248,7 +248,7 @@ workflow PREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(
         SAMTOOLS_COVERAGE.out.coverage.map{ meta, txt -> return txt }
     )
-    ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions).first()
+    ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
 
     FASTQ_TO_CRAM.out.cram_crai
     .map { meta, cram, crai ->
@@ -278,7 +278,7 @@ workflow PREPROCESSING {
         MOSDEPTH.out.global_txt.map{ meta, txt -> return txt },
         MOSDEPTH.out.regions_txt.map{ meta, txt -> return txt }
     )
-    ch_versions = ch_versions.mix(MOSDEPTH.out.versions).first()
+    ch_versions = ch_versions.mix(MOSDEPTH.out.versions.first())
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
