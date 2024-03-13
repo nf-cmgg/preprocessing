@@ -69,6 +69,26 @@
                     "description": "Skip adapter trimming",
                     "default": false
                 },
+                "trim_front": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to trim from the front of the read"
+                },
+                "trim_tail": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of bases to trim from the tail of the read"
+                },
+                "adapter_R1": {
+                    "type": "string",
+                    "default": null,
+                    "description": "Adapter sequence to be trimmed"
+                },
+                "adapter_R2": {
+                    "type": "string",
+                    "default": null,
+                    "description": "Adapter sequence to be trimmed"
+                },
                 "disable_picard_metrics": {
                     "type": "boolean",
                     "default": false,
