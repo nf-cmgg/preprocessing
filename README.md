@@ -26,6 +26,8 @@ Steps inlcude:
 title: "nf-cmgg/preprocessing"
 ---
 flowchart TD
+
+    FASTQ_INPUTS[Fastq inputs] -->|fastp| C
     A[Demultiplexing] -->|BCLconvert| B[Demultiplexed fastq]
     B -->|fastp| C[Trimmed fastq]
     C -->|bwa| D[Aligned bam]
@@ -52,25 +54,30 @@ flowchart TD
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
 First, prepare a samplesheet with your input data that looks as follows:
 
-`samplesheet.csv`:
+`samplesheet.csv` for fastq inputs:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+id,samplename,organism,library,fastq_1,fastq_2
+sample1,sample1,Homo sapiens,Library_Name,reads1.fq.gz,reads2.fq.gz
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+`samplesheet.csv` for flowcell inputs:
 
--->
+```csv
+id,samplesheet,lane,flowcell,sample_info
+flowcell_id,/path/to/illumina_samplesheet.csv,1,/path/to/sequencer_uploaddir,/path/to/sampleinfo.csv
+```
+
+`sampleinfo.csv` for use with flowcell inputs:
+
+```csv
+samplename,library,organism,tag
+fc_sample1,test,Homo sapiens,WES
+```
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run nf-cmgg/preprocessing \
