@@ -27,7 +27,7 @@ workflow FASTQ_TO_UCRAM {
 
         // SAMTOOLS_IMPORT([meta, fastq])
         SAMTOOLS_IMPORT(ch_fastq)
-        ch_versions = ch_versions.mix(SAMTOOLS_IMPORT.first())
+        ch_versions = ch_versions.mix(SAMTOOLS_IMPORT.versions)
 
         SAMTOOLS_IMPORT.out.cram
         .map {
