@@ -1,3 +1,5 @@
+# ![nf-cmgg/preprocessing](docs/images/nf-cmgg-preprocessing_logo_light.png#gh-light-mode-only) ![nf-cmgg/preprocessing](docs/images/nf-cmgg-preprocessing_logo_dark.png#gh-dark-mode-only)
+
 [![GitHub Actions CI Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/ci.yml)
 [![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
