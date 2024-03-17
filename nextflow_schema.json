@@ -93,6 +93,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Disable the calculation of (slow) Picard metrics"
+                },
+                "roi": {
+                    "type": "string",
+                    "default": null,
+                    "description": "Region of interest for coverage analysis to be applied to all samples"
                 }
             },
             "required": ["aligner"]

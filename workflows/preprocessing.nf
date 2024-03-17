@@ -36,6 +36,7 @@ workflow PREPROCESSING {
     genomes        // map: genome reference files
     aligner        // string: aligner to use
     markdup        // string: markdup method to use
+    roi            // file: regions of interest bed file to be applied to all samples
 
     main:
     ch_versions = Channel.empty()
@@ -53,6 +54,8 @@ workflow PREPROCESSING {
             error "Unable to determine input type, please check inputs"
     }
     .set{ch_inputs_from_samplesheet}
+
+    roi = roi ? file(roi, checkIfExists:true) : null
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -132,6 +135,11 @@ workflow PREPROCESSING {
         }
         if (genomes && genomes[meta.genome]){
             meta = meta + ["genome": genomes[meta.genome]]
+        }
+
+        // set the ROI
+        if (roi && !meta.roi) {
+            meta = meta.subMap("roi") + ["roi": roi]
         }
         return [meta, reads]
     }

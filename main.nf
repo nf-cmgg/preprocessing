@@ -35,6 +35,7 @@ workflow NFCMGG_PREPROCESSING {
     genomes     // map: genome reference files
     aligner     // string: aligner to use
     markdup     // string: markdup method to use
+    roi         // string: region of interest to use
 
     main:
 
@@ -45,7 +46,8 @@ workflow NFCMGG_PREPROCESSING {
         samplesheet,
         genomes,
         aligner,
-        markdup
+        markdup,
+        roi,
     )
 
     emit:
@@ -82,7 +84,8 @@ workflow {
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
         params.aligner,
-        params.markdup
+        params.markdup,
+        params.roi,
     )
 
     //
