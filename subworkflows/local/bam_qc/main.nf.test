@@ -1,0 +1,106 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_QC"
+    script "subworkflows/local/bam_qc/main.nf"
+    workflow "BAM_QC"
+
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/bam_qc"
+
+    test("Bam QC - HSmetrics") {
+
+        when {
+            workflow {
+                """
+                // [meta, bam, bai, roi, fasta, fai, dict]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict", checkIfExists: true),
+                ])
+                // boolean
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                workflow.out.samtools_stats,
+                workflow.out.samtools_flagstat,
+                workflow.out.samtools_idxstats,
+                file(workflow.out.picard_multiplemetrics[0][1][0]).name,
+                file(workflow.out.picard_hsmetrics[0][1]).name,
+            ).match()
+        }
+
+    }
+
+    test("Bam QC - WGSmetrics") {
+        when {
+            workflow {
+                """
+                // [meta, bam, bai, roi, fasta, fai, dict]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
+                    [],
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict", checkIfExists: true),
+                ])
+                // boolean
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                workflow.out.samtools_stats,
+                workflow.out.samtools_flagstat,
+                workflow.out.samtools_idxstats,
+                file(workflow.out.picard_multiplemetrics[0][1][0]).name,
+                file(workflow.out.picard_wgsmetrics[0][1]).name,
+            ).match()
+        }
+    }
+
+    test("Bam QC - Samtools") {
+        when {
+            workflow {
+                """
+                // [meta, bam, bai, roi, fasta, fai, dict]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict", checkIfExists: true),
+                ])
+                // boolean
+                input[1] = true
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                workflow.out.samtools_stats,
+                workflow.out.samtools_flagstat,
+                workflow.out.samtools_idxstats,
+            ).match()
+        }
+    }
+}

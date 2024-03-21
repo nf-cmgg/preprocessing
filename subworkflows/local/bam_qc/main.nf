@@ -15,7 +15,6 @@ workflow BAM_QC {
 
     main:
     ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
 
     ch_bam_bai_roi_fasta_fai_dict
     .map{ meta, bam, bai, roi, fasta, fai, dict -> return [meta, bam, bai, fasta]}
@@ -23,7 +22,6 @@ workflow BAM_QC {
 
     SAMTOOLS_STATS ( ch_bam_bai_fasta )
     ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
-    ch_multiqc_files = ch_multiqc_files.mix(SAMTOOLS_STATS.out.stats)
 
     ch_bam_bai_fasta
     .map{ meta, bam, bai, fasta -> return [meta, bam, bai]}
@@ -31,12 +29,13 @@ workflow BAM_QC {
 
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )
     ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions)
-    ch_multiqc_files = ch_multiqc_files.mix(SAMTOOLS_FLAGSTAT.out.flagstat)
 
     SAMTOOLS_IDXSTATS ( ch_bam_bai )
     ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions)
-    ch_multiqc_files = ch_multiqc_files.mix(SAMTOOLS_IDXSTATS.out.idxstats)
 
+    ch_picard_hsmetrics = Channel.empty()
+    ch_picard_multiplemetrics = Channel.empty()
+    ch_picard_wgsmetrics = Channel.empty()
     if (!disable_picard) {
 
         ch_bam_bai_roi_fasta_fai_dict
@@ -45,7 +44,7 @@ workflow BAM_QC {
 
         PICARD_COLLECTMULTIPLEMETRICS ( ch_bam_bai_fasta_fai )
         ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
+        ch_picard_multiplemetrics = ch_picard_multiplemetrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
 
         ch_bam_bai_roi_fasta_fai_dict
         .branch{ meta, bam, bai, roi, fasta, fai, dict ->
@@ -58,14 +57,19 @@ workflow BAM_QC {
 
         PICARD_COLLECTWGSMETRICS ( ch_picard.wgsmetrics, [] )
         ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
+        ch_picard_wgsmetrics = ch_picard_wgsmetrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
 
         PICARD_COLLECTHSMETRICS ( ch_picard.hsmetrics )
         ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(PICARD_COLLECTHSMETRICS.out.metrics)
+        ch_picard_hsmetrics = ch_picard_hsmetrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
     }
 
     emit:
-    multiqc_files   = ch_multiqc_files  // channel: [ path(stats), path(stats) ]
-    versions        = ch_versions       // channel: [ path(versions.yml) ]
+    samtools_stats          = SAMTOOLS_STATS.out.stats
+    samtools_flagstat       = SAMTOOLS_FLAGSTAT.out.flagstat
+    samtools_idxstats       = SAMTOOLS_IDXSTATS.out.idxstats
+    picard_multiplemetrics  = ch_picard_multiplemetrics
+    picard_wgsmetrics       = ch_picard_wgsmetrics
+    picard_hsmetrics        = ch_picard_hsmetrics
+    versions                = ch_versions
 }
