@@ -4,7 +4,11 @@ nextflow_workflow {
     script "subworkflows/local/fastq_to_aligned_cram/main.nf"
     workflow "FASTQ_TO_CRAM"
 
-    test("test_fastq_to_cram_bwa_bamsormadup") {
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/fastq_to_aligned_cram"
+
+    test("fastq to cram - bwa - bamsormadup") {
         when {
             workflow {
                 """
@@ -36,12 +40,20 @@ nextflow_workflow {
 
         then {
             assertAll(
-                { assert workflow.success}
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
             )
         }
     }
 
-    test("test_fastq_to_cram_bwa_samtools_sormadup") {
+    test("fastq to cram - bwa - samtools sormadup") {
         when {
             workflow {
                 """
@@ -73,12 +85,20 @@ nextflow_workflow {
 
         then {
             assertAll(
-                { assert workflow.success}
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
             )
         }
     }
 
-    test("test_fastq_to_cram_bwa_samtools_sort") {
+    test("fastq to cram - bwa - samtools sort") {
         when {
             workflow {
                 """
@@ -110,12 +130,20 @@ nextflow_workflow {
 
         then {
             assertAll(
-                { assert workflow.success}
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
             )
         }
     }
 
-    test("test_fastq_to_cram_stub") {
+    test("fastq to cram - stub") {
         options: "-stub"
         when {
             workflow {
@@ -148,7 +176,15 @@ nextflow_workflow {
 
         then {
             assertAll(
-                { assert workflow.success}
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
             )
         }
     }
