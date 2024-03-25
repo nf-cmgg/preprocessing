@@ -1,0 +1,32 @@
+nextflow_workflow {
+
+    name "Test Workflow PREPROCESSING"
+    script "workflows/preprocessing.nf"
+    workflow "PREPROCESSING"
+
+    tag "workflows"
+    tag "workflows/preprocessing"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                // input[0] = file("test-file.txt")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

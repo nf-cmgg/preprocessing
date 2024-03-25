@@ -37,7 +37,7 @@ workflow FASTQ_TO_UCRAM {
             return [
                 groupKey(
                     // replace id by samplename, drop readgroup meta and chunks
-                    meta - meta.subMap('id', 'readgroup', 'chunks') + [id: meta.samplename + ".unaligned"],
+                    meta - meta.subMap('id', 'readgroup', 'chunks') + [id: meta.samplename ? meta.samplename + ".unaligned" : meta.id + ".unaligned"],
                     gk
                 ),
                 files
@@ -69,7 +69,7 @@ workflow FASTQ_TO_UCRAM {
         ch_versions = ch_versions.mix(SAMTOOLS_CAT.out.versions)
 
     emit:
-        cram_crai = SAMTOOLS_CAT.out.cram    // [meta, cram]
-        versions  = ch_versions              // versions
+        cram     = SAMTOOLS_CAT.out.cram    // [meta, cram]
+        versions = ch_versions              // versions
 
 }

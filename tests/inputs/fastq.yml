@@ -1,0 +1,16 @@
+---
+# fastq inputs
+- id: sample1_L001
+  samplename: fastq_paired1
+  library: test
+  organism: Homo sapiens
+  tag: WES
+  fastq_1: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz
+  fastq_2: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz
+- id: sample1_L002
+  samplename: fastq_paired1
+  library: test
+  organism: Homo sapiens
+  tag: WES
+  fastq_1: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz
+  fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz

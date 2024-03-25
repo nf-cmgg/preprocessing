@@ -308,7 +308,14 @@ workflow PREPROCESSING {
     .set{ch_cram_crai_roi_fasta_fai_dict}
 
     BAM_QC(ch_cram_crai_roi_fasta_fai_dict, false)
-    ch_multiqc_files = ch_multiqc_files.mix(BAM_QC.out.multiqc_files.map{ meta, txt -> return txt })
+    ch_multiqc_files = ch_multiqc_files.mix(
+        BAM_QC.out.samtools_stats           .map{ meta, txt -> return txt },
+        BAM_QC.out.samtools_flagstat        .map{ meta, txt -> return txt },
+        BAM_QC.out.samtools_idxstats        .map{ meta, txt -> return txt },
+        BAM_QC.out.picard_multiplemetrics   .map{ meta, txt -> return txt },
+        BAM_QC.out.picard_wgsmetrics        .map{ meta, txt -> return txt },
+        BAM_QC.out.picard_hsmetrics         .map{ meta, txt -> return txt },
+    )
     ch_versions = ch_versions.mix(BAM_QC.out.versions)
 
 /*
