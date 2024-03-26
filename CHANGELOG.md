@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update to nf-core template v2.13.1
 - Drop `fgbio/fastqtosam` in favour of `samtools/import`
 - Add `samtools/coverage` for coverage analysis
+- Add testing with nf-test
 
 ## v1.2.0
 
