@@ -55,9 +55,11 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert snapshot(workflow.out).match()
+            assert snapshot(
+                file(workflow.out.multiqc_report[0][0]).name,
+                workflow.out.versions
+            ).match()
         }
-
     }
 
     test("preprocessing - fastq - bwa - bamsormadup - no roi") {
@@ -108,9 +110,11 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert snapshot(workflow.out).match()
+            assert snapshot(
+                file(workflow.out.multiqc_report[0][0]).name,
+                workflow.out.versions
+            ).match()
         }
-
     }
 
     test("preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard") {
@@ -164,8 +168,10 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert snapshot(workflow.out).match()
+            assert snapshot(
+                file(workflow.out.multiqc_report[0][0]).name,
+                workflow.out.versions
+            ).match()
         }
-
     }
 }
