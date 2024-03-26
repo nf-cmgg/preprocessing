@@ -2,13 +2,32 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
+    config "tests/config/igenomes_test.config"
 
-    test("Should run without failures") {
+    tag "pipeline"
+    tag "pipeline/main"
+
+    test("main - fastq input") {
 
         when {
             params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
+                input = "${projectDir}/tests/inputs/fastq.yml"
+                aligner = "bwamem"
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+    test("main - flowcell input") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/inputs/flowcell.yml"
+                aligner = "bwamem"
             }
         }
 

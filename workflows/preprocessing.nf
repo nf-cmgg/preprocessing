@@ -139,7 +139,7 @@ workflow PREPROCESSING {
 
         // set the ROI
         if (roi && !meta.roi) {
-            meta = meta.subMap("roi") + ["roi": roi]
+            meta = meta - meta.subMap("roi") + ["roi": roi]
         }
         return [meta, reads]
     }
@@ -223,12 +223,13 @@ workflow PREPROCESSING {
             meta,
             reads,
             GenomeUtils.getGenomeAttribute(meta.genome, aligner),
+            GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
             ]
     }
-    .set{ch_meta_reads_alignerindex}
+    .set{ch_meta_reads_alignerindex_fasta}
 
     FASTQ_TO_CRAM(
-        ch_meta_reads_alignerindex,
+        ch_meta_reads_alignerindex_fasta,
         aligner,
         markdup
     )
@@ -242,22 +243,6 @@ workflow PREPROCESSING {
 // STEP: COVERAGE ANALYSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    FASTQ_TO_CRAM.out.cram_crai.map{ meta, cram, crai ->
-        return [
-            meta,
-            cram,
-            crai,
-            GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-            GenomeUtils.getGenomeAttribute(meta.genome, "fai")
-        ]
-    }
-    .set{ch_cram_crai_fasta_fai}
-    SAMTOOLS_COVERAGE(ch_cram_crai_fasta_fai)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        SAMTOOLS_COVERAGE.out.coverage.map{ meta, txt -> return txt }
-    )
-    ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions)
-
     FASTQ_TO_CRAM.out.cram_crai
     .map { meta, cram, crai ->
         if (meta.roi) {
@@ -280,14 +265,33 @@ workflow PREPROCESSING {
     }
     .set{ch_cram_crai_roi_fasta}
 
-    MOSDEPTH(ch_cram_crai_roi_fasta)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        MOSDEPTH.out.summary_txt.map{ meta, txt -> return txt },
-        MOSDEPTH.out.global_txt.map{ meta, txt -> return txt },
-        MOSDEPTH.out.regions_txt.map{ meta, txt -> return txt }
-    )
-    ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
+    FASTQ_TO_CRAM.out.cram_crai.map{ meta, cram, crai ->
+        return [
+            meta,
+            cram,
+            crai,
+            GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
+            GenomeUtils.getGenomeAttribute(meta.genome, "fai")
+        ]
+    }
+    .set{ch_cram_crai_fasta_fai}
 
+    if (params.run_coverage) {
+
+        MOSDEPTH(ch_cram_crai_roi_fasta)
+        ch_multiqc_files = ch_multiqc_files.mix(
+            MOSDEPTH.out.summary_txt.map{ meta, txt -> return txt },
+            MOSDEPTH.out.global_txt.map{ meta, txt -> return txt },
+            MOSDEPTH.out.regions_txt.map{ meta, txt -> return txt }
+        )
+        ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
+
+        SAMTOOLS_COVERAGE(ch_cram_crai_fasta_fai)
+        ch_multiqc_files = ch_multiqc_files.mix(
+            SAMTOOLS_COVERAGE.out.coverage.map{ meta, txt -> return txt }
+        )
+        ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions)
+    }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: QC FOR ALIGNMENTS
@@ -307,7 +311,7 @@ workflow PREPROCESSING {
     }
     .set{ch_cram_crai_roi_fasta_fai_dict}
 
-    BAM_QC(ch_cram_crai_roi_fasta_fai_dict, false)
+    BAM_QC(ch_cram_crai_roi_fasta_fai_dict, params.disable_picard_metrics)
     ch_multiqc_files = ch_multiqc_files.mix(
         BAM_QC.out.samtools_stats           .map{ meta, txt -> return txt },
         BAM_QC.out.samtools_flagstat        .map{ meta, txt -> return txt },
