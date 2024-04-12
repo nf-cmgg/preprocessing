@@ -37,6 +37,7 @@ workflow PREPROCESSING {
     aligner        // string: aligner to use
     markdup        // string: markdup method to use
     roi            // file: regions of interest bed file to be applied to all samples
+    genelists      // list: gene list bed files for coverage analysis
 
     main:
     ch_versions = Channel.empty()
@@ -250,8 +251,48 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
+                GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
+                GenomeUtils.getGenomeAttribute(meta.genome, "fai")
+                file(meta.roi, checkIfExists:true),
+            ]
+        } else {
+            return [
+                meta,
+                cram,
+                crai,
+                GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
+                GenomeUtils.getGenomeAttribute(meta.genome, "fai")
+                [],
+            ]
+        }
+    }
+    .set{ch_cram_crai_fasta_fai_roi}
+
+    COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        COVERAGE.out.mosdepth_summary   .map{ meta, txt -> return txt },
+        COVERAGE.out.mosdepth_global    .map{ meta, txt -> return txt },
+        COVERAGE.out.mosdepth_regions   .map{ meta, txt -> return txt },
+        COVERAGE.out.samtools_coverage  .map{ meta, txt -> return txt },
+    )
+    ch_versions = ch_versions.mix(COVERAGE.out.versions)
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: QC FOR ALIGNMENTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+    FASTQ_TO_CRAM.out.cram_crai
+    .map { meta, cram, crai ->
+        if (meta.roi) {
+            return [
+                meta,
+                cram,
+                crai,
                 file(meta.roi, checkIfExists:true),
                 GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
+                GenomeUtils.getGenomeAttribute(meta.genome, "fai")
+                GenomeUtils.getGenomeAttribute(meta.genome, "dict")
             ]
         } else {
             return [
@@ -260,54 +301,10 @@ workflow PREPROCESSING {
                 crai,
                 [],
                 GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
+                GenomeUtils.getGenomeAttribute(meta.genome, "fai")
+                GenomeUtils.getGenomeAttribute(meta.genome, "dict")
             ]
         }
-    }
-    .set{ch_cram_crai_roi_fasta}
-
-    FASTQ_TO_CRAM.out.cram_crai.map{ meta, cram, crai ->
-        return [
-            meta,
-            cram,
-            crai,
-            GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-            GenomeUtils.getGenomeAttribute(meta.genome, "fai")
-        ]
-    }
-    .set{ch_cram_crai_fasta_fai}
-
-    if (params.run_coverage) {
-
-        MOSDEPTH(ch_cram_crai_roi_fasta)
-        ch_multiqc_files = ch_multiqc_files.mix(
-            MOSDEPTH.out.summary_txt.map{ meta, txt -> return txt },
-            MOSDEPTH.out.global_txt.map{ meta, txt -> return txt },
-            MOSDEPTH.out.regions_txt.map{ meta, txt -> return txt }
-        )
-        ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
-
-        SAMTOOLS_COVERAGE(ch_cram_crai_fasta_fai)
-        ch_multiqc_files = ch_multiqc_files.mix(
-            SAMTOOLS_COVERAGE.out.coverage.map{ meta, txt -> return txt }
-        )
-        ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions)
-    }
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: QC FOR ALIGNMENTS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-    ch_cram_crai_roi_fasta
-    .map{ meta, cram, crai, roi, fasta ->
-        [
-            meta,
-            cram,
-            crai,
-            roi,
-            fasta,
-            GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
-            GenomeUtils.getGenomeAttribute(meta.genome, "dict")
-        ]
     }
     .set{ch_cram_crai_roi_fasta_fai_dict}
 

@@ -86,6 +86,7 @@ workflow {
         params.aligner,
         params.markdup,
         params.roi,
+        params.genelists
     )
 
     //

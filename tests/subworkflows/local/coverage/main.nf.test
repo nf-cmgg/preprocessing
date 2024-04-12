@@ -1,0 +1,40 @@
+nextflow_workflow {
+
+    name "Test Workflow COVERAGE"
+    script "subworkflows/local/coverage/main.nf"
+    workflow "COVERAGE"
+
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/coverage"
+
+    test("Coverage") {
+
+        when {
+            workflow {
+                """
+                // ch_meta_cram_crai_fasta_fai_roi
+                input[0] = Channel.of([
+                    [id: "test", single_end: false], // meta
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
+                ])
+                // genelists
+                input[1] = Channel.of([
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/genelists/genelist_chr21_per_exon.bed",checkIfExists:true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}
