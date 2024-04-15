@@ -14,6 +14,7 @@ include { SAMTOOLS_COVERAGE      } from '../modules/nf-core/samtools/coverage/ma
 // Subworkflows
 include { BAM_QC                 } from '../subworkflows/local/bam_qc/main'
 include { BCL_DEMULTIPLEX        } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { COVERAGE               } from '../subworkflows/local/coverage/main'
 include { FASTQ_TO_UCRAM         } from '../subworkflows/local/fastq_to_unaligned_cram/main'
 include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram/main'
 
@@ -37,7 +38,7 @@ workflow PREPROCESSING {
     aligner        // string: aligner to use
     markdup        // string: markdup method to use
     roi            // file: regions of interest bed file to be applied to all samples
-    genelists      // list: gene list bed files for coverage analysis
+    genelists      // file: directory containing genelist bed files for coverage analysis
 
     main:
     ch_versions = Channel.empty()
@@ -57,6 +58,8 @@ workflow PREPROCESSING {
     .set{ch_inputs_from_samplesheet}
 
     roi = roi ? file(roi, checkIfExists:true) : null
+
+    genelists = genelists ? file(genelists + "/*.bed", checkIfExists:true) : []
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -251,8 +254,8 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai")
+                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
+                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
                 file(meta.roi, checkIfExists:true),
             ]
         } else {
@@ -260,8 +263,8 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai")
+                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
+                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
                 [],
             ]
         }
@@ -290,9 +293,9 @@ workflow PREPROCESSING {
                 cram,
                 crai,
                 file(meta.roi, checkIfExists:true),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai")
-                GenomeUtils.getGenomeAttribute(meta.genome, "dict")
+                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
+                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
+                GenomeUtils.getGenomeAttribute(meta.genome, "dict"),
             ]
         } else {
             return [
@@ -300,9 +303,9 @@ workflow PREPROCESSING {
                 cram,
                 crai,
                 [],
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai")
-                GenomeUtils.getGenomeAttribute(meta.genome, "dict")
+                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
+                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
+                GenomeUtils.getGenomeAttribute(meta.genome, "dict"),
             ]
         }
     }
