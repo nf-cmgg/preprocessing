@@ -36,7 +36,7 @@ workflow NFCMGG_PREPROCESSING {
     aligner     // string: aligner to use
     markdup     // string: markdup method to use
     roi         // string: region of interest to use
-
+    genelists   // file: directory containing genelist bed files for coverage analysis
     main:
 
     //
@@ -48,6 +48,7 @@ workflow NFCMGG_PREPROCESSING {
         aligner,
         markdup,
         roi,
+        genelists
     )
 
     emit:
@@ -86,6 +87,7 @@ workflow {
         params.aligner,
         params.markdup,
         params.roi,
+        params.genelists,
     )
 
     //

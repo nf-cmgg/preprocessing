@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drop `fgbio/fastqtosam` in favour of `samtools/import`
 - Add `samtools/coverage` for coverage analysis
 - Add testing with nf-test
+- Overhaul panel coverage analysis
 
 ## v1.2.0
 

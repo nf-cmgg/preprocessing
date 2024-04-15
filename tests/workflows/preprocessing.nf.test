@@ -49,6 +49,7 @@ nextflow_workflow {
                 input[3] = "bamsormadup"
                 // roi
                 input[4] = "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
+                input[5] = null
                 """
             }
         }
@@ -104,6 +105,7 @@ nextflow_workflow {
                 input[3] = "bamsormadup"
                 // roi
                 input[4] = ""
+                input[5] = null
                 """
             }
         }
@@ -162,6 +164,7 @@ nextflow_workflow {
                 input[3] = "bamsormadup"
                 // roi
                 input[4] = "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
+                input[5] = null
                 """
             }
         }

@@ -98,6 +98,13 @@
                     "type": "string",
                     "default": null,
                     "description": "Region of interest for coverage analysis to be applied to all samples"
+                },
+                "genelists": {
+                    "type": "string",
+                    "default": null,
+                    "exists": true,
+                    "format": "directory-path",
+                    "description": "Directory containing gene list bed files for granular coverage analysis"
                 }
             },
             "required": ["aligner"]

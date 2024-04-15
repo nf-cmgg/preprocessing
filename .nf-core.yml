@@ -20,6 +20,10 @@ lint:
     - manifest.name
     - manifest.homePage
   subworkflow_changes: false
+  template_strings:
+    - bin/cmgg_genelists
+  merge_markers:
+    - bin/cmgg_genelists
 repository_type: pipeline
 template:
   prefix: nf-cmgg

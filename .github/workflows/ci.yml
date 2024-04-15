@@ -33,7 +33,9 @@ jobs:
           - "23.10.1"
           - "latest-everything"
         tags:
+          - "modules/local/panelcoverage"
           - "subworkflows/local/bam_qc"
+          - "subworkflows/local/coverage"
           - "subworkflows/local/fastq_to_aligned_cram"
           - "subworkflows/local/fastq_to_unaligned_cram"
           - "workflows/preprocessing"
