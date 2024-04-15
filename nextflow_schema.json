@@ -102,6 +102,8 @@
                 "genelists": {
                     "type": "string",
                     "default": null,
+                    "exists": true,
+                    "format": "directory-path",
                     "description": "Directory containing gene list bed files for granular coverage analysis"
                 }
             },
