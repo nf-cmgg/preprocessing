@@ -14,8 +14,6 @@ workflow COVERAGE {
         ch_versions         = Channel.empty()
         ch_coverageqc_files = Channel.empty()
 
-
-
         MOSDEPTH(
             ch_meta_cram_crai_fasta_fai_roi.map{
                 meta, cram, crai, fasta, fai, roi ->
