@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf-cmgg/preprocessing/main/assests/schema_input.json",
+    "$id": "https://raw.githubusercontent.com/nf-cmgg/preprocessing/main/assets/schema_input.json",
     "title": "nf-cmgg/preprocessing params.input schema",
-    "description": "Schema for the file provided with params.cram",
+    "description": "Schema for the file provided with params.input",
     "type": "array",
     "items": {
         "type": "object",
