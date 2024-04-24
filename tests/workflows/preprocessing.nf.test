@@ -22,8 +22,6 @@ nextflow_workflow {
                             organism: "Homo sapiens",
                             tag: "WES",
                         ],
-                        [],                         // bam
-                        [],                         // cram
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
                         // fastq_2
@@ -78,8 +76,6 @@ nextflow_workflow {
                             organism: "Homo sapiens",
                             tag: "WGS",
                         ],
-                        [],                         // bam
-                        [],                         // cram
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
                         // fastq_2
@@ -137,8 +133,6 @@ nextflow_workflow {
                             organism: "Homo sapiens",
                             tag: "WES",
                         ],
-                        [],                         // bam
-                        [],                         // cram
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
                         // fastq_2
