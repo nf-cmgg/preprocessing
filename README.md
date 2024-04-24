@@ -23,33 +23,7 @@ Steps inlcude:
 6. Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`picard CollecHsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectHsMetrics), [`picard CollectWgsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics), [`picard CollectMultipleMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics)
 7. QC aggregation using [`multiqc`](https://multiqc.info/)
 
-```mermaid
----
-title: "nf-cmgg/preprocessing"
----
-flowchart TD
-
-    FASTQ_INPUTS[Fastq inputs] -->|fastp| C
-    A[Demultiplexing] -->|BCLconvert| B[Demultiplexed fastq]
-    B -->|fastp| C[Trimmed fastq]
-    C -->|bwa| D[Aligned bam]
-    C -->|bwa-mem2| D
-    C -->|bowtie2| D
-    C -->|snap| D
-    D -->|bamsormadup| E[Marked bam]
-    D -->|samtools markdup| E
-    E -->|mosdepth| F[Coverage]
-    E -->|samtools coverage| F
-    E -->|samtools flagstat| G[Alignment QC]
-    E -->|samtools stats| G
-    E -->|samtools idxstats| G
-    E -->|picard CollecHsMetrics| G
-    E -->|picard CollectWgsMetrics| G
-    E -->|picard CollectMultipleMetrics| G
-    F -->|multiqc| H[QC report]
-    G -->|multiqc| H
-
-```
+![metro map](docs/images/metro_map.png)
 
 ## Usage
 
