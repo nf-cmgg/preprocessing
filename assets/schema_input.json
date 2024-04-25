@@ -33,6 +33,13 @@
                 "pattern": "^[a-zA-Z0-9_]+$",
                 "default": null
             },
+            "aligner": {
+                "meta": ["aligner"],
+                "type": "string",
+                "description": "Aligner to use to align sample to the reference genome",
+                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"],
+                "default": "bwamem"
+            },
             "tag": {
                 "meta": ["tag"],
                 "type": "string",

@@ -35,7 +35,7 @@ workflow PREPROCESSING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     genomes        // map: genome reference files
-    aligner        // string: aligner to use
+    aligner        // string: global aligner to use
     markdup        // string: markdup method to use
     roi            // file: regions of interest bed file to be applied to all samples
     genelists      // file: directory containing genelist bed files for coverage analysis
@@ -138,10 +138,13 @@ workflow PREPROCESSING {
         if (genomes && genomes[meta.genome]){
             meta = meta + ["genome": genomes[meta.genome]]
         }
-
+        // set the aligner
+        if (aligner && !meta.aligner) {
+            meta = meta + ["aligner": aligner]
+        }
         // set the ROI
         if (roi && !meta.roi) {
-            meta = meta - meta.subMap("roi") + ["roi": roi]
+            meta = meta + ["roi": roi]
         }
         return [meta, reads]
     }
@@ -224,15 +227,15 @@ workflow PREPROCESSING {
         return [
             meta,
             reads,
-            GenomeUtils.getGenomeAttribute(meta.genome, aligner),
+            meta.aligner,
+            GenomeUtils.getGenomeAttribute(meta.genome, meta.aligner),
             GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
             ]
     }
-    .set{ch_meta_reads_alignerindex_fasta}
+    .set{ch_meta_reads_aligner_index_fasta}
 
     FASTQ_TO_CRAM(
-        ch_meta_reads_alignerindex_fasta,
-        aligner,
+        ch_meta_reads_aligner_index_fasta,
         markdup
     )
 
