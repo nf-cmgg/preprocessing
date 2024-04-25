@@ -66,18 +66,6 @@
                 "unique": ["id"],
                 "description": "Flowcell lane number"
             },
-            "bam": {
-                "type": "string",
-                "pattern": "^\\S+(bam)$",
-                "format": "file-path",
-                "errorMessage": "BAM file must be provided, cannot contain spaces and must have extension '.bam'"
-            },
-            "cram": {
-                "type": "string",
-                "pattern": "^\\S+(cram)$",
-                "format": "file-path",
-                "errorMessage": "CRAM file must be provided, cannot contain spaces and must have extension '.cram'"
-            },
             "fastq_1": {
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
@@ -127,18 +115,6 @@
         }
     },
     "anyOf": [
-        {
-            "required": ["id", "samplename", "organism", "tag", "bam"]
-        },
-        {
-            "required": ["id", "samplename", "genome", "tag", "bam"]
-        },
-        {
-            "required": ["id", "samplename", "organism", "tag", "cram"]
-        },
-        {
-            "required": ["id", "samplename", "genome", "tag", "cram"]
-        },
         {
             "required": ["id", "samplename", "organism", "tag", "fastq_1", "fastq_2"]
         },

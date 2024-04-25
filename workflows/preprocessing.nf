@@ -45,13 +45,11 @@ workflow PREPROCESSING {
     ch_multiqc_files = Channel.empty()
 
     ch_samplesheet
-    .branch {meta, bam, cram, fastq_1, fastq_2, samplesheet, sampleinfo, flowcell ->
-        illumina_flowcell   : (flowcell && samplesheet && sampleinfo) && !(bam || cram || fastq_1 || fastq_2)
+    .branch {meta, fastq_1, fastq_2, samplesheet, sampleinfo, flowcell ->
+        illumina_flowcell   : (flowcell && samplesheet && sampleinfo) && !(fastq_1 || fastq_2)
             return [meta, samplesheet, sampleinfo, flowcell]
-        fastq               : (fastq_1) && !(bam || cram || flowcell || samplesheet || sampleinfo)
+        fastq               : (fastq_1) && !(flowcell || samplesheet || sampleinfo)
             return [meta, [fastq_1, fastq_2].findAll()]
-        aligned             : (bam || cram) && !(fastq_1 || fastq_2 || flowcell || samplesheet || sampleinfo)
-            return [meta, [bam, cram].find()]
         other: true
             error "Unable to determine input type, please check inputs"
     }
