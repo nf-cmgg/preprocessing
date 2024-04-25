@@ -138,7 +138,10 @@ workflow PREPROCESSING {
         if (genomes && genomes[meta.genome]){
             meta = meta + ["genome": genomes[meta.genome]]
         }
-
+        // set the aligner
+        if (aligner && !meta.aligner) {
+            meta = meta - meta.subMap("aligner") + ["aligner": aligner]
+        }
         // set the ROI
         if (roi && !meta.roi) {
             meta = meta - meta.subMap("roi") + ["roi": roi]
@@ -221,12 +224,11 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
     ch_trimmed_reads.supported.map{ meta, reads ->
-        sample_aligner = meta.aligner ?: aligner
         return [
             meta,
             reads,
-            sample_aligner,
-            GenomeUtils.getGenomeAttribute(meta.genome, sample_aligner),
+            meta.aligner,
+            GenomeUtils.getGenomeAttribute(meta.genome, meta.aligner),
             GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
             ]
     }
