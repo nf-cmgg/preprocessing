@@ -140,11 +140,11 @@ workflow PREPROCESSING {
         }
         // set the aligner
         if (aligner && !meta.aligner) {
-            meta = meta - meta.subMap("aligner") + ["aligner": aligner]
+            meta = meta + ["aligner": aligner]
         }
         // set the ROI
         if (roi && !meta.roi) {
-            meta = meta - meta.subMap("roi") + ["roi": roi]
+            meta = meta + ["roi": roi]
         }
         return [meta, reads]
     }
