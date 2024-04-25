@@ -16,9 +16,8 @@ include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
 
 workflow FASTQ_TO_CRAM {
     take:
-        ch_meta_reads_alignerindex_fasta  // channel: [mandatory] [meta, [fastq, ...], aligner_index, fasta]
-        aligner                           // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
-        markdup                           // string:  [optional ] markdup [bamsormadup, samtools, false]
+        ch_meta_reads_aligner_index_fasta  // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap], aligner_index, fasta]
+        markdup                            // string:  [optional ] markdup [bamsormadup, samtools, false]
 
     main:
 
@@ -31,12 +30,12 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        ch_meta_reads_alignerindex_fasta.dump(tag: "FASTQ_TO_CRAM: reads to align",pretty: true)
+        ch_meta_reads_aligner_index_fasta.dump(tag: "FASTQ_TO_CRAM: reads to align",pretty: true)
 
         // align fastq files per sample
         // ALIGNMENT([meta,fastq], index, sort)
         FASTQ_ALIGN_DNA(
-            ch_meta_reads_alignerindex_fasta,
+            ch_meta_reads_aligner_index_fasta,
             aligner,
             false
         )

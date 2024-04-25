@@ -35,7 +35,7 @@ workflow PREPROCESSING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     genomes        // map: genome reference files
-    aligner        // string: aligner to use
+    aligner        // string: global aligner to use
     markdup        // string: markdup method to use
     roi            // file: regions of interest bed file to be applied to all samples
     genelists      // file: directory containing genelist bed files for coverage analysis
@@ -221,18 +221,19 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
     ch_trimmed_reads.supported.map{ meta, reads ->
+        sample_aligner = meta.aligner ?: aligner
         return [
             meta,
             reads,
-            GenomeUtils.getGenomeAttribute(meta.genome, aligner),
+            sample_aligner,
+            GenomeUtils.getGenomeAttribute(meta.genome, sample_aligner),
             GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
             ]
     }
-    .set{ch_meta_reads_alignerindex_fasta}
+    .set{ch_meta_reads_aligner_index_fasta}
 
     FASTQ_TO_CRAM(
-        ch_meta_reads_alignerindex_fasta,
-        aligner,
+        ch_meta_reads_aligner_index_fasta,
         markdup
     )
 

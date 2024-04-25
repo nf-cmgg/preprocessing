@@ -15,8 +15,7 @@ include { SNAPALIGNER_ALIGN as SNAP_ALIGN   } from '../../../modules/nf-core/sna
 
 workflow FASTQ_ALIGN_DNA {
     take:
-        ch_reads_aligner_index_fasta    // channel: [mandatory] reads, aligner_index, fasta file
-        aligner                         // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
+        ch_reads_aligner_index_fasta    // channel: [mandatory] reads, aligner, aligner_index, fasta file
         sort                            // boolean: [mandatory] true -> sort, false -> don't sort
 
     main:
@@ -26,39 +25,39 @@ workflow FASTQ_ALIGN_DNA {
         ch_reports      = Channel.empty()
         ch_versions     = Channel.empty()
 
-        // Align fastq files to reference genome and (optionally) sort
-        switch (aligner) {
-            case 'bowtie2':
-                BOWTIE2_ALIGN(ch_reads_aligner_index_fasta, false, sort) // if aligner is bowtie2
-                ch_bam = ch_bam.mix(BOWTIE2_ALIGN.out.bam)
-                ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
-                break
-            case 'bwamem':
-                BWAMEM1_MEM  (ch_reads_aligner_index_fasta, sort)        // If aligner is bwa-mem
-                ch_bam = ch_bam.mix(BWAMEM1_MEM.out.bam)
-                ch_bam_index = ch_bam_index.mix(BWAMEM1_MEM.out.csi)
-                ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions)
-                break
-            case 'bwamem2':
-                BWAMEM2_MEM  (ch_reads_aligner_index_fasta, sort)       // If aligner is bwa-mem2
-                ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
-                ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions)
-                break
-            case 'dragmap':
-                DRAGMAP_ALIGN(ch_reads_aligner_index_fasta, sort)       // If aligner is dragmap
-                ch_bam = ch_bam.mix(DRAGMAP_ALIGN.out.bam)
-                ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
-                ch_versions = ch_versions.mix(DRAGMAP_ALIGN.out.versions)
-                break
-            case 'snap':
-                SNAP_ALIGN(ch_reads_aligner_index_fasta.map{ meta, reads, index, fasta -> return [meta, reads, index]}) // If aligner is snap
-                ch_bam = ch_bam.mix(SNAP_ALIGN.out.bam)
-                ch_bam_index.mix(SNAP_ALIGN.out.bai)
-                ch_versions = ch_versions.mix(SNAP_ALIGN.out.versions)
-                break
-            default:
-                error "Unknown aligner: ${aligner}"
+        ch_reads_aligner_index_fasta.branch {
+            bowtie2 : it.filter{ it.meta.aligner == 'bowtie2' }
+            bwamem  : it.filter{ it.meta.aligner == 'bwamem' }
+            bwamem2 : it.filter{ it.meta.aligner == 'bwamem2' }
+            dragmap : it.filter{ it.meta.aligner == 'dragmap' }
+            snap    : it.filter{ it.meta.aligner == 'snap' }
+            other      : true
         }
+        .set{ch_to_align}
+
+        // Align fastq files to reference genome and (optionally) sort
+        BOWTIE2_ALIGN(ch_to_align.bowtie2, false, sort) // if aligner is bowtie2
+        ch_bam = ch_bam.mix(BOWTIE2_ALIGN.out.bam)
+        ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
+
+        BWAMEM1_MEM  (ch_to_align.bwamem, sort)        // If aligner is bwa-mem
+        ch_bam = ch_bam.mix(BWAMEM1_MEM.out.bam)
+        ch_bam_index = ch_bam_index.mix(BWAMEM1_MEM.out.csi)
+        ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions)
+
+        BWAMEM2_MEM  (ch_to_align.bwamem2, sort)       // If aligner is bwa-mem2
+        ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
+        ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions)
+
+        DRAGMAP_ALIGN(ch_to_align.dragmap, sort)       // If aligner is dragmap
+        ch_bam = ch_bam.mix(DRAGMAP_ALIGN.out.bam)
+        ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
+        ch_versions = ch_versions.mix(DRAGMAP_ALIGN.out.versions)
+
+        SNAP_ALIGN(ch_to_align.snap.map{ meta, reads, index, fasta -> return [meta, reads, index]}) // If aligner is snap
+        ch_bam = ch_bam.mix(SNAP_ALIGN.out.bam)
+        ch_bam_index.mix(SNAP_ALIGN.out.bai)
+        ch_versions = ch_versions.mix(SNAP_ALIGN.out.versions)
 
     emit:
         bam         = ch_bam        // channel: [ [meta], bam       ]
