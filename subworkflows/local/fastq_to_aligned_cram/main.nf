@@ -36,7 +36,6 @@ workflow FASTQ_TO_CRAM {
         // ALIGNMENT([meta,fastq], index, sort)
         FASTQ_ALIGN_DNA(
             ch_meta_reads_aligner_index_fasta,
-            aligner,
             false
         )
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)

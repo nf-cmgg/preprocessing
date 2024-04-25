@@ -27,13 +27,12 @@ nextflow_workflow {
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
+                    "bwamem", // aligner
                     file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
                 ])
-                // aligner
-                input[1] = "bwamem"
                 // markdup
-                input[2] = "bamsormadup"
+                input[1] = "bamsormadup"
                 """
             }
         }
@@ -57,7 +56,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                // [meta, [fq_1,fq_2], aligner_index]
+                // [meta, [fq_1,fq_2], aligner, index, fasta]
                 input[0] = Channel.of([
                     [
                         id:'test',
@@ -72,13 +71,12 @@ nextflow_workflow {
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
+                    "bwamem", // aligner
                     file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
                 ])
-                // aligner
-                input[1] = "bwamem"
                 // markdup
-                input[2] = "samtools"
+                input[1] = "samtools"
                 """
             }
         }
@@ -102,7 +100,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                // [meta, [fq_1,fq_2], aligner_index]
+                // [meta, [fq_1,fq_2], aligner, index, fasta]
                 input[0] = Channel.of([
                     [
                         id:'test',
@@ -117,13 +115,12 @@ nextflow_workflow {
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
+                    "bwamem", // aligner
                     file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
                 ])
-                // aligner
-                input[1] = "bwamem"
                 // markdup
-                input[2] = "false"
+                input[1] = "false"
                 """
             }
         }
@@ -148,7 +145,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                // [meta, [fq_1,fq_2], aligner_index]
+                // [meta, [fq_1,fq_2], aligner, index, fasta]
                 input[0] = Channel.of([
                     [
                         id:'test',
@@ -163,13 +160,12 @@ nextflow_workflow {
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
+                    "bwamem", // aligner
                     file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
                 ])
-                // aligner
-                input[1] = "bwamem"
                 // markdup
-                input[2] = "false"
+                input[1] = "false"
                 """
             }
         }
