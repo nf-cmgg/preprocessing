@@ -44,7 +44,7 @@ A separate directory will be created in the output directory for each sample con
   - `SAMPLE.regions.bed.gz`: The regional BED file, showing how well covered the requested regions are, calculated by `mosdepth` (only when a ROI BED file has been given)
   - `SAMPLE.regions.bed.gz.csi`: The index of the regional BED file
   - `SAMPLE.stats`: General statistics for the sample
-</details>
+  </details>
 
 ### Extra outputs for flowcell inputs
 

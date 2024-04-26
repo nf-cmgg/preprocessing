@@ -18,12 +18,12 @@ The pipeline supports two types of samplesheets to be used as input: [`fastq`](#
 
 This table shows all samplesheet fields that can be used by both the [`fastq`](#fastq-samplesheet) and the [`flowcell`](#flowcell-samplesheet) samplesheet types.
 
-| Column    | Description                                                                                                                                                                            | Required for Fastq | Required for Flowcell |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
-| `id`  | Unique samplesheet/flowcell ID. Can only contain letters, numbers and underscores. | :heavy_check_mark: | :heavy_check_mark: |
-| `tag`  | The tag used by the sample. Can be one of WES, WGS or coPGT-M | :heavy_check_mark: | :x: |
-| `aligner`  | The aligner to use for this sample. Can be one of these: bowtie2, <b>bwamem (default)</b>, bwamem2, dragmap and snap | :x: | :x: |
-| `roi`  | The path to a BED file containing <b>R</b>egions <b>O</b>f <b>I</b>nterest for coverage analysis | :x: | :x: |
+| Column    | Description                                                                                                          | Required for Fastq | Required for Flowcell |
+| --------- | -------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------- |
+| `id`      | Unique samplesheet/flowcell ID. Can only contain letters, numbers and underscores.                                   | :heavy_check_mark: | :heavy_check_mark:    |
+| `tag`     | The tag used by the sample. Can be one of WES, WGS or coPGT-M                                                        | :heavy_check_mark: | :x:                   |
+| `aligner` | The aligner to use for this sample. Can be one of these: bowtie2, <b>bwamem (default)</b>, bwamem2, dragmap and snap | :x:                | :x:                   |
+| `roi`     | The path to a BED file containing <b>R</b>egions <b>O</b>f <b>I</b>nterest for coverage analysis                     | :x:                | :x:                   |
 
 ### Fastq samplesheet
 
@@ -42,14 +42,14 @@ TREATMENT_REP3,TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,GRCh38
 
 Following table shows the fields that are used by the `fastq` samplesheet:
 
-| Column    | Description                                                                                                                                                                            | Required |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| `fastq_1`  | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz' | :heavy_check_mark: |
-| `fastq_2`  | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz' | :x: |
-| `samplename`  | The sample name corresponding to the sample in the Fastq file(s) | :heavy_check_mark: |
-| `genome`  | The genome build to use for the analysis. Currently supports GRCh38, GRCm39 and GRCz11 | :heavy_check_mark: (unless `organism` is given) |
-| `organism`  | Full name of the organism. Currently supports "Homo sapiens", "Mus musculus" and "Danio rerio" | :heavy_check_mark: (unless `genome` is given) |
-| `library`  | Sample library name | :x: |
+| Column       | Description                                                                                                    | Required                                        |
+| ------------ | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `fastq_1`    | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz' | :heavy_check_mark:                              |
+| `fastq_2`    | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                   | :x:                                             |
+| `samplename` | The sample name corresponding to the sample in the Fastq file(s)                                               | :heavy_check_mark:                              |
+| `genome`     | The genome build to use for the analysis. Currently supports GRCh38, GRCm39 and GRCz11                         | :heavy_check_mark: (unless `organism` is given) |
+| `organism`   | Full name of the organism. Currently supports "Homo sapiens", "Mus musculus" and "Danio rerio"                 | :heavy_check_mark: (unless `genome` is given)   |
+| `library`    | Sample library name                                                                                            | :x:                                             |
 
 An [example samplesheet](../tests/inputs/fastq.yml) has been provided with the pipeline.
 
@@ -64,12 +64,12 @@ RUN_NAME,RUN_NAME_samplesheet.csv,RUN_NAME_sampleinfo.csv,RUN_NAME_flowcell/
 
 Following table shows the fields that are used by the `flowcell` samplesheet:
 
-| Column    | Description                                                                                                                                                                            | Required |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| `samplesheet`  | Illumina flowcell for the flowcell lane | :heavy_check_mark: |
-| `sample_info`  | CSV file with sample information. See the [flowcell sample info](#flowcell-sample-info) documentation. | :heavy_check_mark: |
-| `flowcell`  | Illumina flowcell directory | :heavy_check_mark: |
-| `lane`  | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz' | :x: |
+| Column        | Description                                                                                            | Required           |
+| ------------- | ------------------------------------------------------------------------------------------------------ | ------------------ |
+| `samplesheet` | Illumina flowcell for the flowcell lane                                                                | :heavy_check_mark: |
+| `sample_info` | CSV file with sample information. See the [flowcell sample info](#flowcell-sample-info) documentation. | :heavy_check_mark: |
+| `flowcell`    | Illumina flowcell directory                                                                            | :heavy_check_mark: |
+| `lane`        | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'           | :x:                |
 
 An [example samplesheet](../tests/inputs/flowcell.yml) has been provided with the pipeline.
 
@@ -84,16 +84,16 @@ Sample1,test,Homo sapiens,WES
 
 Following table shows the fields that are used by the `flowcell` samplesheet:
 
-| Column    | Description                                                                                                                                                                            | Required |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| `samplename`  | The sample name | :heavy_check_mark: |
-| `library`  | The library name | :x: |
-| `tag`  | Sample tag. Has to be one of these: WES, WGS, coPGT-M | :heavy_check_mark: |
-| `organism`  | The organism of the sample. Has to be one of these: "Homo sapiens", "Mus musculus" or "Danio rerio" | :heavy_check_mark: |
-| `vivar_project`  | The vivar project name (currently not used by the pipeline) | :x: |
-| `binsize`  | The binsize for CNV analysis (currently not used by the pipeline) | :x: |
-| `panels`  | A list of panels for coverage analysis | :x: |
-| `roi`  | Region of interest BED file for coverage analysis | :x: |
+| Column          | Description                                                                                         | Required           |
+| --------------- | --------------------------------------------------------------------------------------------------- | ------------------ |
+| `samplename`    | The sample name                                                                                     | :heavy_check_mark: |
+| `library`       | The library name                                                                                    | :x:                |
+| `tag`           | Sample tag. Has to be one of these: WES, WGS, coPGT-M                                               | :heavy_check_mark: |
+| `organism`      | The organism of the sample. Has to be one of these: "Homo sapiens", "Mus musculus" or "Danio rerio" | :heavy_check_mark: |
+| `vivar_project` | The vivar project name (currently not used by the pipeline)                                         | :x:                |
+| `binsize`       | The binsize for CNV analysis (currently not used by the pipeline)                                   | :x:                |
+| `panels`        | A list of panels for coverage analysis                                                              | :x:                |
+| `roi`           | Region of interest BED file for coverage analysis                                                   | :x:                |
 
 ### Multiple runs of the same sample
 
