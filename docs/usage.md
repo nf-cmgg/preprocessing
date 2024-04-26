@@ -111,7 +111,7 @@ CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-cmgg/preprocessing --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-cmgg/preprocessing --input ./samplesheet.csv --outdir ./results -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -144,7 +144,6 @@ with `params.yaml` containing:
 ```yaml
 input: './samplesheet.csv'
 outdir: './results/'
-genome: 'GRCh37'
 <...>
 ```
 
