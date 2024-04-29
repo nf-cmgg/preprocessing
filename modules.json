@@ -161,6 +161,12 @@
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/snapaligner/align/snapaligner-align.diff"
+                    },
+                    "star/align": {
+                        "branch": "master",
+                        "git_sha": "a21faa6a3481af92a343a10926f59c189a2c16c9",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/star/align/star-align.diff"
                     }
                 }
             },
