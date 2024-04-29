@@ -20,12 +20,14 @@
             "tag": {
                 "type": "string",
                 "description": "Sample tag",
-                "pattern": "^[a-zA-Z0-9_]+$"
+                "pattern": "^[a-zA-Z0-9_]+$",
+                "enum": ["WES", "WGS", "coPGT-M"]
             },
             "organism": {
                 "type": "string",
                 "description": "Sample organism",
-                "pattern": "^[a-zA-Z0-9_\\s]+$"
+                "pattern": "^[a-zA-Z0-9_\\s]+$",
+                "enum": ["Homo sapiens", "Mus musculus", "Danio rerio"]
             },
             "vivar_project": {
                 "type": "string",

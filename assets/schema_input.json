@@ -24,14 +24,16 @@
                 "meta": ["organism"],
                 "type": "string",
                 "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus and Danio rerio",
-                "pattern": "^[a-zA-Z0-9_\\s]+$"
+                "pattern": "^[a-zA-Z0-9_\\s]+$",
+                "enum": ["Homo sapiens", "Mus musculus", "Danio rerio"]
             },
             "genome": {
                 "meta": ["genome"],
                 "type": "string",
                 "description": "Genome build. Currently supported genomes include GRCh38, GRCm39 and GRCz11",
                 "pattern": "^[a-zA-Z0-9_]+$",
-                "default": null
+                "default": null,
+                "enum": ["GRCh38", "GRCm39", "GRCz11"]
             },
             "aligner": {
                 "meta": ["aligner"],
@@ -45,19 +47,13 @@
                 "type": "string",
                 "description": "Sample tag",
                 "pattern": "^[a-zA-Z0-9_-]+$",
-                "enum": [null, "WES", "WGS", "coPGT-M"]
+                "enum": ["WES", "WGS", "coPGT-M"]
             },
             "library": {
                 "meta": ["library"],
                 "type": "string",
                 "pattern": "^[a-zA-Z0-9_]+$",
                 "description": "Sample library name"
-            },
-            "single_end": {
-                "meta": ["single_end"],
-                "description": "Whether the sample is single end data or not",
-                "type": "boolean",
-                "default": false
             },
             "roi": {
                 "meta": ["roi"],
@@ -81,17 +77,9 @@
             },
             "fastq_2": {
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                        "format": "file-path"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ]
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "format": "file-path"
             },
             "samplesheet": {
                 "type": "string",
@@ -107,16 +95,8 @@
                 "description": "CSV file with sample information, must contain columns 'samplename', 'organism' and 'tag'"
             },
             "flowcell": {
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "format": "file-path"
-                    },
-                    {
-                        "type": "string",
-                        "format": "directory-path"
-                    }
-                ],
+                "type": "string",
+                "format": "path",
                 "description": "Illumina flowcell directory"
             }
         }
