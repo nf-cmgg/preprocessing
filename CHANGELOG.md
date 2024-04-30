@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `samtools/coverage` for coverage analysis
 - Add testing with nf-test
 - Overhaul panel coverage analysis
+- Add support for `STAR` aligner for RNA-seq
 
 ## v1.2.0
 
