@@ -12,6 +12,7 @@ include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/m
 
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
+include { FASTQ_ALIGN_RNA   } from '../../local/fastq_align_rna/main'
 
 
 workflow FASTQ_TO_CRAM {
