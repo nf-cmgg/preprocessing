@@ -10,6 +10,10 @@ on:
 
 env:
   NXF_ANSI_LOG: false
+  NFT_VER: "0.8.4"
+  NFT_WORKDIR: "~"
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
   AWS_ACCESS_KEY_ID: ${{ secrets.UGENT_S3_ACCESS_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.UGENT_S3_SECRET_KEY }}
 
@@ -19,29 +23,79 @@ concurrency:
 
 jobs:
   test:
-    name: Run pipeline with test data
+    name: ${{ matrix.tags }} ${{ matrix.profile }} NF-${{ matrix.NXF_VER }}
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-cmgg/preprocessing') }}"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         NXF_VER:
-          - 23.04.0
-        aligner:
-          #- "bowtie2"
-          - "bwamem"
-          #- "bwamem2"
-          #- "dragmap"
-          #- "snap"
+          - "23.10.1"
+          - "latest-everything"
+        tags:
+          - "modules/local/panelcoverage"
+          - "subworkflows/local/bam_qc"
+          - "subworkflows/local/coverage"
+          - "subworkflows/local/fastq_to_aligned_cram"
+          - "subworkflows/local/fastq_to_unaligned_cram"
+          - "workflows/preprocessing"
+          - "pipeline"
+        profile:
+          - "test,docker"
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Run pipeline with test data
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          architecture: "x64"
+
+      - name: Install pdiff to see diff between nf-test snapshots
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker  --aligner ${{ matrix.aligner }} --outdir ./results
+          python -m pip install --upgrade pip
+          pip install pdiff
+
+      - name: Cache nf-test installation
+        id: cache-software
+        uses: actions/cache@v3
+        with:
+          path: |
+            /usr/local/bin/nf-test
+            /home/runner/.nf-test/nf-test.jar
+          key: ${{ runner.os }}-${{ env.NFT_VER }}-nftest
+
+      - name: Install nf-test
+        if: steps.cache-software.outputs.cache-hit != 'true'
+        run: |
+          wget -qO- https://code.askimed.com/install/nf-test | bash
+          sudo mv nf-test /usr/local/bin/
+
+      - name: Run nf-test
+        run: |
+          nf-test test --verbose --tag "${{ matrix.tags }}" --profile "+${{ matrix.profile }}" --junitxml=test.xml --tap=test.tap
+
+      - uses: pcolby/tap-summary@v1
+        with:
+          path: >-
+            test.tap
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always ${{ github.workspace }}/.nf-test/tests/*/meta/nextflow.log
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: test.xml

@@ -1,0 +1,61 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-cmgg/preprocessing/main/assets/schema_sampleinfo.json",
+    "title": "nf-cmgg/preprocessing sample info schema",
+    "description": "Schema for the file provided with under the sample_info key of params.flowcell",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "samplename": {
+                "type": "string",
+                "description": "Sample name",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "library": {
+                "type": "string",
+                "description": "Library name",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "tag": {
+                "type": "string",
+                "description": "Sample tag",
+                "pattern": "^[a-zA-Z0-9_]+$",
+                "enum": ["WES", "WGS", "coPGT-M"]
+            },
+            "organism": {
+                "type": "string",
+                "description": "Sample organism",
+                "pattern": "^[a-zA-Z0-9_\\s]+$",
+                "enum": ["Homo sapiens", "Mus musculus", "Danio rerio"]
+            },
+            "vivar_project": {
+                "type": "string",
+                "description": "Vivar project name",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "binsize": {
+                "type": "integer",
+                "description": "Binsize for CNV analysis",
+                "minimum": 0
+            },
+            "panels": {
+                "type": "array",
+                "description": "List of panels",
+                "items": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_]+$"
+                }
+            },
+            "roi": {
+                "meta": ["roi"],
+                "type": "string",
+                "format": "file-path",
+                "description": "Region of interest BED file for coverage analysis",
+                "pattern": "^[a-zA-Z0-9_]+.bed$",
+                "default": null
+            }
+        }
+    },
+    "required": ["samplename", "tag", "organism"]
+}

@@ -4,16 +4,16 @@ process SAMTOOLS_CAT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.18--h50ea8bc_1' :
-        'biocontainers/samtools:1.18--h50ea8bc_1' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.19.2--h50ea8bc_0' :
+        'biocontainers/samtools:1.19.2--h50ea8bc_0' }"
 
     input:
     tuple val(meta),  path(input_files, stageAs: "?/*")
 
     output:
-    tuple val(meta), path("${prefix}.bam") , optional:true, emit: bam
-    tuple val(meta), path("${prefix}.cram"), optional:true, emit: cram
-    path  "versions.yml"                                  , emit: versions
+    tuple val(meta), path("*.bam") , optional:true, emit: bam
+    tuple val(meta), path("*.cram"), optional:true, emit: cram
+    path  "versions.yml"           , emit: versions
 
 
     when:
@@ -26,7 +26,7 @@ process SAMTOOLS_CAT {
     """
     samtools \\
         cat \\
-        --threads ${task.cpus-1} \\
+        --threads ${task.cpus} \\
         $args \\
         -o ${prefix}.${file_type} \\
         $input_files

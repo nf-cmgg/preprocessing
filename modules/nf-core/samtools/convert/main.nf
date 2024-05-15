@@ -1,20 +1,21 @@
 process SAMTOOLS_CONVERT {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.18--h50ea8bc_1' :
-        'biocontainers/samtools:1.18--h50ea8bc_1' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.19.2--h50ea8bc_0' :
+        'biocontainers/samtools:1.19.2--h50ea8bc_0' }"
 
     input:
-    tuple val(meta), path(input), path(index)
-    tuple val(meta2), path(fasta)
-    tuple val(meta3), path(fai)
+    tuple val(meta), path(input), path(index), path(fasta), path(fai)
 
     output:
-    tuple val(meta), path("*.{cram,bam}"), path("*.{crai,bai}") , emit: alignment_index
-    path  "versions.yml"                                        , emit: versions
+    tuple val(meta), path("*.bam")  , emit: bam ,   optional: true
+    tuple val(meta), path("*.cram") , emit: cram,   optional: true
+    tuple val(meta), path("*.bai")  , emit: bai ,   optional: true
+    tuple val(meta), path("*.crai") , emit: crai,   optional: true
+    path  "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

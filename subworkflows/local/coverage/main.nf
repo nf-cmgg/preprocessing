@@ -1,56 +1,48 @@
 #!/usr/bin/env nextflow
 
-include { MOSDEPTH              } from "../../../modules/nf-core/mosdepth/main"
-include { PANEL_COVERAGE        } from "../../../modules/local/panel_coverage/main"
-include { MULTIQC as COVERAGEQC } from "../../../modules/nf-core/multiqc/main"
+// MODULES
+include { MOSDEPTH              } from "../../../modules/nf-core/mosdepth/main.nf"
+include { SAMTOOLS_COVERAGE     } from "../../../modules/nf-core/samtools/coverage/main"
+include { PANELCOVERAGE         } from "../../../modules/local/panelcoverage/main"
 
 workflow COVERAGE {
     take:
-        ch_reads_index_target   // channel: [mandatory][ meta,  reads, index, target_bed ]
-        ch_fasta_fai            // channel: [mandatory][ meta2, fasta, fai ]
-        ch_genelists            // channel: [optional] [ genelist ]
-
+        ch_meta_cram_crai_fasta_fai_roi  // channel: [mandatory] [meta, cram, crai, fasta, fai, roi]
+        ch_genelists                     // channel: [optional] [genelists]
     main:
-        ch_versions = Channel.empty()
-        ch_metrics  = Channel.empty()
 
-        ch_meta_fasta    = ch_fasta_fai.map  {meta, fasta, fai -> [meta, fasta] }.collect()
+        ch_versions         = Channel.empty()
+        ch_coverageqc_files = Channel.empty()
 
-        MOSDEPTH(ch_reads_index_target, ch_meta_fasta)
-        ch_metrics = ch_metrics.mix(
-            MOSDEPTH.out.summary_txt,
-            MOSDEPTH.out.global_txt,
-            MOSDEPTH.out.regions_txt
+        MOSDEPTH(
+            ch_meta_cram_crai_fasta_fai_roi.map{
+                meta, cram, crai, fasta, fai, roi ->
+                    return [meta, cram, crai, roi, fasta]
+            }
         )
-
         ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
-        ch_metrics.dump(tag: "COVERAGE: metrics", pretty: true)
 
-        // separate WES/WGS samples to run genelist coverage on them
-        ch_per_base_bed = MOSDEPTH.out.per_base_bed.branch{
-            genelist_coverage: ["WES", "WGS"].contains(it[0].tag)
-            other: true
-        }
+        SAMTOOLS_COVERAGE(
+            ch_meta_cram_crai_fasta_fai_roi.map{
+                meta, cram, crai, fasta, fai, roi ->
+                    return [meta, cram, crai, fasta, fai]
+            }
+        )
+        ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions)
+        ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage)
 
-        ch_per_base_genelist = ch_per_base_bed.genelist_coverage.combine(ch_genelists)
-        ch_per_base_genelist.dump(tag: "COVERAGE: per base bed with genelist", pretty: true)
-
-        //PANEL_COVERAGE(per_base_genelist)
-        PANEL_COVERAGE(ch_per_base_genelist)
-
-        ch_regions_dist = PANEL_COVERAGE.out.region_dist.map{ meta, files -> files}.collect()
-
-        COVERAGEQC(ch_regions_dist, [], [], [])
+        PANELCOVERAGE(
+            MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi),
+            ch_genelists
+        )
+        ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions)
+        ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)
 
     emit:
-        per_base_bed        = MOSDEPTH.out.per_base_bed     // [meta, bed]
-        per_base_bed_csi    = MOSDEPTH.out.per_base_csi     // [meta, csi]
-        regions_bed         = MOSDEPTH.out.regions_bed      // [meta, bed]
-        regions_bed_csi     = MOSDEPTH.out.regions_csi      // [meta, csi]
-        regions_dist        = PANEL_COVERAGE.out.region_dist// [meta, [dist,dist,...]]
-        quantized_bed       = MOSDEPTH.out.quantized_bed    // [meta, bed]
-        quantized_bed_csi   = MOSDEPTH.out.quantized_csi    // [meta, csi]
-        metrics             = ch_metrics                    // [[meta, [metrics]]
-        versions            = ch_versions                   // [versions]
+        mosdepth_summary  = MOSDEPTH.out.summary_txt
+        mosdepth_global   = MOSDEPTH.out.global_txt
+        mosdepth_regions  = MOSDEPTH.out.regions_txt
+        samtools_coverage = SAMTOOLS_COVERAGE.out.coverage
+        panelcoverage     = PANELCOVERAGE.out.regiondist
+        versions          = ch_versions
 }
-

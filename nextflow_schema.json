@@ -2,9 +2,45 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-cmgg/preprocessing/master/nextflow_schema.json",
     "title": "nf-cmgg/preprocessing pipeline parameters",
-    "description": "Preprocessing workflow for sequencing data at CMGG",
+    "description": "Demultiplexing, adapter trimming, alignment, and coverage calculation for NGS data.",
     "type": "object",
     "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": ["input", "outdir"],
+            "properties": {
+                "input": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_input.json",
+                    "pattern": "^\\S+\\.(csv|tsv|yaml|yml|json)$",
+                    "description": "Path to comma-separated or yaml file containing information about the samples in the experiment.",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location.",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "outdir": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "email": {
+                    "description": "Email address for completion summary.",
+                    "fa_icon": "fas fa-envelope",
+                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
+                    "fa_icon": "fas fa-file-signature"
+                }
+            }
+        },
         "pipeline_options": {
             "title": "Pipeline options",
             "type": "object",
@@ -26,26 +62,13 @@
                 "run_coverage": {
                     "type": "boolean",
                     "description": "Run coverage analysis steps",
-                    "default": false
+                    "default": true
                 },
                 "skip_trimming": {
                     "type": "boolean",
-                    "description": "Skip adapter trimming"
+                    "description": "Skip adapter trimming",
+                    "default": false
                 },
-                "disable_picard_metrics": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Disable the calculation of (slow) Picard metrics"
-                }
-            },
-            "required": ["aligner"]
-        },
-        "trimming_options": {
-            "title": "Trimming Options",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
                 "trim_front": {
                     "type": "integer",
                     "default": 0,
@@ -58,86 +81,33 @@
                 },
                 "adapter_R1": {
                     "type": "string",
-                    "default": "None",
+                    "default": null,
                     "description": "Adapter sequence to be trimmed"
                 },
                 "adapter_R2": {
                     "type": "string",
-                    "default": "None",
+                    "default": null,
                     "description": "Adapter sequence to be trimmed"
-                }
-            }
-        },
-        "input_output_options": {
-            "title": "Input/output options",
-            "type": "object",
-            "fa_icon": "fas fa-terminal",
-            "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["outdir"],
-            "properties": {
-                "fastq": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-                    "fa_icon": "fas fa-file-csv",
-                    "schema": "schemas/fastq_input_schema.json"
                 },
-                "flowcell": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-                    "fa_icon": "fas fa-file-csv",
-                    "schema": "schemas/flowcell_input_schema.json"
+                "disable_picard_metrics": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Disable the calculation of (slow) Picard metrics"
                 },
-                "bam": {
+                "roi": {
                     "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-                    "fa_icon": "fas fa-file-csv",
-                    "schema": "schemas/bam_input_schema.json"
+                    "default": null,
+                    "description": "Region of interest for coverage analysis to be applied to all samples"
                 },
-                "cram": {
+                "genelists": {
                     "type": "string",
-                    "format": "file-path",
+                    "default": null,
                     "exists": true,
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-                    "fa_icon": "fas fa-file-csv",
-                    "schema": "schemas/cram_input_schema.json"
-                },
-                "outdir": {
-                    "type": "string",
                     "format": "directory-path",
-                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-                    "fa_icon": "fas fa-folder-open"
-                },
-                "email": {
-                    "type": "string",
-                    "description": "Email address for completion summary.",
-                    "fa_icon": "fas fa-envelope",
-                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                },
-                "multiqc_title": {
-                    "type": "string",
-                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
-                    "fa_icon": "fas fa-file-signature"
+                    "description": "Directory containing gene list bed files for granular coverage analysis"
                 }
-            }
+            },
+            "required": ["aligner"]
         },
         "reference_genome_options": {
             "title": "Reference genome options",
@@ -145,107 +115,14 @@
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "default": "GRCh38",
-                    "description": "Reference genome build",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code",
-                    "hidden": true
-                },
-                "dict": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.dict$",
-                    "description": "Path to FASTA genome dict file.",
-                    "hidden": true
-                },
-                "fai": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fai$",
-                    "description": "Path to FASTA genome index file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
-                    "fa_icon": "far fa-file-code",
-                    "hidden": true
-                },
-                "target_regions": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.bed$",
-                    "description": "Path to target regions bed file."
-                },
-                "genomes_base": {
-                    "type": "string",
-                    "default": "/references/",
-                    "hidden": true,
-                    "description": "Directory base for CMGG reference store",
-                    "fa_icon": "fas fa-download"
-                },
-                "genomes_ignore": {
-                    "type": "boolean",
-                    "hidden": true,
-                    "description": "Do not load the local references",
-                    "fa_icon": "fas fa-ban"
-                },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
-                },
-                "bowtie2": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to Bowtie2 index"
-                },
-                "bwamem": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to BWA index"
-                },
-                "bwamem2": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to BWAMEM2 index"
-                },
-                "dragmap": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to Dragmap index"
-                },
-                "snap": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to SNAP aligner index"
-                },
-                "genelists": {
-                    "type": "string",
-                    "default": "None",
-                    "hidden": true,
-                    "description": "Path to directory containing genelist bed"
                 }
-            },
-            "required": ["genome", "fasta", "dict", "fai"]
+            }
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -292,16 +169,6 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
-                },
-                "cmgg_config_version": {
-                    "type": "string",
-                    "default": "main",
-                    "description": "Git commit id for CMGG configs"
-                },
-                "cmgg_config_base": {
-                    "type": "string",
-                    "default": "https://raw.githubusercontent.com/nf-cmgg/nf-cmgg-config/main",
-                    "description": "Base directory for Institutional configs."
                 }
             }
         },
@@ -412,7 +279,6 @@
                 },
                 "multiqc_logo": {
                     "type": "string",
-                    "default": "/Users/matdsmet/Projects/preprocessing/assets/CMGG_logo.png",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
                     "hidden": true
@@ -455,13 +321,10 @@
     },
     "allOf": [
         {
-            "$ref": "#/definitions/pipeline_options"
-        },
-        {
-            "$ref": "#/definitions/trimming_options"
-        },
-        {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/pipeline_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"

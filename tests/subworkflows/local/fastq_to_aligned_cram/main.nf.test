@@ -1,0 +1,187 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_TO_CRAM"
+    script "subworkflows/local/fastq_to_aligned_cram/main.nf"
+    workflow "FASTQ_TO_CRAM"
+
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/fastq_to_aligned_cram"
+
+    test("fastq to cram - bwa - bamsormadup") {
+        when {
+            workflow {
+                """
+                // [meta, [fq_1,fq_2], aligner_index]
+                input[0] = Channel.of([
+                    [
+                        id:'test',
+                        samplename:'test',
+                        single_end:false,
+                        genome: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                        ]
+                    ], // meta map
+                    [
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "bwamem", // aligner
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
+                ])
+                // markdup
+                input[1] = "bamsormadup"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("fastq to cram - bwa - samtools sormadup") {
+        when {
+            workflow {
+                """
+                // [meta, [fq_1,fq_2], aligner, index, fasta]
+                input[0] = Channel.of([
+                    [
+                        id:'test',
+                        samplename:'test',
+                        single_end:false,
+                        genome: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                        ]
+                    ], // meta map
+                    [
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "bwamem", // aligner
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
+                ])
+                // markdup
+                input[1] = "samtools"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("fastq to cram - bwa - samtools sort") {
+        when {
+            workflow {
+                """
+                // [meta, [fq_1,fq_2], aligner, index, fasta]
+                input[0] = Channel.of([
+                    [
+                        id:'test',
+                        samplename:'test',
+                        single_end:false,
+                        genome: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                        ]
+                    ], // meta map
+                    [
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "bwamem", // aligner
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
+                ])
+                // markdup
+                input[1] = "false"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("fastq to cram - stub") {
+        options: "-stub"
+        when {
+            workflow {
+                """
+                // [meta, [fq_1,fq_2], aligner, index, fasta]
+                input[0] = Channel.of([
+                    [
+                        id:'test',
+                        samplename:'test',
+                        single_end:false,
+                        genome: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                        ]
+                    ], // meta map
+                    [
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "bwamem", // aligner
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
+                ])
+                // markdup
+                input[1] = "false"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+}

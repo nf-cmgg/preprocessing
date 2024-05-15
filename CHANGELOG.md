@@ -3,6 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.0
+
+- Move repo to nf-cmgg organisation
+- Overhaul reference data handling. All data is now sourced from the `igenomes` config file and dynamically loaded based on the `organism` metadata field.
+- Drop support for bam/cram inputs
+- Update to nf-core template v2.13.1
+- Drop `fgbio/fastqtosam` in favour of `samtools/import`
+- Add `samtools/coverage` for coverage analysis
+- Add testing with nf-test
+- Overhaul panel coverage analysis
+
 ## v1.2.0
 
 - Add fix for sample replicates with different split sizes
@@ -46,4 +57,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0dev - [06/09/2022]
 
-Initial release of nf-cmgg/preprocessing, created with the [nf-core](https://nf-co.re/) template.
+Initial release of CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing, created with the [nf-core](https://nf-co.re/) template.

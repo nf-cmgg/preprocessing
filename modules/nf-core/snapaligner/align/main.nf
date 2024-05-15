@@ -8,8 +8,7 @@ process SNAPALIGNER_ALIGN {
         'biocontainers/snap-aligner:2.0.3--hd03093a_0' }"
 
     input:
-    tuple val(meta) , path(reads, stageAs: "?/*")
-    tuple val(meta2), path(index)
+    tuple val(meta) , path(reads, stageAs: "?/*"), path(index)
 
     output:
     tuple val(meta), path("*.bam"), emit: bam

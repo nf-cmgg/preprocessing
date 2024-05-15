@@ -1,0 +1,174 @@
+nextflow_workflow {
+
+    name "Test Workflow PREPROCESSING"
+    script "workflows/preprocessing.nf"
+    workflow "PREPROCESSING"
+
+    tag "workflows"
+    tag "workflows/preprocessing"
+
+    test("preprocessing - fastq - bwa - bamsormadup - roi") {
+
+        when {
+            workflow {
+                """
+                // ch_samplesheet
+                input[0] = Channel.of(
+                    [
+                        [                           // meta
+                            id: "sample1",
+                            samplename: "sample1",
+                            library: "test",
+                            organism: "Homo sapiens",
+                            tag: "WES",
+                        ],
+                        //fastq_1
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        // fastq_2
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
+                        [],                         // samplesheet
+                        [],                         // sampleinfo
+                        [],                         // flowcell
+
+                    ]
+                )
+                // genomes
+                input[1] = [
+                    GRCh38: [
+                        fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                        fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                        dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                    ]
+                ]
+                // aligner
+                input[2] = "bwamem"
+                // markdup
+                input[3] = "bamsormadup"
+                // roi
+                input[4] = "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
+                input[5] = null
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                file(workflow.out.multiqc_report[0][0]).name,
+                workflow.out.versions
+            ).match()
+        }
+    }
+
+    test("preprocessing - fastq - bwa - bamsormadup - no roi") {
+
+        when {
+            workflow {
+                """
+                // ch_samplesheet
+                input[0] = Channel.of(
+                    [
+                        [                           // meta
+                            id: "sample1",
+                            samplename: "sample1",
+                            library: "test",
+                            organism: "Homo sapiens",
+                            tag: "WGS",
+                        ],
+                        //fastq_1
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        // fastq_2
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
+                        [],                         // samplesheet
+                        [],                         // sampleinfo
+                        [],                         // flowcell
+
+                    ]
+                )
+                // genomes
+                input[1] = [
+                    GRCh38: [
+                        fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                        fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                        dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                    ]
+                ]
+                // aligner
+                input[2] = "bwamem"
+                // markdup
+                input[3] = "bamsormadup"
+                // roi
+                input[4] = ""
+                input[5] = null
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                file(workflow.out.multiqc_report[0][0]).name,
+                workflow.out.versions
+            ).match()
+        }
+    }
+
+    test("preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard") {
+        when {
+            params {
+                run_coverage = false
+                disable_picard_metrics = true
+            }
+            workflow {
+                """
+                // ch_samplesheet
+                input[0] = Channel.of(
+                    [
+                        [                           // meta
+                            id: "sample1",
+                            samplename: "sample1",
+                            library: "test",
+                            organism: "Homo sapiens",
+                            tag: "WES",
+                        ],
+                        //fastq_1
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        // fastq_2
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
+                        [],                         // samplesheet
+                        [],                         // sampleinfo
+                        [],                         // flowcell
+
+                    ]
+                )
+                // genomes
+                input[1] = [
+                    GRCh38: [
+                        fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                        fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                        dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                    ]
+                ]
+                // aligner
+                input[2] = "bwamem"
+                // markdup
+                input[3] = "bamsormadup"
+                // roi
+                input[4] = "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
+                input[5] = null
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                file(workflow.out.multiqc_report[0][0]).name,
+                workflow.out.versions
+            ).match()
+        }
+    }
+}

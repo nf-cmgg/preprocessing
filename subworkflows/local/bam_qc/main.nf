@@ -1,76 +1,75 @@
-#!/usr/bin/env nextflow
+// samtools modules
+include { SAMTOOLS_STATS    } from '../../../modules/nf-core/samtools/stats/main'
+include { SAMTOOLS_IDXSTATS } from '../../../modules/nf-core/samtools/idxstats/main'
+include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat/main'
 
-include { BAM_STATS_SAMTOOLS        } from "../../nf-core/bam_stats_samtools/main"
-
+// picard modules
 include { PICARD_COLLECTMULTIPLEMETRICS } from '../../../modules/nf-core/picard/collectmultiplemetrics/main'
 include { PICARD_COLLECTHSMETRICS       } from '../../../modules/nf-core/picard/collecthsmetrics/main'
 include { PICARD_COLLECTWGSMETRICS      } from '../../../modules/nf-core/picard/collectwgsmetrics/main'
 
-
 workflow BAM_QC {
     take:
-        ch_bam_bai_target   // channel: [mandatory] [meta, bam, bai, target]
-        ch_fasta_fai        // channel: [mandatory] [meta2, fasta, fai]
-        ch_fasta_dict       // channel: [mandatory] [meta2, dict]
-        disable_picard      // boolean: [optional]  [true]
+    ch_bam_bai_roi_fasta_fai_dict   // channel: [ val(meta), path(bam), path(bai), path(roi), path(fasta), path(fai), path(dict)]
+    disable_picard                  // boolean
 
     main:
-        ch_versions = Channel.empty()
-        ch_metrics  = Channel.empty()
+    ch_versions = Channel.empty()
 
-        ch_bait_interval_list = []
-        ch_target_interval_list = []
+    ch_bam_bai_roi_fasta_fai_dict
+    .map{ meta, bam, bai, roi, fasta, fai, dict -> return [meta, bam, bai, fasta]}
+    .set{ ch_bam_bai_fasta }
 
-        ch_meta_fai   = ch_fasta_fai.map {meta, fasta, fai -> [meta, fai]  }.collect()
-        ch_meta_fasta = ch_fasta_fai.map {meta, fasta, fai -> [meta, fasta]}.collect()
+    SAMTOOLS_STATS ( ch_bam_bai_fasta )
+    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
 
-        ch_bam_bai = ch_bam_bai_target.map{ meta, bam, bai, bed -> [meta, bam, bai]}
+    ch_bam_bai_fasta
+    .map{ meta, bam, bai, fasta -> return [meta, bam, bai]}
+    .set{ ch_bam_bai }
 
-        if (!disable_picard) {
+    SAMTOOLS_FLAGSTAT ( ch_bam_bai )
+    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions)
 
-            PICARD_COLLECTMULTIPLEMETRICS(
-                ch_bam_bai,
-                ch_meta_fasta,
-                ch_meta_fai
-            )
-            ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
-            ch_metrics = ch_metrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
+    SAMTOOLS_IDXSTATS ( ch_bam_bai )
+    ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions)
 
+    ch_picard_hsmetrics = Channel.empty()
+    ch_picard_multiplemetrics = Channel.empty()
+    ch_picard_wgsmetrics = Channel.empty()
+    if (!disable_picard) {
 
-            ch_bam_bai_target_branched = ch_bam_bai_target.branch {
-                hsmetrics  : it.size == 4 && it[3] != []
-                    return it
-                wgsmetrics : true
-                    return [ it[0], it[1], it[2] ]
-            }
+        ch_bam_bai_roi_fasta_fai_dict
+        .map{ meta, bam, bai, roi, fasta, fai, dict -> return [meta, bam, bai, fasta, fai]}
+        .set{ ch_bam_bai_fasta_fai }
 
-            // WGS metrics
-            PICARD_COLLECTWGSMETRICS( ch_bam_bai_target_branched.wgsmetrics, ch_meta_fasta, ch_meta_fai, [] )
-            ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions.first())
-            ch_metrics = ch_metrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
+        PICARD_COLLECTMULTIPLEMETRICS ( ch_bam_bai_fasta_fai )
+        ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions)
+        ch_picard_multiplemetrics = ch_picard_multiplemetrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
 
-            // HS metrics
-            PICARD_COLLECTHSMETRICS( ch_bam_bai_target_branched.hsmetrics, ch_meta_fasta, ch_meta_fai, ch_fasta_dict)
-            ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
-            ch_metrics = ch_metrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
-
-
+        ch_bam_bai_roi_fasta_fai_dict
+        .branch{ meta, bam, bai, roi, fasta, fai, dict ->
+            hsmetrics   : roi != []
+                return [meta, bam, bai, roi, roi, fasta, fai, dict]
+            wgsmetrics  : roi == []
+                return [meta, bam, bai, fasta, fai]
         }
+        .set{ch_picard}
 
-        // SUBWORKFLOW: bam_stats_samtools
-        // Run samtools QC modules
-        // BAM_STATS_SAMTOOLS([meta, bam, bai])
-        BAM_STATS_SAMTOOLS(ch_bam_bai, ch_meta_fasta)
+        PICARD_COLLECTWGSMETRICS ( ch_picard.wgsmetrics, [] )
+        ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions)
+        ch_picard_wgsmetrics = ch_picard_wgsmetrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
 
-        ch_metrics = ch_metrics.mix(
-            BAM_STATS_SAMTOOLS.out.stats,
-            BAM_STATS_SAMTOOLS.out.flagstat,
-            BAM_STATS_SAMTOOLS.out.idxstats
-        )
-        ch_metrics.dump(tag: "BAM QC: metrics", pretty: true)
-        ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
+        PICARD_COLLECTHSMETRICS ( ch_picard.hsmetrics )
+        ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions)
+        ch_picard_hsmetrics = ch_picard_hsmetrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
+    }
 
     emit:
-        metrics  = ch_metrics   // [[meta, metrics], [...], ...]
-        versions = ch_versions  // [versions]
+    samtools_stats          = SAMTOOLS_STATS.out.stats
+    samtools_flagstat       = SAMTOOLS_FLAGSTAT.out.flagstat
+    samtools_idxstats       = SAMTOOLS_IDXSTATS.out.idxstats
+    picard_multiplemetrics  = ch_picard_multiplemetrics
+    picard_wgsmetrics       = ch_picard_wgsmetrics
+    picard_hsmetrics        = ch_picard_hsmetrics
+    versions                = ch_versions
 }

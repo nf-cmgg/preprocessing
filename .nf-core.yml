@@ -1,18 +1,10 @@
-repository_type: pipeline
-template:
-  name: preprocessing
-  description: Preprocessing workflow for sequencing data at CMGG
-  author: matthdsm
-  prefix: nf-cmgg
 lint:
   files_exist:
-    - assets/nf-core-preprocessing_logo_light.png
-    - conf/test.config
-    - conf/test_full.config
     - CODE_OF_CONDUCT.md
+    - CITATIONS.md
+    - assets/nf-core-preprocessing_logo_light.png
     - docs/images/nf-core-preprocessing_logo_light.png
     - docs/images/nf-core-preprocessing_logo_dark.png
-    - lib/nfcore_external_java_deps.jar
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
@@ -22,10 +14,18 @@ lint:
     - docs/images/nf-core-preprocessing_logo_light.png
     - docs/images/nf-core-preprocessing_logo_dark.png
     - .github/ISSUE_TEMPLATE/bug_report.yml
-    - .gitignore
+    - docs/README.md
   multiqc_config:
     - report_comment
   nextflow_config:
-    - params.input
     - manifest.name
     - manifest.homePage
+  subworkflow_changes: false
+  template_strings:
+    - bin/cmgg_genelists
+  merge_markers:
+    - bin/cmgg_genelists
+repository_type: pipeline
+template:
+  prefix: nf-cmgg
+  skip: []
