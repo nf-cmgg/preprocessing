@@ -253,10 +253,24 @@ workflow PREPROCESSING {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: FILTER SAMPLES WITH 'SNP' TAG
+// samples with SNP tag contain only data for sample tracking
+// and as such don't need all the QC steps
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+    FASTQ_TO_CRAM.out.cram_crai
+    .filter{ meta, cram, crai ->
+        meta.tags && meta.tag == "SNP"
+    }
+    .set{ch_no_snp_samples}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: COVERAGE ANALYSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    FASTQ_TO_CRAM.out.cram_crai
+    ch_no_snp_samples
     .map { meta, cram, crai ->
         if (meta.roi) {
             return [
@@ -294,7 +308,7 @@ workflow PREPROCESSING {
 // STEP: QC FOR ALIGNMENTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    FASTQ_TO_CRAM.out.cram_crai
+    ch_no_snp_samples
     .map { meta, cram, crai ->
         if (meta.roi) {
             return [
