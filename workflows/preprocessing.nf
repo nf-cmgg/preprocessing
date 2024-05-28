@@ -237,7 +237,7 @@ workflow PREPROCESSING {
             reads,
             meta.aligner,
             GenomeUtils.getGenomeAttribute(meta.genome, meta.aligner),
-            GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
+            GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
             GenomeUtils.getGenomeAttribute(meta.genome, "gtf")
             ]
     }

@@ -61,7 +61,10 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        FASTQ_ALIGN_DNA.out.bam.map {
+        
+        FASTQ_ALIGN_DNA.out.bam
+        .mix(FASTQ_ALIGN_RNA.out.bam)
+        .map {
             // set id to samplename, drop readgroup and count meta values
             meta, files ->
             def gk = (meta.chunks as Integer ?: 1)
