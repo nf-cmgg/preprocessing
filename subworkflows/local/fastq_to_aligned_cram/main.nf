@@ -17,8 +17,8 @@ include { FASTQ_ALIGN_RNA   } from '../../local/fastq_align_rna/main'
 
 workflow FASTQ_TO_CRAM {
     take:
-        ch_meta_reads_aligner_index_fasta  // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta]
-        markdup                            // string:  [optional ] markdup [bamsormadup, samtools, false]
+        ch_meta_reads_aligner_index_fasta_gtf   // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta, gtf]
+        markdup                                 // string:  [optional ] markdup [bamsormadup, samtools, false]
 
     main:
 
@@ -31,12 +31,14 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        ch_meta_reads_aligner_index_fasta.dump(tag: "FASTQ_TO_CRAM: reads to align",pretty: true)
+        ch_meta_reads_aligner_index_fasta_gtf.dump(tag: "FASTQ_TO_CRAM: reads to align",pretty: true)
 
-        ch_meta_reads_aligner_index_fasta
-            .branch { meta, reads, aligner, index, fasta ->
+        ch_meta_reads_aligner_index_fasta_gtf
+            .branch { meta, reads, aligner, index, fasta, gtf ->
                 rna: meta.sample_type == "RNA"
+                    return [meta, reads, aligner, index, gtf]
                 dna: meta.sample_type == "DNA"
+                    return [meta, reads, aligner, index, fasta]
             }
             .set { ch_meta_reads_aligner_index_fasta_datatype }
 
