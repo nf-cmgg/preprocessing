@@ -61,7 +61,6 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        
         FASTQ_ALIGN_DNA.out.bam
         .mix(FASTQ_ALIGN_RNA.out.bam)
         .map {
