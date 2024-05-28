@@ -143,6 +143,14 @@ workflow PREPROCESSING {
             meta = meta + ["aligner": aligner]
         }
         // set the ROI
+        // // Special case for coPGT samples
+        // // if there's no global ROI AND no sample speficic ROI
+        // // AND the sample tag is "coPGT-M", set the sample ROI to "roi_copgt"
+        if (!roi && !meta.roi && meta.tag == "coPGT-M") {
+            meta = meta + ["roi": GenomeUtils.getGenomeAttribute(meta.genome, "roi_copgt")]
+        }
+        // // if there's a global ROI AND no sample specific ROI
+        // // set the global ROI to the sample
         if (roi && !meta.roi) {
             meta = meta + ["roi": roi]
         }
@@ -245,10 +253,24 @@ workflow PREPROCESSING {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: FILTER SAMPLES WITH 'SNP' TAG
+// samples with SNP tag contain only data for sample tracking
+// and as such don't need all the QC steps
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+    FASTQ_TO_CRAM.out.cram_crai
+    .filter{ meta, cram, crai ->
+        meta.tags && meta.tag == "SNP"
+    }
+    .set{ch_no_snp_samples}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: COVERAGE ANALYSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    FASTQ_TO_CRAM.out.cram_crai
+    ch_no_snp_samples
     .map { meta, cram, crai ->
         if (meta.roi) {
             return [
@@ -286,7 +308,7 @@ workflow PREPROCESSING {
 // STEP: QC FOR ALIGNMENTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    FASTQ_TO_CRAM.out.cram_crai
+    ch_no_snp_samples
     .map { meta, cram, crai ->
         if (meta.roi) {
             return [

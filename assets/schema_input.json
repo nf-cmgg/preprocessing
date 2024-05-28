@@ -46,8 +46,7 @@
                 "meta": ["tag"],
                 "type": "string",
                 "description": "Sample tag",
-                "pattern": "^[a-zA-Z0-9_-]+$",
-                "enum": ["WES", "WGS", "coPGT-M"]
+                "pattern": "^[a-zA-Z0-9_-]+$"
             },
             "sample_type": {
                 "meta": ["sample_type"],

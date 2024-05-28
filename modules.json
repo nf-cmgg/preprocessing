@@ -14,11 +14,8 @@
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "e1e42c1312400df268a0c92e14bd33552e782448",
-                        "installed_by": [
-                            "bcl_demultiplex",
-                            "modules"
-                        ]
+                        "git_sha": "570c5d253837869fa0594972a2ec19ce205e5532",
+                        "installed_by": ["bcl_demultiplex", "modules"]
                     },
                     "biobambam/bamsormadup": {
                         "branch": "master",
@@ -39,10 +36,8 @@
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "b97197968ac12dde2463fa54541f6350c46f2035",
-                        "installed_by": [
-                            "fastq_align_dna"
-                        ],
+                        "git_sha": "0c34b8159f62cde451c4ff249629c9d0a4f3f9c3",
+                        "installed_by": ["fastq_align_dna"],
                         "patch": "modules/nf-core/bwa/mem/bwa-mem.diff"
                     },
                     "bwamem2/mem": {
@@ -55,10 +50,8 @@
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "0997b47c93c06b49aa7b3fefda87e728312cf2ca",
-                        "installed_by": [
-                            "modules"
-                        ]
+                        "git_sha": "4fc983ad0b30e6e32696fa7d980c76c7bfe1c03e",
+                        "installed_by": ["modules"]
                     },
                     "dragmap/align": {
                         "branch": "master",
@@ -84,10 +77,8 @@
                     },
                     "mosdepth": {
                         "branch": "master",
-                        "git_sha": "30d3ca4346ae38f0de821c57a9c517b8b0b135d6",
-                        "installed_by": [
-                            "modules"
-                        ],
+                        "git_sha": "e0616fba0919adb190bfe070d17fb12d76ba3a26",
+                        "installed_by": ["modules"],
                         "patch": "modules/nf-core/mosdepth/mosdepth.diff"
                     },
                     "multiqc": {
@@ -139,10 +130,8 @@
                     },
                     "samtools/convert": {
                         "branch": "master",
-                        "git_sha": "1b93e06140e6807cc408519759f68bd26da63a00",
-                        "installed_by": [
-                            "modules"
-                        ],
+                        "git_sha": "b42fec6f7c6e5d0716685cabb825ef6bf6e386b5",
+                        "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/convert/samtools-convert.diff"
                     },
                     "samtools/coverage": {
@@ -227,17 +216,13 @@
                 "nf-core": {
                     "bcl_demultiplex": {
                         "branch": "master",
-                        "git_sha": "cfd937a668919d948f6fcbf4218e79de50c2f36f",
-                        "installed_by": [
-                            "subworkflows"
-                        ]
+                        "git_sha": "98dec3970368aa6e058c792ae1e451bb09624ed3",
+                        "installed_by": ["subworkflows"]
                     },
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "dd2757cc22c5de8943fa38ba7cd6f8cc1eb65ac1",
-                        "installed_by": [
-                            "subworkflows"
-                        ]
+                        "git_sha": "0c34b8159f62cde451c4ff249629c9d0a4f3f9c3",
+                        "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
