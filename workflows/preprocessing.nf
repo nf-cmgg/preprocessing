@@ -143,6 +143,14 @@ workflow PREPROCESSING {
             meta = meta + ["aligner": aligner]
         }
         // set the ROI
+        // // Special case for coPGT samples
+        // // if there's no global ROI AND no sample speficic ROI
+        // // AND the sample tag is "coPGT-M", set the sample ROI to "roi_copgt"
+        if (!roi && !meta.roi && meta.tag == "coPGT-M") {
+            meta = meta + ["roi": GenomeUtils.getGenomeAttribute(meta.genome, "roi_copgt")]
+        }
+        // // if there's a global ROI AND no sample specific ROI
+        // // set the global ROI to the sample
         if (roi && !meta.roi) {
             meta = meta + ["roi": roi]
         }
