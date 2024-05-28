@@ -20,8 +20,13 @@
             "tag": {
                 "type": "string",
                 "description": "Sample tag",
-                "pattern": "^[a-zA-Z0-9_]+$",
-                "enum": ["WES", "WGS", "coPGT-M"]
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "purpose": {
+                "meta": ["purpose"],
+                "type": "string",
+                "description": "Sample purpose, can be either 'research' or 'diagnostic'",
+                "enum": ["research", "diagnostic"]
             },
             "organism": {
                 "type": "string",

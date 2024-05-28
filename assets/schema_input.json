@@ -48,6 +48,12 @@
                 "description": "Sample tag",
                 "pattern": "^[a-zA-Z0-9_-]+$"
             },
+            "purpose": {
+                "meta": ["purpose"],
+                "type": "string",
+                "description": "Sample purpose, can be either 'research' or 'diagnostic'",
+                "enum": ["research", "diagnostic"]
+            },
             "sample_type": {
                 "meta": ["sample_type"],
                 "type": "string",
