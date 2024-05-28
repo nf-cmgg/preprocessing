@@ -3,64 +3,45 @@
         "content": [
             "multiqc_report.html",
             [
-                "versions.yml:md5,13e87ed415a2e15f5ee6cd61a696f159",
-                "versions.yml:md5,2789454a6d07582f30cca7623d431a2b",
                 "versions.yml:md5,321e55c8f19102dc87a10e981635edda",
-                "versions.yml:md5,4257181c63c732a41de1cb83471b289b",
-                "versions.yml:md5,4cadd59c9520ebd940030a4cc6d39d64",
-                "versions.yml:md5,71f9d3ee1ac829a35187963f25c7c582",
-                "versions.yml:md5,a3854dfc77096728996132543bfa9c39",
-                "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868",
-                "versions.yml:md5,f16d4e5179f6538e258272e7a8fa3a2c",
-                "versions.yml:md5,fcbb82b85126720b43a2f8380bcf2f81"
+                "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
+                "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.1"
         },
-        "timestamp": "2024-04-15T13:02:45.455557"
+        "timestamp": "2024-05-28T13:19:50.358888"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
             "multiqc_report.html",
             [
-                "versions.yml:md5,13e87ed415a2e15f5ee6cd61a696f159",
-                "versions.yml:md5,2789454a6d07582f30cca7623d431a2b",
                 "versions.yml:md5,321e55c8f19102dc87a10e981635edda",
-                "versions.yml:md5,4257181c63c732a41de1cb83471b289b",
-                "versions.yml:md5,71f9d3ee1ac829a35187963f25c7c582",
-                "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868",
-                "versions.yml:md5,f16d4e5179f6538e258272e7a8fa3a2c",
-                "versions.yml:md5,fcbb82b85126720b43a2f8380bcf2f81"
+                "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
+                "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.1"
         },
-        "timestamp": "2024-04-15T13:13:24.558576"
+        "timestamp": "2024-05-28T13:22:41.028522"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
             "multiqc_report.html",
             [
-                "versions.yml:md5,13e87ed415a2e15f5ee6cd61a696f159",
-                "versions.yml:md5,2789454a6d07582f30cca7623d431a2b",
                 "versions.yml:md5,321e55c8f19102dc87a10e981635edda",
-                "versions.yml:md5,4257181c63c732a41de1cb83471b289b",
-                "versions.yml:md5,4cadd59c9520ebd940030a4cc6d39d64",
-                "versions.yml:md5,71f9d3ee1ac829a35187963f25c7c582",
-                "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868",
-                "versions.yml:md5,f16d4e5179f6538e258272e7a8fa3a2c",
-                "versions.yml:md5,f86ff6a955bce1589780c33ee28a1126",
-                "versions.yml:md5,fcbb82b85126720b43a2f8380bcf2f81"
+                "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
+                "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.1"
         },
-        "timestamp": "2024-04-15T13:12:00.645316"
+        "timestamp": "2024-05-28T13:21:12.512162"
     }
 }
