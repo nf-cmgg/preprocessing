@@ -18,6 +18,7 @@ nextflow_workflow {
                         id:'test',
                         samplename:'test',
                         single_end:false,
+                        sample_type:'DNA',
                         genome: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
@@ -52,6 +53,51 @@ nextflow_workflow {
         }
     }
 
+    test("fastq to cram - star - bamsormadup") {
+        when {
+            workflow {
+                """
+                // [meta, [fq_1,fq_2], aligner_index]
+                input[0] = Channel.of([
+                    [
+                        id:'test',
+                        samplename:'test',
+                        single_end:false,
+                        sample_type:'RNA',
+                        genome: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                        ]
+                    ], // meta map
+                    [
+                        file("s3://test-data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz", checkIfExists: true),
+                        file("s3://test-data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "star", // aligner
+                    file("s3://test-data/genomics/homo_sapiens/genome/star/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna")
+                ])
+                // markdup
+                input[1] = "bamsormadup"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        file(workflow.out.cram_crai[0][1]).name,
+                        file(workflow.out.cram_crai[0][2]).name,
+                        workflow.out.multiqc_files,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
     test("fastq to cram - bwa - samtools sormadup") {
         when {
             workflow {
@@ -62,6 +108,7 @@ nextflow_workflow {
                         id:'test',
                         samplename:'test',
                         single_end:false,
+                        sample_type:'DNA',
                         genome: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
@@ -106,6 +153,7 @@ nextflow_workflow {
                         id:'test',
                         samplename:'test',
                         single_end:false,
+                        sample_type:'DNA',
                         genome: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
@@ -151,6 +199,7 @@ nextflow_workflow {
                         id:'test',
                         samplename:'test',
                         single_end:false,
+                        sample_type:'DNA',
                         genome: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"

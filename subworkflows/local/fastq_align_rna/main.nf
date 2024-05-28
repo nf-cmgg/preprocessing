@@ -18,10 +18,10 @@ workflow FASTQ_ALIGN_RNA {
         ch_reports      = Channel.empty()
         ch_versions     = Channel.empty()
 
-        ch_reads_aligner_index_fasta.branch { meta, reads, aligner, index, fasta ->
-            star : aligner == 'star'
+        ch_reads_aligner_index_gtf.branch { meta, reads, aligner, index, gtf ->
+            star: aligner == 'star'
                 return [meta, reads, index, gtf]
-            other   : true
+            other: true
         }
         .set{ch_to_align}
 
@@ -35,7 +35,7 @@ workflow FASTQ_ALIGN_RNA {
         ch_bam = ch_bam.mix(STAR_ALIGN.out.bam)
         ch_reports = ch_reports.mix(
             STAR_ALIGN.out.log_final,
-            STAR_ALIGN.out.log_progress
+            STAR_ALIGN.out.log_progress,
             STAR_ALIGN.out.log_out
         )
         ch_versions = ch_versions.mix(STAR_ALIGN.out.versions)
