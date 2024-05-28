@@ -49,7 +49,7 @@
             "properties": {
                 "aligner": {
                     "type": "string",
-                    "default": "bwamem",
+                    "default": "bowtie2",
                     "description": "Which aligner to use",
                     "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"]
                 },
