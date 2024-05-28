@@ -17,7 +17,7 @@ include { FASTQ_ALIGN_RNA   } from '../../local/fastq_align_rna/main'
 
 workflow FASTQ_TO_CRAM {
     take:
-        ch_meta_reads_aligner_index_fasta  // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap], aligner_index, fasta]
+        ch_meta_reads_aligner_index_fasta  // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta]
         markdup                            // string:  [optional ] markdup [bamsormadup, samtools, false]
 
     main:
@@ -33,11 +33,23 @@ workflow FASTQ_TO_CRAM {
 
         ch_meta_reads_aligner_index_fasta.dump(tag: "FASTQ_TO_CRAM: reads to align",pretty: true)
 
+        ch_meta_reads_aligner_index_fasta
+            .branch { meta, reads, aligner, index, fasta ->
+                rna: meta.sample_type == "RNA"
+                dna: meta.sample_type == "DNA"
+            }
+            .set { ch_meta_reads_aligner_index_fasta_datatype }
+
         // align fastq files per sample
         // ALIGNMENT([meta,fastq], index, sort)
         FASTQ_ALIGN_DNA(
-            ch_meta_reads_aligner_index_fasta,
+            ch_meta_reads_aligner_index_fasta_datatype.dna,
             false
+        )
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
+
+        FASTQ_ALIGN_RNA(
+            ch_meta_reads_aligner_index_fasta_datatype.rna
         )
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 

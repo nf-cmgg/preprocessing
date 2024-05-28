@@ -49,6 +49,13 @@
                 "pattern": "^[a-zA-Z0-9_-]+$",
                 "enum": ["WES", "WGS", "coPGT-M"]
             },
+            "sample_type": {
+                "meta": ["sample_type"],
+                "type": "string",
+                "description": "Data type of the sample",
+                "enum": ["DNA", "RNA"],
+                "default": "DNA"
+            },
             "library": {
                 "meta": ["library"],
                 "type": "string",

@@ -5,7 +5,7 @@
 //
 
 
-include { STAR_ALIGN                     } from "../../../modules/nf-core/star/align/main"
+include { STAR_ALIGN                     } from "../../../modules/local/star/align/main"
 
 workflow FASTQ_ALIGN_RNA {
     take:

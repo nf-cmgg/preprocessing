@@ -4,8 +4,8 @@ process STAR_ALIGN {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:ded3841da0194af2701c780e9b3d653a85d27489-0' :
-        'biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:ded3841da0194af2701c780e9b3d653a85d27489-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-18542ebf762268f62154251d379b96d001894a57:153528b341042daed3d265b3320b7efb5bf385a8-0' :
+        'biocontainers/mulled-v2-18542ebf762268f62154251d379b96d001894a57:153528b341042daed3d265b3320b7efb5bf385a8-0' }"
 
     input:
     tuple val(meta), path(reads, stageAs: "input*/*"), path(index), path(gtf)
@@ -37,7 +37,7 @@ process STAR_ALIGN {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def reads1 = [], reads2 = []
     meta.single_end ? [reads].flatten().each{reads1 << it} : reads.eachWithIndex{ v, ix -> ( ix & 1 ? reads2 : reads1) << v }
-    def ignore_gtf      = $gtf ? "--sjdbGTFfile $gtf" : ""
+    def gtf_arg         = gtf ? "--sjdbGTFfile $gtf" : ""
     def out_sam_type    = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
     def mv_unsorted_bam = (args.contains('--outSAMtype BAM Unsorted SortedByCoordinate')) ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
     """
@@ -47,7 +47,7 @@ process STAR_ALIGN {
         --runThreadN $task.cpus \\
         --outFileNamePrefix $prefix. \\
         $out_sam_type \\
-        $ignore_gtf \\
+        $gtf_arg \\
         $args
 
     $mv_unsorted_bam
@@ -64,8 +64,6 @@ process STAR_ALIGN {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         star: \$(STAR --version | sed -e "s/STAR_//g")
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
     END_VERSIONS
     """
 
@@ -80,8 +78,8 @@ process STAR_ALIGN {
     touch ${prefix}.toTranscriptome.out.bam
     touch ${prefix}.Aligned.unsort.out.bam
     touch ${prefix}.Aligned.sortedByCoord.out.bam
-    touch ${prefix}.unmapped_1.fastq.gz
-    touch ${prefix}.unmapped_2.fastq.gz
+    echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
+    echo "" | gzip > ${prefix}.unmapped_2.fastq.gz
     touch ${prefix}.tab
     touch ${prefix}.SJ.out.tab
     touch ${prefix}.ReadsPerGene.out.tab
@@ -93,8 +91,6 @@ process STAR_ALIGN {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         star: \$(STAR --version | sed -e "s/STAR_//g")
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        gawk: \$(echo \$(gawk --version 2>&1) | sed 's/^.*GNU Awk //; s/, .*\$//')
     END_VERSIONS
     """
 }
