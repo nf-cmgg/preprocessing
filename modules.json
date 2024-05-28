@@ -8,7 +8,9 @@
                     "bcl2fastq": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["bcl_demultiplex"]
+                        "installed_by": [
+                            "bcl_demultiplex"
+                        ]
                     },
                     "bclconvert": {
                         "branch": "master",
@@ -18,13 +20,18 @@
                     "biobambam/bamsormadup": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/biobambam/bamsormadup/biobambam-bamsormadup.diff"
                     },
                     "bowtie2/align": {
                         "branch": "master",
                         "git_sha": "0fe30831abbc2ed115e46e92330edf38f56edc3d",
-                        "installed_by": ["fastq_align_dna", "modules"],
+                        "installed_by": [
+                            "fastq_align_dna",
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/bowtie2/align/bowtie2-align.diff"
                     },
                     "bwa/mem": {
@@ -36,7 +43,9 @@
                     "bwamem2/mem": {
                         "branch": "master",
                         "git_sha": "3afb95b2e15fc4a2347470255a7ef654f650c8ec",
-                        "installed_by": ["fastq_align_dna"],
+                        "installed_by": [
+                            "fastq_align_dna"
+                        ],
                         "patch": "modules/nf-core/bwamem2/mem/bwamem2-mem.diff"
                     },
                     "cat/fastq": {
@@ -47,18 +56,24 @@
                     "dragmap/align": {
                         "branch": "master",
                         "git_sha": "dd2757cc22c5de8943fa38ba7cd6f8cc1eb65ac1",
-                        "installed_by": ["fastq_align_dna"],
+                        "installed_by": [
+                            "fastq_align_dna"
+                        ],
                         "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "95cf5fe0194c7bf5cb0e3027a2eb7e7c89385080",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "md5sum": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "mosdepth": {
                         "branch": "master",
@@ -69,36 +84,48 @@
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "picard/collecthsmetrics": {
                         "branch": "master",
                         "git_sha": "20b0918591d4ba20047d7e13e5094bcceba81447",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/picard/collecthsmetrics/picard-collecthsmetrics.diff"
                     },
                     "picard/collectmultiplemetrics": {
                         "branch": "master",
                         "git_sha": "20b0918591d4ba20047d7e13e5094bcceba81447",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/picard/collectmultiplemetrics/picard-collectmultiplemetrics.diff"
                     },
                     "picard/collectwgsmetrics": {
                         "branch": "master",
                         "git_sha": "20b0918591d4ba20047d7e13e5094bcceba81447",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/picard/collectwgsmetrics/picard-collectwgsmetrics.diff"
                     },
                     "samtools/cat": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/samtools/cat/samtools-cat.diff"
                     },
                     "samtools/collatefastq": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/samtools/collatefastq/samtools-collatefastq.diff"
                     },
                     "samtools/convert": {
@@ -110,56 +137,77 @@
                     "samtools/coverage": {
                         "branch": "master",
                         "git_sha": "38afbe42f7db7f19c7a89607c0a71c68f3be3131",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/samtools/coverage/samtools-coverage.diff"
                     },
                     "samtools/flagstat": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "samtools/getrg": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "samtools/idxstats": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "samtools/import": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "samtools/index": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "samtools/sormadup": {
                         "branch": "master",
                         "git_sha": "675bcc63bf765f2dd9eee19b8df2f23b918cf9a8",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/samtools/sormadup/samtools-sormadup.diff"
                     },
                     "samtools/sort": {
                         "branch": "master",
                         "git_sha": "4352dbdb09ec40db71e9b172b97a01dcf5622c26",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/samtools/sort/samtools-sort.diff"
                     },
                     "samtools/stats": {
                         "branch": "master",
                         "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/samtools/stats/samtools-stats.diff"
                     },
                     "snapaligner/align": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["fastq_align_dna", "modules"],
+                        "installed_by": [
+                            "fastq_align_dna",
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/snapaligner/align/snapaligner-align.diff"
                     }
                 }
@@ -179,7 +227,9 @@
                     "utils_nextflow_pipeline": {
                         "branch": "master",
                         "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": [
+                            "subworkflows"
+                        ]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
@@ -189,7 +239,9 @@
                     "utils_nfvalidation_plugin": {
                         "branch": "master",
                         "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": [
+                            "subworkflows"
+                        ]
                     }
                 }
             }

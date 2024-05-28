@@ -42,6 +42,13 @@ workflow FASTQ_TO_CRAM {
             }
             .set { ch_meta_reads_aligner_index_fasta_datatype }
 
+        ch_meta_reads_aligner_index_fasta
+            .branch { meta, reads, aligner, index, fasta ->
+                rna: meta.sample_type == "RNA"
+                dna: meta.sample_type == "DNA"
+            }
+            .set { ch_meta_reads_aligner_index_fasta_datatype }
+
         // align fastq files per sample
         // ALIGNMENT([meta,fastq], index, sort)
         FASTQ_ALIGN_DNA(
