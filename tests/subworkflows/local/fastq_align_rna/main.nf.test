@@ -4,6 +4,10 @@ nextflow_workflow {
     script "subworkflows/local/fastq_align_rna/main.nf"
     workflow "FASTQ_ALIGN_RNA"
 
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/fastq_align_rna"
+
     test("fastq align rna - star") {
 
         when {
