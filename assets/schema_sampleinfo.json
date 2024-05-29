@@ -53,8 +53,12 @@
                 "minimum": 0
             },
             "panels": {
-                "type": "string",
-                "description": "List of panels"
+                "type": "array",
+                "uniqueItems": true,
+                "description": "List of panels",
+                "items": {
+                    "type": "string"
+                }
             },
             "roi": {
                 "meta": ["roi"],

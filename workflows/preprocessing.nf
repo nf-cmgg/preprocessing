@@ -1,3 +1,5 @@
+include { samplesheetToList } from 'plugin/nf-schema'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
@@ -68,7 +70,7 @@ workflow PREPROCESSING {
     ch_inputs_from_samplesheet.illumina_flowcell
     .multiMap { meta, samplesheet, sampleinfo, flowcell ->
         flowcell: [meta, samplesheet, flowcell]
-        info    : sampleinfo
+        info    : samplesheetToList(sampleinfo, "assets/schema_sampleinfo.json")
     }
     .set{ ch_illumina_flowcell }
 
@@ -81,13 +83,26 @@ workflow PREPROCESSING {
     )
     ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
-    // Add metadata to demultiplexed fastq's
-    merge_sample_info(
-        BCL_DEMULTIPLEX.out.fastq,
-        parse_sample_info_csv(ch_illumina_flowcell.info)
-    )
+    // Merge fastq meta with sample info
+    BCL_DEMULTIPLEX.out.fastq
+    .combine(ch_illumina_flowcell.info)
+    .map { meta1, fastq, meta2 ->
+        def meta = meta1.findAll{true}
+        if ( meta2 && (meta1.samplename == meta2.samplename)) {
+            meta = meta1 + meta2
+            meta.readgroup    = [:]
+            meta.readgroup    = readgroup_from_fastq(fastq[0])
+            meta.readgroup.SM = meta.samplename
+            if(meta.library){
+                meta.readgroup.LB =  meta.library.toString()
+            }
+            return [ meta, fastq ]
+        }
+    }.groupTuple( by: [0])
+    .map { meta, fq ->
+        return [meta, fq.flatten().unique()]
+    }
     .set {ch_demultiplexed_fastq}
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // PROCESS FASTQ INPUTS
@@ -397,37 +412,6 @@ workflow PREPROCESSING {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-// Parse sample info input map
-def parse_sample_info_csv(csv_file) {
-    csv_file.splitCsv(header: true, strip: true).map { row ->
-        // check mandatory fields
-        if (!(row.samplename)) log.error "Missing samplename field in sample info file"
-        return row
-    }
-}
-
-// Merge fastq meta with sample info
-def merge_sample_info(ch_fastq, ch_sample_info) {
-    ch_fastq
-    .combine(ch_sample_info)
-    .map { meta1, fastq, meta2 ->
-        def meta = meta1.findAll{true}
-        if ( meta2 && (meta1.samplename == meta2.samplename)) {
-            meta = meta1 + meta2
-            meta.readgroup    = [:]
-            meta.readgroup    = readgroup_from_fastq(fastq[0])
-            meta.readgroup.SM = meta.samplename
-            if(meta.library){
-                meta.readgroup.LB =  meta.library.toString()
-            }
-            return [ meta, fastq ]
-        }
-    }.groupTuple( by: [0])
-    .map { meta, fq ->
-        return [meta, fq.flatten().unique()]
-    }
-}
 
 // https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
 def readgroup_from_fastq(path) {
