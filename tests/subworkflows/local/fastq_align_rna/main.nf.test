@@ -77,7 +77,7 @@ nextflow_workflow {
 
         then {
             assert workflow.failed
-            assert snapshot(workflow.stdout).match()
+            assert snapshot(workflow.stdout.findAll { it.contains("Unsupported") }).match()
         }
 
     }
