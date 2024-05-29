@@ -44,7 +44,7 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        workflow.out.cram_crai.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                        workflow.out.cram_crai.collect { it.findAll { !(it instanceof Map) }.collect { file(it).name } },
                         workflow.out.multiqc_files,
                         workflow.out.versions
                     ).match()
@@ -89,7 +89,7 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        workflow.out.cram_crai.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                        workflow.out.cram_crai.collect { it.findAll { !(it instanceof Map) }.collect { file(it).name } },
                         workflow.out.multiqc_files,
                         workflow.out.versions
                     ).match()
@@ -134,7 +134,7 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        workflow.out.cram_crai.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                        workflow.out.cram_crai.collect { it.findAll { !(it instanceof Map) }.collect { file(it).name } },
                         workflow.out.multiqc_files,
                         workflow.out.versions
                     ).match()
@@ -179,7 +179,7 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        workflow.out.cram_crai.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                        workflow.out.cram_crai.collect { it.findAll { !(it instanceof Map) }.collect { file(it).name } },
                         workflow.out.multiqc_files,
                         workflow.out.versions
                     ).match()
@@ -225,7 +225,7 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        workflow.out.cram_crai.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                        workflow.out.cram_crai.collect { it.findAll { !(it instanceof Map) }.collect { file(it).name } },
                         workflow.out.multiqc_files,
                         workflow.out.versions
                     ).match()
