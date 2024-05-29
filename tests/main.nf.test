@@ -13,6 +13,7 @@ nextflow_pipeline {
             params {
                 input = "${projectDir}/tests/inputs/fastq.yml"
                 aligner = "bwamem"
+                igenomes_base = "s3://reference-data/genomes"
             }
         }
 
@@ -28,6 +29,7 @@ nextflow_pipeline {
             params {
                 input = "${projectDir}/tests/inputs/flowcell.yml"
                 aligner = "bwamem"
+                igenomes_base = "s3://reference-data/genomes"
             }
         }
 
