@@ -87,16 +87,17 @@ workflow PREPROCESSING {
     BCL_DEMULTIPLEX.out.fastq
     .combine(ch_illumina_flowcell.info)
     .map { meta1, fastq, meta2 ->
-        def meta = meta1.findAll{true}
-        if ( meta2 && (meta1.samplename == meta2.samplename)) {
-            meta = meta1 + meta2
-            meta.readgroup    = [:]
-            meta.readgroup    = readgroup_from_fastq(fastq[0])
-            meta.readgroup.SM = meta.samplename
-            if(meta.library){
-                meta.readgroup.LB =  meta.library.toString()
+        for ( sample in meta2 ) {
+            if (meta1.samplename == sample.samplename) {
+                meta = meta1 + sample
+                meta.readgroup    = [:]
+                meta.readgroup    = readgroup_from_fastq(fastq[0])
+                meta.readgroup.SM = meta.samplename
+                if(meta.library){
+                    meta.readgroup.LB =  meta.library.toString()
+                }
+                return [ meta, fastq ]
             }
-            return [ meta, fastq ]
         }
     }.groupTuple( by: [0])
     .map { meta, fq ->
