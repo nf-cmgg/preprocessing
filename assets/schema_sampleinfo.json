@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-cmgg/preprocessing/main/assets/schema_sampleinfo.json",
     "title": "nf-cmgg/preprocessing sample info schema",
     "description": "Schema for the file provided with under the sample_info key of params.flowcell",
@@ -32,7 +32,7 @@
                 "type": "string",
                 "description": "Sample organism",
                 "pattern": "^[a-zA-Z0-9_\\s]+$",
-                "enum": ["Homo sapiens", "Mus musculus", "Danio rerio"]
+                "enum": ["Homo sapiens", "Mus musculus", "Danio rerio", "SarsCov", "Mus Musculus", "Homo Sapiens", "Danio Rerio"]
             },
             "vivar_project": {
                 "type": "string",
@@ -45,12 +45,8 @@
                 "minimum": 0
             },
             "panels": {
-                "type": "array",
-                "description": "List of panels",
-                "items": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9_]+$"
-                }
+                "type": "string",
+                "description": "List of panels"
             },
             "roi": {
                 "meta": ["roi"],
