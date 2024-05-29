@@ -38,7 +38,7 @@
                 "meta": ["aligner"],
                 "type": "string",
                 "description": "Aligner to use to align sample to the reference genome",
-                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap"]
+                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "star"]
             },
             "tag": {
                 "meta": ["tag"],
@@ -51,6 +51,13 @@
                 "type": "string",
                 "description": "Sample purpose, can be either 'research' or 'diagnostic'",
                 "enum": ["research", "diagnostic"]
+            },
+            "sample_type": {
+                "meta": ["sample_type"],
+                "type": "string",
+                "description": "Data type of the sample",
+                "enum": ["DNA", "RNA"],
+                "default": "DNA"
             },
             "library": {
                 "meta": ["library"],

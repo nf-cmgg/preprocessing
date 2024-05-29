@@ -237,13 +237,14 @@ workflow PREPROCESSING {
             reads,
             meta.aligner,
             GenomeUtils.getGenomeAttribute(meta.genome, meta.aligner),
-            GenomeUtils.getGenomeAttribute(meta.genome, "fasta")
+            GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
+            GenomeUtils.getGenomeAttribute(meta.genome, "gtf")
             ]
     }
-    .set{ch_meta_reads_aligner_index_fasta}
+    .set{ch_meta_reads_aligner_index_fasta_gtf}
 
     FASTQ_TO_CRAM(
-        ch_meta_reads_aligner_index_fasta,
+        ch_meta_reads_aligner_index_fasta_gtf,
         markdup
     )
 

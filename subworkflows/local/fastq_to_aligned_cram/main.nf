@@ -12,12 +12,13 @@ include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/m
 
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
+include { FASTQ_ALIGN_RNA   } from '../../local/fastq_align_rna/main'
 
 
 workflow FASTQ_TO_CRAM {
     take:
-        ch_meta_reads_aligner_index_fasta  // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap], aligner_index, fasta]
-        markdup                            // string:  [optional ] markdup [bamsormadup, samtools, false]
+        ch_meta_reads_aligner_index_fasta_gtf   // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta, gtf]
+        markdup                                 // string:  [optional ] markdup [bamsormadup, samtools, false]
 
     main:
 
@@ -30,13 +31,27 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        ch_meta_reads_aligner_index_fasta.dump(tag: "FASTQ_TO_CRAM: reads to align",pretty: true)
+        ch_meta_reads_aligner_index_fasta_gtf.dump(tag: "FASTQ_TO_CRAM: reads to align",pretty: true)
+
+        ch_meta_reads_aligner_index_fasta_gtf
+            .branch { meta, reads, aligner, index, fasta, gtf ->
+                rna: meta.sample_type == "RNA"
+                    return [meta, reads, aligner, index, gtf]
+                dna: meta.sample_type == "DNA"
+                    return [meta, reads, aligner, index, fasta]
+            }
+            .set { ch_meta_reads_aligner_index_fasta_datatype }
 
         // align fastq files per sample
         // ALIGNMENT([meta,fastq], index, sort)
         FASTQ_ALIGN_DNA(
-            ch_meta_reads_aligner_index_fasta,
+            ch_meta_reads_aligner_index_fasta_datatype.dna,
             false
+        )
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
+
+        FASTQ_ALIGN_RNA(
+            ch_meta_reads_aligner_index_fasta_datatype.rna
         )
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
@@ -46,7 +61,9 @@ workflow FASTQ_TO_CRAM {
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         */
 
-        FASTQ_ALIGN_DNA.out.bam.map {
+        FASTQ_ALIGN_DNA.out.bam
+        .mix(FASTQ_ALIGN_RNA.out.bam)
+        .map {
             // set id to samplename, drop readgroup and count meta values
             meta, files ->
             def gk = (meta.chunks as Integer ?: 1)
