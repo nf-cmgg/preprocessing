@@ -83,27 +83,30 @@ workflow PREPROCESSING {
     )
     ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
-    // Merge fastq meta with sample info
     BCL_DEMULTIPLEX.out.fastq
-    .combine(ch_illumina_flowcell.info)
-    .map { meta1, fastq, meta2 ->
-        for ( sample in meta2 ) {
-            if (meta1.samplename == sample.samplename) {
-                meta = meta1 + sample
-                meta.readgroup    = [:]
-                meta.readgroup    = readgroup_from_fastq(fastq[0])
-                meta.readgroup.SM = meta.samplename
-                if(meta.library){
-                    meta.readgroup.LB =  meta.library.toString()
-                }
-                return [ meta, fastq ]
-            }
-        }
-    }.groupTuple( by: [0])
+    .map(meta, fastq -> [meta.samplename, meta, fastq])
+    .set{ch_demultiplexed_fastq}
+
+    ch_illumina_flowcell.info
+    .transpose()
+    .map{sampleinfo -> [sampleinfo[0].samplename, sampleinfo[0]]}
+    .set{ch_sampleinfo}
+
+    // Merge fastq meta with sample info
+    ch_demultiplexed_fastq
+    .combine(ch_sampleinfo, by: 0)
+    .map { samplename, meta, fastq, sampleinfo ->
+        new_meta = meta + sampleinfo
+        readgroup = readgroup_from_fastq(fastq[0])
+        readgroup = readgroup + ['SM': samplename, 'LB': meta.library ?: ""]
+        new_meta = new_meta + ['readgroup' : readgroup]
+        return [ new_meta, fastq ]
+    }
+    .groupTuple( by: [0])
     .map { meta, fq ->
         return [meta, fq.flatten().unique()]
     }
-    .set {ch_demultiplexed_fastq}
+    .set {ch_demultiplexed_fastq_with_sampleinfo}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // PROCESS FASTQ INPUTS
@@ -132,7 +135,7 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
     ch_input_fastq
-    .mix(ch_demultiplexed_fastq)
+    .mix(ch_demultiplexed_fastq_with_sampleinfo)
     // set genome based on organism key
     .map{ meta, reads ->
         if (meta.organism && !meta.genome) {
