@@ -84,7 +84,7 @@ workflow PREPROCESSING {
     ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
     BCL_DEMULTIPLEX.out.fastq
-    .map(meta, fastq -> [meta.samplename, meta, fastq])
+    .map{meta, fastq -> [meta.samplename, meta, fastq]}
     .set{ch_demultiplexed_fastq}
 
     ch_illumina_flowcell.info
