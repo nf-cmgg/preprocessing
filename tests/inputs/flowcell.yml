@@ -3,4 +3,4 @@
   samplesheet: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/flowcell/SampleSheet.csv
   lane: 1
   flowcell: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/flowcell/200624_A00834_0183_BHMTFYDRXX.tar.gz
-  sample_info: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/flowcell/SampleInfo.csv
+  sample_info: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/flowcell/SampleInfo.json

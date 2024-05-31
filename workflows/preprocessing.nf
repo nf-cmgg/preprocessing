@@ -1,3 +1,5 @@
+include { samplesheetToList } from 'plugin/nf-schema'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
@@ -68,7 +70,7 @@ workflow PREPROCESSING {
     ch_inputs_from_samplesheet.illumina_flowcell
     .multiMap { meta, samplesheet, sampleinfo, flowcell ->
         flowcell: [meta, samplesheet, flowcell]
-        info    : sampleinfo
+        info    : samplesheetToList(sampleinfo, "assets/schema_sampleinfo.json")
     }
     .set{ ch_illumina_flowcell }
 
@@ -81,13 +83,30 @@ workflow PREPROCESSING {
     )
     ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
-    // Add metadata to demultiplexed fastq's
-    merge_sample_info(
-        BCL_DEMULTIPLEX.out.fastq,
-        parse_sample_info_csv(ch_illumina_flowcell.info)
-    )
-    .set {ch_demultiplexed_fastq}
+    BCL_DEMULTIPLEX.out.fastq
+    .map{meta, fastq -> [meta.samplename, meta, fastq]}
+    .set{ch_demultiplexed_fastq}
 
+    ch_illumina_flowcell.info
+    .transpose()
+    .map{sampleinfo -> [sampleinfo[0].samplename, sampleinfo[0]]}
+    .set{ch_sampleinfo}
+
+    // Merge fastq meta with sample info
+    ch_demultiplexed_fastq
+    .combine(ch_sampleinfo, by: 0)
+    .map { samplename, meta, fastq, sampleinfo ->
+        new_meta = meta + sampleinfo
+        readgroup = readgroup_from_fastq(fastq[0])
+        readgroup = readgroup + ['SM': samplename, 'LB': meta.library ?: ""]
+        new_meta = new_meta + ['readgroup' : readgroup]
+        return [ new_meta, fastq ]
+    }
+    .groupTuple( by: [0])
+    .map { meta, fq ->
+        return [meta, fq.flatten().unique()]
+    }
+    .set {ch_demultiplexed_fastq_with_sampleinfo}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // PROCESS FASTQ INPUTS
@@ -116,7 +135,7 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
     ch_input_fastq
-    .mix(ch_demultiplexed_fastq)
+    .mix(ch_demultiplexed_fastq_with_sampleinfo)
     // set genome based on organism key
     .map{ meta, reads ->
         if (meta.organism && !meta.genome) {
@@ -397,37 +416,6 @@ workflow PREPROCESSING {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-// Parse sample info input map
-def parse_sample_info_csv(csv_file) {
-    csv_file.splitCsv(header: true, strip: true).map { row ->
-        // check mandatory fields
-        if (!(row.samplename)) log.error "Missing samplename field in sample info file"
-        return row
-    }
-}
-
-// Merge fastq meta with sample info
-def merge_sample_info(ch_fastq, ch_sample_info) {
-    ch_fastq
-    .combine(ch_sample_info)
-    .map { meta1, fastq, meta2 ->
-        def meta = meta1.findAll{true}
-        if ( meta2 && (meta1.samplename == meta2.samplename)) {
-            meta = meta1 + meta2
-            meta.readgroup    = [:]
-            meta.readgroup    = readgroup_from_fastq(fastq[0])
-            meta.readgroup.SM = meta.samplename
-            if(meta.library){
-                meta.readgroup.LB =  meta.library.toString()
-            }
-            return [ meta, fastq ]
-        }
-    }.groupTuple( by: [0])
-    .map { meta, fq ->
-        return [meta, fq.flatten().unique()]
-    }
-}
 
 // https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
 def readgroup_from_fastq(path) {

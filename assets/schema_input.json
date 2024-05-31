@@ -100,8 +100,8 @@
                 "schema": "assets/schema_sampleinfo.json",
                 "type": "string",
                 "format": "file-path",
-                "pattern": "^\\S+\\.csv$",
-                "description": "CSV file with sample information, must contain columns 'samplename', 'organism' and 'tag'"
+                "pattern": "^\\S+\\.(json|yaml|yml)$",
+                "description": "JSON/YAML file with sample information, must contain fields 'samplename', 'organism' and 'tag'"
             },
             "flowcell": {
                 "type": "string",

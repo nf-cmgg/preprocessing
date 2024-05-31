@@ -8,16 +8,26 @@
         "type": "object",
         "properties": {
             "samplename": {
+                "meta": ["samplename"],
                 "type": "string",
                 "description": "Sample name",
                 "pattern": "^[a-zA-Z0-9_]+$"
             },
+            "sample_type": {
+                "meta": ["sample_type"],
+                "type": "string",
+                "description": "Data type of the sample",
+                "enum": ["DNA", "RNA"],
+                "default": "DNA"
+            },
             "library": {
+                "meta": ["library"],
                 "type": "string",
                 "description": "Library name",
                 "pattern": "^[a-zA-Z0-9_]+$"
             },
             "tag": {
+                "meta": ["tag"],
                 "type": "string",
                 "description": "Sample tag",
                 "pattern": "^[a-zA-Z0-9_]+$"
@@ -29,6 +39,7 @@
                 "enum": ["research", "diagnostic"]
             },
             "organism": {
+                "meta": ["organism"],
                 "type": "string",
                 "description": "Sample organism",
                 "pattern": "^[a-zA-Z0-9_\\s]+$",
@@ -43,18 +54,25 @@
                 ]
             },
             "vivar_project": {
+                "meta": ["vivar_project"],
                 "type": "string",
                 "description": "Vivar project name",
                 "pattern": "^[a-zA-Z0-9_]+$"
             },
             "binsize": {
+                "meta": ["binsize"],
                 "type": "integer",
                 "description": "Binsize for CNV analysis",
                 "minimum": 0
             },
             "panels": {
-                "type": "string",
-                "description": "List of panels"
+                "meta": ["panels"],
+                "type": "array",
+                "uniqueItems": true,
+                "description": "List of panels",
+                "items": {
+                    "type": "string"
+                }
             },
             "roi": {
                 "meta": ["roi"],
