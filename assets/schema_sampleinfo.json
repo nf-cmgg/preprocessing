@@ -59,7 +59,7 @@
                 "minimum": 0
             },
             "panels": {
-                "meta": "panels",
+                "meta": ["panels"],
                 "type": "array",
                 "uniqueItems": true,
                 "description": "List of panels",
