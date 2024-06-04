@@ -281,7 +281,7 @@ workflow PREPROCESSING {
 
     FASTQ_TO_CRAM.out.cram_crai
     .filter{ meta, cram, crai ->
-        meta.tags && meta.tag == "SNP"
+        meta.tag && meta.tag != "SNP"
     }
     .set{ch_no_snp_samples}
 
