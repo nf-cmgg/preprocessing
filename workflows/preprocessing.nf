@@ -88,8 +88,9 @@ workflow PREPROCESSING {
     .set{ch_demultiplexed_fastq}
 
     ch_illumina_flowcell.info
+    .flatten()
     .transpose()
-    .map{sampleinfo -> [sampleinfo[0].samplename, sampleinfo[0]]}
+    .map{sampleinfo -> [sampleinfo.samplename, sampleinfo]}
     .set{ch_sampleinfo}
 
     // Merge fastq meta with sample info
