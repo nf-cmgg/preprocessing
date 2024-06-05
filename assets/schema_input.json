@@ -108,18 +108,18 @@
                 "format": "path",
                 "description": "Illumina flowcell directory"
             }
-        }
+        },
+        "anyOf": [
+            {
+                "required": ["id", "samplename", "organism", "tag", "fastq_1", "fastq_2"]
+            },
+            {
+                "required": ["id", "samplename", "genome", "tag", "fastq_1", "fastq_2"]
+            },
+            {
+                "required": ["id", "samplesheet", "sample_info", "flowcell"]
+            }
+        ]
     },
-    "uniqueEntries": ["id", "samplename", "lane"],
-    "anyOf": [
-        {
-            "required": ["id", "samplename", "organism", "tag", "fastq_1", "fastq_2"]
-        },
-        {
-            "required": ["id", "samplename", "genome", "tag", "fastq_1", "fastq_2"]
-        },
-        {
-            "required": ["id", "samplesheet", "sample_info", "flowcell"]
-        }
-    ]
+    "uniqueEntries": ["id", "samplename", "lane"]
 }
