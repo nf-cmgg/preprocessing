@@ -282,7 +282,7 @@ workflow PREPROCESSING {
 
     FASTQ_TO_CRAM.out.cram_crai
     .filter{ meta, cram, crai ->
-        meta.tag && meta.tag != "SNP"
+        meta.tag != "SNP"
     }
     .set{ch_no_snp_samples}
 
@@ -317,10 +317,10 @@ workflow PREPROCESSING {
 
     COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
     ch_multiqc_files = ch_multiqc_files.mix(
-        COVERAGE.out.mosdepth_summary   .map{ meta, txt -> return txt },
-        COVERAGE.out.mosdepth_global    .map{ meta, txt -> return txt },
-        COVERAGE.out.mosdepth_regions   .map{ meta, txt -> return txt },
-        COVERAGE.out.samtools_coverage  .map{ meta, txt -> return txt },
+        COVERAGE.out.mosdepth_summary .map{ meta, txt -> return txt },
+        COVERAGE.out.mosdepth_global  .map{ meta, txt -> return txt },
+        COVERAGE.out.mosdepth_regions .map{ meta, txt -> return txt },
+        COVERAGE.out.samtools_coverage.map{ meta, txt -> return txt },
     )
     ch_versions = ch_versions.mix(COVERAGE.out.versions)
 
