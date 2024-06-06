@@ -62,7 +62,7 @@
             "library": {
                 "meta": ["library"],
                 "type": "string",
-                "pattern": "^[a-zA-Z0-9_]+$",
+                "pattern": "^[a-zA-Z0-9_-]+$",
                 "description": "Sample library name"
             },
             "roi": {

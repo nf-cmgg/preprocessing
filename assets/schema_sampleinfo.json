@@ -24,7 +24,7 @@
                 "meta": ["library"],
                 "type": "string",
                 "description": "Library name",
-                "pattern": "^[a-zA-Z0-9_]+$"
+                "pattern": "^[a-zA-Z0-9_-]+$"
             },
             "tag": {
                 "meta": ["tag"],
