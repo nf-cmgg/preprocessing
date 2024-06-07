@@ -12,6 +12,17 @@ export_plots: true
 disable_version_detection: true
 bclconvert:
   create_undetermined_barcode_barplots: true
+mosdepth_config:
+  include_contigs:
+    - "chr*"
+  exclude_contigs:
+    - "*_alt"
+    - "*_decoy"
+    - "*_random"
+    - "chrUn*"
+    - "HLA*"
+    - "chrM"
+    - "chrEBV"
 extra_fn_clean_exts:
   - ".cram"
   - ".coverage"
