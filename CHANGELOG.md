@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Overhaul panel coverage analysis
 - Add support for `STAR` aligner for RNA-seq
 - Replace CSV sampleinfo definition with validated JSON/YAML
+- Update modules
 
 ## v1.2.0
 
