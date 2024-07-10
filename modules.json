@@ -12,7 +12,7 @@
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "570c5d253837869fa0594972a2ec19ce205e5532",
+                        "git_sha": "54cd970e633efbd6adab9fc5610dd280e50ab32c",
                         "installed_by": ["bcl_demultiplex", "modules"]
                     },
                     "biobambam/bamsormadup": {
@@ -168,7 +168,7 @@
                 "nf-core": {
                     "bcl_demultiplex": {
                         "branch": "master",
-                        "git_sha": "98dec3970368aa6e058c792ae1e451bb09624ed3",
+                        "git_sha": "54cd970e633efbd6adab9fc5610dd280e50ab32c",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_align_dna": {
