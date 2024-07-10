@@ -73,19 +73,19 @@
                     },
                     "picard/collecthsmetrics": {
                         "branch": "master",
-                        "git_sha": "20b0918591d4ba20047d7e13e5094bcceba81447",
+                        "git_sha": "0dee12b56ccecc416d6f7a1ccd85fd571eab3307",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collecthsmetrics/picard-collecthsmetrics.diff"
                     },
                     "picard/collectmultiplemetrics": {
                         "branch": "master",
-                        "git_sha": "20b0918591d4ba20047d7e13e5094bcceba81447",
+                        "git_sha": "0dee12b56ccecc416d6f7a1ccd85fd571eab3307",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collectmultiplemetrics/picard-collectmultiplemetrics.diff"
                     },
                     "picard/collectwgsmetrics": {
                         "branch": "master",
-                        "git_sha": "20b0918591d4ba20047d7e13e5094bcceba81447",
+                        "git_sha": "0dee12b56ccecc416d6f7a1ccd85fd571eab3307",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collectwgsmetrics/picard-collectwgsmetrics.diff"
                     },
