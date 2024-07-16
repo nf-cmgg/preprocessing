@@ -23,13 +23,13 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "0fe30831abbc2ed115e46e92330edf38f56edc3d",
+                        "git_sha": "e4bad511789f16d0df39ee306b2cd50418365048",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/bowtie2/align/bowtie2-align.diff"
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "0c34b8159f62cde451c4ff249629c9d0a4f3f9c3",
+                        "git_sha": "e0ff65e1fb313677de09f5f477ae3da30ce19b7b",
                         "installed_by": ["fastq_align_dna"],
                         "patch": "modules/nf-core/bwa/mem/bwa-mem.diff"
                     },
@@ -41,7 +41,7 @@
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "4fc983ad0b30e6e32696fa7d980c76c7bfe1c03e",
+                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
                         "installed_by": ["modules"]
                     },
                     "dragmap/align": {
@@ -52,12 +52,12 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "95cf5fe0194c7bf5cb0e3027a2eb7e7c89385080",
+                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
                         "installed_by": ["modules"]
                     },
                     "md5sum": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "1164836d4d3922ab937865b17086485f0f472748",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
@@ -68,7 +68,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "45d482f013f7da8a3e050e855f04ada418d91c3c",
+                        "git_sha": "b80f5fd12ff7c43938f424dd76392a2704fa2396",
                         "installed_by": ["modules"]
                     },
                     "picard/collecthsmetrics": {
