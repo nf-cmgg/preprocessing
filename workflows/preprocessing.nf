@@ -372,7 +372,7 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-    MD5SUM(FASTQ_TO_CRAM.out.cram_crai.map{ meta, cram, crai -> return [meta,cram] })
+    MD5SUM(FASTQ_TO_CRAM.out.cram_crai.map{ meta, cram, crai -> return [meta,cram] }, false)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
