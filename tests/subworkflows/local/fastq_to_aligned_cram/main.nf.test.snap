@@ -11,16 +11,16 @@
                 
             ],
             [
-                "versions.yml:md5,1628f3785f7e7fd46344418b00926ff3",
+                "versions.yml:md5,4ad4a320748ecb9f9005dff1cc516425",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-05-29T10:57:22.374590722"
+        "timestamp": "2024-07-16T08:42:31.046232"
     },
     "fastq to cram - bwa - bamsormadup": {
         "content": [
@@ -54,19 +54,19 @@
                 ]
             ],
             [
-                "test.merged.metrics:md5,934298c4be265f81fdc3e39b303d811b"
+                "test.merged.metrics:md5,51b2debf81378094ed82d1cdaa21669f"
             ],
             [
-                "versions.yml:md5,163edee2f4f70839ca5012263163ffd1",
+                "versions.yml:md5,608b9e6041cb85edeaee61b0efa3b37c",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-05-29T10:55:13.12322678"
+        "timestamp": "2024-07-16T08:41:41.794917"
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
@@ -77,7 +77,7 @@
                 ]
             ],
             [
-                "test.merged.metrics.txt:md5,641527401576375d7c0b0b54fbaf63ab"
+                "test.merged.metrics.txt:md5,7afa97ed76abfd72a77d98709474be68"
             ],
             [
                 "versions.yml:md5,d8544811f6b511ef45e9c3547430a30d"
@@ -85,9 +85,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-05-29T10:54:01.876474886"
+        "timestamp": "2024-07-16T08:41:12.044485"
     },
     "fastq to cram - bwa - samtools sort": {
         "content": [
@@ -101,15 +101,15 @@
                 
             ],
             [
-                "versions.yml:md5,1628f3785f7e7fd46344418b00926ff3",
+                "versions.yml:md5,4ad4a320748ecb9f9005dff1cc516425",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-05-29T10:56:15.06682395"
+        "timestamp": "2024-07-16T08:42:06.679175"
     }
 }
