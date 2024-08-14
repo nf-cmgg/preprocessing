@@ -4,71 +4,28 @@ nextflow_workflow {
     script "subworkflows/local/coverage/main.nf"
     workflow "COVERAGE"
 
-    test("COVERAGE - No target interval file") {
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/coverage"
+
+    test("Coverage") {
 
         when {
-            params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
-            }
             workflow {
                 """
-                // define inputs of the workflow here. Example:
-                // ch_bam_bai [meta, bam, bai]
+                // ch_meta_cram_crai_fasta_fai_roi
                 input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    file(params.test_data['homo_sapiens']['illumina']['test_cram'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_cram_index'], checkIfExists: true)
+                    [id: "test", single_end: false], // meta
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
                 ])
-
-                // ch_fasta_fai
+                // genelists
                 input[1] = Channel.of([
-                    [id:'genome'],
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
-                    ])
-
-                // Target interval file
-                input[2] = []
-
-                """
-            }
-        }
-
-        then {
-            assert workflow.success
-            assert snapshot(workflow.out).match()
-        }
-
-    }
-
-    test("COVERAGE - Target interval file") {
-
-        when {
-            params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
-            }
-            workflow {
-                """
-                // define inputs of the workflow here. Example:
-                // ch_bam_bai [meta, bam, bai]
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    file(params.test_data['homo_sapiens']['illumina']['test_cram'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_cram_index'], checkIfExists: true)
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/genelists/genelist_chr21_per_exon.bed",checkIfExists:true)
                 ])
-
-                // ch_fasta_fai
-                input[1] = Channel.of([
-                    [id:'genome'],
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true),
-                    ])
-
-                // ch_target_interval
-                input[2] = Channel.of( file(params.test_data['homo_sapiens']['illumina']['roi_bed'], checkIfExists: true))
-
                 """
             }
         }

@@ -1,7 +1,21 @@
-# CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing: Changelog
+# nf-cmgg/preprocessing: Changelog
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## v2.0.0
+
+- Move repo to nf-cmgg organisation
+- Overhaul reference data handling. All data is now sourced from the `igenomes` config file and dynamically loaded based on the `organism` metadata field.
+- Drop support for bam/cram inputs
+- Update to nf-core template v2.13.1
+- Drop `fgbio/fastqtosam` in favour of `samtools/import`
+- Add `samtools/coverage` for coverage analysis
+- Add testing with nf-test
+- Overhaul panel coverage analysis
+- Add support for `STAR` aligner for RNA-seq
+- Replace CSV sampleinfo definition with validated JSON/YAML
+- Update modules
 
 ## v1.2.0
 

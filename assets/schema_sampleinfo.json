@@ -1,0 +1,88 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-cmgg/preprocessing/main/assets/schema_sampleinfo.json",
+    "title": "nf-cmgg/preprocessing sample info schema",
+    "description": "Schema for the file provided with under the sample_info key of params.flowcell",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "samplename": {
+                "meta": ["samplename"],
+                "type": "string",
+                "description": "Sample name",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "sample_type": {
+                "meta": ["sample_type"],
+                "type": "string",
+                "description": "Data type of the sample",
+                "enum": ["DNA", "RNA"],
+                "default": "DNA"
+            },
+            "library": {
+                "meta": ["library"],
+                "type": "string",
+                "description": "Library name",
+                "pattern": "^[a-zA-Z0-9_-]+$"
+            },
+            "tag": {
+                "meta": ["tag"],
+                "type": "string",
+                "description": "Sample tag",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "purpose": {
+                "meta": ["purpose"],
+                "type": "string",
+                "description": "Sample purpose, can be either 'research' or 'diagnostic'",
+                "enum": ["research", "diagnostic"]
+            },
+            "organism": {
+                "meta": ["organism"],
+                "type": "string",
+                "description": "Sample organism",
+                "pattern": "^[a-zA-Z0-9_\\s]+$",
+                "enum": [
+                    "Homo sapiens",
+                    "Mus musculus",
+                    "Danio rerio",
+                    "SarsCov",
+                    "Mus Musculus",
+                    "Homo Sapiens",
+                    "Danio Rerio"
+                ]
+            },
+            "vivar_project": {
+                "meta": ["vivar_project"],
+                "type": "string",
+                "description": "Vivar project name",
+                "pattern": "^[a-zA-Z0-9_]+$"
+            },
+            "binsize": {
+                "meta": ["binsize"],
+                "type": "integer",
+                "description": "Binsize for CNV analysis",
+                "minimum": 0
+            },
+            "panels": {
+                "meta": ["panels"],
+                "type": "array",
+                "uniqueItems": true,
+                "description": "List of panels",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "roi": {
+                "meta": ["roi"],
+                "type": "string",
+                "format": "file-path",
+                "description": "Region of interest BED file for coverage analysis",
+                "pattern": "^[a-zA-Z0-9_]+.bed$",
+                "default": null
+            }
+        }
+    },
+    "required": ["samplename", "tag", "organism"]
+}

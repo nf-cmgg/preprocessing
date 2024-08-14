@@ -4,13 +4,11 @@ process PICARD_COLLECTMULTIPLEMETRICS {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/picard:3.1.1--hdfd78af_0' :
-        'biocontainers/picard:3.1.1--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/picard:3.2.0--hdfd78af_0' :
+        'biocontainers/picard:3.2.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta) , path(bam), path(bai)
-    tuple val(meta2), path(fasta)
-    tuple val(meta3), path(fai)
+    tuple val(meta) , path(bam), path(bai) ,path(fasta) ,path(fai)
 
     output:
     tuple val(meta), path("*_metrics"), emit: metrics

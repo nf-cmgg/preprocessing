@@ -1,0 +1,113 @@
+{
+    "Coverage": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_genelist_chr21_per_exon.mosdepth.region.dist.txt:md5,e5c7b4f381721888249c57aa55be2d34"
+                    ]
+                ],
+                "5": [
+                    "versions.yml:md5,240240886d2b7ad84a62b01cb04c382d",
+                    "versions.yml:md5,2d22ebfca674911d28ac60f352a98b1b",
+                    "versions.yml:md5,731a006ffa265ac74ad677b4e5a68640"
+                ],
+                "mosdepth_global": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
+                    ]
+                ],
+                "mosdepth_regions": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
+                    ]
+                ],
+                "mosdepth_summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
+                    ]
+                ],
+                "panelcoverage": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_genelist_chr21_per_exon.mosdepth.region.dist.txt:md5,e5c7b4f381721888249c57aa55be2d34"
+                    ]
+                ],
+                "samtools_coverage": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,240240886d2b7ad84a62b01cb04c382d",
+                    "versions.yml:md5,2d22ebfca674911d28ac60f352a98b1b",
+                    "versions.yml:md5,731a006ffa265ac74ad677b4e5a68640"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-16T08:42:51.371734"
+    }
+}

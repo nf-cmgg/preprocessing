@@ -1,0 +1,37 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_TO_UCRAM"
+    script "subworkflows/local/fastq_to_unaligned_cram/main.nf"
+    workflow "FASTQ_TO_UCRAM"
+
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/fastq_to_unaligned_cram"
+
+    test("fastq to unaligned cram") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', samplename:'test', single_end:false ], // meta map
+                    [
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                file(workflow.out.cram[0][1]).name,
+                workflow.out.versions
+            ).match()
+        }
+
+    }
+
+}

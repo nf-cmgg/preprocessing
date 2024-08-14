@@ -1,59 +1,117 @@
-# CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing: Usage
+# nf-cmgg/preprocessing: Usage
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
+Parameter documentation can be found [here](parameters.md)
 
 ## Introduction
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It can be a CSV (comma-separated values), TSV (tab-separated values), JSON (javascript object notation) or YAML (yet another markup language) file.
 
 ```bash
 --input '[path to samplesheet file]'
 ```
 
+The pipeline supports two types of samplesheets to be used as input: [`fastq`](#fastq-samplesheet) and [`flowcell`](#flowcell-samplesheet) samplesheets. The type will be automatically detected and applied by the pipeline. The pipeline will also auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire.
+
+### Common samplesheet fields
+
+This table shows all samplesheet fields that can be used by both the [`fastq`](#fastq-samplesheet) and the [`flowcell`](#flowcell-samplesheet) samplesheet types.
+
+| Column    | Description                                                                                                          | Required for Fastq | Required for Flowcell |
+| --------- | -------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------- |
+| `id`      | Unique samplesheet/flowcell ID. Can only contain letters, numbers and underscores.                                   | :heavy_check_mark: | :heavy_check_mark:    |
+| `tag`     | The tag used by the sample. Can be one of WES, WGS or coPGT-M                                                        | :heavy_check_mark: | :x:                   |
+| `aligner` | The aligner to use for this sample. Can be one of these: bowtie2, <b>bwamem (default)</b>, bwamem2, dragmap and snap | :x:                | :x:                   |
+| `roi`     | The path to a BED file containing <b>R</b>egions <b>O</b>f <b>I</b>nterest for coverage analysis                     | :x:                | :x:                   |
+
+### Fastq samplesheet
+
+A `fastq` samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
+
+```csv title="samplesheet.csv"
+id,samplename,fastq_1,fastq_2,genome
+CONTROL_REP1,CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,GRCh38
+CONTROL_REP2,CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,GRCh38
+CONTROL_REP3,CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,GRCh38
+TREATMENT_REP1,TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,,GRCh38
+TREATMENT_REP2,TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,,GRCh38
+TREATMENT_REP3,TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,,GRCh38
+TREATMENT_REP3,TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,GRCh38
+```
+
+Following table shows the fields that are used by the `fastq` samplesheet:
+
+| Column       | Description                                                                                                    | Required                                        |
+| ------------ | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `fastq_1`    | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz' | :heavy_check_mark:                              |
+| `fastq_2`    | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                   | :x:                                             |
+| `samplename` | The sample name corresponding to the sample in the Fastq file(s)                                               | :heavy_check_mark:                              |
+| `genome`     | The genome build to use for the analysis. Currently supports GRCh38, GRCm39 and GRCz11                         | :heavy_check_mark: (unless `organism` is given) |
+| `organism`   | Full name of the organism. Currently supports "Homo sapiens", "Mus musculus" and "Danio rerio"                 | :heavy_check_mark: (unless `genome` is given)   |
+| `library`    | Sample library name                                                                                            | :x:                                             |
+
+An [example samplesheet](../tests/inputs/fastq.yml) has been provided with the pipeline.
+
+### Flowcell samplesheet
+
+A `flowcell` samplesheet file consisting of one sequencing run may look something like the one below.
+
+```csv title="samplesheet.csv"
+id,samplesheet,sample_info,flowcell
+RUN_NAME,RUN_NAME_samplesheet.csv,RUN_NAME_sampleinfo.csv,RUN_NAME_flowcell/
+```
+
+Following table shows the fields that are used by the `flowcell` samplesheet:
+
+| Column        | Description                                                                                            | Required           |
+| ------------- | ------------------------------------------------------------------------------------------------------ | ------------------ |
+| `samplesheet` | Illumina flowcell for the flowcell lane                                                                | :heavy_check_mark: |
+| `sample_info` | CSV file with sample information. See the [flowcell sample info](#flowcell-sample-info) documentation. | :heavy_check_mark: |
+| `flowcell`    | Illumina flowcell directory                                                                            | :heavy_check_mark: |
+| `lane`        | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'           | :x:                |
+
+An [example samplesheet](../tests/inputs/flowcell.yml) has been provided with the pipeline.
+
+### Flowcell sample info
+
+A `flowcell` sample info CSV file consisting for one sequencing run may look something like the one below.
+
+```csv title="sample_info.csv"
+samplename,library,organism,tag
+Sample1,test,Homo sapiens,WES
+```
+
+Following table shows the fields that are used by the `flowcell` samplesheet:
+
+| Column          | Description                                                                                         | Required           |
+| --------------- | --------------------------------------------------------------------------------------------------- | ------------------ |
+| `samplename`    | The sample name                                                                                     | :heavy_check_mark: |
+| `library`       | The library name                                                                                    | :x:                |
+| `tag`           | Sample tag. Has to be one of these: WES, WGS, coPGT-M                                               | :heavy_check_mark: |
+| `organism`      | The organism of the sample. Has to be one of these: "Homo sapiens", "Mus musculus" or "Danio rerio" | :heavy_check_mark: |
+| `vivar_project` | The vivar project name (currently not used by the pipeline)                                         | :x:                |
+| `binsize`       | The binsize for CNV analysis (currently not used by the pipeline)                                   | :x:                |
+| `panels`        | A list of panels for coverage analysis                                                              | :x:                |
+| `roi`           | Region of interest BED file for coverage analysis                                                   | :x:                |
+
 ### Multiple runs of the same sample
 
 The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
 
-```console
+```csv title="samplesheet.csv"
 sample,fastq_1,fastq_2
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
 CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
 ```
 
-### Full samplesheet
-
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
-```
-
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
-
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-cmgg/preprocessing --input ./samplesheet.csv --outdir ./results -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -71,12 +129,14 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-> ⚠️ Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+:::warning
+Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+:::
 
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing -profile docker -params-file params.yaml
+nextflow run nf-cmgg/preprocessing -profile docker -params-file params.yaml
 ```
 
 with `params.yaml` containing:
@@ -84,7 +144,6 @@ with `params.yaml` containing:
 ```yaml
 input: './samplesheet.csv'
 outdir: './results/'
-genome: 'GRCh37'
 <...>
 ```
 
@@ -95,24 +154,28 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
-nextflow pull CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+nextflow pull nf-cmgg/preprocessing
 ```
 
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing releases page](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
+First, go to the [nf-cmgg/preprocessing releases page](https://github.com/nf-cmgg/preprocessing/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
 To further assist in reproducbility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
-> 💡 If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
+:::tip
+If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
+:::
 
 ## Core Nextflow arguments
 
-> **NB:** These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
+:::note
+These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
+:::
 
 ### `-profile`
 
@@ -120,7 +183,9 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 
-> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
+:::info
+We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
+:::
 
 The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 

@@ -1,0 +1,85 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_ALIGN_RNA"
+    script "subworkflows/local/fastq_align_rna/main.nf"
+    workflow "FASTQ_ALIGN_RNA"
+
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/fastq_align_rna"
+
+    test("fastq align rna - star") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id:'test',
+                        samplename:'test',
+                        single_end:false,
+                        sample_type:'RNA',
+                        genome: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                        ]
+                    ], // meta map
+                    [
+                        file("s3://test-data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz", checkIfExists: true),
+                        file("s3://test-data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "star", // aligner
+                    file("s3://test-data/genomics/homo_sapiens/genome/star/", checkIfExists: true),
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                workflow.out.bam.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                workflow.out.reports.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                workflow.out.versions
+            ).match()
+        }
+
+    }
+
+    test("fastq align rna - unknown aligner") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id:'test',
+                        samplename:'test',
+                        single_end:false,
+                        sample_type:'RNA',
+                        genome: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                        ]
+                    ], // meta map
+                    [
+                        file("s3://test-data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz", checkIfExists: true),
+                        file("s3://test-data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "woop", // aligner
+                    file("s3://test-data/genomics/homo_sapiens/genome/star/", checkIfExists: true),
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assert snapshot(workflow.stdout.findAll { it.contains("Unsupported") }).match()
+        }
+
+    }
+
+}

@@ -1,27 +1,114 @@
 {
-    "QC - No Picard": {
+    "Bam QC - HSmetrics": {
         "content": [
-            {
-                "versions": [
-                    "versions.yml:md5,c679001d803dacd120a83e77ce7ebf7c",
-                    "versions.yml:md5,3fe0fb0d490cf1bf4adef6054a996aaa",
-                    "versions.yml:md5,807bb6c5f45f7f79747bf0ac76b4b1d3"
-                ],
-                "metrics": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.idxstats:md5,da8d682c344e9b7a11e6d58f541a574d",
-                            "test.flagstat:md5,7786d0cae80d4dab99f21e79439e033f",
-                            "test.stats:md5,a9f6787143ff01160dcae2a6001581c0"
-                        ]
-                    ]
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
                 ]
-            }
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
+                ]
+            ],
+            "test.CollectMultipleMetrics.alignment_summary_metrics",
+            "test.CollectHsMetrics.coverage_metrics"
         ],
-        "timestamp": "2022-12-21T11:08:37+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-16T08:43:39.309111"
+    },
+    "Bam QC - Samtools": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-16T08:44:51.463305"
+    },
+    "Bam QC - WGSmetrics": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
+                ]
+            ],
+            "test.CollectMultipleMetrics.alignment_summary_metrics",
+            "test.CollectWgsMetrics.coverage_metrics"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-16T08:44:36.334246"
     }
 }

@@ -1,119 +1,80 @@
-# CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing
+# ![nf-cmgg/preprocessing](docs/images/nf-cmgg-preprocessing_logo_light.png#gh-light-mode-only) ![nf-cmgg/preprocessing](docs/images/nf-cmgg-preprocessing_logo_dark.png#gh-dark-mode-only)
 
-[![GitHub Actions CI Status](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/workflows/nf-core%20CI/badge.svg)](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/actions?query=workflow%3A%22nf-core+CI%22)
-[![GitHub Actions Linting Status](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/workflows/nf-core%20linting/badge.svg)](https://github.com/CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing/actions?query=workflow%3A%22nf-core+linting%22)
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.0-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
+[![GitHub Actions CI Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/ci.yml)
+[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.10.1-23aa62.svg)](https://www.nextflow.io/)
+[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
+[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
+[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 
 ## Introduction
 
-**CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing** is a bioinformatics best-practice analysis pipeline for sequencing data preprocessing at CMGG.
-This workflow handles demultiplexing, alignment, qc and archiving.
+**nf-cmgg/preprocessing** is a bioinformatics pipeline that demultiplexes and aligns raw sequencing data.
+It also performs basic QC and coverage analysis.
 
-The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
+The pipeline is built using Nextflow, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
-## Pipeline summary
+Steps inlcude:
 
-1. Demultiplexing
-2. Fastq preprocessing
-3. Alignment
-4. QC
-5. Coverage analysis
-6. Compression
+1. Demultiplexing using [`BCLconvert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
+2. Read QC and trimming using [`fastp`](https://github.com/OpenGene/fastp)
+3. Alignment using either [`bwa`](https://github.com/lh3/bwa), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bowtie2`](https://github.com/BenLangmead/bowtie2), [`dragmap`](https://github.com/Illumina/DRAGMAP) or [`snap`](https://github.com/amplab/snap) for DNA-seq and [`STAR`](https://github.com/alexdobin/STAR) for RNA-seq
+4. Duplicate marking using [`bamsormadup`](https://gitlab.com/german.tischler/biobambam2) or [`samtools markdup`](http://www.htslib.org/doc/samtools-markdup.html)
+5. Coverage analysis using [`mosdepth`](https://github.com/brentp/mosdepth) and [`samtools coverage`](http://www.htslib.org/doc/samtools-coverage.html)
+6. Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`picard CollecHsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectHsMetrics), [`picard CollectWgsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics), [`picard CollectMultipleMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics)
+7. QC aggregation using [`multiqc`](https://multiqc.info/)
 
-![](docs/img/nf-cmgg-preprocessing.png)
+![metro map](docs/images/metro_map.png)
 
-## Quick Start
+## Usage
 
-1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=22.10.0`)
+> [!NOTE]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
+The full documentation can be found [here](docs/README.md)
 
-3. Download the pipeline and test it on a minimal dataset with a single command:
+First, prepare a samplesheet with your input data that looks as follows:
 
-   ```console
-   nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing -profile test,YOURPROFILE --outdir <OUTDIR>
-   ```
+`samplesheet.csv` for fastq inputs:
 
-   Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
-
-   > - The pipeline comes with config profiles called `docker`, `singularity`, `podman`, `shifter`, `charliecloud` and `conda` which instruct the pipeline to use the named tool for software management. For example, `-profile test,docker`.
-   > - Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
-   > - If you are using `singularity`, please use the [`nf-core download`](https://nf-co.re/tools/#downloading-pipelines-for-offline-use) command to download images first, before running the pipeline. Setting the [`NXF_SINGULARITY_CACHEDIR` or `singularity.cacheDir`](https://www.nextflow.io/docs/latest/singularity.html?#singularity-docker-hub) Nextflow options enables you to store and re-use the images from a central location for future pipeline runs.
-   > - If you are using `conda`, it is highly recommended to use the [`NXF_CONDA_CACHEDIR` or `conda.cacheDir`](https://www.nextflow.io/docs/latest/conda.html) settings to store the environments in a central location for future pipeline runs.
-
-4. Start running your own analysis!
-
-   ```console
-   nextflow run CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing --input flowcells.csv --samples samples.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
-   ```
-
-## Flowchart
-
-```mermaid
-
-flowchart TB
-
-FC(["Flowcell (BCL)"])                          --> DEMULTIPLEX
-SS([SampleSheet])                               --> DEMULTIPLEX
-
-subgraph DEMULTIPLEX[Demultiplex]
-    direction LR
-    SAMPLESHEET([SampleSheet])                  --> BCLCONVERT[bcl-convert]
-    FLOWCELL([Flowcell])                        --Split by LANE--> BCLCONVERT[bcl-convert]
-    BCLCONVERT                                  --> DEMUX_FASTQ([Fastq])
-    BCLCONVERT                                  --> DEMULTIPLEX_STATS([Demultiplex Reports])
-end
-
-DEMULTIPLEX                                     --> FASTP[FastP: Trimming and QC]
-DEMULTIPLEX                                     --> DEMUX_REPORTS
-FASTP                                           --> IS_HUMAN{Human data?}
-IS_HUMAN                                        --YES--> ALIGNMENT
-IS_HUMAN                                        --NO--> FASTQTOSAM
-FASTQTOSAM[Picard FastqToSam]                   --> UNALIGNED_BAM([Unaligned BAM]) --> A_CRAM
-
-subgraph ALIGNMENT
-    direction TB
-
-    subgraph ALIGNER
-        direction LR
-        BOWTIE2[bowtie2-align] & SNAP[snap-aligner] --> SORT[Sorting]
-    end
-
-    ALIGNER --> BamSorMaDUP
-    BamSorMaDUP                                 --> SORTBAM[Sorted/markdup bam] & MARKDUP_METRICS([Markduplicates Metrics])
-    SORTBAM                                     -->  ALN_CRAM([CRAM]) & MOSDEPTH[Mosdepth] & BAMQC[BAM QC Tools]
-    MOSDEPTH                                    -->  COVERAGE_BED([Coverage BEDs]) & COVERAGE_METRICS([Coverage Metrics])
-    BAMQC & MARKDUP_METRICS & COVERAGE_METRICS  -->  ALN_MULTIQC[MultiQC]
-end
-
-ALIGNMENT                                       --> A_CRAM([CRAM])
-ALIGNMENT                                       --> A_BAM_METRICS([BAM metrics])
-ALIGNMENT                                       --> A_COVERAGE_METRICS([Coverage metrics])
-ALIGNMENT                                       --> A_COVERAGE_BED([Coverage BED])
-
-A_BAM_METRICS                                   --> MQC([Run MultiQC Report])
-A_COVERAGE_METRICS                              --> MQC
-FASTP                                           --> MQC
-DEMUX_REPORTS                                   --> MQC
-
+```csv
+id,samplename,organism,library,fastq_1,fastq_2
+sample1,sample1,Homo sapiens,Library_Name,reads1.fq.gz,reads2.fq.gz
 ```
+
+`samplesheet.csv` for flowcell inputs:
+
+```csv
+id,samplesheet,lane,flowcell,sample_info
+flowcell_id,/path/to/illumina_samplesheet.csv,1,/path/to/sequencer_uploaddir,/path/to/sampleinfo.csv
+```
+
+`sampleinfo.csv` for use with flowcell inputs:
+
+```csv
+samplename,library,organism,tag
+fc_sample1,test,Homo sapiens,WES
+```
+
+Now, you can run the pipeline using:
+
+```bash
+nextflow run nf-cmgg/preprocessing \
+   -profile <docker/singularity/.../institute> \
+   --igenomes_base /path/to/genomes \
+   --input samplesheet.csv \
+   --outdir <OUTDIR>
+```
+
+> [!WARNING]
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
+> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
 ## Credits
 
-CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing was originally written by Matthias De Smet.
+nf-cmgg/preprocessing was originally written by the CMGG ICT team.
 
-## Contributions and Support
-
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
-
-## Citations
-
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use  CenterForMedicalGeneticsGhent/nf-cmgg-preprocessing for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
-
-An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
+## Support
 
 This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
 

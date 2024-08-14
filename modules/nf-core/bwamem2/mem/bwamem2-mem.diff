@@ -1,0 +1,16 @@
+Changes in module 'nf-core/bwamem2/mem'
+--- modules/nf-core/bwamem2/mem/main.nf
++++ modules/nf-core/bwamem2/mem/main.nf
+@@ -8,9 +8,7 @@
+         'biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:2d15960ccea84e249a150b7f5d4db3a42fc2d6c3-0' }"
+ 
+     input:
+-    tuple val(meta), path(reads)
+-    tuple val(meta2), path(index)
+-    tuple val(meta3), path(fasta)
++    tuple val(meta), path(reads), path(index), path(fasta)
+     val   sort_bam
+ 
+     output:
+
+************************************************************

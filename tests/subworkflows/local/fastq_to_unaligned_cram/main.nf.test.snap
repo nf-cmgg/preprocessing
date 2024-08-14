@@ -1,0 +1,16 @@
+{
+    "fastq to unaligned cram": {
+        "content": [
+            "test.unaligned.cram",
+            [
+                "versions.yml:md5,04a4ced997edc34e02c0b3dd65214f31",
+                "versions.yml:md5,dd125f3b3eea273b7171bd3cc0ce3df6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-16T08:38:56.569264"
+    }
+}
