@@ -7,7 +7,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,7098b9422bf3cce350116e93bd8cf83a"
+                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
                 ]
             ],
             [
@@ -33,9 +33,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-25T14:41:54.380478"
+        "timestamp": "2024-07-16T08:43:39.309111"
     },
     "Bam QC - Samtools": {
         "content": [
@@ -45,7 +45,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,7098b9422bf3cce350116e93bd8cf83a"
+                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
                 ]
             ],
             [
@@ -69,9 +69,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-25T14:43:20.206066"
+        "timestamp": "2024-07-16T08:44:51.463305"
     },
     "Bam QC - WGSmetrics": {
         "content": [
@@ -81,7 +81,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,7098b9422bf3cce350116e93bd8cf83a"
+                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
                 ]
             ],
             [
@@ -107,8 +107,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-25T14:42:57.86288"
+        "timestamp": "2024-07-16T08:44:36.334246"
     }
 }
