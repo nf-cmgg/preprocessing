@@ -37,7 +37,7 @@ workflow FASTQ_TO_CRAM {
             .branch { meta, reads, aligner, index, fasta, gtf ->
                 rna: meta.sample_type == "RNA"
                     return [meta, reads, aligner, index, gtf]
-                dna: meta.sample_type == "DNA"
+                dna: meta.sample_type == "DNA" || meta.sample_type == "Tissue"
                     return [meta, reads, aligner, index, fasta]
             }
             .set { ch_meta_reads_aligner_index_fasta_datatype }
