@@ -56,7 +56,7 @@
                 "meta": ["sample_type"],
                 "type": "string",
                 "description": "Data type of the sample",
-                "enum": ["DNA", "RNA"],
+                "enum": ["DNA", "RNA", "Tissue"],
                 "default": "DNA"
             },
             "library": {

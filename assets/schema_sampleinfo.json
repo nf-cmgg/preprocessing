@@ -17,7 +17,7 @@
                 "meta": ["sample_type"],
                 "type": "string",
                 "description": "Data type of the sample",
-                "enum": ["DNA", "RNA"],
+                "enum": ["DNA", "RNA", "Tissue"],
                 "default": "DNA"
             },
             "library": {
@@ -57,7 +57,7 @@
                 "meta": ["vivar_project"],
                 "type": "string",
                 "description": "Vivar project name",
-                "pattern": "^[a-zA-Z0-9_]+$"
+                "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "binsize": {
                 "meta": ["binsize"],
