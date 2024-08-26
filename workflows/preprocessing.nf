@@ -25,6 +25,7 @@ include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getGenomeAttribute     } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -140,19 +141,14 @@ workflow PREPROCESSING {
     // set genome based on organism key
     .map{ meta, reads ->
         if (meta.organism && !meta.genome) {
-            switch (meta.organism) {
-                case ~/(?i)Homo[\s_]sapiens/:
-                    meta = meta + ["genome":"GRCh38"]
-                    break
-                // case ~/(?i)Mus[\s_]musculus/:
-                //     meta = meta + ["genome":"GRCm39"]
-                //     break
-                // case ~/(?i)Danio[\s_]rerio/:
-                //     meta = meta + ["genome":"GRCz11"]
-                //     break
-                default:
-                    meta = meta + ["genome": null ]
-                    break
+            if (meta.organism ==~ /(?i)Homo[\s_]sapiens/) {
+                meta = meta + ["genome":"GRCh38"]
+            } else if (meta.organism ==~ /(?i)Mus[\s_]musculus/) {
+                meta = meta + ["genome":"GRCh38"]
+            } else if (meta.organism ==~/(?i)Danio[\s_]rerio/) {
+                meta = meta + ["genome":"GRCz11"]
+            } else {
+                meta = meta + ["genome": null ]
             }
         }
         if (genomes && genomes[meta.genome]){
@@ -167,7 +163,7 @@ workflow PREPROCESSING {
         // // if there's no global ROI AND no sample speficic ROI
         // // AND the sample tag is "coPGT-M", set the sample ROI to "roi_copgt"
         if (!roi && !meta.roi && meta.tag == "coPGT-M") {
-            meta = meta + ["roi": GenomeUtils.getGenomeAttribute(meta.genome, "roi_copgt")]
+            meta = meta + ["roi": getGenomeAttribute(meta.genome, "roi_copgt")]
         }
         // // if there's a global ROI AND no sample specific ROI
         // // set the global ROI to the sample
@@ -256,9 +252,9 @@ workflow PREPROCESSING {
             meta,
             reads,
             meta.aligner,
-            GenomeUtils.getGenomeAttribute(meta.genome, meta.aligner),
-            GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-            GenomeUtils.getGenomeAttribute(meta.genome, "gtf")
+            getGenomeAttribute(meta.genome, meta.aligner),
+            getGenomeAttribute(meta.genome, "fasta"),
+            getGenomeAttribute(meta.genome, "gtf")
             ]
     }
     .set{ch_meta_reads_aligner_index_fasta_gtf}
@@ -298,8 +294,8 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome, "fasta"),
+                getGenomeAttribute(meta.genome, "fai"),
                 file(meta.roi, checkIfExists:true),
             ]
         } else {
@@ -307,8 +303,8 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome, "fasta"),
+                getGenomeAttribute(meta.genome, "fai"),
                 [],
             ]
         }
@@ -337,9 +333,9 @@ workflow PREPROCESSING {
                 cram,
                 crai,
                 file(meta.roi, checkIfExists:true),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "dict"),
+                getGenomeAttribute(meta.genome, "fasta"),
+                getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome, "dict"),
             ]
         } else {
             return [
@@ -347,9 +343,9 @@ workflow PREPROCESSING {
                 cram,
                 crai,
                 [],
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "dict"),
+                getGenomeAttribute(meta.genome, "fasta"),
+                getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome, "dict"),
             ]
         }
     }
@@ -428,10 +424,10 @@ def readgroup_from_fastq(path) {
     // FLOWCELLID:LANE:xx:... (five fields)
     def line
 
-    path.withInputStream {
-        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
-        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-        BufferedReader buffered = new BufferedReader(decoder)
+    path.withInputStream { fq ->
+        def gzipStream = new java.util.zip.GZIPInputStream(fq) as InputStream
+        def decoder = new InputStreamReader(gzipStream, 'ASCII')
+        def buffered = new BufferedReader(decoder)
         line = buffered.readLine()
     }
     assert line.startsWith('@')
@@ -443,22 +439,21 @@ def readgroup_from_fastq(path) {
     if (fields.size() >= 7) {
         // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
         // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-        sequencer_serial = fields[0]
-        run_nubmer       = fields[1]
-        fcid             = fields[2]
-        lane             = fields[3]
-        index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+        def sequencer_serial = fields[0]
+        def run_nubmer       = fields[1]
+        def fcid             = fields[2]
+        def lane             = fields[3]
+        def index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
         rg.ID = [fcid,lane].join(".")
         rg.PU = [fcid, lane, index].findAll().join(".")
         rg.PL = "ILLUMINA"
     } else if (fields.size() == 5) {
-        fcid = fields[0]
+        def fcid = fields[0]
         rg.ID = fcid
     }
     return rg
 }
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

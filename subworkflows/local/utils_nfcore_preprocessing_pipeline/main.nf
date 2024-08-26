@@ -56,7 +56,7 @@ workflow PIPELINE_INITIALISATION {
     //
     pre_help_text = nfCoreLogo(monochrome_logs)
     post_help_text = '\n' + workflowCitation() + '\n' + dashedLine(monochrome_logs)
-    def String workflow_command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+    def workflow_command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>" as String
     UTILS_NFVALIDATION_PLUGIN (
         help,
         workflow_command,
@@ -153,11 +153,11 @@ def validateInputSamplesheet(input) {
 //
 // Get attribute from genome config file e.g. fasta
 //
-def getGenomeAttribute(attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[ params.genome ].containsKey(attribute)) {
-            return params.genomes[ params.genome ][ attribute ]
-        }
+def getGenomeAttribute(genome, attribute) {
+    if (genome.containsKey(attribute)) {
+        return nextflow.Nextflow.file(genome[attribute], checkIfExists: true)
+    } else {
+        nextflow.Nextflow.error("Genome config does not contain attribute ${attribute}")
     }
     return null
 }

@@ -32,8 +32,9 @@ workflow COVERAGE {
         ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage)
 
         PANELCOVERAGE(
-            MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi),
-            ch_genelists
+            MOSDEPTH.out.per_base_bed
+            .join(MOSDEPTH.out.per_base_csi)
+            .combine(ch_genelists)
         )
         ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions)
         ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)

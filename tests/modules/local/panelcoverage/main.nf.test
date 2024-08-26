@@ -17,9 +17,8 @@ nextflow_process {
                     [id: "test", single_end: false ],
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/bed/sample1.per-base.bed.gz", checkIfExists:true),
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/bed/sample1.per-base.bed.gz.csi", checkIfExists:true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/genelists/genelist_chr21_per_exon.bed",checkIfExists:true)
                 ]
-                // genelists
-                input[1] =[ file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/genelists/genelist_chr21_per_exon.bed",checkIfExists:true)]
                 """
             }
         }
