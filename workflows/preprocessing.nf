@@ -140,19 +140,14 @@ workflow PREPROCESSING {
     // set genome based on organism key
     .map{ meta, reads ->
         if (meta.organism && !meta.genome) {
-            switch (meta.organism) {
-                case ~/(?i)Homo[\s_]sapiens/:
-                    meta = meta + ["genome":"GRCh38"]
-                    break
-                // case ~/(?i)Mus[\s_]musculus/:
-                //     meta = meta + ["genome":"GRCm39"]
-                //     break
-                // case ~/(?i)Danio[\s_]rerio/:
-                //     meta = meta + ["genome":"GRCz11"]
-                //     break
-                default:
-                    meta = meta + ["genome": null ]
-                    break
+            if (meta.organism ==~ /(?i)Homo[\s_]sapiens/) {
+                meta = meta + ["genome":"GRCh38"]
+            } else if (meta.organism ==~ /(?i)Mus[\s_]musculus/) {
+                meta = meta + ["genome":"GRCh38"]
+            } else if (meta.organism ==~/(?i)Danio[\s_]rerio/) {
+                meta = meta + ["genome":"GRCz11"]
+            } else {
+                meta = meta + ["genome": null ]
             }
         }
         if (genomes && genomes[meta.genome]){
