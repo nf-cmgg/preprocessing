@@ -271,16 +271,16 @@
     },
     "allOf": [
         {
-            "$ref": "#/defs/input_output_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/defs/pipeline_options"
+            "$ref": "#/$defs/pipeline_options"
         },
         {
-            "$ref": "#/defs/institutional_config_options"
+            "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/defs/generic_options"
+            "$ref": "#/$defs/generic_options"
         }
     ]
 }
