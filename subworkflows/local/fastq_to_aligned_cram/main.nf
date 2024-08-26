@@ -14,6 +14,8 @@ include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/m
 include { FASTQ_ALIGN_DNA   } from '../../nf-core/fastq_align_dna/main'
 include { FASTQ_ALIGN_RNA   } from '../../local/fastq_align_rna/main'
 
+// FUNCTIONS
+include { getGenomeAttribute } from '../../local/utils_nfcore_preprocessing_pipeline'
 
 workflow FASTQ_TO_CRAM {
     take:
@@ -91,7 +93,7 @@ workflow FASTQ_TO_CRAM {
         }
         .groupTuple()
         .map { meta, files ->
-            return [meta, files.flatten(), GenomeUtils.getGenomeAttribute(meta.genome, 'fasta')]
+            return [meta, files.flatten(), getGenomeAttribute(meta.genome, 'fasta')]
         }
         .set{ch_bam_fasta}
         ch_bam_fasta.dump(tag: "FASTQ_TO_CRAM: aligned bam per sample", pretty: true)
@@ -140,7 +142,7 @@ workflow FASTQ_TO_CRAM {
 
         ch_markdup_index.bam
         .map { meta, bam, bai ->
-            bam_bai: [meta, bam, bai, GenomeUtils.getGenomeAttribute(meta.genome, 'fasta'), GenomeUtils.getGenomeAttribute(meta.genome, 'fai')]
+            bam_bai: [meta, bam, bai, getGenomeAttribute(meta.genome, 'fasta'), getGenomeAttribute(meta.genome, 'fai')]
         }
         .set {ch_bam_bai_fasta_fai}
 

@@ -25,6 +25,7 @@ include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getGenomeAttribute     } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -162,7 +163,7 @@ workflow PREPROCESSING {
         // // if there's no global ROI AND no sample speficic ROI
         // // AND the sample tag is "coPGT-M", set the sample ROI to "roi_copgt"
         if (!roi && !meta.roi && meta.tag == "coPGT-M") {
-            meta = meta + ["roi": GenomeUtils.getGenomeAttribute(meta.genome, "roi_copgt")]
+            meta = meta + ["roi": getGenomeAttribute(meta.genome, "roi_copgt")]
         }
         // // if there's a global ROI AND no sample specific ROI
         // // set the global ROI to the sample
@@ -251,9 +252,9 @@ workflow PREPROCESSING {
             meta,
             reads,
             meta.aligner,
-            GenomeUtils.getGenomeAttribute(meta.genome, meta.aligner),
-            GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-            GenomeUtils.getGenomeAttribute(meta.genome, "gtf")
+            getGenomeAttribute(meta.genome, meta.aligner),
+            getGenomeAttribute(meta.genome, "fasta"),
+            getGenomeAttribute(meta.genome, "gtf")
             ]
     }
     .set{ch_meta_reads_aligner_index_fasta_gtf}
@@ -293,8 +294,8 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome, "fasta"),
+                getGenomeAttribute(meta.genome, "fai"),
                 file(meta.roi, checkIfExists:true),
             ]
         } else {
@@ -302,8 +303,8 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome, "fasta"),
+                getGenomeAttribute(meta.genome, "fai"),
                 [],
             ]
         }
@@ -332,9 +333,9 @@ workflow PREPROCESSING {
                 cram,
                 crai,
                 file(meta.roi, checkIfExists:true),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "dict"),
+                getGenomeAttribute(meta.genome, "fasta"),
+                getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome, "dict"),
             ]
         } else {
             return [
@@ -342,9 +343,9 @@ workflow PREPROCESSING {
                 cram,
                 crai,
                 [],
-                GenomeUtils.getGenomeAttribute(meta.genome, "fasta"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "fai"),
-                GenomeUtils.getGenomeAttribute(meta.genome, "dict"),
+                getGenomeAttribute(meta.genome, "fasta"),
+                getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome, "dict"),
             ]
         }
     }
@@ -453,7 +454,6 @@ def readgroup_from_fastq(path) {
     }
     return rg
 }
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
