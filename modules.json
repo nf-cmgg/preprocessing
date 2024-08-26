@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bcl2fastq": {
                         "branch": "master",
-                        "git_sha": "22261833fced91665b986c6833e91a4a5cccb0a9",
+                        "git_sha": "90b63cde0f838ca4da3a88a37a5309888cae97b9",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "bclconvert": {
@@ -169,7 +169,7 @@
                 "nf-core": {
                     "bcl_demultiplex": {
                         "branch": "master",
-                        "git_sha": "22261833fced91665b986c6833e91a4a5cccb0a9",
+                        "git_sha": "a6e6bec1b1da613b89a6c0a3a46713f880cf5aca",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_align_dna": {
