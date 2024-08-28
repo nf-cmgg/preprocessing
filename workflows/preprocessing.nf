@@ -311,14 +311,16 @@ workflow PREPROCESSING {
     }
     .set{ch_cram_crai_fasta_fai_roi}
 
-    COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        COVERAGE.out.mosdepth_summary .map{ meta, txt -> return txt },
-        COVERAGE.out.mosdepth_global  .map{ meta, txt -> return txt },
-        COVERAGE.out.mosdepth_regions .map{ meta, txt -> return txt },
-        COVERAGE.out.samtools_coverage.map{ meta, txt -> return txt },
-    )
-    ch_versions = ch_versions.mix(COVERAGE.out.versions)
+    if (params.run_coverage == true || params.run_coverage == "true") {
+        COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
+        ch_multiqc_files = ch_multiqc_files.mix(
+            COVERAGE.out.mosdepth_summary .map{ meta, txt -> return txt },
+            COVERAGE.out.mosdepth_global  .map{ meta, txt -> return txt },
+            COVERAGE.out.mosdepth_regions .map{ meta, txt -> return txt },
+            COVERAGE.out.samtools_coverage.map{ meta, txt -> return txt },
+        )
+        ch_versions = ch_versions.mix(COVERAGE.out.versions)
+    }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
