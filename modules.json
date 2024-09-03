@@ -53,7 +53,8 @@
                     "fastp": {
                         "branch": "master",
                         "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/fastp/fastp.diff"
                     },
                     "md5sum": {
                         "branch": "master",

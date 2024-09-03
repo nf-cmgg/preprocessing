@@ -1,0 +1,13 @@
+Changes in module 'nf-core/fastp'
+--- modules/nf-core/fastp/main.nf
++++ modules/nf-core/fastp/main.nf
+@@ -92,7 +92,6 @@
+             $fail_fastq \\
+             $merge_fastq \\
+             --thread $task.cpus \\
+-            --detect_adapter_for_pe \\
+             $args \\
+             2> >(tee ${prefix}.fastp.log >&2)
+ 
+
+************************************************************
