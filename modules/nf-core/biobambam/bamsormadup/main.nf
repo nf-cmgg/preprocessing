@@ -24,7 +24,7 @@ process BIOBAMBAM_BAMSORMADUP {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def suffix = args.contains("outputformat=cram") ? "cram" : "bam"
     def input_string = bams instanceof List ? bams.join(" I=") : bams
-    if (args.contains("outputformat=cram") && reference == null) error "Reference required for CRAM output."
+    if (args.contains("outputformat=cram") && fasta == null) error "Reference required for CRAM output."
 
     """
     bamcat \\

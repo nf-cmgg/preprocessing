@@ -17,7 +17,7 @@
                 "meta": ["sample_type"],
                 "type": "string",
                 "description": "Data type of the sample",
-                "enum": ["DNA", "RNA"],
+                "enum": ["DNA", "RNA", "Tissue"],
                 "default": "DNA"
             },
             "library": {
@@ -30,7 +30,7 @@
                 "meta": ["tag"],
                 "type": "string",
                 "description": "Sample tag",
-                "pattern": "^[a-zA-Z0-9_]+$"
+                "pattern": "^[a-zA-Z0-9_-]+$"
             },
             "purpose": {
                 "meta": ["purpose"],
@@ -53,11 +53,19 @@
                     "Danio Rerio"
                 ]
             },
+            "genome": {
+                "meta": ["genome"],
+                "type": "string",
+                "description": "Genome build. Currently supported genomes include GRCh38, GRCm39 and GRCz11",
+                "pattern": "^[a-zA-Z0-9_-]+$",
+                "default": null,
+                "enum": ["GRCh38", "GRCm39", "GRCz11", "hg38", "hg38-noalt"]
+            },
             "vivar_project": {
                 "meta": ["vivar_project"],
                 "type": "string",
                 "description": "Vivar project name",
-                "pattern": "^[a-zA-Z0-9_]+$"
+                "pattern": "^[a-zA-Z0-9_\\s-]+$"
             },
             "binsize": {
                 "meta": ["binsize"],

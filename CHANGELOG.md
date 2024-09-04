@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.1
+
+- Fix syntax according to new rules
+- Drop usage of `check_max` function in favour of `resourceLimits`
+- Bump nf-schema to v2.1.0
+- Add configuration profiles for several datatypes
+- Fix usage of `--run_coverage` parameter
+- Update modules
+
 ## v2.0.0
 
 - Move repo to nf-cmgg organisation
