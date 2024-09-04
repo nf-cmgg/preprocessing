@@ -100,7 +100,7 @@ workflow PREPROCESSING {
     .map { samplename, meta, fastq, sampleinfo ->
         new_meta = meta + sampleinfo
         readgroup = readgroup_from_fastq(fastq[0])
-        readgroup = readgroup + ['SM': samplename, 'LB': meta.library ?: ""]
+        readgroup = readgroup + ['SM': samplename, 'LB': new_meta.library ?: ""]
         new_meta = new_meta + ['readgroup' : readgroup]
         return [ new_meta, fastq ]
     }
