@@ -144,7 +144,7 @@ workflow PREPROCESSING {
             if (meta.organism ==~ /(?i)Homo[\s_]sapiens/) {
                 meta = meta + ["genome":"GRCh38"]
             } else if (meta.organism ==~ /(?i)Mus[\s_]musculus/) {
-                meta = meta + ["genome":"GRCh38"]
+                meta = meta + ["genome":"GRCm39"]
             } else if (meta.organism ==~/(?i)Danio[\s_]rerio/) {
                 meta = meta + ["genome":"GRCz11"]
             } else {
