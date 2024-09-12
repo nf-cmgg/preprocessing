@@ -42,16 +42,7 @@
                 "meta": ["organism"],
                 "type": "string",
                 "description": "Sample organism",
-                "pattern": "^[a-zA-Z0-9_\\s]+$",
-                "enum": [
-                    "Homo sapiens",
-                    "Mus musculus",
-                    "Danio rerio",
-                    "SarsCov",
-                    "Mus Musculus",
-                    "Homo Sapiens",
-                    "Danio Rerio"
-                ]
+                "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "genome": {
                 "meta": ["genome"],

@@ -23,8 +23,7 @@
                 "meta": ["organism"],
                 "type": "string",
                 "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus and Danio rerio",
-                "pattern": "^[a-zA-Z0-9_\\s]+$",
-                "enum": ["Homo sapiens", "Mus musculus", "Danio rerio"]
+                "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "genome": {
                 "meta": ["genome"],
