@@ -1,4 +1,7 @@
 Changes in module 'nf-core/biobambam/bamsormadup'
+'modules/nf-core/biobambam/bamsormadup/environment.yml' is unchanged
+'modules/nf-core/biobambam/bamsormadup/meta.yml' is unchanged
+Changes in 'biobambam/bamsormadup/main.nf':
 --- modules/nf-core/biobambam/bamsormadup/main.nf
 +++ modules/nf-core/biobambam/bamsormadup/main.nf
 @@ -6,8 +6,7 @@
@@ -20,5 +23,47 @@ Changes in module 'nf-core/biobambam/bamsormadup'
  
      """
      bamcat \\
+@@ -53,7 +52,7 @@
+     def args = task.ext.args ?: ''
+     def prefix = task.ext.prefix ?: "${meta.id}"
+     def suffix = args.contains("outputformat=cram") ? "cram" : "bam"
+-    if (args.contains("outputformat=cram") && reference == null) error "Reference required for CRAM output."
++    if (args.contains("outputformat=cram") && fasta == null) error "Reference required for CRAM output."
+ 
+     """
+     touch ${prefix}.${suffix}
+
+'modules/nf-core/biobambam/bamsormadup/tests/main.nf.test.snap' is unchanged
+Changes in 'biobambam/bamsormadup/tests/main.nf.test':
+--- modules/nf-core/biobambam/bamsormadup/tests/main.nf.test
++++ modules/nf-core/biobambam/bamsormadup/tests/main.nf.test
+@@ -16,8 +16,8 @@
+             process {
+                 """
+                 input[0] = [
+-				    [ id:'test', single_end:false ], // meta map
+-				    [
++                    [ id:'test', single_end:false ], // meta map
++                    [
+                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                     ]
+@@ -49,12 +49,12 @@
+             process {
+                 """
+                 input[0] = [
+-				    [ id:'test', single_end:false ], // meta map
+-				    [
++                    [ id:'test', single_end:false ], // meta map
++                    [
+                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                     ]
+-				]
+-				input[1] = [[:],[]]
++                ]
++                input[1] = [[:],[]]
+ 
+                 """
+             }
 
 ************************************************************

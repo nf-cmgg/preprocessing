@@ -1,4 +1,7 @@
 Changes in module 'nf-core/snapaligner/align'
+'modules/nf-core/snapaligner/align/environment.yml' is unchanged
+'modules/nf-core/snapaligner/align/meta.yml' is unchanged
+Changes in 'snapaligner/align/main.nf':
 --- modules/nf-core/snapaligner/align/main.nf
 +++ modules/nf-core/snapaligner/align/main.nf
 @@ -8,8 +8,7 @@

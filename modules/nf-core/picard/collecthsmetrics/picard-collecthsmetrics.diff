@@ -1,4 +1,7 @@
 Changes in module 'nf-core/picard/collecthsmetrics'
+'modules/nf-core/picard/collecthsmetrics/environment.yml' is unchanged
+'modules/nf-core/picard/collecthsmetrics/meta.yml' is unchanged
+Changes in 'picard/collecthsmetrics/main.nf':
 --- modules/nf-core/picard/collecthsmetrics/main.nf
 +++ modules/nf-core/picard/collecthsmetrics/main.nf
 @@ -8,10 +8,7 @@
@@ -14,4 +17,7 @@ Changes in module 'nf-core/picard/collecthsmetrics'
      output:
      tuple val(meta), path("*_metrics")  , emit: metrics
 
+'modules/nf-core/picard/collecthsmetrics/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/picard/collecthsmetrics/tests/tags.yml' is unchanged
+'modules/nf-core/picard/collecthsmetrics/tests/main.nf.test' is unchanged
 ************************************************************

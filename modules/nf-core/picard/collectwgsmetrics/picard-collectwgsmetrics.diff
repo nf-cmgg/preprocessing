@@ -1,4 +1,7 @@
 Changes in module 'nf-core/picard/collectwgsmetrics'
+'modules/nf-core/picard/collectwgsmetrics/environment.yml' is unchanged
+'modules/nf-core/picard/collectwgsmetrics/meta.yml' is unchanged
+Changes in 'picard/collectwgsmetrics/main.nf':
 --- modules/nf-core/picard/collectwgsmetrics/main.nf
 +++ modules/nf-core/picard/collectwgsmetrics/main.nf
 @@ -8,9 +8,7 @@
@@ -13,4 +16,6 @@ Changes in module 'nf-core/picard/collectwgsmetrics'
  
      output:
 
+'modules/nf-core/picard/collectwgsmetrics/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/picard/collectwgsmetrics/tests/main.nf.test' is unchanged
 ************************************************************
