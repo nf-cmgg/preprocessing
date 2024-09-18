@@ -101,15 +101,15 @@
                 
             ],
             [
-                "versions.yml:md5,4ad4a320748ecb9f9005dff1cc516425",
+                "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-16T08:42:06.679175"
+        "timestamp": "2024-09-18T14:32:47.356464"
     }
 }

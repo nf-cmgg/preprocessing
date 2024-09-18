@@ -7,7 +7,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
+                    "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
                 ]
             ],
             [
@@ -32,10 +32,10 @@
             "test.CollectHsMetrics.coverage_metrics"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-16T08:43:39.309111"
+        "timestamp": "2024-09-18T14:24:36.927623"
     },
     "Bam QC - Samtools": {
         "content": [
@@ -45,7 +45,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
+                    "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
                 ]
             ],
             [
@@ -68,10 +68,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-16T08:44:51.463305"
+        "timestamp": "2024-09-18T14:27:40.173773"
     },
     "Bam QC - WGSmetrics": {
         "content": [
@@ -81,7 +81,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,b14ae04d09a50f5c08be851a6f9cdef4"
+                    "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
                 ]
             ],
             [
@@ -106,9 +106,9 @@
             "test.CollectWgsMetrics.coverage_metrics"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-16T08:44:36.334246"
+        "timestamp": "2024-09-18T14:27:12.938971"
     }
 }
