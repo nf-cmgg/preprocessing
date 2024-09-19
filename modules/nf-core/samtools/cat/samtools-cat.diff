@@ -14,14 +14,5 @@ Changes in module 'nf-core/samtools/cat'
  
  
      when:
-@@ -26,7 +26,7 @@
-     """
-     samtools \\
-         cat \\
--        --threads ${task.cpus-1} \\
-+        --threads ${task.cpus} \\
-         $args \\
-         -o ${prefix}.${file_type} \\
-         $input_files
 
 ************************************************************
