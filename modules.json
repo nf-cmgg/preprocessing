@@ -23,19 +23,19 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "9bfc81874554e87740bcb3e5e07acf0a153c9ecb",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/bowtie2/align/bowtie2-align.diff"
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "2201e21b09213f083832ac58e33353d410a6fde7",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["fastq_align_dna"],
                         "patch": "modules/nf-core/bwa/mem/bwa-mem.diff"
                     },
                     "bwamem2/mem": {
                         "branch": "master",
-                        "git_sha": "2201e21b09213f083832ac58e33353d410a6fde7",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["fastq_align_dna"],
                         "patch": "modules/nf-core/bwamem2/mem/bwamem2-mem.diff"
                     },
@@ -46,7 +46,7 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "dd2757cc22c5de8943fa38ba7cd6f8cc1eb65ac1",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["fastq_align_dna"],
                         "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
@@ -160,7 +160,7 @@
                     },
                     "snapaligner/align": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "e743b2dea725bcfc4b76a209981808987332013a",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/snapaligner/align/snapaligner-align.diff"
                     }
@@ -175,7 +175,7 @@
                     },
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "0c34b8159f62cde451c4ff249629c9d0a4f3f9c3",
+                        "git_sha": "0fa40bbf85955171ec197334ac70a1197fba600d",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
