@@ -23,6 +23,17 @@ mosdepth_config:
     - "HLA*"
     - "chrM"
     - "chrEBV"
+samtools_coverage:
+  include_contigs:
+    - "chr*"
+  exclude_contigs:
+    - "*_alt"
+    - "*_decoy"
+    - "*_random"
+    - "chrUn*"
+    - "HLA*"
+    - "chrM"
+    - "chrEBV"
 extra_fn_clean_exts:
   - ".cram"
   - ".coverage"
