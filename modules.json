@@ -53,7 +53,7 @@
                     },
                     "md5sum": {
                         "branch": "master",
-                        "git_sha": "1164836d4d3922ab937865b17086485f0f472748",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
