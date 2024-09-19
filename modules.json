@@ -58,7 +58,7 @@
                     },
                     "mosdepth": {
                         "branch": "master",
-                        "git_sha": "9bfc81874554e87740bcb3e5e07acf0a153c9ecb",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/mosdepth/mosdepth.diff"
                     },
