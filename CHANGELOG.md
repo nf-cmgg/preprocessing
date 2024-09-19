@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## dev
 
+## v2.0.2
+
+- Drop unsed params
+- Set aligner to `star` for RNA-seq
+- Finetune resources
+- Fix some bugs for different input tags
+- Update modules
+
 ## v2.0.1
 
 - Fix syntax according to new rules
