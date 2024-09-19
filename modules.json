@@ -92,12 +92,6 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/cat/samtools-cat.diff"
                     },
-                    "samtools/collatefastq": {
-                        "branch": "master",
-                        "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/samtools/collatefastq/samtools-collatefastq.diff"
-                    },
                     "samtools/convert": {
                         "branch": "master",
                         "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
