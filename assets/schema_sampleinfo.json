@@ -42,16 +42,7 @@
                 "meta": ["organism"],
                 "type": "string",
                 "description": "Sample organism",
-                "pattern": "^[a-zA-Z0-9_\\s]+$",
-                "enum": [
-                    "Homo sapiens",
-                    "Mus musculus",
-                    "Danio rerio",
-                    "SarsCov",
-                    "Mus Musculus",
-                    "Homo Sapiens",
-                    "Danio Rerio"
-                ]
+                "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "genome": {
                 "meta": ["genome"],
@@ -89,6 +80,12 @@
                 "description": "Region of interest BED file for coverage analysis",
                 "pattern": "^[a-zA-Z0-9_]+.bed$",
                 "default": null
+            },
+            "aligner": {
+                "meta": ["aligner"],
+                "type": "string",
+                "description": "Aligner to use to align sample to the reference genome",
+                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "star"]
             }
         }
     },

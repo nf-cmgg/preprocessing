@@ -98,8 +98,8 @@ workflow PREPROCESSING {
     ch_demultiplexed_fastq
     .combine(ch_sampleinfo, by: 0)
     .map { samplename, meta, fastq, sampleinfo ->
-        new_meta = meta + sampleinfo
-        readgroup = readgroup_from_fastq(fastq[0])
+        def new_meta = meta + sampleinfo
+        def readgroup = readgroup_from_fastq(fastq[0])
         readgroup = readgroup + ['SM': samplename, 'LB': new_meta.library ?: ""]
         new_meta = new_meta + ['readgroup' : readgroup]
         return [ new_meta, fastq ]
@@ -118,15 +118,15 @@ workflow PREPROCESSING {
     ch_inputs_from_samplesheet.fastq
     .map { meta, fastq ->
         // if no fastq_2, then single-end
-        single_end = fastq[1] ? false : true
+        def single_end = fastq[1] ? false : true
         // add readgroup metadata
-        rg = readgroup_from_fastq(fastq[0])
+        def rg = readgroup_from_fastq(fastq[0])
         rg = rg + [ 'SM': meta.samplename,
                     'LB': meta.library ?: "",
                     'PL': meta.platform ?: rg.PL,
                     'ID': meta.readgroup ?: rg.ID
                 ]
-        meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
+        def meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
         return [meta_with_readgroup, fastq]
     }
     .set {ch_input_fastq}
@@ -180,8 +180,7 @@ workflow PREPROCESSING {
     .map{meta_fastq, count -> [meta_fastq[0] + ['count': count], meta_fastq[1]]}
     // Clean up metadata
     .map{meta, fastq ->
-        clean_meta = meta - meta.subMap('fcid','lane','library')
-        return [clean_meta, fastq]
+        return [meta - meta.subMap('fcid','lane','library'), fastq]
     }
     .set{ch_fastq_per_sample}
 
