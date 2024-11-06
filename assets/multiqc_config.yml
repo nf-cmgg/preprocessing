@@ -13,6 +13,14 @@ disable_version_detection: true
 bclconvert:
   create_undetermined_barcode_barplots: true
 mosdepth_config:
+  general_stats_coverage:
+    - 1
+    - 5
+    - 10
+    - 20
+    - 30
+    - 40
+    - 50
   include_contigs:
     - "chr*"
   exclude_contigs:
