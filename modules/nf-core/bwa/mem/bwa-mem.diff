@@ -1,4 +1,7 @@
 Changes in module 'nf-core/bwa/mem'
+'modules/nf-core/bwa/mem/environment.yml' is unchanged
+'modules/nf-core/bwa/mem/meta.yml' is unchanged
+Changes in 'bwa/mem/main.nf':
 --- modules/nf-core/bwa/mem/main.nf
 +++ modules/nf-core/bwa/mem/main.nf
 @@ -8,9 +8,7 @@
@@ -13,4 +16,7 @@ Changes in module 'nf-core/bwa/mem'
  
      output:
 
+'modules/nf-core/bwa/mem/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/bwa/mem/tests/tags.yml' is unchanged
+'modules/nf-core/bwa/mem/tests/main.nf.test' is unchanged
 ************************************************************
