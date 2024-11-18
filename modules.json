@@ -138,7 +138,7 @@
                     },
                     "snapaligner/align": {
                         "branch": "master",
-                        "git_sha": "e743b2dea725bcfc4b76a209981808987332013a",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/snapaligner/align/snapaligner-align.diff"
                     }
