@@ -1,4 +1,7 @@
 Changes in module 'nf-core/samtools/cat'
+'modules/nf-core/samtools/cat/environment.yml' is unchanged
+'modules/nf-core/samtools/cat/meta.yml' is unchanged
+Changes in 'samtools/cat/main.nf':
 --- modules/nf-core/samtools/cat/main.nf
 +++ modules/nf-core/samtools/cat/main.nf
 @@ -11,9 +11,9 @@
@@ -15,4 +18,7 @@ Changes in module 'nf-core/samtools/cat'
  
      when:
 
+'modules/nf-core/samtools/cat/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/samtools/cat/tests/tags.yml' is unchanged
+'modules/nf-core/samtools/cat/tests/main.nf.test' is unchanged
 ************************************************************
