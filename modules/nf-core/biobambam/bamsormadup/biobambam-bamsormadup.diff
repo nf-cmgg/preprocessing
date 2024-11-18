@@ -1,4 +1,7 @@
 Changes in module 'nf-core/biobambam/bamsormadup'
+'modules/nf-core/biobambam/bamsormadup/environment.yml' is unchanged
+'modules/nf-core/biobambam/bamsormadup/meta.yml' is unchanged
+Changes in 'biobambam/bamsormadup/main.nf':
 --- modules/nf-core/biobambam/bamsormadup/main.nf
 +++ modules/nf-core/biobambam/bamsormadup/main.nf
 @@ -6,8 +6,7 @@
@@ -30,4 +33,6 @@ Changes in module 'nf-core/biobambam/bamsormadup'
      """
      touch ${prefix}.${suffix}
 
+'modules/nf-core/biobambam/bamsormadup/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/biobambam/bamsormadup/tests/main.nf.test' is unchanged
 ************************************************************
