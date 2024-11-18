@@ -12,7 +12,7 @@
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "22261833fced91665b986c6833e91a4a5cccb0a9",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["bcl_demultiplex", "modules"]
                     },
                     "biobambam/bamsormadup": {
