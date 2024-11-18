@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bcl2fastq": {
                         "branch": "master",
-                        "git_sha": "90b63cde0f838ca4da3a88a37a5309888cae97b9",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "bclconvert": {
