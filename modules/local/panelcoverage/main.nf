@@ -18,7 +18,6 @@ process PANELCOVERAGE {
     task.ext.when == null || task.ext.when
 
     script:
-    def args   = task.ext.args   ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     cmgg_genelists regiondist --samplename ${prefix} --perbase ${perbase} --genelist ${genelist}
@@ -31,7 +30,6 @@ process PANELCOVERAGE {
     """
 
     stub:
-    def args   = task.ext.args   ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}_genelist.mosdepth.region.dist.txt
