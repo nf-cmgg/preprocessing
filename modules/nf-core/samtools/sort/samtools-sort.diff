@@ -14,6 +14,7 @@ Changes in 'samtools/sort/main.nf':
  
      output:
      tuple val(meta), path("*.bam"),  emit: bam,  optional: true
+
 @@ -28,6 +27,7 @@
                      args.contains("--output-fmt cram") ? "cram" :
                      "bam"
