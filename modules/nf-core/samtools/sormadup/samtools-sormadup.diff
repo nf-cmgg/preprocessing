@@ -1,4 +1,7 @@
 Changes in module 'nf-core/samtools/sormadup'
+'modules/nf-core/samtools/sormadup/environment.yml' is unchanged
+'modules/nf-core/samtools/sormadup/meta.yml' is unchanged
+Changes in 'samtools/sormadup/main.nf':
 --- modules/nf-core/samtools/sormadup/main.nf
 +++ modules/nf-core/samtools/sormadup/main.nf
 @@ -8,8 +8,7 @@
@@ -12,4 +15,7 @@ Changes in module 'nf-core/samtools/sormadup'
      output:
      tuple val(meta), path("*.bam")      , emit: bam,  optional: true
 
+'modules/nf-core/samtools/sormadup/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/samtools/sormadup/tests/tags.yml' is unchanged
+'modules/nf-core/samtools/sormadup/tests/main.nf.test' is unchanged
 ************************************************************
