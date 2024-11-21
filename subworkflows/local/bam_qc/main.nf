@@ -17,14 +17,14 @@ workflow BAM_QC {
     ch_versions = Channel.empty()
 
     ch_bam_bai_roi_fasta_fai_dict
-    .map{ meta, bam, bai, roi, fasta, fai, dict -> return [meta, bam, bai, fasta]}
+    .map{ meta, bam, bai, _roi, fasta, _fai, _dict -> return [meta, bam, bai, fasta]}
     .set{ ch_bam_bai_fasta }
 
     SAMTOOLS_STATS ( ch_bam_bai_fasta )
     ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
 
     ch_bam_bai_fasta
-    .map{ meta, bam, bai, fasta -> return [meta, bam, bai]}
+    .map{ meta, bam, bai, _fasta -> return [meta, bam, bai]}
     .set{ ch_bam_bai }
 
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )
@@ -39,7 +39,7 @@ workflow BAM_QC {
     if (!disable_picard) {
 
         ch_bam_bai_roi_fasta_fai_dict
-        .map{ meta, bam, bai, roi, fasta, fai, dict -> return [meta, bam, bai, fasta, fai]}
+        .map{ meta, bam, bai, _roi, fasta, fai, _dict -> return [meta, bam, bai, fasta, fai]}
         .set{ ch_bam_bai_fasta_fai }
 
         PICARD_COLLECTMULTIPLEMETRICS ( ch_bam_bai_fasta_fai )

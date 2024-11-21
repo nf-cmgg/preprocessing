@@ -16,7 +16,7 @@ workflow COVERAGE {
 
         MOSDEPTH(
             ch_meta_cram_crai_fasta_fai_roi.map{
-                meta, cram, crai, fasta, fai, roi ->
+                meta, cram, crai, fasta, _fai, roi ->
                     return [meta, cram, crai, roi, fasta]
             }
         )
@@ -24,7 +24,7 @@ workflow COVERAGE {
 
         SAMTOOLS_COVERAGE(
             ch_meta_cram_crai_fasta_fai_roi.map{
-                meta, cram, crai, fasta, fai, roi ->
+                meta, cram, crai, fasta, fai, _roi ->
                     return [meta, cram, crai, fasta, fai]
             }
         )
