@@ -79,8 +79,8 @@ workflow PREPROCESSING {
     BCL_DEMULTIPLEX(ch_illumina_flowcell.flowcell, "bclconvert")
     BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq",pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(
-        BCL_DEMULTIPLEX.out.reports.map { meta, reports -> return reports},
-        BCL_DEMULTIPLEX.out.stats.map   { meta, stats   -> return stats  }
+        BCL_DEMULTIPLEX.out.reports.map { _meta, reports -> return reports},
+        BCL_DEMULTIPLEX.out.stats.map   { _meta, stats   -> return stats  }
     )
     ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
@@ -175,7 +175,7 @@ workflow PREPROCESSING {
     // Count the number of samples per samplename
     .map{ meta, reads -> [meta.samplename, [meta, reads]]}
     .groupTuple()
-    .map{ samplename, meta_fastq -> [meta_fastq, meta_fastq.size()]}
+    .map{ _samplename, meta_fastq -> [meta_fastq, meta_fastq.size()]}
     .transpose()
     .map{meta_fastq, count -> [meta_fastq[0] + ['count': count], meta_fastq[1]]}
     // Clean up metadata
@@ -197,7 +197,7 @@ workflow PREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], adapter_fasta, save_trimmed, save_merged)
     FASTP(ch_fastq_per_sample, [], false, false, false)
-    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { meta, json -> return json} )
+    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { _meta, json -> return json} )
     ch_versions      = ch_versions.mix(FASTP.out.versions)
 
     // edit meta.id to match sample name
@@ -220,7 +220,7 @@ workflow PREPROCESSING {
         ]
     }
     // split samples into human and non human data
-    .branch { meta, reads ->
+    .branch { meta, _reads ->
         supported: meta.genome
         other: true
     }
@@ -276,7 +276,7 @@ workflow PREPROCESSING {
 */
 
     FASTQ_TO_CRAM.out.cram_crai
-    .filter{ meta, cram, crai ->
+    .filter{ meta, _cram, _crai ->
         meta.tag != "SNP"
     }
     .set{ch_no_snp_samples}
@@ -313,10 +313,10 @@ workflow PREPROCESSING {
     if (params.run_coverage == true || params.run_coverage == "true") {
         COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
         ch_multiqc_files = ch_multiqc_files.mix(
-            COVERAGE.out.mosdepth_summary .map{ meta, txt -> return txt },
-            COVERAGE.out.mosdepth_global  .map{ meta, txt -> return txt },
-            COVERAGE.out.mosdepth_regions .map{ meta, txt -> return txt },
-            COVERAGE.out.samtools_coverage.map{ meta, txt -> return txt },
+            COVERAGE.out.mosdepth_summary .map{ _meta, txt -> return txt },
+            COVERAGE.out.mosdepth_global  .map{ _meta, txt -> return txt },
+            COVERAGE.out.mosdepth_regions .map{ _meta, txt -> return txt },
+            COVERAGE.out.samtools_coverage.map{ _meta, txt -> return txt },
         )
         ch_versions = ch_versions.mix(COVERAGE.out.versions)
     }
@@ -354,12 +354,12 @@ workflow PREPROCESSING {
 
     BAM_QC(ch_cram_crai_roi_fasta_fai_dict, params.disable_picard_metrics)
     ch_multiqc_files = ch_multiqc_files.mix(
-        BAM_QC.out.samtools_stats           .map{ meta, txt -> return txt },
-        BAM_QC.out.samtools_flagstat        .map{ meta, txt -> return txt },
-        BAM_QC.out.samtools_idxstats        .map{ meta, txt -> return txt },
-        BAM_QC.out.picard_multiplemetrics   .map{ meta, txt -> return txt },
-        BAM_QC.out.picard_wgsmetrics        .map{ meta, txt -> return txt },
-        BAM_QC.out.picard_hsmetrics         .map{ meta, txt -> return txt },
+        BAM_QC.out.samtools_stats           .map{ _meta, txt -> return txt },
+        BAM_QC.out.samtools_flagstat        .map{ _meta, txt -> return txt },
+        BAM_QC.out.samtools_idxstats        .map{ _meta, txt -> return txt },
+        BAM_QC.out.picard_multiplemetrics   .map{ _meta, txt -> return txt },
+        BAM_QC.out.picard_wgsmetrics        .map{ _meta, txt -> return txt },
+        BAM_QC.out.picard_hsmetrics         .map{ _meta, txt -> return txt },
     )
     ch_versions = ch_versions.mix(BAM_QC.out.versions)
 
@@ -369,7 +369,7 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-    MD5SUM(FASTQ_TO_CRAM.out.cram_crai.map{ meta, cram, crai -> return [meta,cram] }, false)
+    MD5SUM(FASTQ_TO_CRAM.out.cram_crai.map{ meta, cram, _crai -> return [meta,cram] }, false)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -440,8 +440,8 @@ def readgroup_from_fastq(path) {
     if (fields.size() >= 7) {
         // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
         // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-        def sequencer_serial = fields[0]
-        def run_nubmer       = fields[1]
+        //def sequencer_serial = fields[0]
+        //def run_nubmer       = fields[1]
         def fcid             = fields[2]
         def lane             = fields[3]
         def index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
