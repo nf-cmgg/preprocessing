@@ -153,6 +153,8 @@ workflow PREPROCESSING {
         }
         if (genomes && genomes[meta.genome]){
             meta = meta + ["genome": genomes[meta.genome]]
+        } else {
+            meta = meta + ["genome": [:]]
         }
         // set the aligner
         if (aligner && !meta.aligner) {
