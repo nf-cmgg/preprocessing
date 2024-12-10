@@ -71,8 +71,8 @@ workflow FASTQ_TO_CRAM {
             def gk = (meta.chunks as Integer ?: 1)
             return [
                 groupKey(
-                    // replace id by samplename, drop readgroup meta and chunks
-                    meta - meta.subMap('id', 'readgroup', 'chunks') + [id: meta.samplename ?: meta.id],
+                    // Remove the chunk prefix from the id when present, remove readgroup and chunks from meta
+                    meta - meta.subMap('readgroup', 'chunks') + [id: meta.id ==~ /^\d{4}\..*$/ ? meta.id[5..-1] : meta.id],
                     gk
                 ),
                 files
@@ -84,8 +84,8 @@ workflow FASTQ_TO_CRAM {
             def gk = (meta.count as Integer ?: 1)
             return [
                 groupKey(
-                    // drop count
-                    meta - meta.subMap('count'),
+                    // drop count and set id to samplename
+                    meta - meta.subMap('count') + [id: meta.samplename ?: meta.id],
                     gk
                 ),
                 files
