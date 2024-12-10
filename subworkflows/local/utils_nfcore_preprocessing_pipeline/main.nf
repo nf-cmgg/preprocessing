@@ -149,7 +149,7 @@ def validateInputSamplesheet(input) {
 // Get attribute from genome config file e.g. fasta
 //
 def getGenomeAttribute(genome, attribute) {
-    if (genome.containsKey(attribute)) {
+    if (genome instanceof Map && genome.containsKey(attribute)) {
         return nextflow.Nextflow.file(genome[attribute], checkIfExists: true)
     } else {
         nextflow.Nextflow.error("Genome config does not contain attribute ${attribute}")
