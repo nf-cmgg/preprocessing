@@ -28,8 +28,8 @@ workflow COVERAGE {
                     return [meta, cram, crai, fasta, fai]
             }
         )
-        ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions)
-        ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage.first())
+        ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
+        ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage)
 
         PANELCOVERAGE(
             MOSDEPTH.out.per_base_bed
