@@ -92,7 +92,7 @@ workflow FASTQ_TO_CRAM {
         }
         .groupTuple() // Group all files from the same sample
         .map { meta, files ->
-            return [meta, files.flatten(), getGenomeAttribute(meta.genome, 'fasta')]
+            return [meta, files.flatten(), getGenomeAttribute(meta.genome_data, 'fasta')]
         }
         .set{ch_bam_fasta}
         ch_bam_fasta.dump(tag: "FASTQ_TO_CRAM: aligned bam per sample", pretty: true)
@@ -141,7 +141,7 @@ workflow FASTQ_TO_CRAM {
 
         ch_markdup_index.bam
         .map { meta, bam, bai ->
-            bam_bai: [meta, bam, bai, getGenomeAttribute(meta.genome, 'fasta'), getGenomeAttribute(meta.genome, 'fai')]
+            bam_bai: [meta, bam, bai, getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai')]
         }
         .set {ch_bam_bai_fasta_fai}
 

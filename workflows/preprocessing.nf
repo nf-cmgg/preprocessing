@@ -152,9 +152,9 @@ workflow PREPROCESSING {
             }
         }
         if (genomes && genomes[meta.genome]){
-            meta = meta + ["genome": genomes[meta.genome]]
+            meta = meta + ["genome_data": genomes[meta.genome]]
         } else {
-            meta = meta + ["genome": [:]]
+            meta = meta + ["genome_data": [:]]
         }
         // set the aligner
         if (aligner && !meta.aligner) {
@@ -165,7 +165,7 @@ workflow PREPROCESSING {
         // // if there's no global ROI AND no sample speficic ROI
         // // AND the sample tag is "coPGT-M", set the sample ROI to "roi_copgt"
         if (!roi && !meta.roi && meta.tag == "coPGT-M") {
-            meta = meta + ["roi": getGenomeAttribute(meta.genome, "roi_copgt")]
+            meta = meta + ["roi": getGenomeAttribute(meta.genome_data, "roi_copgt")]
         }
         // // if there's a global ROI AND no sample specific ROI
         // // set the global ROI to the sample
@@ -223,7 +223,7 @@ workflow PREPROCESSING {
     }
     // split samples into human and non human data
     .branch { meta, reads ->
-        supported: meta.genome
+        supported: meta.genome_data instanceof Map && meta.genome.size() > 0
         other: true
     }
     .set { ch_trimmed_reads }
@@ -253,9 +253,9 @@ workflow PREPROCESSING {
             meta,
             reads,
             meta.aligner,
-            getGenomeAttribute(meta.genome, meta.aligner),
-            getGenomeAttribute(meta.genome, "fasta"),
-            getGenomeAttribute(meta.genome, "gtf")
+            getGenomeAttribute(meta.genome_data, meta.aligner),
+            getGenomeAttribute(meta.genome_data, "fasta"),
+            getGenomeAttribute(meta.genome_data, "gtf")
             ]
     }
     .set{ch_meta_reads_aligner_index_fasta_gtf}
@@ -295,8 +295,8 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                getGenomeAttribute(meta.genome, "fasta"),
-                getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome_data, "fasta"),
+                getGenomeAttribute(meta.genome_data, "fai"),
                 file(meta.roi, checkIfExists:true),
             ]
         } else {
@@ -304,8 +304,8 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                getGenomeAttribute(meta.genome, "fasta"),
-                getGenomeAttribute(meta.genome, "fai"),
+                getGenomeAttribute(meta.genome_data, "fasta"),
+                getGenomeAttribute(meta.genome_data, "fai"),
                 [],
             ]
         }
@@ -336,9 +336,9 @@ workflow PREPROCESSING {
                 cram,
                 crai,
                 file(meta.roi, checkIfExists:true),
-                getGenomeAttribute(meta.genome, "fasta"),
-                getGenomeAttribute(meta.genome, "fai"),
-                getGenomeAttribute(meta.genome, "dict"),
+                getGenomeAttribute(meta.genome_data, "fasta"),
+                getGenomeAttribute(meta.genome_data, "fai"),
+                getGenomeAttribute(meta.genome_data, "dict"),
             ]
         } else {
             return [
@@ -346,9 +346,9 @@ workflow PREPROCESSING {
                 cram,
                 crai,
                 [],
-                getGenomeAttribute(meta.genome, "fasta"),
-                getGenomeAttribute(meta.genome, "fai"),
-                getGenomeAttribute(meta.genome, "dict"),
+                getGenomeAttribute(meta.genome_data, "fasta"),
+                getGenomeAttribute(meta.genome_data, "fai"),
+                getGenomeAttribute(meta.genome_data, "dict"),
             ]
         }
     }
