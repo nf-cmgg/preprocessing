@@ -223,7 +223,7 @@ workflow PREPROCESSING {
     }
     // split samples into human and non human data
     .branch { meta, reads ->
-        supported: meta.genome_data instanceof Map && meta.genome.size() > 0
+        supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0
         other: true
     }
     .set { ch_trimmed_reads }
