@@ -144,7 +144,7 @@
                     },
                     "star/align": {
                         "branch": "master",
-                        "git_sha": "a5ad53288c79fa52c5ae708c317e09ec2dd149ab",
+                        "git_sha": "3c259f0ac1ed9ae3f6b835461d054edffc60120e",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/star/align/star-align.diff"
                     }
