@@ -5,6 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## dev
 
+## v2.0.3
+
+- Update modules
+- Fix bugs where samples with unequal number of files were not processed correctly
+- Update to nf-core template v3.1.1
+- Fix all tests
+
 ## v2.0.2
 
 - Drop unsed params
