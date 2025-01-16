@@ -3,67 +3,65 @@
         "content": [
             "multiqc_report.html",
             [
-                "versions.yml:md5,0561a5d2b2d777401f0ff89a8ac67f15",
-                "versions.yml:md5,116a5fdf1801c9d342a96384f9a022bc",
-                "versions.yml:md5,2f0e4646e69983a2407320287c06ee2c",
                 "versions.yml:md5,321e55c8f19102dc87a10e981635edda",
                 "versions.yml:md5,3e9382a1dc62d4f405bcfb58fe6b7768",
-                "versions.yml:md5,3fe85660b335f118fdc13e8b6a7ea4d3",
+                "versions.yml:md5,67e17554941666c3f3da7ab6e3b1ac5d",
+                "versions.yml:md5,84a41fdb642c270c5f36846cd7d8f033",
+                "versions.yml:md5,8ede2c6189fe1f73ef7e36b42528473c",
+                "versions.yml:md5,a18197a27823760677276bdf9a17c0b6",
                 "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
                 "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
-                "versions.yml:md5,c19a5d4b6146164005a164079a11ebb9",
                 "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868",
-                "versions.yml:md5,db50ed84358f6a5a82f5f4b80a61404f"
+                "versions.yml:md5,ebdd9fe0c553612c66238375b920f178",
+                "versions.yml:md5,fecf2763ae04725fa0ca7c995018dcea"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-07-16T08:24:04.721605"
+        "timestamp": "2025-01-14T11:12:00.42062267"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
             "multiqc_report.html",
             [
-                "versions.yml:md5,116a5fdf1801c9d342a96384f9a022bc",
-                "versions.yml:md5,2f0e4646e69983a2407320287c06ee2c",
                 "versions.yml:md5,321e55c8f19102dc87a10e981635edda",
-                "versions.yml:md5,3e9382a1dc62d4f405bcfb58fe6b7768",
-                "versions.yml:md5,3fe85660b335f118fdc13e8b6a7ea4d3",
+                "versions.yml:md5,67e17554941666c3f3da7ab6e3b1ac5d",
+                "versions.yml:md5,8ede2c6189fe1f73ef7e36b42528473c",
+                "versions.yml:md5,a18197a27823760677276bdf9a17c0b6",
                 "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
                 "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
-                "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868",
-                "versions.yml:md5,db50ed84358f6a5a82f5f4b80a61404f"
+                "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-07-16T08:29:26.100389"
+        "timestamp": "2025-01-14T11:16:49.01790145"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
             "multiqc_report.html",
             [
-                "versions.yml:md5,116a5fdf1801c9d342a96384f9a022bc",
-                "versions.yml:md5,2f0e4646e69983a2407320287c06ee2c",
+                "versions.yml:md5,2dbfdf50978986550dbe621f1d49fea7",
                 "versions.yml:md5,321e55c8f19102dc87a10e981635edda",
                 "versions.yml:md5,3e9382a1dc62d4f405bcfb58fe6b7768",
-                "versions.yml:md5,3fe85660b335f118fdc13e8b6a7ea4d3",
-                "versions.yml:md5,96d98de76860314b8942bf8a6f10e7d3",
+                "versions.yml:md5,67e17554941666c3f3da7ab6e3b1ac5d",
+                "versions.yml:md5,84a41fdb642c270c5f36846cd7d8f033",
+                "versions.yml:md5,8ede2c6189fe1f73ef7e36b42528473c",
+                "versions.yml:md5,a18197a27823760677276bdf9a17c0b6",
                 "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
                 "versions.yml:md5,a70ab0a818f1e25471def6430e6324de",
-                "versions.yml:md5,c19a5d4b6146164005a164079a11ebb9",
                 "versions.yml:md5,d11c133ecb39ba9f6d7e081a8a6ff868",
-                "versions.yml:md5,db50ed84358f6a5a82f5f4b80a61404f"
+                "versions.yml:md5,fecf2763ae04725fa0ca7c995018dcea"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-07-16T08:27:40.676964"
+        "timestamp": "2025-01-14T11:15:21.380002387"
     }
 }

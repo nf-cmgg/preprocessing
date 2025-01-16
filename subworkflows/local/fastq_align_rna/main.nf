@@ -29,7 +29,7 @@ workflow FASTQ_ALIGN_RNA {
         }
 
         // Align fastq files to reference genome
-        STAR_ALIGN(ch_to_align.star, false, "Illumina", "CMGG") // if aligner is STAR
+        STAR_ALIGN(ch_to_align.star, "Illumina", "CMGG") // if aligner is STAR
         ch_bam = ch_bam.mix(STAR_ALIGN.out.bam)
         ch_reports = ch_reports.mix(
             STAR_ALIGN.out.log_final,

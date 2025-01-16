@@ -58,14 +58,14 @@
                 ]
             ],
             [
-                "versions.yml:md5,605896d89504a79cbbf1e0e450b15f00"
+                "versions.yml:md5,a08c174f2d393f0b39c2cfe003ffafb9"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-05-28T16:12:33.555868971"
+        "timestamp": "2025-01-14T10:45:55.903470736"
     },
     "fastq align rna - unknown aligner": {
         "content": [
