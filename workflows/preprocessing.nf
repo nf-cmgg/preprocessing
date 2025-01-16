@@ -138,6 +138,7 @@ workflow PREPROCESSING {
 */
     ch_input_fastq
     .mix(ch_demultiplexed_fastq_with_sampleinfo)
+    // Add the genome config to the tuple
     // set genome based on organism key
     .map{ meta, reads ->
         if (meta.organism && !meta.genome) {
