@@ -1,4 +1,7 @@
 Changes in module 'nf-core/fastp'
+'modules/nf-core/fastp/environment.yml' is unchanged
+'modules/nf-core/fastp/meta.yml' is unchanged
+Changes in 'fastp/main.nf':
 --- modules/nf-core/fastp/main.nf
 +++ modules/nf-core/fastp/main.nf
 @@ -92,7 +92,6 @@
@@ -10,4 +13,9 @@ Changes in module 'nf-core/fastp'
              2> >(tee ${prefix}.fastp.log >&2)
  
 
+'modules/nf-core/fastp/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/fastp/tests/tags.yml' is unchanged
+'modules/nf-core/fastp/tests/main.nf.test' is unchanged
+'modules/nf-core/fastp/tests/nextflow.save_failed.config' is unchanged
+'modules/nf-core/fastp/tests/nextflow.interleaved.config' is unchanged
 ************************************************************

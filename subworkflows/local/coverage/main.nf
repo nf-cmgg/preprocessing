@@ -20,7 +20,7 @@ workflow COVERAGE {
                     return [meta, cram, crai, roi, fasta]
             }
         )
-        ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
+        ch_versions = ch_versions.mix(MOSDEPTH.out.versions.first())
 
         SAMTOOLS_COVERAGE(
             ch_meta_cram_crai_fasta_fai_roi.map{
@@ -28,7 +28,7 @@ workflow COVERAGE {
                     return [meta, cram, crai, fasta, fai]
             }
         )
-        ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions)
+        ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
         ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage)
 
         PANELCOVERAGE(
@@ -36,7 +36,7 @@ workflow COVERAGE {
             .join(MOSDEPTH.out.per_base_csi)
             .combine(ch_genelists)
         )
-        ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions)
+        ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions.first())
         ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)
 
     emit:

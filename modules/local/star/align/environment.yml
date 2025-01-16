@@ -1,8 +1,0 @@
-name: star_align
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-dependencies:
-  - bioconda::htslib=1.19.1
-  - bioconda::star=2.7.11b

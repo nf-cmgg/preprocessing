@@ -11,16 +11,16 @@
                 
             ],
             [
-                "versions.yml:md5,4ad4a320748ecb9f9005dff1cc516425",
+                "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-07-16T08:42:31.046232"
+        "timestamp": "2024-11-19T15:29:33.777103"
     },
     "fastq to cram - bwa - bamsormadup": {
         "content": [
@@ -57,16 +57,16 @@
                 "test.merged.metrics:md5,934298c4be265f81fdc3e39b303d811b"
             ],
             [
-                "versions.yml:md5,608b9e6041cb85edeaee61b0efa3b37c",
+                "versions.yml:md5,7d966b1716b0f134534741313257f0ec",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-07-16T08:41:41.794917"
+        "timestamp": "2024-11-19T15:28:38.387127"
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
@@ -101,15 +101,15 @@
                 
             ],
             [
-                "versions.yml:md5,4ad4a320748ecb9f9005dff1cc516425",
+                "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
                 "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-07-16T08:42:06.679175"
+        "timestamp": "2024-11-19T15:29:05.943512"
     }
 }

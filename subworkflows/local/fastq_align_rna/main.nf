@@ -5,15 +5,13 @@
 //
 
 
-include { STAR_ALIGN                     } from "../../../modules/local/star/align/main"
+include { STAR_ALIGN } from "../../../modules/nf-core/star/align/main.nf"
 
 workflow FASTQ_ALIGN_RNA {
     take:
         ch_reads_aligner_index_gtf      // channel: [mandatory] reads, aligner, index, gtf
 
     main:
-
-        ch_bam_index    = Channel.empty()
         ch_bam          = Channel.empty()
         ch_reports      = Channel.empty()
         ch_versions     = Channel.empty()
@@ -26,12 +24,12 @@ workflow FASTQ_ALIGN_RNA {
         .set{ch_to_align}
 
         // Throw error for all samples with unsupported aligners
-        ch_to_align.other.map{ meta, reads, aligner, index, fasta ->
+        ch_to_align.other.map{ meta, _reads, aligner, _index, _fasta ->
             error "Unsupported aligner ${aligner} for sample ${meta.id}"
         }
 
         // Align fastq files to reference genome
-        STAR_ALIGN(ch_to_align.star) // if aligner is STAR
+        STAR_ALIGN(ch_to_align.star, "Illumina", "CMGG") // if aligner is STAR
         ch_bam = ch_bam.mix(STAR_ALIGN.out.bam)
         ch_reports = ch_reports.mix(
             STAR_ALIGN.out.log_final,

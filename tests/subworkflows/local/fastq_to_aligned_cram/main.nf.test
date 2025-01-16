@@ -19,7 +19,7 @@ nextflow_workflow {
                         samplename:'test',
                         single_end:false,
                         sample_type:'DNA',
-                        genome: [
+                        genome_data: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
                         ]
@@ -64,7 +64,7 @@ nextflow_workflow {
                         samplename:'test',
                         single_end:false,
                         sample_type:'RNA',
-                        genome: [
+                        genome_data: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
                         ]
@@ -109,7 +109,7 @@ nextflow_workflow {
                         samplename:'test',
                         single_end:false,
                         sample_type:'DNA',
-                        genome: [
+                        genome_data: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
                         ]
@@ -154,7 +154,7 @@ nextflow_workflow {
                         samplename:'test',
                         single_end:false,
                         sample_type:'DNA',
-                        genome: [
+                        genome_data: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
                         ]
@@ -200,7 +200,7 @@ nextflow_workflow {
                         samplename:'test',
                         single_end:false,
                         sample_type:'DNA',
-                        genome: [
+                        genome_data: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                             fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
                         ]
