@@ -121,7 +121,9 @@ workflow PREPROCESSING {
         def single_end = fastq[1] ? false : true
         // add readgroup metadata
         def rg = readgroup_from_fastq(fastq[0])
-        rg = rg + [ 'SM': meta.samplename,
+        // if the sample name starts with "snp_", remove it so the sampletracking works later on.
+        def samplename = meta.samplename.startsWith("snp_") ? meta.samplename[4..-1] : meta.samplename
+        rg = rg + [ 'SM': samplename,
                     'LB': meta.library ?: "",
                     'PL': meta.platform ?: rg.PL,
                     'ID': meta.readgroup ?: rg.ID
@@ -145,7 +147,7 @@ workflow PREPROCESSING {
             if (meta.organism ==~ /(?i)Homo[\s_]sapiens/) {
                 meta = meta + ["genome":"GRCh38"]
             } else if (meta.organism ==~ /(?i)Mus[\s_]musculus/) {
-                meta = meta + ["genome":"GRCm39"]
+                meta = meta + ["genome":"mm10"]
             } else if (meta.organism ==~/(?i)Danio[\s_]rerio/) {
                 meta = meta + ["genome":"GRCz11"]
             } else {
