@@ -1,5 +1,5 @@
 process PANELCOVERAGE {
-    tag "$meta.id - $genelist"
+    tag "$meta.id"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -8,7 +8,8 @@ process PANELCOVERAGE {
         'biocontainers/bedtools:2.31.1--hf5e1c6e_1' }"
 
     input:
-    tuple val(meta), path(perbase), path(perbase_index), path(genelist)
+    tuple val(meta), path(perbase), path(perbase_index)
+    path(genelists)
 
     output:
     tuple val(meta), path("*.mosdepth.region.dist.txt"), emit: regiondist
@@ -20,7 +21,10 @@ process PANELCOVERAGE {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    cmgg_genelists regiondist --samplename ${prefix} --perbase ${perbase} --genelist ${genelist}
+    for GENELIST in $genelists
+    do
+        cmgg_genelists regiondist --samplename ${prefix} --perbase ${perbase} --genelist \$GENELIST
+    done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -32,7 +36,11 @@ process PANELCOVERAGE {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_genelist.mosdepth.region.dist.txt
+    for GENELIST in $genelists
+    do
+        name=\$(basename \$GENELIST .bed)
+        touch ${prefix}_\${name}.mosdepth.region.dist.txt
+    done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

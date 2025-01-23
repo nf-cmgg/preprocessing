@@ -60,7 +60,7 @@ workflow PREPROCESSING {
 
     roi = roi ? file(roi, checkIfExists:true) : null
 
-    genelists = genelists ? file(genelists + "/*.bed", checkIfExists:true) : []
+    genelists = genelists ? Channel.value(file(genelists + "/*.bed", checkIfExists:true)) : Channel.empty()
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -5,7 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## dev
 
-# v2.0.4
+- Panel coverage will now run all genelists' coverage analysis in one process per sample
+
+## v2.0.4
 
 - Add flag to `snap` to allow for more expansion of compressed data
 - Parse readgroup samplenames for `snp_` prefixed samples
