@@ -70,6 +70,7 @@ process SAMTOOLS_SORMADUP {
         -T ${prefix} \\
         -f ${prefix}.metrics \\
         --threads $task.cpus \\
+        $reference \\
         $args5 \\
         - \\
         ${prefix}.${extension}

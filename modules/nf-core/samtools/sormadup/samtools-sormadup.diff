@@ -25,6 +25,14 @@ Changes in 'samtools/sormadup/main.nf':
  
      """
      samtools cat \\
+@@ -69,6 +70,7 @@
+         -T ${prefix} \\
+         -f ${prefix}.metrics \\
+         --threads $task.cpus \\
++        $reference \\
+         $args5 \\
+         - \\
+         ${prefix}.${extension}
 
 'modules/nf-core/samtools/sormadup/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/samtools/sormadup/tests/tags.yml' is unchanged
