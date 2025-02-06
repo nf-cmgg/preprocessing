@@ -33,7 +33,7 @@ process SAMTOOLS_SORMADUP {
                     "bam"
     def reference = fasta ? "--reference ${fasta}" : ""
     // memory per thread for samtools sort
-    // set to 50% of the memory per thread, but at least 768M (samtool default)
+    // set to 50% of the memory per thread, but at least 768M (samtools default)
     def sort_memory = Math.max(768,(task.memory.mega/task.cpus*0.50).intValue())
 
     """

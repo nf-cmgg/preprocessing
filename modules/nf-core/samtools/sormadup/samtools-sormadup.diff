@@ -14,27 +14,10 @@ Changes in 'samtools/sormadup/main.nf':
  
      output:
      tuple val(meta), path("*.bam")      , emit: bam,  optional: true
-@@ -33,7 +32,9 @@
-                     args5.contains("--output-fmt cram") ? "cram" :
-                     "bam"
-     def reference = fasta ? "--reference ${fasta}" : ""
--    def sort_memory = (task.memory.mega/task.cpus*0.75).intValue()
-+    // memory per thread for samtools sort
-+    // set to 50% of the memory per thread, but at least 768M (samtool default)
-+    def sort_memory = Math.max(768,(task.memory.mega/task.cpus*0.50).intValue())
- 
-     """
-     samtools cat \\
-@@ -69,6 +70,7 @@
-         -T ${prefix} \\
-         -f ${prefix}.metrics \\
-         --threads $task.cpus \\
-+        $reference \\
-         $args5 \\
-         - \\
-         ${prefix}.${extension}
 
 'modules/nf-core/samtools/sormadup/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/samtools/sormadup/tests/bam.config' is unchanged
 'modules/nf-core/samtools/sormadup/tests/tags.yml' is unchanged
+'modules/nf-core/samtools/sormadup/tests/cram.config' is unchanged
 'modules/nf-core/samtools/sormadup/tests/main.nf.test' is unchanged
 ************************************************************
