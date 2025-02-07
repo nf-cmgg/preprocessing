@@ -54,7 +54,7 @@
                 ]
             ],
             [
-                "test.merged.metrics:md5,d3e0cdaa30ffec2a4f0ef4476205cf32"
+                "test.merged.metrics:md5,6e4d03a56877997e0e035d267550e381"
             ],
             [
                 "versions.yml:md5,7d966b1716b0f134534741313257f0ec",
@@ -66,7 +66,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-06T13:53:52.659219"
+        "timestamp": "2025-02-07T10:42:21.74869"
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
