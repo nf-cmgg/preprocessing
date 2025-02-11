@@ -32,7 +32,9 @@ process SAMTOOLS_SORMADUP {
                     args5.contains("--output-fmt cram") ? "cram" :
                     "bam"
     def reference = fasta ? "--reference ${fasta}" : ""
-    def sort_memory = (task.memory.mega/task.cpus*0.75).intValue()
+    // memory per thread for samtools sort
+    // set to 50% of the memory per thread, but at least 768M (samtools default)
+    def sort_memory = Math.max(768,(task.memory.mega/task.cpus*0.50).intValue())
 
     """
     samtools cat \\
@@ -68,6 +70,7 @@ process SAMTOOLS_SORMADUP {
         -T ${prefix} \\
         -f ${prefix}.metrics \\
         --threads $task.cpus \\
+        $reference \\
         $args5 \\
         - \\
         ${prefix}.${extension}
