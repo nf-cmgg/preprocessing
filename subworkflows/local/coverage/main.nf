@@ -33,8 +33,8 @@ workflow COVERAGE {
 
         PANELCOVERAGE(
             MOSDEPTH.out.per_base_bed
-            .join(MOSDEPTH.out.per_base_csi)
-            .combine(ch_genelists)
+            .join(MOSDEPTH.out.per_base_csi),
+            ch_genelists
         )
         ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions.first())
         ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)

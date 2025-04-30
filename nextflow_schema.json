@@ -59,6 +59,11 @@
                     "description": "Which alignment postprocessor to use",
                     "enum": ["bamsormadup", "samtools", "false"]
                 },
+                "umi_aware": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name."
+                },
                 "run_coverage": {
                     "type": "boolean",
                     "description": "Run coverage analysis steps",

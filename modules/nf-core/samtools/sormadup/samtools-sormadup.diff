@@ -16,6 +16,8 @@ Changes in 'samtools/sormadup/main.nf':
      tuple val(meta), path("*.bam")      , emit: bam,  optional: true
 
 'modules/nf-core/samtools/sormadup/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/samtools/sormadup/tests/bam.config' is unchanged
 'modules/nf-core/samtools/sormadup/tests/tags.yml' is unchanged
+'modules/nf-core/samtools/sormadup/tests/cram.config' is unchanged
 'modules/nf-core/samtools/sormadup/tests/main.nf.test' is unchanged
 ************************************************************
