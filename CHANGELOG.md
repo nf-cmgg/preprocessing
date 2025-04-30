@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## dev
 
 - Panel coverage will now run all genelists' coverage analysis in one process per sample
+- Fix readgroup sample names for `snp_` prefixed samples
+- Edit `WGS` profile to include `samtools/sormadup` and enable UMI aware duplicate marking
 
 ## v2.0.4
 
