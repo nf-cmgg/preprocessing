@@ -45,3 +45,5 @@ samtools_coverage:
 extra_fn_clean_exts:
   - ".cram"
   - ".coverage"
+
+template: "cmgg"
