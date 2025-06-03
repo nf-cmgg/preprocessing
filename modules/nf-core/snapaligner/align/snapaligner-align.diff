@@ -1,4 +1,4 @@
-Changes in module 'nf-core/snapaligner/align'
+Changes in component 'nf-core/snapaligner/align'
 'modules/nf-core/snapaligner/align/environment.yml' is unchanged
 'modules/nf-core/snapaligner/align/meta.yml' is unchanged
 Changes in 'snapaligner/align/main.nf':
@@ -15,4 +15,7 @@ Changes in 'snapaligner/align/main.nf':
      output:
      tuple val(meta), path("*.bam"), emit: bam
 
+'modules/nf-core/snapaligner/align/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/snapaligner/align/tests/nextflow.config' is unchanged
+'modules/nf-core/snapaligner/align/tests/main.nf.test' is unchanged
 ************************************************************
