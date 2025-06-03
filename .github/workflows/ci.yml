@@ -10,7 +10,7 @@ on:
 
 env:
   NXF_ANSI_LOG: false
-  NFT_VER: "0.8.4"
+  NFT_VER: "0.9.2"
   NFT_WORKDIR: "~"
   NFT_DIFF: "pdiff"
   NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "24.10.0"
+          - "25.04.3"
         tags:
           - "modules/local/panelcoverage"
           - "subworkflows/local/bam_qc"
