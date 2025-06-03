@@ -7,12 +7,12 @@
                 "nf-core": {
                     "bcl2fastq": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "27cceb2eb8aa959d4a8819caab886386a59a3789",
                         "installed_by": ["bcl_demultiplex", "modules"]
                     },
                     "biobambam/bamsormadup": {
@@ -154,7 +154,7 @@
                 "nf-core": {
                     "bcl_demultiplex": {
                         "branch": "master",
-                        "git_sha": "a6e6bec1b1da613b89a6c0a3a46713f880cf5aca",
+                        "git_sha": "27cceb2eb8aa959d4a8819caab886386a59a3789",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_align_dna": {
