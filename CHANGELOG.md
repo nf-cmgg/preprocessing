@@ -4,7 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## dev
+
 - Update bash options for nextflow version 25.04.2
+- Update `bcl-convert` module to 4.3.13
+- Update `bowtie2` module to 2.5.4
+- Update `multiqc` module to 1.29
 
 ## v2.0.5
 
