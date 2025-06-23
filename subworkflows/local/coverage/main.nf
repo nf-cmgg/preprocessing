@@ -16,7 +16,7 @@ workflow COVERAGE {
 
         MOSDEPTH(
             ch_meta_cram_crai_fasta_fai_roi.map{
-                meta, cram, crai, fasta, fai, roi ->
+                meta, cram, crai, fasta, _fai, roi ->
                     return [meta, cram, crai, roi, fasta]
             }
         )
@@ -24,17 +24,37 @@ workflow COVERAGE {
 
         SAMTOOLS_COVERAGE(
             ch_meta_cram_crai_fasta_fai_roi.map{
-                meta, cram, crai, fasta, fai, roi ->
+                meta, cram, crai, fasta, fai, _roi ->
                     return [meta, cram, crai, fasta, fai]
             }
         )
         ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
         ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage)
 
+        ch_genelists.view()
+
         PANELCOVERAGE(
             MOSDEPTH.out.per_base_bed
-            .join(MOSDEPTH.out.per_base_csi),
-            ch_genelists
+            .join(MOSDEPTH.out.per_base_csi)
+            .combine(ch_genelists)
+            .map{meta, bed, index, genelists ->
+                if (genelists !instanceof List){
+                    // Because groovy typing sucks ass; apparently an array of 1 is automatically converted to a string...
+                    genelists = [genelists]
+                }
+                def filtered_genelists = meta.tag.toLowerCase() == "seqcap" ?
+                    genelists.findAll{it.name.toLowerCase().contains("seqcap")} :
+                    genelists.findAll{!it.name.toLowerCase().contains("seqcap")}
+
+                if (filtered_genelists.size() > 0) {
+                    return [
+                        meta,
+                        bed,
+                        index,
+                        filtered_genelists
+                    ]
+                }
+            }
         )
         ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions.first())
         ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)
