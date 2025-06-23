@@ -41,7 +41,7 @@ workflow FASTQ_ALIGN_DNA {
         .set{ch_to_align}
 
         // Throw error for all samples with unsupported aligners
-        ch_to_align.other.map{ meta, reads, aligner, index, fasta ->
+        ch_to_align.other.map{ meta, _reads, aligner, _index, _fasta ->
             error "Unsupported aligner ${aligner} for sample ${meta.id}"
         }
 

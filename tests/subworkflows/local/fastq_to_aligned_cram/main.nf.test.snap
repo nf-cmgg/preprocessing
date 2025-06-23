@@ -12,15 +12,15 @@
             ],
             [
                 "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
-                "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
-                "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
+                "versions.yml:md5,d92f130d879deee51a23917c6e272233",
+                "versions.yml:md5,d92f130d879deee51a23917c6e272233"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-11-19T15:29:33.777103"
+        "timestamp": "2025-06-03T10:39:18.407178"
     },
     "fastq to cram - bwa - bamsormadup": {
         "content": [
@@ -34,16 +34,16 @@
                 "test.merged.metrics.txt:md5,4ee20f12cb4d6077479a08310c8f6c70"
             ],
             [
-                "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
-                "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
-                "versions.yml:md5,d8544811f6b511ef45e9c3547430a30d"
+                "versions.yml:md5,d8544811f6b511ef45e9c3547430a30d",
+                "versions.yml:md5,d92f130d879deee51a23917c6e272233",
+                "versions.yml:md5,d92f130d879deee51a23917c6e272233"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-05-29T10:51:09.599566745"
+        "timestamp": "2025-06-03T10:36:05.605497"
     },
     "fastq to cram - bwa - samtools sormadup": {
         "content": [
@@ -58,15 +58,15 @@
             ],
             [
                 "versions.yml:md5,7d966b1716b0f134534741313257f0ec",
-                "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
-                "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
+                "versions.yml:md5,d92f130d879deee51a23917c6e272233",
+                "versions.yml:md5,d92f130d879deee51a23917c6e272233"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2025-02-07T10:42:21.74869"
+        "timestamp": "2025-06-03T10:38:15.994769"
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
@@ -102,14 +102,14 @@
             ],
             [
                 "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
-                "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125",
-                "versions.yml:md5,b5d3406dd4eaa5dd12355308d78b4125"
+                "versions.yml:md5,d92f130d879deee51a23917c6e272233",
+                "versions.yml:md5,d92f130d879deee51a23917c6e272233"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-11-19T15:29:05.943512"
+        "timestamp": "2025-06-03T10:38:46.909512"
     }
 }
