@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## dev
 
+## v2.0.6
+
 - Update bash options for nextflow version 25.04.2
 - Update `bcl-convert` module to 4.3.13
 - Update `bowtie2` module to 2.5.4
