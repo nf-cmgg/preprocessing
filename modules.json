@@ -64,7 +64,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "471cf3ca1617271b9b6fea09ea2ebdee78b874de",
+                        "git_sha": "a4488d3d09244f29fb4606ba4eef85d59dcc6ad8",
                         "installed_by": ["modules"]
                     },
                     "picard/collecthsmetrics": {
