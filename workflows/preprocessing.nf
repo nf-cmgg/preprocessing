@@ -145,7 +145,7 @@ workflow PREPROCESSING {
 if (params.enable_umi) {
 
     // Convert to [meta, r1, r2] for the UMI subworkflow
-    ch_umi_fastq = ch_input_fastq.map { meta, reads ->
+    def ch_umi_fastq = ch_input_fastq.map { meta, reads ->
         def r1 = (reads instanceof List) ? reads[0] : reads
         def r2 = (reads instanceof List && reads.size() > 1) ? reads[1] : []
         return [meta, r1, r2]
@@ -160,7 +160,7 @@ if (params.enable_umi) {
     ch_versions = ch_versions.mix(CONSENSUS.out.versions)
 
     // Output channels
-    ch_umi_consensus_bam  = CONSENSUS.out.consensus_bam
+    def ch_umi_consensus_bam  = CONSENSUS.out.consensus_bam
 }
 
 /*

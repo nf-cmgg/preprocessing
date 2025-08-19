@@ -21,29 +21,18 @@ workflow CONSENSUS {
     main:
         def ch_versions       = Channel.empty()
         def readname_fastq     = Channel.empty()
-        def ch_readname_uBAM   = Channel.empty()
+        def seq_fastq = Channel.empty()
+        def ch_fastq_to_uBAM   = Channel.empty()
         def ch_fastqtobam_with_bai = Channel.empty()
 
-        ch_input_fastq
-            .combine(params.umi_in_readname)
-            .map { meta, fq1, fq2, umi_flag ->
-                tuple(meta, fq1, fq2, umi_flag)
-            }
-            .set  {ch_input_fastq_combined}
-
+    // 1.1: FASTQ => uBAM
 
         if (params.umi_in_readname) {
 
         // Case 1: UMI_in_readname
 
-            ch_input_fastq_combined
-                .filter { _meta, _fq1, _fq2, umi_flag -> umi_flag == true }
-                .set { ch_input_fastq_umi_in_readname }
 
-
-            // 1.1: FASTQ => uBAM
-
-            readname_fastq = ch_input_fastq_umi_in_readname.map { meta, r1, r2, _f -> tuple(meta, [r1, r2]) }
+            readname_fastq = ch_input_fastq.map { meta, r1, r2 -> tuple(meta, [r1, r2]) }
 
             FASTQTOBAM_READNAME(readname_fastq)
             ch_versions = ch_versions.mix(FASTQTOBAM_READNAME.out.versions)
@@ -59,18 +48,21 @@ workflow CONSENSUS {
             FGBIO_COPYUMIFROMREADNAME(ch_fastqtobam_with_bai)
             ch_versions = ch_versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
 
-            ch_readname_uBAM = ch_readname_uBAM.mix(FGBIO_COPYUMIFROMREADNAME.out.bam)
-
-            // 1.2: uBAM => Mapped BAM
+            ch_fastq_to_uBAM = ch_fastq_to_uBAM.mix(FGBIO_COPYUMIFROMREADNAME.out.bam)
 
         } else {
 
         // Case 2: UMI_in_sequence
 
-            ch_input_fastq_combined
-                .filter { _meta, _fq1, _fq2, umi_flag -> umi_flag == false }
-                .set { ch_input_fastq_umi_in_seq }
+            seq_fastq = ch_input_fastq.map { meta, r1, r2 -> tuple(meta, [r1, r2]) }
+
+            FASTQTOBAM_SEQ(seq_fastq)
+            ch_versions = ch_versions.mix(FASTQTOBAM_SEQ.out.versions)
+
+            ch_fastq_to_uBAM = ch_fastq_to_uBAM.mix(FASTQTOBAM_SEQ.out.bam)
         }
+
+    // 1.2: uBAM => Mapped BAM
 /*
     // Seq branch => uBAM
 
