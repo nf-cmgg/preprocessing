@@ -141,13 +141,13 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-UMI_FLAG = Channel.value(params.umi_in_readname as boolean)
+
 if (params.enable_umi) {
 
     // Convert to [meta, r1, r2] for the UMI subworkflow
-    CH_UMI_FASTQ = ch_input_fastq.map { meta, reads ->
+    ch_umi_fastq = ch_input_fastq.map { meta, reads ->
         def r1 = (reads instanceof List) ? reads[0] : reads
-        def r2 = (reads instanceof List && reads.size() > 1) ? reads[1] : null
+        def r2 = (reads instanceof List && reads.size() > 1) ? reads[1] : []
         return [meta, r1, r2]
     }
 
@@ -155,7 +155,7 @@ if (params.enable_umi) {
     // NOTE: your CONSENSUS expects (ch_fastq, ch_reference, ch_umi_in_readname)
     // If your CONSENSUS expects a single fasta (not keyed), replace CH_UMI_FASTA by Channel.fromPath(...).
 
-    CONSENSUS(CH_UMI_FASTQ, genomes, UMI_FLAG)
+    CONSENSUS(ch_umi_fastq, genomes)
 
     ch_versions = ch_versions.mix(CONSENSUS.out.versions)
 

@@ -47,6 +47,18 @@
             "description": "",
             "default": "",
             "properties": {
+                "enable_umi": {
+                    "type": "boolean",
+                    "description": "Enable UMI subworkflow",
+                    "hidden": true,
+                    "default": true
+                },
+                "umi_in_readname": {
+                    "type": "boolean",
+                    "description": "UMI present in ireadname",
+                    "hidden": true,
+                    "default": true
+                },
                 "aligner": {
                     "type": "string",
                     "default": "bowtie2",
@@ -259,19 +271,5 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ],
-    "properties": {
-        "umi_in_readname": {
-            "type": "boolean",
-            "description": "UMI present in ireadname",
-            "hidden": true,
-            "default": true
-        },
-        "enable_umi": {
-            "type": "boolean",
-            "description": "Enable UMI subworkflow",
-            "hidden": true,
-            "default": true
-        }
-    }
+    ]
 }

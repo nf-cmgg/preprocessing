@@ -11,63 +11,76 @@ include { FGBIO_ZIPPERBAMS                  } from '../../../modules/nf-core/fgb
 include { SAMTOOLS_FASTQ                    } from '../../../modules/nf-core/samtools/fastq/main'
 include { SAMTOOLS_INDEX                    } from '../../../modules/nf-core/samtools/index/main'
 include { BWA_MEM                        } from '../../../modules/nf-core/bwa/mem/main'
-include { samplesheetToList } from 'plugin/nf-schema'
 
 
 workflow CONSENSUS {
     take:
         ch_input_fastq                   // channel: [meta_with_readgroup, fastq] for SE/PE/duplex samples
         ch_genomes                       // map: reference genome files
-        ch_umi_in_readname               // boolean
-    main:
 
-        ch_versions       = Channel.empty()
+    main:
+        def ch_versions       = Channel.empty()
+        def readname_fastq     = Channel.empty()
+        def ch_readname_uBAM   = Channel.empty()
+        def ch_fastqtobam_with_bai = Channel.empty()
 
         ch_input_fastq
-            .combine(ch_umi_in_readname)
+            .combine(params.umi_in_readname)
             .map { meta, fq1, fq2, umi_flag ->
                 tuple(meta, fq1, fq2, umi_flag)
             }
-            .branch { _meta, _fq1, _fq2, umi_flag ->
-                umi_in_readname: umi_flag == true
-                umi_in_seq: umi_flag == false
-            }
-            .set  {ch_input_fastq_branch}
+            .set  {ch_input_fastq_combined}
 
 
-    // Readname branch
+        if (params.umi_in_readname) {
 
-        // 1.1: FASTQ => uBAM
-        ch_RN_uBAM = Channel.empty()
-        RN_FQ  = ch_input_fastq_branch.umi_in_readname.map { meta, r1, r2, _f -> tuple(meta, [r1, r2]) }
+        // Case 1: UMI_in_readname
 
-        FASTQTOBAM_READNAME(RN_FQ)
-        SAMTOOLS_INDEX(FASTQTOBAM_READNAME.out.bam)
-
-        FASTQTOBAM_READNAME.out.bam
-            .join(SAMTOOLS_INDEX.out.bai, by: 0)
-            .map { meta, bam, bai -> tuple(meta, bam, bai) }
-            .set { CH_FASTQTOBAM_WITH_BAI }
-
-        FGBIO_COPYUMIFROMREADNAME(CH_FASTQTOBAM_WITH_BAI)
-        ch_RN_uBAM = ch_RN_uBAM.mix(FGBIO_COPYUMIFROMREADNAME.out.bam)
-
-        // 1.2: uBAM => Mapped BAM
+            ch_input_fastq_combined
+                .filter { _meta, _fq1, _fq2, umi_flag -> umi_flag == true }
+                .set { ch_input_fastq_umi_in_readname }
 
 
+            // 1.1: FASTQ => uBAM
 
+            readname_fastq = ch_input_fastq_umi_in_readname.map { meta, r1, r2, _f -> tuple(meta, [r1, r2]) }
 
+            FASTQTOBAM_READNAME(readname_fastq)
+            ch_versions = ch_versions.mix(FASTQTOBAM_READNAME.out.versions)
 
+            SAMTOOLS_INDEX(FASTQTOBAM_READNAME.out.bam)
+            ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
 
+            FASTQTOBAM_READNAME.out.bam
+                .join(SAMTOOLS_INDEX.out.bai, by: 0)
+                .map { meta, bam, bai -> tuple(meta, bam, bai) }
+                .set { ch_fastqtobam_with_bai }
 
+            FGBIO_COPYUMIFROMREADNAME(ch_fastqtobam_with_bai)
+            ch_versions = ch_versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
+
+            ch_readname_uBAM = ch_readname_uBAM.mix(FGBIO_COPYUMIFROMREADNAME.out.bam)
+
+            // 1.2: uBAM => Mapped BAM
+
+        } else {
+
+        // Case 2: UMI_in_sequence
+
+            ch_input_fastq_combined
+                .filter { _meta, _fq1, _fq2, umi_flag -> umi_flag == false }
+                .set { ch_input_fastq_umi_in_seq }
+        }
 /*
-        // Seq branch => uBAM
+    // Seq branch => uBAM
 
 
         // 1.1: FASTQ => uBAM
         SEQ_FQ = ch_input_fastq_branch.umi_in_seq.map { meta, r1, r2, _f -> tuple(meta, [r1, r2]) }
 
         FASTQTOBAM_SEQ(SEQ_FQ)
+
+        // 1.2: uBAM -> Mapped BAM
 */
 
     emit:
@@ -77,5 +90,5 @@ workflow CONSENSUS {
         versions       = ch_versions
         */
         consensus_bam  = Channel.empty()
-        versions       = Channel.empty()
+        versions       = ch_versions
 }
