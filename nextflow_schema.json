@@ -61,7 +61,6 @@
                 },
                 "umi_aware": {
                     "type": "boolean",
-                    "default": "false",
                     "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name."
                 },
                 "run_coverage": {
@@ -71,8 +70,7 @@
                 },
                 "skip_trimming": {
                     "type": "boolean",
-                    "description": "Skip adapter trimming",
-                    "default": false
+                    "description": "Skip adapter trimming"
                 },
                 "trim_front": {
                     "type": "integer",
@@ -86,27 +84,22 @@
                 },
                 "adapter_R1": {
                     "type": "string",
-                    "default": null,
                     "description": "Adapter sequence to be trimmed"
                 },
                 "adapter_R2": {
                     "type": "string",
-                    "default": null,
                     "description": "Adapter sequence to be trimmed"
                 },
                 "disable_picard_metrics": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Disable the calculation of (slow) Picard metrics"
                 },
                 "roi": {
                     "type": "string",
-                    "default": null,
                     "description": "Region of interest for coverage analysis to be applied to all samples"
                 },
                 "genelists": {
                     "type": "string",
-                    "default": null,
                     "exists": true,
                     "format": "directory-path",
                     "description": "Directory containing gene list bed files for granular coverage analysis"
@@ -266,5 +259,19 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "umi_in_readname": {
+            "type": "boolean",
+            "description": "UMI present in ireadname",
+            "hidden": true,
+            "default": true
+        },
+        "enable_umi": {
+            "type": "boolean",
+            "description": "Enable UMI subworkflow",
+            "hidden": true,
+            "default": true
+        }
+    }
 }

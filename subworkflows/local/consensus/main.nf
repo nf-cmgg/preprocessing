@@ -1,73 +1,81 @@
 #!/usr/bin/env nextflow
 
-include { FGBIO_COPYUMIFROMREADNAME         } from "${projectDir}/modules/nf-core/fgbio/copyumifromreadname/main.nf"
-include { FGBIO_CALLDUPLEXCONSENSUSREADS    } from "${projectDir}/modules/nf-core/fgbio/callduplexconsensusreads/main.nf"
-include { FGBIO_CALLMOLECULARCONSENSUSREADS } from "${projectDir}/modules/nf-core/fgbio/callmolecularconsensusreads/main.nf"
-include { FGBIO_COLLECTDUPLEXSEQMETRICS     } from "${projectDir}/modules/nf-core/fgbio/collectduplexseqmetrics/main.nf"
-include { FGBIO_FASTQTOBAM                  } from "${projectDir}/modules/nf-core/fgbio/fastqtobam/main.nf"
-include { FGBIO_FILTERCONSENSUSREADS        } from "${projectDir}/modules/nf-core/fgbio/filterconsensusreads/main.nf"
-include { FGBIO_GROUPREADSBYUMI             } from "${projectDir}/modules/nf-core/fgbio/groupreadsbyumi/main.nf"
-include { FGBIO_SORTBAM                     } from "${projectDir}/modules/nf-core/fgbio/sortbam/main.nf"
-include { FGBIO_ZIPPERBAMS                  } from "${projectDir}/modules/nf-core/fgbio/zipperbams/main.nf"
+include { FGBIO_COPYUMIFROMREADNAME         } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
+include { FGBIO_CALLMOLECULARCONSENSUSREADS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main'
+include { FGBIO_FASTQTOBAM as FASTQTOBAM_READNAME           } from '../../../modules/nf-core/fgbio/fastqtobam/main'
+include { FGBIO_FASTQTOBAM as FASTQTOBAM_SEQ           } from '../../../modules/nf-core/fgbio/fastqtobam/main'
+include { FGBIO_FILTERCONSENSUSREADS        } from '../../../modules/nf-core/fgbio/filterconsensusreads/main'
+include { FGBIO_GROUPREADSBYUMI             } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
+include { FGBIO_SORTBAM                     } from '../../../modules/nf-core/fgbio/sortbam/main'
+include { FGBIO_ZIPPERBAMS                  } from '../../../modules/nf-core/fgbio/zipperbams/main'
+include { SAMTOOLS_FASTQ                    } from '../../../modules/nf-core/samtools/fastq/main'
+include { SAMTOOLS_INDEX                    } from '../../../modules/nf-core/samtools/index/main'
+include { BWA_MEM                        } from '../../../modules/nf-core/bwa/mem/main'
+include { samplesheetToList } from 'plugin/nf-schema'
+
 
 workflow CONSENSUS {
     take:
-        ch_fastq                // channel: tuple(meta, fastq1, fastq2) for SE/PE/duplex samples
-        ch_reference            // channel: reference genome fasta file
-        ch_umi_in_readname      // boolean
-
+        ch_input_fastq                   // channel: [meta_with_readgroup, fastq] for SE/PE/duplex samples
+        ch_genomes                       // map: reference genome files
+        ch_umi_in_readname               // boolean
     main:
+
         ch_versions       = Channel.empty()
-        ch_duplex_metrics = Channel.empty()
 
-        ch_fastq
-          .combine(ch_umi_in_readname)
-          .branch(
-            rn:  { it[3] == true },
-            seq: { it[3] == false }
-          )
-          .set { ch_fastq_branch }
+        ch_input_fastq
+            .combine(ch_umi_in_readname)
+            .map { meta, fq1, fq2, umi_flag ->
+                tuple(meta, fq1, fq2, umi_flag)
+            }
+            .branch { _meta, _fq1, _fq2, umi_flag ->
+                umi_in_readname: umi_flag == true
+                umi_in_seq: umi_flag == false
+            }
+            .set  {ch_input_fastq_branch}
 
-        RN_FQ  = ch_fastq_branch.rn .map { meta, r1, r2, f -> [meta, r1, r2] }
-        SEQ_FQ = ch_fastq_branch.seq.map { meta, r1, r2, f -> [meta, r1, r2] }
 
-        FGBIO_FASTQTOBAM(RN_FQ, ch_reference)
-        ch_versions = ch_versions.mix(FGBIO_FASTQTOBAM.out.versions.first())
+    // Readname branch
 
-        FGBIO_COPYUMIFROMREADNAME(FGBIO_FASTQTOBAM.out.bam)
-        ch_versions = ch_versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions.first())
+        // 1.1: FASTQ => uBAM
+        ch_RN_uBAM = Channel.empty()
+        RN_FQ  = ch_input_fastq_branch.umi_in_readname.map { meta, r1, r2, _f -> tuple(meta, [r1, r2]) }
 
-        FGBIO_SORTBAM(FGBIO_COPYUMIFROMREADNAME.out.bam)
-        ch_versions = ch_versions.mix(FGBIO_SORTBAM.out.versions.first())
+        FASTQTOBAM_READNAME(RN_FQ)
+        SAMTOOLS_INDEX(FASTQTOBAM_READNAME.out.bam)
 
-        FGBIO_GROUPREADSBYUMI(FGBIO_SORTBAM.out.bam)
-        ch_versions = ch_versions.mix(FGBIO_GROUPREADSBYUMI.out.versions.first())
+        FASTQTOBAM_READNAME.out.bam
+            .join(SAMTOOLS_INDEX.out.bai, by: 0)
+            .map { meta, bam, bai -> tuple(meta, bam, bai) }
+            .set { CH_FASTQTOBAM_WITH_BAI }
 
-        FGBIO_CALLMOLECULARCONSENSUSREADS(FGBIO_GROUPREADSBYUMI.out.bam)
-        ch_versions = ch_versions.mix(FGBIO_CALLMOLECULARCONSENSUSREADS.out.versions.first())
+        FGBIO_COPYUMIFROMREADNAME(CH_FASTQTOBAM_WITH_BAI)
+        ch_RN_uBAM = ch_RN_uBAM.mix(FGBIO_COPYUMIFROMREADNAME.out.bam)
 
-        if (params.enable_duplex) {
-            FGBIO_ZIPPERBAMS(FGBIO_CALLMOLECULARCONSENSUSREADS.out.bam)
-            ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS.out.versions.first())
-            FGBIO_CALLDUPLEXCONSENSUSREADS(FGBIO_ZIPPERBAMS.out.bam)
-            ch_versions = ch_versions.mix(FGBIO_CALLDUPLEXCONSENSUSREADS.out.versions.first())
-            FGBIO_FILTERCONSENSUSREADS(FGBIO_CALLDUPLEXCONSENSUSREADS.out.bam)
-            ch_versions = ch_versions.mix(FGBIO_FILTERCONSENSUSREADS.out.versions.first())
-            FGBIO_COLLECTDUPLEXSEQMETRICS(FGBIO_FILTERCONSENSUSREADS.out.bam)
-            ch_versions = ch_versions.mix(FGBIO_COLLECTDUPLEXSEQMETRICS.out.versions.first())
-            ch_duplex_metrics = ch_duplex_metrics.mix(FGBIO_COLLECTDUPLEXSEQMETRICS.out.metrics)
-        } else {
-            FGBIO_FILTERCONSENSUSREADS(FGBIO_CALLMOLECULARCONSENSUSREADS.out.bam)
-            ch_versions = ch_versions.mix(FGBIO_FILTERCONSENSUSREADS.out.versions.first())
-        }
+        // 1.2: uBAM => Mapped BAM
 
-        ch_consensus_rn  = FGBIO_FILTERCONSENSUSREADS.out.bam
-        ch_consensus_seq = Channel.empty()   // pending: ExtractUmisFromBam branch
 
-        ch_consensus = ch_consensus_rn.mix(ch_consensus_seq)
+
+
+
+
+
+/*
+        // Seq branch => uBAM
+
+
+        // 1.1: FASTQ => uBAM
+        SEQ_FQ = ch_input_fastq_branch.umi_in_seq.map { meta, r1, r2, _f -> tuple(meta, [r1, r2]) }
+
+        FASTQTOBAM_SEQ(SEQ_FQ)
+*/
 
     emit:
+        /*
         consensus_bam  = ch_consensus
         duplex_metrics = ch_duplex_metrics
         versions       = ch_versions
+        */
+        consensus_bam  = Channel.empty()
+        versions       = Channel.empty()
 }

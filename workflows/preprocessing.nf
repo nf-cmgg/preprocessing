@@ -19,6 +19,7 @@ include { BCL_DEMULTIPLEX        } from '../subworkflows/nf-core/bcl_demultiplex
 include { COVERAGE               } from '../subworkflows/local/coverage/main'
 include { FASTQ_TO_UCRAM         } from '../subworkflows/local/fastq_to_unaligned_cram/main'
 include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram/main'
+
 include { CONSENSUS              } from '../subworkflows/local/consensus/main'
 
 // Functions
@@ -136,6 +137,34 @@ workflow PREPROCESSING {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: UMI CONSENSUS (optional, before alignment)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+UMI_FLAG = Channel.value(params.umi_in_readname as boolean)
+if (params.enable_umi) {
+
+    // Convert to [meta, r1, r2] for the UMI subworkflow
+    CH_UMI_FASTQ = ch_input_fastq.map { meta, reads ->
+        def r1 = (reads instanceof List) ? reads[0] : reads
+        def r2 = (reads instanceof List && reads.size() > 1) ? reads[1] : null
+        return [meta, r1, r2]
+    }
+
+    // Call the UMI subworkflow “like a function”
+    // NOTE: your CONSENSUS expects (ch_fastq, ch_reference, ch_umi_in_readname)
+    // If your CONSENSUS expects a single fasta (not keyed), replace CH_UMI_FASTA by Channel.fromPath(...).
+
+    CONSENSUS(CH_UMI_FASTQ, genomes, UMI_FLAG)
+
+    ch_versions = ch_versions.mix(CONSENSUS.out.versions)
+
+    // Output channels
+    ch_umi_consensus_bam  = CONSENSUS.out.consensus_bam
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ASSOCIATE CORRECT GENOME AND COUNT SAMPLE REPLICATES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -234,42 +263,6 @@ workflow PREPROCESSING {
 
     ch_trimmed_reads.supported.dump(tag:"Supported trimmed reads per sample", pretty: true)
     ch_trimmed_reads.other.dump(tag:"Other trimmed reads per sample", pretty: true)
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: UMI CONSENSUS (optional, before alignment)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-UMI_FLAG = Channel.value(params.umi_in_readname as boolean)
-
-if (params.enable_umi) {
-
-    // ch_trimmed_reads.supported: [meta, reads]
-    // Convert to [meta, r1, r2] for the UMI subworkflow
-    CH_UMI_FASTQ = ch_trimmed_reads.supported.map { meta, reads ->
-        def r1 = (reads instanceof List) ? reads[0] : reads
-        def r2 = (reads instanceof List && reads.size() > 1) ? reads[1] : null
-        return [meta, r1, r2]
-    }
-
-    // Per-sample reference fasta (same that you use later for alignment)
-    CH_UMI_FASTA = ch_trimmed_reads.supported.map { meta, reads ->
-        return [meta, getGenomeAttribute(meta.genome_data, "fasta")]
-    }
-
-    // Call the UMI subworkflow “like a function”
-    // NOTE: your CONSENSUS expects (ch_fastq, ch_reference, ch_umi_in_readname)
-    // If your CONSENSUS expects a single fasta (not keyed), replace CH_UMI_FASTA by Channel.fromPath(...).
-    CONSENSUS(CH_UMI_FASTQ, CH_UMI_FASTA, UMI_FLAG)
-
-    ch_versions = ch_versions.mix(CONSENSUS.out.versions)
-
-    // Output channels
-    ch_umi_consensus_bam  = CONSENSUS.out.consensus_bam
-    ch_umi_duplex_metrics = CONSENSUS.out.duplex_metrics
-}
 
 
 /*
