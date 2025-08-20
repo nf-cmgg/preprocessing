@@ -128,43 +128,13 @@ workflow PREPROCESSING {
         rg = rg + [ 'SM': samplename,
                     'LB': meta.library ?: "",
                     'PL': meta.platform ?: rg.PL,
-                    'ID': (meta.readgroup ?: rg.ID ?: meta.id ?: samplename)
+                    'ID': rg.ID
                 ]
         def meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
         return [meta_with_readgroup, fastq]
     }
     .set {ch_input_fastq}
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: UMI CONSENSUS (optional, before alignment)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-
-if (params.enable_umi) {
-
-    // Convert to [meta, r1, r2] for the UMI subworkflow
-    def ch_umi_fastq = ch_input_fastq.map { meta, reads ->
-        def r1 = (reads instanceof List) ? reads[0] : reads
-        def r2 = (reads instanceof List && reads.size() > 1) ? reads[1] : []
-        return [meta, r1, r2]
-    }
-
-    // Call the UMI subworkflow “like a function”
-    // NOTE: your CONSENSUS expects (ch_fastq, ch_reference, ch_umi_in_readname)
-    // If your CONSENSUS expects a single fasta (not keyed), replace CH_UMI_FASTA by Channel.fromPath(...).
-
-    CONSENSUS(ch_umi_fastq, genomes)
-
-    ch_versions = ch_versions.mix(CONSENSUS.out.versions)
-
-    def ch_ubam_for_umi      = CONSENSUS.out.ubam
-    def ch_mapped_umi_bam    = CONSENSUS.out.mapped_bam
-    
-    // Output channels
-    def ch_umi_consensus_bam = ch_mapped_umi_bam
-}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,6 +193,31 @@ if (params.enable_umi) {
     .set{ch_fastq_per_sample}
 
     ch_fastq_per_sample.dump(tag:"FASTQ per sample", pretty: true)
+
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: UMI CONSENSUS (optional, before alignment)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+
+if (params.enable_umi) {
+
+    // Convert to [meta, r1, r2] for the UMI subworkflow
+    def ch_umi_fastq = ch_input_fastq.map { meta, reads ->
+        def r1 = (reads instanceof List) ? reads[0] : reads
+        def r2 = (reads instanceof List && reads.size() > 1) ? reads[1] : []
+        return [meta, r1, r2]
+    }
+
+    CONSENSUS(ch_umi_fastq, genomes)
+
+    ch_versions = ch_versions.mix(CONSENSUS.out.versions)
+
+    def ch_ubam_for_umi      = CONSENSUS.out.ubam
+    def ch_umi_consensus_bam = CONSENSUS.out.consensus_bam
+}
 
 
 /*
@@ -470,7 +465,12 @@ def readgroup_from_fastq(path) {
     }
     assert line.startsWith('@')
     line = line.substring(1)
-    def fields = line.split(':')
+
+    def parts  = line.split(' ')
+    def left   = parts[0]
+    def right  = parts.size() > 1 ? parts[1] : ""
+
+    def fields = left.split(':')
     def rg = [:]
     rg.CN = "CMGG"
 
@@ -481,7 +481,11 @@ def readgroup_from_fastq(path) {
         def run_nubmer       = fields[1]
         def fcid             = fields[2]
         def lane             = fields[3]
-        def index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+        def index = ""
+        if (right) {
+            def r = right.split(':')
+            if (r && (r[-1] ==~ /[ACGTN+\-]+/)) index = r[-1]
+        }
 
         rg.ID = [fcid,lane].join(".")
         rg.PU = [fcid, lane, index].findAll().join(".")
@@ -489,6 +493,15 @@ def readgroup_from_fastq(path) {
     } else if (fields.size() == 5) {
         def fcid = fields[0]
         rg.ID = fcid
+        rg.PU = fcid
+        rg.PL = "ILLUMINA"
+    }
+    else {
+        // fallback para cabeceras no-CASAVA: usa el primer campo no vacío
+        def fallback = (fields && fields[0]) ? fields[0] : "unknown"
+        rg.ID = fallback
+        rg.PU = fallback
+        rg.PL = rg.PL ?: "ILLUMINA"
     }
     return rg
 }
