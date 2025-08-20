@@ -128,7 +128,7 @@ workflow PREPROCESSING {
         rg = rg + [ 'SM': samplename,
                     'LB': meta.library ?: "",
                     'PL': meta.platform ?: rg.PL,
-                    'ID': meta.readgroup ?: rg.ID
+                    'ID': (meta.readgroup ?: rg.ID ?: meta.id ?: samplename)
                 ]
         def meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
         return [meta_with_readgroup, fastq]
@@ -159,8 +159,11 @@ if (params.enable_umi) {
 
     ch_versions = ch_versions.mix(CONSENSUS.out.versions)
 
+    def ch_ubam_for_umi      = CONSENSUS.out.ubam
+    def ch_mapped_umi_bam    = CONSENSUS.out.mapped_bam
+    
     // Output channels
-    def ch_umi_consensus_bam  = CONSENSUS.out.consensus_bam
+    def ch_umi_consensus_bam = ch_mapped_umi_bam
 }
 
 /*
