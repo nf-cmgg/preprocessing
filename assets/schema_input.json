@@ -72,6 +72,13 @@
                 "pattern": "^[a-zA-Z0-9_]+.bed$",
                 "default": null
             },
+            "umi_type": {
+                "meta": ["umi_type"],
+                "type": "string",
+                "description": "Distinguish UMI samples (readname, seq) from non-UMI samples",
+                "enum": ["readname", "seq", "none"],
+                "default": "none"
+            },
             "lane": {
                 "type": "integer",
                 "meta": ["lane"],
@@ -110,13 +117,13 @@
         },
         "anyOf": [
             {
-                "required": ["id", "samplename", "organism", "tag", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "organism", "tag", "fastq_1", "fastq_2", "umi_type"]
             },
             {
-                "required": ["id", "samplename", "genome", "tag", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "genome", "tag", "fastq_1", "fastq_2", "umi_type"]
             },
             {
-                "required": ["id", "samplesheet", "sample_info", "flowcell"]
+                "required": ["id", "samplesheet", "sample_info", "flowcell", "umi_type"]
             }
         ]
     },
