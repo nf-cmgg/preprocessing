@@ -1,0 +1,40 @@
+Changes in component 'nf-core/fgbio/zipperbams'
+'modules/nf-core/fgbio/zipperbams/environment.yml' is unchanged
+Changes in 'fgbio/zipperbams/main.nf':
+--- modules/nf-core/fgbio/zipperbams/main.nf
++++ modules/nf-core/fgbio/zipperbams/main.nf
+@@ -8,10 +8,8 @@
+         'community.wave.seqera.io/library/fgbio:2.5.21--368dab1b4f308243' }"
+ 
+     input:
+-    tuple val(meta), path(unmapped_bam)
+-    tuple val(meta2), path(mapped_bam)
+-    tuple val(meta3), path(fasta)
+-    tuple val(meta4), path(dict)
++    
++    tuple val(meta), path(unmapped_bam), path(mapped_bam), path(fasta), path(dict)
+ 
+     output:
+     tuple val(meta), path("${prefix}.bam"), emit: bam
+@@ -22,7 +20,6 @@
+ 
+     script:
+     def args  = task.ext.args ?: ''
+-    def args2 = task.ext.args2 ?: ''
+     def compression = task.ext.compression ?: '0'
+     prefix = task.ext.prefix ?: "${meta.id}_zipped"
+     def mem_gb = 8
+@@ -50,7 +47,6 @@
+         ${args} \\
+         --output ${prefix}.bam
+ 
+-
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+         fgbio: \$( echo \$(fgbio --version 2>&1 | tr -d '[:cntrl:]' ) | sed -e 's/^.*Version: //;s/\\[.*\$//')
+
+'modules/nf-core/fgbio/zipperbams/meta.yml' is unchanged
+'modules/nf-core/fgbio/zipperbams/tests/main.nf.test' is unchanged
+'modules/nf-core/fgbio/zipperbams/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/fgbio/zipperbams/tests/nextflow.config' is unchanged
+************************************************************

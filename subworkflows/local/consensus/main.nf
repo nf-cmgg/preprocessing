@@ -20,7 +20,6 @@ workflow CONSENSUS {
         def ch_versions            = Channel.empty()
         def ch_ubam                = Channel.empty()
 
-
     // 1.1: FASTQ => uBAM
 
 
@@ -90,12 +89,15 @@ workflow CONSENSUS {
             tuple(meta, dict)
         }
 
-        FGBIO_ZIPPERBAMS(
-            ch_ubam,
-            ch_mapped_bam,
-            ch_fasta_by_meta,
-            ch_dict_by_meta
-        )
+
+        ch_ubam
+            .join(ch_mapped_bam, by:0)
+            .join(ch_fasta_by_meta, by:0)
+            .join(ch_dict_by_meta, by:0)
+            .map { meta, ubam, mapped_bam, fasta, dict -> tuple(meta, ubam, mapped_bam, fasta, dict) }
+            .set { ch_zipperbam }
+
+        FGBIO_ZIPPERBAMS(ch_zipperbam)
 
         ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS.out.versions)
 

@@ -8,10 +8,8 @@ process FGBIO_ZIPPERBAMS {
         'community.wave.seqera.io/library/fgbio:2.5.21--368dab1b4f308243' }"
 
     input:
-    tuple val(meta), path(unmapped_bam)
-    tuple val(meta2), path(mapped_bam)
-    tuple val(meta3), path(fasta)
-    tuple val(meta4), path(dict)
+    
+    tuple val(meta), path(unmapped_bam), path(mapped_bam), path(fasta), path(dict)
 
     output:
     tuple val(meta), path("${prefix}.bam"), emit: bam
@@ -22,7 +20,6 @@ process FGBIO_ZIPPERBAMS {
 
     script:
     def args  = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: ''
     def compression = task.ext.compression ?: '0'
     prefix = task.ext.prefix ?: "${meta.id}_zipped"
     def mem_gb = 8
@@ -49,7 +46,6 @@ process FGBIO_ZIPPERBAMS {
         --ref ${fasta} \\
         ${args} \\
         --output ${prefix}.bam
-
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
