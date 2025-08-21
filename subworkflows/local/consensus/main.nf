@@ -12,7 +12,6 @@ include { SAMTOOLS_FASTQ                          } from '../../../modules/nf-co
 include { SAMTOOLS_INDEX                          } from '../../../modules/nf-core/samtools/index/main'
 include { FASTQ_ALIGN_DNA                         } from '../../../subworkflows/nf-core/fastq_align_dna/main'
 
-
 workflow CONSENSUS {
     take:
         ch_umi_fastq                   // channel: [meta_with_readgroup, fastq] for SE/PE/duplex samples
@@ -62,10 +61,11 @@ workflow CONSENSUS {
 
     // 1.2: uBAM => Mapped BAM
 
-        SAMTOOLS_FASTQ(ch_ubam)
+        SAMTOOLS_FASTQ(ch_ubam, true)
+
         ch_versions = ch_versions.mix(SAMTOOLS_FASTQ.out.versions)
 
-        def ch_reads_aligner_index_fasta = SAMTOOLS_FASTQ.out.reads.map { meta, reads ->
+        def ch_reads_aligner_index_fasta = SAMTOOLS_FASTQ.out.interleaved.map { meta, reads ->
             def gd    = (meta.genome_data instanceof Map) ? meta.genome_data : [:]
             def alg   = (meta.aligner ?: 'bwamem')
             def fasta = file(gd.fasta, checkIfExists: true)
@@ -76,18 +76,34 @@ workflow CONSENSUS {
         FASTQ_ALIGN_DNA(ch_reads_aligner_index_fasta, false)
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
-        def ch_mapped_bam = FASTQ_ALIGN_DNA.out.bam
+        def ch_mapped_bam = FASTQ_ALIGN_DNA.out.bam.map { meta, bam ->
+            def sample = meta.samplename ?: UUID.randomUUID().toString()
+            def new_bam = file("${sample}.mapped.bam")
+            bam.copyTo(new_bam)
+            tuple(meta, new_bam)
+        }
+
         def ch_fasta_by_meta = ch_reads_aligner_index_fasta.map { meta, _r, _a, _i, fasta -> tuple(meta, fasta) }
+
+        def ch_dict_by_meta = ch_reads_aligner_index_fasta.map { meta, _r, _a, _i, _fasta ->
+            def dict = file(meta.genome_data.dict, checkIfExists: true)
+            tuple(meta, dict)
+        }
 
         FGBIO_ZIPPERBAMS(
             ch_ubam,
             ch_mapped_bam,
-            ch_fasta_by_meta
+            ch_fasta_by_meta,
+            ch_dict_by_meta
         )
+
         ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS.out.versions)
+
+    // 1.3: Mapped BAM -> Grouped BAM
 
 
     emit:
+        ubam = ch_ubam
         consensus_bam  = FGBIO_ZIPPERBAMS.out.bam
         versions       = ch_versions
 }
