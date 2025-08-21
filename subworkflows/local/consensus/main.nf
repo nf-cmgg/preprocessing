@@ -10,9 +10,7 @@ include { FGBIO_SORTBAM                           } from '../../../modules/nf-co
 include { FGBIO_ZIPPERBAMS                        } from '../../../modules/nf-core/fgbio/zipperbams/main'
 include { SAMTOOLS_FASTQ                          } from '../../../modules/nf-core/samtools/fastq/main'
 include { SAMTOOLS_INDEX                          } from '../../../modules/nf-core/samtools/index/main'
-include { BWA_MEM                                 } from '../../../modules/nf-core/bwa/mem/main'
-include { BWAMEM2_MEM                             } from '../../../modules/nf-core/bwamem2/mem/main'
-include { BOWTIE2_ALIGN                           } from '../../../modules/nf-core/bowtie2/align/main'
+include { FASTQ_ALIGN_DNA                         } from '../../../subworkflows/nf-core/fastq_align_dna/main'
 
 
 workflow CONSENSUS {
@@ -77,26 +75,10 @@ workflow CONSENSUS {
             tuple(meta, reads, alg, index, fasta)
         }
 
-        ch_reads_aligner_index_fasta.branch { meta, reads, alg, index, fasta ->
-            bwamem  : alg == 'bwamem'  ; return [meta, reads, index, fasta]
-            bwamem2 : alg == 'bwamem2' ; return [meta, reads, index, fasta]
-            bowtie2 : alg == 'bowtie2' ; return [meta, reads, index, fasta]
-            other   : true
-        }.set { ch_to_map }
+        FASTQ_ALIGN_DNA(ch_reads_aligner_index_fasta, false)
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
-        BWA_MEM(ch_to_map.bwamem, false)
-        BWAMEM2_MEM(ch_to_map.bwamem2, false)
-        BOWTIE2_ALIGN(ch_to_map.bowtie2, false, false)
-
-        ch_versions = ch_versions.mix(BWA_MEM.out.versions)
-        ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions)
-        ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
-
-        def ch_mapped_bam = Channel.empty()
-        ch_mapped_bam = ch_mapped_bam.mix(BWA_MEM.out.bam)
-        ch_mapped_bam = ch_mapped_bam.mix(BWAMEM2_MEM.out.bam)
-        ch_mapped_bam = ch_mapped_bam.mix(BOWTIE2_ALIGN.out.bam)
-
+        def ch_mapped_bam = FASTQ_ALIGN_DNA.out.bam
         def ch_fasta_by_meta = ch_reads_aligner_index_fasta.map { meta, _r, _a, _i, fasta -> tuple(meta, fasta) }
 
         FGBIO_ZIPPERBAMS(
