@@ -15,26 +15,26 @@ include { FASTQ_ALIGN_DNA                         } from '../../../subworkflows/
 
 workflow CONSENSUS {
     take:
-        ch_input_fastq                   // channel: [meta_with_readgroup, fastq] for SE/PE/duplex samples
-        ch_genomes                       // map: reference genome files
+        ch_umi_fastq                   // channel: [meta_with_readgroup, fastq] for SE/PE/duplex samples
 
     main:
         def ch_versions            = Channel.empty()
-        def ch_fastq_readname      = Channel.empty()
-        def ch_fastq_seq           = Channel.empty()
         def ch_ubam                = Channel.empty()
-        def ch_ubam_with_bai       = Channel.empty()
+
 
     // 1.1: FASTQ => uBAM
 
-        if (params.umi_in_readname) {
+
+        def ch_fastq = ch_umi_fastq
+            .map { meta, r1, r2 -> tuple(meta, [r1, r2]) }
+            .branch { meta, _fastq ->
+                readname: meta['umi_type'] == 'readname'
+                seq:      meta['umi_type'] == 'seq'
+            }
 
         // Case 1: UMI_in_readname
-
-
-            ch_fastq_readname = ch_input_fastq.map { meta, r1, r2 -> tuple(meta, [r1, r2]) }
-
-            FASTQTOBAM_READNAME(ch_fastq_readname)
+        if (ch_fastq.readname) {
+            FASTQTOBAM_READNAME(ch_fastq.readname)
             ch_versions = ch_versions.mix(FASTQTOBAM_READNAME.out.versions)
 
             SAMTOOLS_INDEX(FASTQTOBAM_READNAME.out.bam)
@@ -49,14 +49,12 @@ workflow CONSENSUS {
             ch_versions = ch_versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
 
             ch_ubam = ch_ubam.mix(FGBIO_COPYUMIFROMREADNAME.out.bam)
-
-        } else {
+        }
 
         // Case 2: UMI_in_sequence
 
-            ch_fastq_seq = ch_input_fastq.map { meta, r1, r2 -> tuple(meta, [r1, r2]) }
-
-            FASTQTOBAM_SEQ(ch_fastq_seq)
+        if (ch_fastq.seq) {
+            FASTQTOBAM_SEQ(ch_fastq.seq)
             ch_versions = ch_versions.mix(FASTQTOBAM_SEQ.out.versions)
 
             ch_ubam = ch_ubam.mix(FASTQTOBAM_SEQ.out.bam)
@@ -90,11 +88,6 @@ workflow CONSENSUS {
 
 
     emit:
-        /*
-        consensus_bam  = ch_consensus
-        duplex_metrics = ch_duplex_metrics
-        versions       = ch_versions
-        */
         consensus_bam  = FGBIO_ZIPPERBAMS.out.bam
         versions       = ch_versions
 }

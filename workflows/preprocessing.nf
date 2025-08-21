@@ -201,23 +201,19 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-
-if (params.enable_umi) {
-
     // Convert to [meta, r1, r2] for the UMI subworkflow
-    def ch_umi_fastq = ch_input_fastq.map { meta, reads ->
+    def ch_umi_fastq = ch_fastq_per_sample.map { meta, reads ->
         def r1 = (reads instanceof List) ? reads[0] : reads
         def r2 = (reads instanceof List && reads.size() > 1) ? reads[1] : []
         return [meta, r1, r2]
     }
+    .filter {meta, _r1, _r2 -> meta.umi_type != "none"}
 
-    CONSENSUS(ch_umi_fastq, genomes)
-
+    CONSENSUS(ch_umi_fastq)
     ch_versions = ch_versions.mix(CONSENSUS.out.versions)
 
     def ch_ubam_for_umi      = CONSENSUS.out.ubam
     def ch_umi_consensus_bam = CONSENSUS.out.consensus_bam
-}
 
 
 /*
