@@ -1,0 +1,22 @@
+Changes in component 'nf-core/fgbio/copyumifromreadname'
+'modules/nf-core/fgbio/copyumifromreadname/environment.yml' is unchanged
+Changes in 'fgbio/copyumifromreadname/main.nf':
+--- modules/nf-core/fgbio/copyumifromreadname/main.nf
++++ modules/nf-core/fgbio/copyumifromreadname/main.nf
+@@ -11,8 +11,8 @@
+     tuple val(meta), path(bam), path(bai)
+ 
+     output:
+-    tuple val(meta), path("*.bam"), emit: bam
+-    tuple val(meta), path("*.bai"), emit: bai
++    tuple val(meta), path("${meta.samplename}_ubam.bam"), emit: bam
++    tuple val(meta), path("${meta.samplename}_ubai.bai"), emit: bai
+     path "versions.yml"           , emit: versions
+ 
+     when:
+
+'modules/nf-core/fgbio/copyumifromreadname/meta.yml' is unchanged
+'modules/nf-core/fgbio/copyumifromreadname/tests/main.nf.test' is unchanged
+'modules/nf-core/fgbio/copyumifromreadname/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/fgbio/copyumifromreadname/tests/nextflow.config' is unchanged
+************************************************************

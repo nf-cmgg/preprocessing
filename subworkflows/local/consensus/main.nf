@@ -75,12 +75,7 @@ workflow CONSENSUS {
         FASTQ_ALIGN_DNA(ch_reads_aligner_index_fasta, false)
         ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
-        def ch_mapped_bam = FASTQ_ALIGN_DNA.out.bam.map { meta, bam ->
-            def sample = meta.samplename ?: UUID.randomUUID().toString()
-            def new_bam = file("${sample}.mapped.bam")
-            bam.copyTo(new_bam)
-            tuple(meta, new_bam)
-        }
+        def ch_mapped_bam = FASTQ_ALIGN_DNA.out.bam
 
         def ch_fasta_by_meta = ch_reads_aligner_index_fasta.map { meta, _r, _a, _i, fasta -> tuple(meta, fasta) }
 
@@ -88,8 +83,6 @@ workflow CONSENSUS {
             def dict = file(meta.genome_data.dict, checkIfExists: true)
             tuple(meta, dict)
         }
-
-
         ch_ubam
             .join(ch_mapped_bam, by:0)
             .join(ch_fasta_by_meta, by:0)
