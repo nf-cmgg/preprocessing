@@ -197,7 +197,7 @@ workflow PREPROCESSING {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: UMI CONSENSUS (optional, before alignment)
+// STEP: UMI CONSENSUS 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -214,6 +214,8 @@ workflow PREPROCESSING {
 
     def ch_ubam_for_umi      = CONSENSUS.out.ubam
     def ch_umi_consensus_bam = CONSENSUS.out.consensus_bam
+    def ch_umi_grouped_bam   = CONSENSUS.out.grouped_bam
+
 
 
 /*

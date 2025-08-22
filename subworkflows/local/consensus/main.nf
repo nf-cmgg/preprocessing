@@ -15,13 +15,12 @@ include { FASTQ_ALIGN_DNA                         } from '../../../subworkflows/
 workflow CONSENSUS {
     take:
         ch_umi_fastq                   // channel: [meta_with_readgroup, fastq] for SE/PE/duplex samples
-
+        
     main:
         def ch_versions            = Channel.empty()
         def ch_ubam                = Channel.empty()
 
     // 1.1: FASTQ => uBAM
-
 
         def ch_fastq = ch_umi_fastq
             .map { meta, r1, r2 -> tuple(meta, [r1, r2]) }
@@ -93,12 +92,24 @@ workflow CONSENSUS {
         FGBIO_ZIPPERBAMS(ch_zipperbam)
 
         ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS.out.versions)
+    
+    
+    // 1.3: Mapped BAM => Grouped BAM
 
-    // 1.3: Mapped BAM -> Grouped BAM
+        // 1.3: Mapped BAM => Grouped BAM
+        def ch_strategy = Channel.value( (params.umi_group_strategy ?: 'Adjacency') as String )
 
+        FGBIO_GROUPREADSBYUMI(
+            FGBIO_ZIPPERBAMS.out.bam,  
+            ch_strategy                 
+        )
+
+        ch_versions     = ch_versions.mix(FGBIO_GROUPREADSBYUMI.out.versions)
+        def ch_grouped_bam = FGBIO_GROUPREADSBYUMI.out.bam
 
     emit:
         ubam = ch_ubam
         consensus_bam  = FGBIO_ZIPPERBAMS.out.bam
+        grouped_bam    = ch_grouped_bam
         versions       = ch_versions
 }
