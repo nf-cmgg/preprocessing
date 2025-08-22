@@ -47,6 +47,13 @@
             "description": "",
             "default": "",
             "properties": {
+                "umi_group_strategy": {
+                    "type": "string",
+                    "description": "Strategy for Mapped Bam => Grouped BAM ('identity', 'edit', 'adjacency', 'paired')",
+                    "default": "adjacency",
+                    "hidden": true,
+                    "enum": ["identity", "edit", "adjacency", "paired"]
+                },
                 "aligner": {
                     "type": "string",
                     "default": "bowtie2",
@@ -259,13 +266,5 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ],
-    "properties": {
-        "umi_group_strategy": {
-            "type": "string",
-            "description": "Strategy for Mapped Bam => Grouped BAM ('identity', 'edit', 'adjacency', 'paired')",
-            "default": "adjacency",
-            "hidden": true
-        }
-    }
+    ]
 }

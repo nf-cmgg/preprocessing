@@ -96,12 +96,8 @@ workflow CONSENSUS {
 
     // 1.3: Mapped BAM => Grouped BAM
 
-        def valid_strategies = ['identity', 'edit', 'adjacency', 'paired']
-        def umi_strategy = (params.umi_group_strategy ?: 'adjacency').toLowerCase()
-        if ( !valid_strategies.contains(umi_strategy) ) {
-            exit 1, "Invalid value for --umi_group_strategy: '${params.umi_group_strategy}'. Allowed values: ${valid_strategies.join(', ')}"
-        }
-        def ch_strategy = Channel.value(umi_strategy)
+
+        def ch_strategy = Channel.value(params.umi_group_strategy)
 
         FGBIO_GROUPREADSBYUMI(
             FGBIO_ZIPPERBAMS.out.bam,
@@ -110,6 +106,7 @@ workflow CONSENSUS {
 
         ch_versions     = ch_versions.mix(FGBIO_GROUPREADSBYUMI.out.versions)
         def ch_grouped_bam = FGBIO_GROUPREADSBYUMI.out.bam
+
 
     emit:
         ubam = ch_ubam
