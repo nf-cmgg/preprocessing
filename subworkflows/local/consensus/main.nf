@@ -107,10 +107,42 @@ workflow CONSENSUS {
         ch_versions     = ch_versions.mix(FGBIO_GROUPREADSBYUMI.out.versions)
         def ch_grouped_bam = FGBIO_GROUPREADSBYUMI.out.bam
 
+    // 2(b).1: GroupedBam -> Filtered Consensus uBam
+        def call_min_reads = Channel.value(params.callmolecularconsensusreads_min_reads)
+        def call_min_baseq = Channel.value(params.callmolecularconsensusreads_min_baseq)
+
+        FGBIO_CALLMOLECULARCONSENSUSREADS(
+            ch_grouped_bam,
+            call_min_reads,
+            call_min_baseq
+        )
+
+        ch_versions = ch_versions.mix(FGBIO_CALLMOLECULARCONSENSUSREADS.out.versions)
+
+        def ch_input_filterconsensusreads = FGBIO_CALLMOLECULARCONSENSUSREADS.out.bam.map {meta, bam ->
+            def fasta = file(meta.genome_data.fasta, checkIfExists: true)
+            tuple(meta, bam, fasta)
+        }
+
+        def filter_min_reads = Channel.value(params.filterconsensusreads_min_reads)
+        def filter_min_baseq = Channel.value(params.filterconsensusreads_min_baseq)
+        def filter_min_base_error_rate = Channel.value(params.filterconsensusreads_min_base_error_rate)
+
+        FGBIO_FILTERCONSENSUSREADS(
+            ch_input_filterconsensusreads,
+            filter_min_reads,
+            filter_min_baseq,
+            filter_min_base_error_rate
+        )
+
+        ch_versions = ch_versions.mix(FGBIO_FILTERCONSENSUSREADS.out.versions)
+
+        ch_filtered_uBam = FGBIO_FILTERCONSENSUSREADS.out.bam
 
     emit:
         ubam = ch_ubam
         consensus_bam  = FGBIO_ZIPPERBAMS.out.bam
         grouped_bam    = ch_grouped_bam
+        filtered_ubam  = ch_filtered_uBam
         versions       = ch_versions
 }

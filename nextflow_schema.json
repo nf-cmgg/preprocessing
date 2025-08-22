@@ -54,6 +54,36 @@
                     "hidden": true,
                     "enum": ["identity", "edit", "adjacency", "paired"]
                 },
+                "callmolecularconsensusreads_min_reads": {
+                    "type": "integer",
+                    "default": 3,
+                    "description": "Minimum reads for callmolecularconsensusreads",
+                    "hidden": true
+                },
+                "callmolecularconsensusreads_min_baseq": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Minimum base quality for callmolecularconsensusreads",
+                    "hidden": true
+                },
+                "filterconsensusreads_min_reads": {
+                    "type": "integer",
+                    "default": 3,
+                    "hidden": true,
+                    "description": "Minimum reads for filterconsensusreads"
+                },
+                "filterconsensusreads_min_baseq": {
+                    "type": "integer",
+                    "default": 45,
+                    "hidden": true,
+                    "description": "Minimum base quality for filterconsensusreads"
+                },
+                "filterconsensusreads_min_base_error_rate": {
+                    "type": "number",
+                    "default": 0.2,
+                    "hidden": true,
+                    "description": "Minimum base error rate for filterconsensusreads"
+                },
                 "aligner": {
                     "type": "string",
                     "default": "bowtie2",

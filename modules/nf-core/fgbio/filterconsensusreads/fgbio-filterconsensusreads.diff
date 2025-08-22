@@ -1,0 +1,20 @@
+Changes in component 'nf-core/fgbio/filterconsensusreads'
+'modules/nf-core/fgbio/filterconsensusreads/environment.yml' is unchanged
+Changes in 'fgbio/filterconsensusreads/main.nf':
+--- modules/nf-core/fgbio/filterconsensusreads/main.nf
++++ modules/nf-core/fgbio/filterconsensusreads/main.nf
+@@ -8,8 +8,7 @@
+         'community.wave.seqera.io/library/fgbio:2.5.21--368dab1b4f308243' }"
+ 
+     input:
+-    tuple val(meta), path(bam)
+-    tuple val(meta2), path(fasta)
++    tuple val(meta), path(bam), path(fasta)
+     val(min_reads)
+     val(min_baseq)
+     val(max_base_error_rate)
+
+'modules/nf-core/fgbio/filterconsensusreads/meta.yml' is unchanged
+'modules/nf-core/fgbio/filterconsensusreads/tests/main.nf.test' is unchanged
+'modules/nf-core/fgbio/filterconsensusreads/tests/main.nf.test.snap' is unchanged
+************************************************************

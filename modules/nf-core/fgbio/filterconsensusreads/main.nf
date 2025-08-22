@@ -8,8 +8,7 @@ process FGBIO_FILTERCONSENSUSREADS {
         'community.wave.seqera.io/library/fgbio:2.5.21--368dab1b4f308243' }"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(fasta)
+    tuple val(meta), path(bam), path(fasta)
     val(min_reads)
     val(min_baseq)
     val(max_base_error_rate)
