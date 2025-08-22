@@ -1,16 +1,19 @@
 #!/usr/bin/env nextflow
 
-include { FGBIO_COPYUMIFROMREADNAME               } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
-include { FGBIO_CALLMOLECULARCONSENSUSREADS       } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main'
-include { FGBIO_FASTQTOBAM as FASTQTOBAM_READNAME } from '../../../modules/nf-core/fgbio/fastqtobam/main'
-include { FGBIO_FASTQTOBAM as FASTQTOBAM_SEQ      } from '../../../modules/nf-core/fgbio/fastqtobam/main'
-include { FGBIO_FILTERCONSENSUSREADS              } from '../../../modules/nf-core/fgbio/filterconsensusreads/main'
-include { FGBIO_GROUPREADSBYUMI                   } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
-include { FGBIO_SORTBAM                           } from '../../../modules/nf-core/fgbio/sortbam/main'
-include { FGBIO_ZIPPERBAMS                        } from '../../../modules/nf-core/fgbio/zipperbams/main'
-include { SAMTOOLS_FASTQ                          } from '../../../modules/nf-core/samtools/fastq/main'
-include { SAMTOOLS_INDEX                          } from '../../../modules/nf-core/samtools/index/main'
-include { FASTQ_ALIGN_DNA                         } from '../../../subworkflows/nf-core/fastq_align_dna/main'
+include { FGBIO_COPYUMIFROMREADNAME                 } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
+include { FGBIO_CALLMOLECULARCONSENSUSREADS         } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main'
+include { FGBIO_FASTQTOBAM as FASTQTOBAM_READNAME   } from '../../../modules/nf-core/fgbio/fastqtobam/main'
+include { FGBIO_FASTQTOBAM as FASTQTOBAM_SEQ        } from '../../../modules/nf-core/fgbio/fastqtobam/main'
+include { FGBIO_FILTERCONSENSUSREADS                } from '../../../modules/nf-core/fgbio/filterconsensusreads/main'
+include { FGBIO_GROUPREADSBYUMI                     } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
+include { FGBIO_SORTBAM                             } from '../../../modules/nf-core/fgbio/sortbam/main'
+include { FGBIO_ZIPPERBAMS as FGBIO_ZIPPERBAMS_RAW  } from '../../../modules/nf-core/fgbio/zipperbams/main'
+include { FGBIO_ZIPPERBAMS as FGBIO_ZIPPERBAMS_CONS } from '../../../modules/nf-core/fgbio/zipperbams/main'
+include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_RAW      } from '../../../modules/nf-core/samtools/fastq/main'
+include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_CONS     } from '../../../modules/nf-core/samtools/fastq/main'
+include { SAMTOOLS_INDEX                            } from '../../../modules/nf-core/samtools/index/main'
+include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_RAW    } from '../../../subworkflows/nf-core/fastq_align_dna/main'
+include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_CONS   } from '../../../subworkflows/nf-core/fastq_align_dna/main'
 
 workflow CONSENSUS {
     take:
@@ -59,11 +62,11 @@ workflow CONSENSUS {
 
     // 1.2: uBAM => Mapped BAM
 
-        SAMTOOLS_FASTQ(ch_ubam, true)
+        SAMTOOLS_FASTQ_RAW(ch_ubam, true)
 
-        ch_versions = ch_versions.mix(SAMTOOLS_FASTQ.out.versions)
+        ch_versions = ch_versions.mix(SAMTOOLS_FASTQ_RAW.out.versions)
 
-        def ch_reads_aligner_index_fasta = SAMTOOLS_FASTQ.out.interleaved.map { meta, reads ->
+        def ch_reads_aligner_index_fasta = SAMTOOLS_FASTQ_RAW.out.interleaved.map { meta, reads ->
             def gd    = (meta.genome_data instanceof Map) ? meta.genome_data : [:]
             def alg   = (meta.aligner ?: 'bwamem')
             def fasta = file(gd.fasta, checkIfExists: true)
@@ -71,10 +74,10 @@ workflow CONSENSUS {
             tuple(meta, reads, alg, index, fasta)
         }
 
-        FASTQ_ALIGN_DNA(ch_reads_aligner_index_fasta, false)
-        ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
+        FASTQ_ALIGN_DNA_RAW(ch_reads_aligner_index_fasta, false)
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA_RAW.out.versions)
 
-        def ch_mapped_bam = FASTQ_ALIGN_DNA.out.bam
+        def ch_mapped_bam = FASTQ_ALIGN_DNA_RAW.out.bam
 
         def ch_fasta_by_meta = ch_reads_aligner_index_fasta.map { meta, _r, _a, _i, fasta -> tuple(meta, fasta) }
 
@@ -89,9 +92,9 @@ workflow CONSENSUS {
             .map { meta, ubam, mapped_bam, fasta, dict -> tuple(meta, ubam, mapped_bam, fasta, dict) }
             .set { ch_zipperbam }
 
-        FGBIO_ZIPPERBAMS(ch_zipperbam)
+        FGBIO_ZIPPERBAMS_RAW(ch_zipperbam)
 
-        ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS.out.versions)
+        ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS_RAW.out.versions)
 
 
     // 1.3: Mapped BAM => Grouped BAM
@@ -100,7 +103,7 @@ workflow CONSENSUS {
         def ch_strategy = Channel.value(params.umi_group_strategy)
 
         FGBIO_GROUPREADSBYUMI(
-            FGBIO_ZIPPERBAMS.out.bam,
+            FGBIO_ZIPPERBAMS_RAW.out.bam,
             ch_strategy
         )
 
@@ -139,10 +142,49 @@ workflow CONSENSUS {
 
         ch_filtered_uBam = FGBIO_FILTERCONSENSUSREADS.out.bam
 
+    // 2(b).2: Consensus Filtered uBam -> Consensus Mapped & Filtered BAM
+
+        SAMTOOLS_FASTQ_CONS(ch_filtered_uBam, true)
+        ch_versions = ch_versions.mix(SAMTOOLS_FASTQ_CONS.out.versions)
+
+        def ch_cons_reads_aligner_index_fasta = SAMTOOLS_FASTQ_CONS.out.interleaved.map { meta, reads ->
+            def gd    = (meta.genome_data instanceof Map) ? meta.genome_data : [:]
+            def alg   = (meta.aligner ?: 'bwamem')
+            def fasta = file(gd.fasta, checkIfExists: true)
+            def index = file(gd[alg],  checkIfExists: true)
+            tuple(meta, reads, alg, index, fasta)
+        }
+
+        FASTQ_ALIGN_DNA_CONS(ch_cons_reads_aligner_index_fasta, false)
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA_CONS.out.versions)
+
+        def ch_cons_mapped_bam = FASTQ_ALIGN_DNA_CONS.out.bam
+        def ch_cons_fasta_by_meta = ch_cons_reads_aligner_index_fasta.map { meta, _r, _a, _i, fasta -> tuple(meta, fasta) }
+        def ch_cons_dict_by_meta  = ch_cons_reads_aligner_index_fasta.map { meta, _r, _a, _i, _fasta ->
+            def dict = file(meta.genome_data.dict, checkIfExists: true)
+            tuple(meta, dict)
+        }
+
+        ch_filtered_uBam
+            .join(ch_cons_mapped_bam,    by: 0)
+            .join(ch_cons_fasta_by_meta, by: 0)
+            .join(ch_cons_dict_by_meta,  by: 0)
+            .map { meta, ubam, mapped_bam, fasta, dict -> tuple(meta, ubam, mapped_bam, fasta, dict) }
+            .set { ch_cons_zipperbam }
+
+        FGBIO_ZIPPERBAMS_CONS(ch_cons_zipperbam)
+        ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS_CONS.out.versions)
+
+        FGBIO_SORTBAM(FGBIO_ZIPPERBAMS_CONS.out.bam)
+        ch_versions = ch_versions.mix(FGBIO_SORTBAM.out.versions)
+
+        def ch_consensus_filtered_bam = FGBIO_SORTBAM.out.bam
+
+
     emit:
-        ubam = ch_ubam
-        consensus_bam  = FGBIO_ZIPPERBAMS.out.bam
-        grouped_bam    = ch_grouped_bam
-        filtered_ubam  = ch_filtered_uBam
-        versions       = ch_versions
+        ubam              = ch_ubam
+        consensus_bam     = ch_consensus_filtered_bam
+        grouped_bam       = ch_grouped_bam
+        filtered_ubam     = ch_filtered_uBam
+        versions          = ch_versions
 }
