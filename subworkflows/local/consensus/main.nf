@@ -15,7 +15,7 @@ include { FASTQ_ALIGN_DNA                         } from '../../../subworkflows/
 workflow CONSENSUS {
     take:
         ch_umi_fastq                   // channel: [meta_with_readgroup, fastq] for SE/PE/duplex samples
-        
+
     main:
         def ch_versions            = Channel.empty()
         def ch_ubam                = Channel.empty()
@@ -92,16 +92,20 @@ workflow CONSENSUS {
         FGBIO_ZIPPERBAMS(ch_zipperbam)
 
         ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS.out.versions)
-    
-    
+
+
     // 1.3: Mapped BAM => Grouped BAM
 
-        // 1.3: Mapped BAM => Grouped BAM
-        def ch_strategy = Channel.value( (params.umi_group_strategy ?: 'Adjacency') as String )
+        def valid_strategies = ['identity', 'edit', 'adjacency', 'paired']
+        def umi_strategy = (params.umi_group_strategy ?: 'adjacency').toLowerCase()
+        if ( !valid_strategies.contains(umi_strategy) ) {
+            exit 1, "Invalid value for --umi_group_strategy: '${params.umi_group_strategy}'. Allowed values: ${valid_strategies.join(', ')}"
+        }
+        def ch_strategy = Channel.value(umi_strategy)
 
         FGBIO_GROUPREADSBYUMI(
-            FGBIO_ZIPPERBAMS.out.bam,  
-            ch_strategy                 
+            FGBIO_ZIPPERBAMS.out.bam,
+            ch_strategy
         )
 
         ch_versions     = ch_versions.mix(FGBIO_GROUPREADSBYUMI.out.versions)
