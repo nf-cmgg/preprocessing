@@ -1,0 +1,75 @@
+nextflow_workflow {
+    name "Test Subworkflow CONSENSUS"
+    script "subworkflows/local/consensus/main.nf"
+    workflow "CONSENSUS"
+
+    tag "subworkflows"
+    tag "consensus"
+    tag "fgbio"
+    tag "umi"
+    tag "bwamem"
+
+    test("test_consensus") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        [
+                            id        : 'umi_sample1',
+                            samplename: 'umi_test1',
+                            library   : 'test',
+                            organism  : 'Homo sapiens',
+                            umi_type  : 'seq',
+                            tag       : 'WES',
+                            aligner   : 'bwamem',
+                            genome_data: [
+                                fasta : params.genomes.GRCh38.fasta,
+                                dict  : params.genomes.GRCh38.dict,
+                                bwamem: params.genomes.GRCh38.bwamem
+                            ]
+                        ],
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test.umi_1.fastq.gz'),
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test.umi_2.fastq.gz')
+                    ],
+                    [
+                        [
+                            id        : 'umi_sample2',
+                            samplename: 'umi_test2',
+                            library   : 'test',
+                            organism  : 'Homo sapiens',
+                            umi_type  : 'seq',
+                            tag       : 'WES',
+                            aligner   : 'bwamem',
+                            genome_data: [
+                                fasta : params.genomes.GRCh38.fasta,
+                                dict  : params.genomes.GRCh38.dict,
+                                bwamem: params.genomes.GRCh38.bwamem
+                            ]
+                        ],
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2.umi_1.fastq.gz'),
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2.umi_2.fastq.gz')
+
+                    ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        workflow.out.ubam.collect { it[1].name },
+                        workflow.out.grouped_bam.collect { it[1].name },
+                        workflow.out.filtered_ubam.collect { it[1].name },
+                        workflow.out.consensus_bam.collect { it[1].name },
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+}
