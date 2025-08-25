@@ -1,6 +1,3 @@
-import nf.test.NFTest
-import nf.test.bam.BamFile
-
 nextflow_workflow {
     name "Test Subworkflow CONSENSUS"
     script "subworkflows/local/consensus/main.nf"
@@ -19,76 +16,37 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of([
                     [
-                        [
-                            id        : 'umi_sample1',
-                            samplename: 'umi_test1',
-                            library   : 'test',
-                            organism  : 'Homo sapiens',
-                            umi_type  : 'seq',
-                            tag       : 'WES',
-                            aligner   : 'bwamem',
-                            genome_data: [
-                                fasta : params.genomes.GRCh38.fasta,
-                                dict  : params.genomes.GRCh38.dict,
-                                bwamem: params.genomes.GRCh38.bwamem
-                            ]
-                        ],
-                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test.umi_1.fastq.gz'),
-                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test.umi_2.fastq.gz')
+                        id        : 'umi_sample1',
+                        samplename: 'umi_test1',
+                        library   : 'test',
+                        organism  : 'Homo sapiens',
+                        umi_type  : 'seq',
+                        tag       : 'WES',
+                        aligner   : 'bwamem',
+                        genome_data: [
+                            fasta : params.genomes.GRCh38.fasta,
+                            dict  : params.genomes.GRCh38.dict,
+                            bwamem: params.genomes.GRCh38.bwamem
+                        ]
                     ],
-                    [
-                        [
-                            id        : 'umi_sample2',
-                            samplename: 'umi_test2',
-                            library   : 'test',
-                            organism  : 'Homo sapiens',
-                            umi_type  : 'seq',
-                            tag       : 'WES',
-                            aligner   : 'bwamem',
-                            genome_data: [
-                                fasta : params.genomes.GRCh38.fasta,
-                                dict  : params.genomes.GRCh38.dict,
-                                bwamem: params.genomes.GRCh38.bwamem
-                            ]
-                        ],
-                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2.umi_1.fastq.gz'),
-                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2.umi_2.fastq.gz')
-                    ]
+                    file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test.umi_1.fastq.gz'),
+                    file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test.umi_2.fastq.gz')
                 ])
                 """
             }
         }
 
         then {
-            assertAll(
-                {
-                    assert workflow.success
-
-                    def ubam_md5s = workflow.out.ubam.collect {
-                        new BamFile(it[1]).getReadsMD5()
-                    }
-
-                    def grouped_md5s = workflow.out.grouped_bam.collect {
-                        new BamFile(it[1]).getReadsMD5()
-                    }
-
-                    def filtered_md5s = workflow.out.filtered_ubam.collect {
-                        new BamFile(it[1]).getReadsMD5()
-                    }
-
-                    def consensus_md5s = workflow.out.consensus_bam.collect {
-                        new BamFile(it[1]).getReadsMD5()
-                    }
-
-                    assert snapshot(
-                        ubam_md5s,
-                        grouped_md5s,
-                        filtered_md5s,
-                        consensus_md5s,
-                        workflow.out.versions
-                    ).match()
-                }
-            )
+            assertAll {
+                assert workflow.success
+                assert snapshot(
+                    workflow.out.ubam.collect { bam(it[1]).getReadsMD5() },
+                    workflow.out.grouped_bam.collect { bam(it[1]).getReadsMD5() },
+                    workflow.out.filtered_ubam.collect { bam(it[1]).getReadsMD5() },
+                    workflow.out.consensus_bam.collect { bam(it[1]).getReadsMD5() },
+                    workflow.out.versions
+                ).match()
+            }
         }
     }
 }

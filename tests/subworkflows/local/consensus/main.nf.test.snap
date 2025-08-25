@@ -1,0 +1,26 @@
+{
+    "test_consensus_reads_md5": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,92ec3e7cd231a6503321464eb83e6955"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-25T11:10:48.133975221"
+    }
+}
