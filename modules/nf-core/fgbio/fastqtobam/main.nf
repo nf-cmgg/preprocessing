@@ -11,8 +11,8 @@ process FGBIO_FASTQTOBAM {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("${meta.samplename}_ubam.bam") , emit: bam , optional: true
-    tuple val(meta), path("${meta.samplename}_ucram.cram"), emit: cram, optional: true
+    tuple val(meta), path("*.bam") , emit: bam , optional: true
+    tuple val(meta), path("*.cram"), emit: cram, optional: true
     path "versions.yml"            , emit: versions
 
     when:

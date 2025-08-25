@@ -11,8 +11,8 @@ process FGBIO_COPYUMIFROMREADNAME {
     tuple val(meta), path(bam), path(bai)
 
     output:
-    tuple val(meta), path("${meta.samplename}_ubam.bam"), emit: bam
-    tuple val(meta), path("${meta.samplename}_ubai.bai"), emit: bai
+    tuple val(meta), path("*.bam"), emit: bam
+    tuple val(meta), path("*.bai"), emit: bai
     path "versions.yml"           , emit: versions
 
     when:
