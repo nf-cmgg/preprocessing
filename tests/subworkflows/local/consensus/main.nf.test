@@ -1,3 +1,6 @@
+import nf.test.NFTest
+import nf.test.bam.BamFile
+
 nextflow_workflow {
     name "Test Subworkflow CONSENSUS"
     script "subworkflows/local/consensus/main.nf"
@@ -9,7 +12,7 @@ nextflow_workflow {
     tag "umi"
     tag "bwamem"
 
-    test("test_consensus") {
+    test("test_consensus_reads_md5") {
 
         when {
             workflow {
@@ -50,7 +53,6 @@ nextflow_workflow {
                         ],
                         file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2.umi_1.fastq.gz'),
                         file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2.umi_2.fastq.gz')
-
                     ]
                 ])
                 """
@@ -61,11 +63,28 @@ nextflow_workflow {
             assertAll(
                 {
                     assert workflow.success
+
+                    def ubam_md5s = workflow.out.ubam.collect {
+                        new BamFile(it[1]).getReadsMD5()
+                    }
+
+                    def grouped_md5s = workflow.out.grouped_bam.collect {
+                        new BamFile(it[1]).getReadsMD5()
+                    }
+
+                    def filtered_md5s = workflow.out.filtered_ubam.collect {
+                        new BamFile(it[1]).getReadsMD5()
+                    }
+
+                    def consensus_md5s = workflow.out.consensus_bam.collect {
+                        new BamFile(it[1]).getReadsMD5()
+                    }
+
                     assert snapshot(
-                        workflow.out.ubam.collect { it[1].name },
-                        workflow.out.grouped_bam.collect { it[1].name },
-                        workflow.out.filtered_ubam.collect { it[1].name },
-                        workflow.out.consensus_bam.collect { it[1].name },
+                        ubam_md5s,
+                        grouped_md5s,
+                        filtered_md5s,
+                        consensus_md5s,
                         workflow.out.versions
                     ).match()
                 }
