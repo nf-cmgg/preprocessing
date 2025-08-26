@@ -26,7 +26,8 @@ nextflow_workflow {
                         genome_data: [
                             fasta : params.genomes.GRCh38.fasta,
                             dict  : params.genomes.GRCh38.dict,
-                            bwamem: params.genomes.GRCh38.bwamem
+                            bwamem: params.genomes.GRCh38.bwamem,
+                            fai   : params.genomes.GRCh38.fai
                         ]
                     ],
                     file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test.umi_1.fastq.gz'),
@@ -44,6 +45,7 @@ nextflow_workflow {
                     workflow.out.grouped_bam.collect { bam(it[1]).getReadsMD5() },
                     workflow.out.filtered_ubam.collect { bam(it[1]).getReadsMD5() },
                     workflow.out.consensus_bam.collect { bam(it[1]).getReadsMD5() },
+                    workflow.out.consensus_cram.collect { bam(it[1]).getReadsMD5() },
                     workflow.out.versions
                 ).match()
             }

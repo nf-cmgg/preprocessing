@@ -1,23 +1,25 @@
 #!/usr/bin/env nextflow
 
-include { FGBIO_COPYUMIFROMREADNAME                 } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
-include { FGBIO_CALLMOLECULARCONSENSUSREADS         } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main'
-include { FGBIO_FASTQTOBAM as FASTQTOBAM_READNAME   } from '../../../modules/nf-core/fgbio/fastqtobam/main'
-include { FGBIO_FASTQTOBAM as FASTQTOBAM_SEQ        } from '../../../modules/nf-core/fgbio/fastqtobam/main'
-include { FGBIO_FILTERCONSENSUSREADS                } from '../../../modules/nf-core/fgbio/filterconsensusreads/main'
-include { FGBIO_GROUPREADSBYUMI                     } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
-include { FGBIO_SORTBAM                             } from '../../../modules/nf-core/fgbio/sortbam/main'
-include { FGBIO_ZIPPERBAMS as FGBIO_ZIPPERBAMS_RAW  } from '../../../modules/nf-core/fgbio/zipperbams/main'
-include { FGBIO_ZIPPERBAMS as FGBIO_ZIPPERBAMS_CONS } from '../../../modules/nf-core/fgbio/zipperbams/main'
-include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_RAW      } from '../../../modules/nf-core/samtools/fastq/main'
-include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_CONS     } from '../../../modules/nf-core/samtools/fastq/main'
-include { SAMTOOLS_INDEX                            } from '../../../modules/nf-core/samtools/index/main'
-include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_RAW    } from '../../../subworkflows/nf-core/fastq_align_dna/main'
-include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_CONS   } from '../../../subworkflows/nf-core/fastq_align_dna/main'
+include { FGBIO_COPYUMIFROMREADNAME                  } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
+include { FGBIO_CALLMOLECULARCONSENSUSREADS          } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main'
+include { FGBIO_FASTQTOBAM as FASTQTOBAM_READNAME    } from '../../../modules/nf-core/fgbio/fastqtobam/main'
+include { FGBIO_FASTQTOBAM as FASTQTOBAM_SEQ         } from '../../../modules/nf-core/fgbio/fastqtobam/main'
+include { FGBIO_FILTERCONSENSUSREADS                 } from '../../../modules/nf-core/fgbio/filterconsensusreads/main'
+include { FGBIO_GROUPREADSBYUMI                      } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
+include { FGBIO_SORTBAM                              } from '../../../modules/nf-core/fgbio/sortbam/main'
+include { FGBIO_ZIPPERBAMS as FGBIO_ZIPPERBAMS_RAW   } from '../../../modules/nf-core/fgbio/zipperbams/main'
+include { FGBIO_ZIPPERBAMS as FGBIO_ZIPPERBAMS_CONS  } from '../../../modules/nf-core/fgbio/zipperbams/main'
+include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_RAW       } from '../../../modules/nf-core/samtools/fastq/main'
+include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_CONS      } from '../../../modules/nf-core/samtools/fastq/main'
+include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_UMI       } from '../../../modules/nf-core/samtools/index/main'
+include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_CONSENSUS } from '../../../modules/nf-core/samtools/index/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CONVERT       } from '../../../modules/nf-core/samtools/convert/main'
+include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_RAW     } from '../../../subworkflows/nf-core/fastq_align_dna/main'
+include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_CONS    } from '../../../subworkflows/nf-core/fastq_align_dna/main'
 
 workflow CONSENSUS {
     take:
-        ch_umi_fastq                   // channel: [meta_with_readgroup, fastq] for SE/PE/duplex samples
+        ch_umi_fastq                   // channel: [meta, fastq1, fastq2]
 
     main:
         def ch_versions            = Channel.empty()
@@ -37,11 +39,11 @@ workflow CONSENSUS {
             FASTQTOBAM_READNAME(ch_fastq.readname)
             ch_versions = ch_versions.mix(FASTQTOBAM_READNAME.out.versions)
 
-            SAMTOOLS_INDEX(FASTQTOBAM_READNAME.out.bam)
-            ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
+            SAMTOOLS_INDEX_UMI(FASTQTOBAM_READNAME.out.bam)
+            ch_versions = ch_versions.mix(SAMTOOLS_INDEX_UMI.out.versions)
 
             FASTQTOBAM_READNAME.out.bam
-                .join(SAMTOOLS_INDEX.out.bai, by: 0)
+                .join(SAMTOOLS_INDEX_UMI.out.bai, by: 0)
                 .map { meta, bam, bai -> tuple(meta, bam, bai) }
                 .set { ch_ubam_with_bai }
 
@@ -95,7 +97,6 @@ workflow CONSENSUS {
         FGBIO_ZIPPERBAMS_RAW(ch_zipperbam)
 
         ch_versions = ch_versions.mix(FGBIO_ZIPPERBAMS_RAW.out.versions)
-
 
     // 1.3: Mapped BAM => Grouped BAM
 
@@ -180,11 +181,31 @@ workflow CONSENSUS {
 
         def ch_consensus_filtered_bam = FGBIO_SORTBAM.out.bam
 
+    // Consensus_filtered_bam into CRAM (integration into pipeline)
+
+        SAMTOOLS_INDEX_CONSENSUS(ch_consensus_filtered_bam)
+        ch_versions = ch_versions.mix(SAMTOOLS_INDEX_CONSENSUS.out.versions)
+
+        def ch_sam_convert_bai_fasta_fai = SAMTOOLS_INDEX_CONSENSUS.out.bai.map {meta, bai ->
+            def gd    = (meta.genome_data instanceof Map) ? meta.genome_data : [:]
+            def fasta = file(gd.fasta, checkIfExists: true)
+            def fai   = file(gd.fai,   checkIfExists: true)
+            tuple(meta, bai, fasta, fai)
+        }
+
+        def ch_consensus_bam_convert = ch_consensus_filtered_bam
+            .join(ch_sam_convert_bai_fasta_fai, by: 0)
+
+        SAMTOOLS_CONVERT(ch_consensus_bam_convert)
+
+        ch_consensus_cram = SAMTOOLS_CONVERT.out.cram
+        ch_versions = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
 
     emit:
         ubam              = ch_ubam
         consensus_bam     = ch_consensus_filtered_bam
         grouped_bam       = ch_grouped_bam
         filtered_ubam     = ch_filtered_uBam
+        consensus_cram    = ch_consensus_cram
         versions          = ch_versions
 }
