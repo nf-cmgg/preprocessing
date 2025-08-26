@@ -45,7 +45,7 @@ nextflow_workflow {
                     workflow.out.grouped_bam.collect { bam(it[1]).getReadsMD5() },
                     workflow.out.filtered_ubam.collect { bam(it[1]).getReadsMD5() },
                     workflow.out.consensus_bam.collect { bam(it[1]).getReadsMD5() },
-                    workflow.out.consensus_cram.collect { bam(it[1]).getReadsMD5() },
+                    workflow.out.consensus_cram_crai.collect { bam(it[1]).getReadsMD5() },
                     workflow.out.versions
                 ).match()
             }

@@ -197,7 +197,7 @@ workflow PREPROCESSING {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: UMI CONSENSUS 
+// STEP: UMI CONSENSUS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -212,10 +212,7 @@ workflow PREPROCESSING {
     CONSENSUS(ch_umi_fastq)
     ch_versions = ch_versions.mix(CONSENSUS.out.versions)
 
-    def ch_ubam_for_umi      = CONSENSUS.out.ubam
-    def ch_umi_consensus_bam = CONSENSUS.out.consensus_bam
-    def ch_umi_grouped_bam   = CONSENSUS.out.grouped_bam
-
+    def ch_consensus_cram_crai = CONSENSUS.out.consensus_cram_crai
 
 
 /*
@@ -306,6 +303,7 @@ workflow PREPROCESSING {
 */
 
     FASTQ_TO_CRAM.out.cram_crai
+    .mix(ch_consensus_cram_crai)
     .filter{ meta, cram, crai ->
         meta.tag != "SNP"
     }

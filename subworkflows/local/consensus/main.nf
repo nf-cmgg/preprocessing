@@ -197,15 +197,18 @@ workflow CONSENSUS {
             .join(ch_sam_convert_bai_fasta_fai, by: 0)
 
         SAMTOOLS_CONVERT(ch_consensus_bam_convert)
-
-        ch_consensus_cram = SAMTOOLS_CONVERT.out.cram
         ch_versions = ch_versions.mix(SAMTOOLS_CONVERT.out.versions)
+
+        SAMTOOLS_CONVERT.out.cram
+            .join(SAMTOOLS_CONVERT.out.crai, by: 0)
+            .map { meta, cram, crai -> tuple(meta, cram, crai) }
+            .set { ch_consensus_cram_crai }
 
     emit:
         ubam              = ch_ubam
         consensus_bam     = ch_consensus_filtered_bam
         grouped_bam       = ch_grouped_bam
         filtered_ubam     = ch_filtered_uBam
-        consensus_cram    = ch_consensus_cram
+        consensus_cram_crai    = ch_consensus_cram_crai
         versions          = ch_versions
 }
