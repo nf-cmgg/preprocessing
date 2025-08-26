@@ -14,6 +14,8 @@ It also performs basic QC and coverage analysis.
 
 The pipeline is built using Nextflow, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
+The pipeline also supports Unique Molecular Identifier (UMI) data. If your samplesheet includes a `umi_type` column (`seq` or `readname`), UMI-aware preprocessing is enabled automatically; rows with `umi_type=none` are processed as usual.
+
 Steps inlcude:
 
 1. Demultiplexing using [`BCLconvert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
@@ -25,6 +27,12 @@ Steps inlcude:
 7. QC aggregation using [`multiqc`](https://multiqc.info/)
 
 ![metro map](docs/images/metro_map.png)
+
+UMI processing (only for rows with `umi_type`):
+- Extract UMI from read sequence (`seq`) or read name (`readname`)
+- Group reads by UMI (fgbio GroupReadsByUmi)
+- Call molecular consensus (fgbio CallMolecularConsensusReads) and filter (fgbio FilterConsensusReads)
+- Re-align filtered consensus reads with BWA-MEM (`-Y`), then sort/index
 
 ## Usage
 
@@ -40,6 +48,12 @@ First, prepare a samplesheet with your input data that looks as follows:
 ```csv
 id,samplename,organism,library,fastq_1,fastq_2
 sample1,sample1,Homo sapiens,Library_Name,reads1.fq.gz,reads2.fq.gz
+```
+`samplesheet.csv` for fastq inputs with UMI:
+
+```csv
+id,samplename,organism,library,umi_type,fastq_1,fastq_2
+umi_sample1,umi_sample1,Homo sapiens,Library_Name,seq,reads1.fq.gz,reads2.fq.gz
 ```
 
 `samplesheet.csv` for flowcell inputs:
