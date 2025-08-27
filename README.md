@@ -14,7 +14,7 @@ It also performs basic QC and coverage analysis.
 
 The pipeline is built using Nextflow, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
-The pipeline also supports Unique Molecular Identifier (UMI) data. If your samplesheet includes a `umi_type` column (`seq` or `readname`), UMI-aware preprocessing is enabled automatically; rows with `umi_type=none` are processed as usual.
+The pipeline also supports Unique Molecular Identifier (UMI) data. If your samplesheet includes a `umi_type` column (`seq` or `readname`), UMI-aware preprocessing is enabled automatically. Rows with no `umi_type` specified will be processed as non-UMI sequencing data.
 
 Steps inlcude:
 
@@ -26,7 +26,7 @@ Steps inlcude:
 6. Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`picard CollecHsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectHsMetrics), [`picard CollectWgsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics), [`picard CollectMultipleMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics)
 7. QC aggregation using [`multiqc`](https://multiqc.info/)
 
-![metro map](docs/images/metro_map.png)
+![metro map](docs/images/metro_mapumi.png)
 
 UMI processing (only for rows with `umi_type`):
 - Extract UMI from read sequence (`seq`) or read name (`readname`)
