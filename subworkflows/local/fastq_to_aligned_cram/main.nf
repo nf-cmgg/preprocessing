@@ -103,21 +103,21 @@ workflow FASTQ_TO_CRAM {
             // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
             BIOBAMBAM_BAMSORMADUP(ch_bam_fasta)
             ch_markdup_index = ch_markdup_index.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index, failOnMismatch:true, failOnDuplicate:true))
-            ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-            ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix( BIOBAMBAM_BAMSORMADUP.out.metrics.map { _meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions.first())
         }
         else if ( markdup == "samtools") {
             SAMTOOLS_SORMADUP(ch_bam_fasta)
             ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORMADUP.out.cram.join(SAMTOOLS_SORMADUP.out.crai, failOnMismatch:true, failOnDuplicate:true))
-            ch_multiqc_files = ch_multiqc_files.mix( SAMTOOLS_SORMADUP.out.metrics.map { meta, metrics -> return metrics} )
-            ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix( SAMTOOLS_SORMADUP.out.metrics.map { _meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions.first())
         }
         else if ( markdup == "false" || markdup == false) {
             // Merge bam files and compress
             // SAMTOOLS_SORT([meta, [bam, bam], fasta])
             SAMTOOLS_SORT(ch_bam_fasta)
             ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch:true, failOnDuplicate:true))
-            ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
+            ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
         }
         else {
             error "markdup: ${markdup} not supported"
@@ -146,6 +146,7 @@ workflow FASTQ_TO_CRAM {
         .set {ch_bam_bai_fasta_fai}
 
         SAMTOOLS_CONVERT(ch_bam_bai_fasta_fai)
+        ch_versions = ch_versions.mix(SAMTOOLS_CONVERT.out.versions.first())
 
         ch_markdup_index.cram
         .mix(

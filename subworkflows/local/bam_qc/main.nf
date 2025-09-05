@@ -17,21 +17,21 @@ workflow BAM_QC {
     ch_versions = Channel.empty()
 
     ch_bam_bai_roi_fasta_fai_dict
-    .map{ meta, bam, bai, roi, fasta, fai, dict -> return [meta, bam, bai, fasta]}
+    .map{ meta, bam, bai, _roi, fasta, _fai, _dict -> return [meta, bam, bai, fasta]}
     .set{ ch_bam_bai_fasta }
 
     SAMTOOLS_STATS ( ch_bam_bai_fasta )
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
 
     ch_bam_bai_fasta
-    .map{ meta, bam, bai, fasta -> return [meta, bam, bai]}
+    .map{ meta, bam, bai, _fasta -> return [meta, bam, bai]}
     .set{ ch_bam_bai }
 
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )
-    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions.first())
 
     SAMTOOLS_IDXSTATS ( ch_bam_bai )
-    ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions.first())
 
     ch_picard_hsmetrics = Channel.empty()
     ch_picard_multiplemetrics = Channel.empty()
@@ -39,11 +39,11 @@ workflow BAM_QC {
     if (!disable_picard) {
 
         ch_bam_bai_roi_fasta_fai_dict
-        .map{ meta, bam, bai, roi, fasta, fai, dict -> return [meta, bam, bai, fasta, fai]}
+        .map{ meta, bam, bai, _roi, fasta, fai, _dict -> return [meta, bam, bai, fasta, fai]}
         .set{ ch_bam_bai_fasta_fai }
 
         PICARD_COLLECTMULTIPLEMETRICS ( ch_bam_bai_fasta_fai )
-        ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions)
+        ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
         ch_picard_multiplemetrics = ch_picard_multiplemetrics.mix(PICARD_COLLECTMULTIPLEMETRICS.out.metrics)
 
         ch_bam_bai_roi_fasta_fai_dict
@@ -56,11 +56,11 @@ workflow BAM_QC {
         .set{ch_picard}
 
         PICARD_COLLECTWGSMETRICS ( ch_picard.wgsmetrics, [] )
-        ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions)
+        ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions.first())
         ch_picard_wgsmetrics = ch_picard_wgsmetrics.mix(PICARD_COLLECTWGSMETRICS.out.metrics)
 
         PICARD_COLLECTHSMETRICS ( ch_picard.hsmetrics )
-        ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions)
+        ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
         ch_picard_hsmetrics = ch_picard_hsmetrics.mix(PICARD_COLLECTHSMETRICS.out.metrics)
     }
 
