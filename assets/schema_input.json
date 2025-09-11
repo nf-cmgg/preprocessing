@@ -69,7 +69,7 @@
                 "type": "string",
                 "format": "file-path",
                 "description": "Region of interest BED file for coverage analysis",
-                "pattern": "^.*/[^/]+\\.bed$",
+                "pattern": "^\\S+\\.bed$",
                 "default": null
             },
             "lane": {
