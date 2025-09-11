@@ -36,7 +36,7 @@ workflow FASTQ_ALIGN_RNA {
             STAR_ALIGN.out.log_progress,
             STAR_ALIGN.out.log_out
         )
-        ch_versions = ch_versions.mix(STAR_ALIGN.out.versions)
+        ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
     emit:
         bam         = ch_bam        // channel: [ [meta], bam       ]

@@ -48,26 +48,26 @@ workflow FASTQ_ALIGN_DNA {
         // Align fastq files to reference genome and (optionally) sort
         BOWTIE2_ALIGN(ch_to_align.bowtie2, false, sort) // if aligner is bowtie2
         ch_bam = ch_bam.mix(BOWTIE2_ALIGN.out.bam)
-        ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
+        ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions.first())
 
         BWAMEM1_MEM  (ch_to_align.bwamem, sort)         // If aligner is bwa-mem
         ch_bam = ch_bam.mix(BWAMEM1_MEM.out.bam)
         ch_bam_index = ch_bam_index.mix(BWAMEM1_MEM.out.csi)
-        ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions)
+        ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
 
         BWAMEM2_MEM  (ch_to_align.bwamem2, sort)        // If aligner is bwa-mem2
         ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
-        ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions)
+        ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
 
         DRAGMAP_ALIGN(ch_to_align.dragmap, sort)        // If aligner is dragmap
         ch_bam = ch_bam.mix(DRAGMAP_ALIGN.out.bam)
         ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
-        ch_versions = ch_versions.mix(DRAGMAP_ALIGN.out.versions)
+        ch_versions = ch_versions.mix(DRAGMAP_ALIGN.out.versions.first())
 
         SNAP_ALIGN(ch_to_align.snap)                    // If aligner is snap
         ch_bam = ch_bam.mix(SNAP_ALIGN.out.bam)
         ch_bam_index.mix(SNAP_ALIGN.out.bai)
-        ch_versions = ch_versions.mix(SNAP_ALIGN.out.versions)
+        ch_versions = ch_versions.mix(SNAP_ALIGN.out.versions.first())
 
     emit:
         bam         = ch_bam        // channel: [ [meta], bam       ]
