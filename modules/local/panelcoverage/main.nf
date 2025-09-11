@@ -8,8 +8,7 @@ process PANELCOVERAGE {
         'biocontainers/bedtools:2.31.1--hf5e1c6e_1' }"
 
     input:
-    tuple val(meta), path(perbase), path(perbase_index)
-    path(genelists)
+    tuple val(meta), path(perbase), path(perbase_index), path(genelists)
 
     output:
     tuple val(meta), path("*.mosdepth.region.dist.txt"), emit: regiondist
