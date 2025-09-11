@@ -8,7 +8,7 @@ report_section_order:
     order: -1001
   "nf-cmgg-preprocessing-summary":
     order: -1002
-export_plots: false
+export_plots: true
 disable_version_detection: true
 bclconvert:
   create_undetermined_barcode_barplots: true
