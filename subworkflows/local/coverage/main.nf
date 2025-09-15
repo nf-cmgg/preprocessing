@@ -1,69 +1,65 @@
 #!/usr/bin/env nextflow
 
 // MODULES
-include { MOSDEPTH              } from "../../../modules/nf-core/mosdepth/main.nf"
-include { SAMTOOLS_COVERAGE     } from "../../../modules/nf-core/samtools/coverage/main"
-include { PANELCOVERAGE         } from "../../../modules/local/panelcoverage/main"
+include { MOSDEPTH          } from "../../../modules/nf-core/mosdepth/main.nf"
+include { SAMTOOLS_COVERAGE } from "../../../modules/nf-core/samtools/coverage/main"
+include { PANELCOVERAGE     } from "../../../modules/local/panelcoverage/main"
 
 workflow COVERAGE {
     take:
-        ch_meta_cram_crai_fasta_fai_roi  // channel: [mandatory] [meta, cram, crai, fasta, fai, roi]
-        ch_genelists                     // channel: [optional] [genelists]
+    ch_meta_cram_crai_fasta_fai_roi // channel: [mandatory] [meta, cram, crai, fasta, fai, roi]
+    ch_genelists                    // channel: [optional] [genelists]
+
     main:
 
-        ch_versions         = Channel.empty()
-        ch_coverageqc_files = Channel.empty()
+    ch_versions = Channel.empty()
+    ch_coverageqc_files = Channel.empty()
 
-        MOSDEPTH(
-            ch_meta_cram_crai_fasta_fai_roi.map{
-                meta, cram, crai, fasta, _fai, roi ->
-                    return [meta, cram, crai, roi, fasta]
+    MOSDEPTH(
+        ch_meta_cram_crai_fasta_fai_roi.map { meta, cram, crai, fasta, _fai, roi ->
+            return [meta, cram, crai, roi, fasta]
+        }
+    )
+    ch_versions = ch_versions.mix(MOSDEPTH.out.versions.first())
+
+    SAMTOOLS_COVERAGE(
+        ch_meta_cram_crai_fasta_fai_roi.map { meta, cram, crai, fasta, fai, _roi ->
+            return [meta, cram, crai, fasta, fai]
+        }
+    )
+    ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
+    ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage)
+
+    ch_genelists.view()
+
+    PANELCOVERAGE(
+        MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi).combine(ch_genelists).map { meta, bed, index, genelists ->
+            if (genelists !instanceof List) {
+                // Because groovy typing sucks ass; apparently an array of 1 is automatically converted to a string...
+                genelists = [genelists]
             }
-        )
-        ch_versions = ch_versions.mix(MOSDEPTH.out.versions.first())
+            def filtered_genelists = meta.tag.toLowerCase() == "seqcap"
+                ? genelists.findAll { it.name.toLowerCase().contains("seqcap") }
+                : genelists.findAll { !it.name.toLowerCase().contains("seqcap") }
 
-        SAMTOOLS_COVERAGE(
-            ch_meta_cram_crai_fasta_fai_roi.map{
-                meta, cram, crai, fasta, fai, _roi ->
-                    return [meta, cram, crai, fasta, fai]
+            if (filtered_genelists.size() > 0) {
+                return [
+                    meta,
+                    bed,
+                    index,
+                    filtered_genelists,
+                ]
             }
-        )
-        ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
-        ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage)
-
-        ch_genelists.view()
-
-        PANELCOVERAGE(
-            MOSDEPTH.out.per_base_bed
-            .join(MOSDEPTH.out.per_base_csi)
-            .combine(ch_genelists)
-            .map{meta, bed, index, genelists ->
-                if (genelists !instanceof List){
-                    // Because groovy typing sucks ass; apparently an array of 1 is automatically converted to a string...
-                    genelists = [genelists]
-                }
-                def filtered_genelists = meta.tag.toLowerCase() == "seqcap" ?
-                    genelists.findAll{it.name.toLowerCase().contains("seqcap")} :
-                    genelists.findAll{!it.name.toLowerCase().contains("seqcap")}
-
-                if (filtered_genelists.size() > 0) {
-                    return [
-                        meta,
-                        bed,
-                        index,
-                        filtered_genelists
-                    ]
-                }
-            }
-        )
-        ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions.first())
-        ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)
+        }
+    )
+    ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions.first())
+    ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)
 
     emit:
-        mosdepth_summary  = MOSDEPTH.out.summary_txt
-        mosdepth_global   = MOSDEPTH.out.global_txt
-        mosdepth_regions  = MOSDEPTH.out.regions_txt
-        samtools_coverage = SAMTOOLS_COVERAGE.out.coverage
-        panelcoverage     = PANELCOVERAGE.out.regiondist
-        versions          = ch_versions
+    mosdepth_summary  = MOSDEPTH.out.summary_txt
+    mosdepth_global   = MOSDEPTH.out.global_txt
+    mosdepth_regions  = MOSDEPTH.out.regions_txt
+    samtools_coverage = SAMTOOLS_COVERAGE.out.coverage
+    panelcoverage     = PANELCOVERAGE.out.regiondist
+    versions          = ch_versions
 }

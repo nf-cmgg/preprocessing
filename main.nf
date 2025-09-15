@@ -18,43 +18,6 @@ nextflow.enable.dsl = 2
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_preprocessing_pipeline'
 include { PREPROCESSING           } from './workflows/preprocessing'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_preprocessing_pipeline'
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// WORKFLOW: Run main analysis pipeline depending on type of input
-//
-workflow NFCMGG_PREPROCESSING {
-
-    take:
-    samplesheet // channel: samplesheet read in from --input
-    genomes     // map: genome reference files
-    aligner     // string: aligner to use
-    markdup     // string: markdup method to use
-    roi         // string: region of interest to use
-    genelists   // file: directory containing genelist bed files for coverage analysis
-    main:
-
-    //
-    // WORKFLOW: Run pipeline
-    //
-    PREPROCESSING (
-        samplesheet,
-        genomes,
-        aligner,
-        markdup,
-        roi,
-        genelists
-    )
-
-    emit:
-    multiqc_report = PREPROCESSING.out.multiqc_report // channel: /path/to/multiqc_report.html
-
-}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -63,23 +26,21 @@ workflow NFCMGG_PREPROCESSING {
 
 workflow {
 
-    main:
-
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
-    PIPELINE_INITIALISATION (
+    PIPELINE_INITIALISATION(
         params.version,
         params.validate_params,
         args,
         params.outdir,
-        params.input
+        params.input,
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    NFCMGG_PREPROCESSING (
+    NFCMGG_PREPROCESSING(
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
         params.aligner,
@@ -91,19 +52,49 @@ workflow {
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION (
+    PIPELINE_COMPLETION(
         params.email,
         params.email_on_fail,
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCMGG_PREPROCESSING.out.multiqc_report
+        NFCMGG_PREPROCESSING.out.multiqc_report,
     )
 }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
+    NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+//
+// WORKFLOW: Run main analysis pipeline depending on type of input
+//
+workflow NFCMGG_PREPROCESSING {
+    take:
+    samplesheet // channel: samplesheet read in from --input
+    genomes     // map: genome reference files
+    aligner     // string: aligner to use
+    markdup     // string: markdup method to use
+    roi         // string: region of interest to use
+    genelists   // file: directory containing genelist bed files for coverage analysis
+
+    main:
+
+    //
+    // WORKFLOW: Run pipeline
+    //
+    PREPROCESSING(
+        samplesheet,
+        genomes,
+        aligner,
+        markdup,
+        roi,
+        genelists,
+    )
+
+    emit:
+    multiqc_report = PREPROCESSING.out.multiqc_report // channel: /path/to/multiqc_report.html
+}

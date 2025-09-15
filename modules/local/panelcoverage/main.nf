@@ -1,18 +1,18 @@
 process PANELCOVERAGE {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bedtools:2.31.1--hf5e1c6e_1' :
-        'biocontainers/bedtools:2.31.1--hf5e1c6e_1' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/bedtools:2.31.1--hf5e1c6e_1'
+        : 'biocontainers/bedtools:2.31.1--hf5e1c6e_1'}"
 
     input:
     tuple val(meta), path(perbase), path(perbase_index), path(genelists)
 
     output:
     tuple val(meta), path("*.mosdepth.region.dist.txt"), emit: regiondist
-    path "versions.yml"           , emit: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,7 +20,7 @@ process PANELCOVERAGE {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    for GENELIST in $genelists
+    for GENELIST in ${genelists}
     do
         cmgg_genelists regiondist --samplename ${prefix} --perbase ${perbase} --genelist \$GENELIST
     done
@@ -35,7 +35,7 @@ process PANELCOVERAGE {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    for GENELIST in $genelists
+    for GENELIST in ${genelists}
     do
         name=\$(basename \$GENELIST .bed)
         touch ${prefix}_\${name}.mosdepth.region.dist.txt
