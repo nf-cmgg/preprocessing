@@ -446,6 +446,9 @@ workflow PREPROCESSING {
     )
 
     emit:
+    demultiplex_interop = BCL_DEMULTIPLEX.out.interop
+    demultiplex_reports = BCL_DEMULTIPLEX.out.reports
+    demultiplex_logs = BCL_DEMULTIPLEX.out.logs
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions // channel: [ path(versions.yml) ]
 }

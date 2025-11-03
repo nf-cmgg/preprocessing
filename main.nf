@@ -26,6 +26,7 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_prep
 
 workflow {
 
+    main:
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
@@ -40,7 +41,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCMGG_PREPROCESSING(
+    PREPROCESSING(
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
         params.aligner,
@@ -59,42 +60,22 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCMGG_PREPROCESSING.out.multiqc_report,
+        PREPROCESSING.out.multiqc_report,
     )
+
+    publish:
+    demultiplex_interop = PREPROCESSING.out.demultiplex_interop
+    demultiplex_reports = PREPROCESSING.out.demultiplex_reports.map { meta, reports -> [ meta, files("${reports.toUri()}/*") ] }.transpose(by:1)
+    demultiplex_logs    = PREPROCESSING.out.demultiplex_logs.map { meta, logs -> [ meta, files("${logs.toUri()}/*") ] }.transpose(by:1)
 }
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// WORKFLOW: Run main analysis pipeline depending on type of input
-//
-workflow NFCMGG_PREPROCESSING {
-    take:
-    samplesheet // channel: samplesheet read in from --input
-    genomes     // map: genome reference files
-    aligner     // string: aligner to use
-    markdup     // string: markdup method to use
-    roi         // string: region of interest to use
-    genelists   // file: directory containing genelist bed files for coverage analysis
-
-    main:
-
-    //
-    // WORKFLOW: Run pipeline
-    //
-    PREPROCESSING(
-        samplesheet,
-        genomes,
-        aligner,
-        markdup,
-        roi,
-        genelists,
-    )
-
-    emit:
-    multiqc_report = PREPROCESSING.out.multiqc_report // channel: /path/to/multiqc_report.html
+output {
+    // TODO also add the RunInfo.xml file as output, needs a module update
+    demultiplex_interop { path "InterOp" }
+    demultiplex_reports { path { meta, report ->
+        report >> (meta.lane ? "Reports/LOO${meta.lane}/${report.name}" as String : "Reports/${report.name}")
+    } }
+    demultiplex_logs { path { meta, log ->
+        log >> (meta.lane ? "Logs/LOO${meta.lane}/${log.name}" as String : "Logs/${log.name}")
+    } }
 }
