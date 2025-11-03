@@ -64,14 +64,16 @@ workflow {
     )
 
     publish:
-    demultiplex_interop = PREPROCESSING.out.demultiplex_interop
+    demultiplex_interop = PREPROCESSING.out.demultiplex_interop.transpose(by:1)
     demultiplex_reports = PREPROCESSING.out.demultiplex_reports.map { meta, reports -> [ meta, files("${reports.toUri()}/*") ] }.transpose(by:1)
     demultiplex_logs    = PREPROCESSING.out.demultiplex_logs.map { meta, logs -> [ meta, files("${logs.toUri()}/*") ] }.transpose(by:1)
 }
 
 output {
     // TODO also add the RunInfo.xml file as output, needs a module update
-    demultiplex_interop { path "InterOp" }
+    demultiplex_interop { path { _meta, bin ->
+        bin >> "Interop/${bin.name}"
+    } }
     demultiplex_reports { path { meta, report ->
         report >> (meta.lane ? "Reports/LOO${meta.lane}/${report.name}" as String : "Reports/${report.name}")
     } }
