@@ -13,11 +13,11 @@ workflow BCL_DEMULTIPLEX {
         demultiplexer   // bclconvert or bcl2fastq
 
     main:
-        ch_versions      = Channel.empty()
-        ch_fastq         = Channel.empty()
-        ch_reports       = Channel.empty()
-        ch_stats         = Channel.empty()
-        ch_interop       = Channel.empty()
+        ch_versions      = channel.empty()
+        ch_fastq         = channel.empty()
+        ch_reports       = channel.empty()
+        ch_stats         = channel.empty()
+        ch_interop       = channel.empty()
         ch_logs          = channel.empty()
 
         // Split flowcells into separate channels containing run as tar and run as path
@@ -122,9 +122,9 @@ workflow BCL_DEMULTIPLEX {
             meta.single_end = fastq.size() == 1
             return [meta, fastq.flatten()]
         }
-        .branch {
-            fastq       : it[0].empty == false
-            empty_fastq : it[0].empty == true
+        .branch { meta, _fastq ->
+            fastq       : meta.empty == false
+            empty_fastq : meta.empty == true
         }
         .set{ch_fastq_with_meta}
 
