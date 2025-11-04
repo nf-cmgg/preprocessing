@@ -1,114 +1,231 @@
 {
     "Bam QC - HSmetrics": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+            {
+                "picard_hsmetrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.CollectHsMetrics.coverage_metrics"
+                    ]
+                ],
+                "picard_multiplemetrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.CollectMultipleMetrics.alignment_summary_metrics",
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle_metrics",
+                            "test.CollectMultipleMetrics.insert_size_metrics",
+                            "test.CollectMultipleMetrics.quality_by_cycle_metrics",
+                            "test.CollectMultipleMetrics.quality_distribution_metrics"
+                        ]
+                    ]
+                ],
+                "picard_multiplemetrics_pdf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle.pdf",
+                            "test.CollectMultipleMetrics.insert_size_histogram.pdf",
+                            "test.CollectMultipleMetrics.quality_by_cycle.pdf",
+                            "test.CollectMultipleMetrics.quality_distribution.pdf",
+                            "test.CollectMultipleMetrics.read_length_histogram.pdf"
+                        ]
+                    ]
+                ],
+                "picard_wgsmetrics": [
+                    
+                ],
+                "samtools_flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
+                    ]
+                ],
+                "samtools_idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
+                    ]
+                ],
+                "samtools_stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1e3d06d4435935cb6c01c1d94dad41c3",
+                    "versions.yml:md5,25efd393aac661d8cb2aa8669127abac",
+                    "versions.yml:md5,28cad528cb128dd7bdad050758f1801c",
+                    "versions.yml:md5,ebcad29c0749995f2306fbcf31b03c8c",
+                    "versions.yml:md5,ff0b9222ca016f9d2a7fa1d24010eccf"
                 ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
-                ]
-            ],
-            "test.CollectMultipleMetrics.alignment_summary_metrics",
-            "test.CollectHsMetrics.coverage_metrics"
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2024-11-19T15:23:54.440455"
+        "timestamp": "2025-11-04T14:17:45.293786329"
     },
     "Bam QC - Samtools": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+            {
+                "picard_hsmetrics": [
+                    
+                ],
+                "picard_multiplemetrics": [
+                    
+                ],
+                "picard_multiplemetrics_pdf": [
+                    
+                ],
+                "picard_wgsmetrics": [
+                    
+                ],
+                "samtools_flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
+                    ]
+                ],
+                "samtools_idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
+                    ]
+                ],
+                "samtools_stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1e3d06d4435935cb6c01c1d94dad41c3",
+                    "versions.yml:md5,28cad528cb128dd7bdad050758f1801c",
+                    "versions.yml:md5,ff0b9222ca016f9d2a7fa1d24010eccf"
                 ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
-                ]
-            ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2024-11-19T15:25:06.200354"
+        "timestamp": "2025-11-04T14:19:09.897986912"
     },
     "Bam QC - WGSmetrics": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+            {
+                "picard_hsmetrics": [
+                    
+                ],
+                "picard_multiplemetrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.CollectMultipleMetrics.alignment_summary_metrics",
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle_metrics",
+                            "test.CollectMultipleMetrics.insert_size_metrics",
+                            "test.CollectMultipleMetrics.quality_by_cycle_metrics",
+                            "test.CollectMultipleMetrics.quality_distribution_metrics"
+                        ]
+                    ]
+                ],
+                "picard_multiplemetrics_pdf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle.pdf",
+                            "test.CollectMultipleMetrics.insert_size_histogram.pdf",
+                            "test.CollectMultipleMetrics.quality_by_cycle.pdf",
+                            "test.CollectMultipleMetrics.quality_distribution.pdf",
+                            "test.CollectMultipleMetrics.read_length_histogram.pdf"
+                        ]
+                    ]
+                ],
+                "picard_wgsmetrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.CollectWgsMetrics.coverage_metrics"
+                    ]
+                ],
+                "samtools_flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
+                    ]
+                ],
+                "samtools_idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
+                    ]
+                ],
+                "samtools_stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1e3d06d4435935cb6c01c1d94dad41c3",
+                    "versions.yml:md5,25efd393aac661d8cb2aa8669127abac",
+                    "versions.yml:md5,28cad528cb128dd7bdad050758f1801c",
+                    "versions.yml:md5,5da695471744af2707c6864e2773aa27",
+                    "versions.yml:md5,ff0b9222ca016f9d2a7fa1d24010eccf"
                 ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
-                ]
-            ],
-            "test.CollectMultipleMetrics.alignment_summary_metrics",
-            "test.CollectWgsMetrics.coverage_metrics"
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2024-11-19T15:24:51.243661"
+        "timestamp": "2025-11-04T14:18:47.271352687"
     }
 }

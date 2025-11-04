@@ -32,11 +32,12 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                workflow.out.samtools_stats,
-                workflow.out.samtools_flagstat,
-                workflow.out.samtools_idxstats,
-                file(workflow.out.picard_multiplemetrics[0][1][0]).name,
-                file(workflow.out.picard_hsmetrics[0][1]).name,
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics"
+                ])
             ).match()
         }
 
@@ -65,11 +66,12 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                workflow.out.samtools_stats,
-                workflow.out.samtools_flagstat,
-                workflow.out.samtools_idxstats,
-                file(workflow.out.picard_multiplemetrics[0][1][0]).name,
-                file(workflow.out.picard_wgsmetrics[0][1]).name,
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics"
+                ])
             ).match()
         }
     }
@@ -97,9 +99,12 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                workflow.out.samtools_stats,
-                workflow.out.samtools_flagstat,
-                workflow.out.samtools_idxstats,
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics"
+                ])
             ).match()
         }
     }

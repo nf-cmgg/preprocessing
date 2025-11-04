@@ -1,115 +1,252 @@
 {
     "fastq to cram - stub": {
         "content": [
-            [
-                [
-                    "test.merged.cram",
-                    "test.merged.cram.crai"
+            {
+                "align_reports": [
+                    
+                ],
+                "cram_crai": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "genome_data": {
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                                },
+                                "id": "test",
+                                "sample_type": "DNA",
+                                "samplename": "test",
+                                "single_end": false
+                            }
+                        },
+                        "test.merged.cram",
+                        "test.merged.cram.crai"
+                    ]
+                ],
+                "sormadup_metrics": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
+                    "versions.yml:md5,d92f130d879deee51a23917c6e272233",
+                    "versions.yml:md5,d92f130d879deee51a23917c6e272233"
                 ]
-            ],
-            [
-                
-            ],
-            [
-                "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
-                "versions.yml:md5,d92f130d879deee51a23917c6e272233",
-                "versions.yml:md5,d92f130d879deee51a23917c6e272233"
-            ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-06-03T10:39:18.407178"
+        "timestamp": "2025-11-04T14:30:29.475396941"
     },
     "fastq to cram - bwa - bamsormadup": {
         "content": [
-            [
-                [
-                    "test.cram",
-                    "test.cram.crai"
+            {
+                "align_reports": [
+                    
+                ],
+                "cram_crai": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "genome_data": {
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                                },
+                                "id": "test",
+                                "sample_type": "DNA",
+                                "samplename": "test",
+                                "single_end": false
+                            }
+                        },
+                        "test.cram",
+                        "test.cram.crai"
+                    ]
+                ],
+                "sormadup_metrics": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test",
+                                "samplename": "test",
+                                "single_end": false,
+                                "sample_type": "DNA",
+                                "genome_data": {
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                                }
+                            }
+                        },
+                        "test.merged.metrics.txt:md5,4ee20f12cb4d6077479a08310c8f6c70"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7e9be834e78aaf958ee23618377d8da5",
+                    "versions.yml:md5,d8544811f6b511ef45e9c3547430a30d",
+                    "versions.yml:md5,d92f130d879deee51a23917c6e272233",
+                    "versions.yml:md5,d92f130d879deee51a23917c6e272233"
                 ]
-            ],
-            [
-                "test.merged.metrics.txt:md5,4ee20f12cb4d6077479a08310c8f6c70"
-            ],
-            [
-                "versions.yml:md5,d8544811f6b511ef45e9c3547430a30d",
-                "versions.yml:md5,d92f130d879deee51a23917c6e272233",
-                "versions.yml:md5,d92f130d879deee51a23917c6e272233"
-            ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-06-03T10:36:05.605497"
+        "timestamp": "2025-11-04T14:24:09.28415088"
     },
     "fastq to cram - bwa - samtools sormadup": {
         "content": [
-            [
-                [
-                    "test.merged.cram",
-                    "test.merged.cram.crai"
+            {
+                "align_reports": [
+                    
+                ],
+                "cram_crai": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "genome_data": {
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                                },
+                                "id": "test",
+                                "sample_type": "DNA",
+                                "samplename": "test",
+                                "single_end": false
+                            }
+                        },
+                        "test.merged.cram",
+                        "test.merged.cram.crai"
+                    ]
+                ],
+                "sormadup_metrics": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test",
+                                "samplename": "test",
+                                "single_end": false,
+                                "sample_type": "DNA",
+                                "genome_data": {
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                                }
+                            }
+                        },
+                        "test.merged.metrics:md5,6e4d03a56877997e0e035d267550e381"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7d966b1716b0f134534741313257f0ec",
+                    "versions.yml:md5,d92f130d879deee51a23917c6e272233",
+                    "versions.yml:md5,d92f130d879deee51a23917c6e272233"
                 ]
-            ],
-            [
-                "test.merged.metrics:md5,6e4d03a56877997e0e035d267550e381"
-            ],
-            [
-                "versions.yml:md5,7d966b1716b0f134534741313257f0ec",
-                "versions.yml:md5,d92f130d879deee51a23917c6e272233",
-                "versions.yml:md5,d92f130d879deee51a23917c6e272233"
-            ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-06-03T10:38:15.994769"
+        "timestamp": "2025-11-04T14:28:32.155644934"
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
-            [
-                [
-                    "test.cram",
-                    "test.cram.crai"
+            {
+                "align_reports": [
+                    
+                ],
+                "cram_crai": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "genome_data": {
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                                },
+                                "id": "test",
+                                "sample_type": "RNA",
+                                "samplename": "test",
+                                "single_end": false
+                            }
+                        },
+                        "test.cram",
+                        "test.cram.crai"
+                    ]
+                ],
+                "sormadup_metrics": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test",
+                                "samplename": "test",
+                                "single_end": false,
+                                "sample_type": "RNA",
+                                "genome_data": {
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                                }
+                            }
+                        },
+                        "test.merged.metrics.txt:md5,641527401576375d7c0b0b54fbaf63ab"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7e9be834e78aaf958ee23618377d8da5",
+                    "versions.yml:md5,d8544811f6b511ef45e9c3547430a30d"
                 ]
-            ],
-            [
-                "test.merged.metrics.txt:md5,641527401576375d7c0b0b54fbaf63ab"
-            ],
-            [
-                "versions.yml:md5,d8544811f6b511ef45e9c3547430a30d"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
-        },
-        "timestamp": "2024-07-16T08:41:12.044485"
-    },
-    "fastq to cram - bwa - samtools sort": {
-        "content": [
-            [
-                [
-                    "test.merged.cram",
-                    "test.merged.cram.crai"
-                ]
-            ],
-            [
-                
-            ],
-            [
-                "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
-                "versions.yml:md5,d92f130d879deee51a23917c6e272233",
-                "versions.yml:md5,d92f130d879deee51a23917c6e272233"
-            ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-06-03T10:38:46.909512"
+        "timestamp": "2025-11-04T14:27:31.44516813"
+    },
+    "fastq to cram - bwa - samtools sort": {
+        "content": [
+            {
+                "align_reports": [
+                    
+                ],
+                "cram_crai": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "genome_data": {
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                                },
+                                "id": "test",
+                                "sample_type": "DNA",
+                                "samplename": "test",
+                                "single_end": false
+                            }
+                        },
+                        "test.merged.cram",
+                        "test.merged.cram.crai"
+                    ]
+                ],
+                "sormadup_metrics": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,a7ccfeb53d42f57673ea59012c30e897",
+                    "versions.yml:md5,d92f130d879deee51a23917c6e272233",
+                    "versions.yml:md5,d92f130d879deee51a23917c6e272233"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-04T14:29:30.443653387"
     }
 }
