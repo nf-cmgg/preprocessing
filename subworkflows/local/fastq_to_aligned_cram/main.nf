@@ -25,7 +25,7 @@ workflow FASTQ_TO_CRAM {
     main:
 
     ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
+    ch_sormadup_metrics = Channel.empty()
 
     /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,21 +99,13 @@ workflow FASTQ_TO_CRAM {
         // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
         BIOBAMBAM_BAMSORMADUP(ch_bam_fasta)
         ch_markdup_index = ch_markdup_index.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index, failOnMismatch: true, failOnDuplicate: true))
-        ch_multiqc_files = ch_multiqc_files.mix(
-            BIOBAMBAM_BAMSORMADUP.out.metrics.map { _meta, metrics ->
-                return metrics
-            }
-        )
+        ch_sormadup_metrics = ch_sormadup_metrics.mix(BIOBAMBAM_BAMSORMADUP.out.metrics)
         ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions.first())
     }
     else if (markdup == "samtools") {
         SAMTOOLS_SORMADUP(ch_bam_fasta)
         ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORMADUP.out.cram.join(SAMTOOLS_SORMADUP.out.crai, failOnMismatch: true, failOnDuplicate: true))
-        ch_multiqc_files = ch_multiqc_files.mix(
-            SAMTOOLS_SORMADUP.out.metrics.map { _meta, metrics ->
-                return metrics
-            }
-        )
+        ch_sormadup_metrics = ch_sormadup_metrics.mix(SAMTOOLS_SORMADUP.out.metrics)
         ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions.first())
     }
     else if (markdup == "false" || markdup == false) {
@@ -160,7 +152,8 @@ workflow FASTQ_TO_CRAM {
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
     emit:
-    cram_crai     = ch_cram_crai
-    multiqc_files = ch_multiqc_files
-    versions      = ch_versions
+    cram_crai           = ch_cram_crai
+    sormadup_metrics    = ch_sormadup_metrics
+    align_reports       = FASTQ_ALIGN_DNA.out.reports
+    versions            = ch_versions
 }
