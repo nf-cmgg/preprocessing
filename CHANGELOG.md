@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## dev
 
+- Update the output handling to use the new workflow output definitions.
+
 ## v2.0.6
 
 - Update bash options for nextflow version 25.04.2
