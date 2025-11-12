@@ -27,8 +27,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                file(workflow.out.cram[0][1]).name,
-                workflow.out.versions
+                sanitizeOutput(workflow.out, unstableKeys:["cram"])
             ).match()
         }
 

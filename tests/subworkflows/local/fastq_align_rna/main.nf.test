@@ -39,9 +39,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                workflow.out.bam.collect { it.collect { it instanceof Map ? it : file(it).name } },
-                workflow.out.reports.collect { it.collect { it instanceof Map ? it : file(it).name } },
-                workflow.out.versions
+                sanitizeOutput(workflow.out, unstableKeys:["bam", "reports"])
             ).match()
         }
 

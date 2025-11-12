@@ -274,7 +274,7 @@ workflow PREPROCESSING {
         markdup,
     )
 
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.multiqc_files)
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics.map { _meta, metrics -> metrics })
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
 
@@ -322,7 +322,21 @@ workflow PREPROCESSING {
         }
         .set { ch_cram_crai_fasta_fai_roi }
 
-    if (params.run_coverage == true || params.run_coverage == "true") {
+    def mosdepth_global_out = channel.empty()
+    def mosdepth_summary_out = channel.empty()
+    def mosdepth_regions_out = channel.empty()
+    def mosdepth_per_base_d4_out = channel.empty()
+    def mosdepth_per_base_bed_out = channel.empty()
+    def mosdepth_per_base_csi_out = channel.empty()
+    def mosdepth_regions_bed_out = channel.empty()
+    def mosdepth_regions_csi_out = channel.empty()
+    def mosdepth_quantized_bed_out = channel.empty()
+    def mosdepth_quantized_csi_out = channel.empty()
+    def mosdepth_thresholds_bed_out = channel.empty()
+    def mosdepth_thresholds_csi_out = channel.empty()
+    def samtools_coverage_out = channel.empty()
+    def panelcoverage_out = channel.empty()
+    if (params.run_coverage) {
         COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
         ch_multiqc_files = ch_multiqc_files.mix(
             COVERAGE.out.mosdepth_summary.map { _meta, txt ->
@@ -338,6 +352,20 @@ workflow PREPROCESSING {
                 return txt
             },
         )
+        mosdepth_global_out = COVERAGE.out.mosdepth_global
+        mosdepth_summary_out = COVERAGE.out.mosdepth_summary
+        mosdepth_regions_out = COVERAGE.out.mosdepth_regions
+        mosdepth_per_base_d4_out = COVERAGE.out.mosdepth_per_base_d4
+        mosdepth_per_base_bed_out = COVERAGE.out.mosdepth_per_base_bed
+        mosdepth_per_base_csi_out = COVERAGE.out.mosdepth_per_base_csi
+        mosdepth_regions_bed_out = COVERAGE.out.mosdepth_regions_bed
+        mosdepth_regions_csi_out = COVERAGE.out.mosdepth_regions_csi
+        mosdepth_quantized_bed_out = COVERAGE.out.mosdepth_quantized_bed
+        mosdepth_quantized_csi_out = COVERAGE.out.mosdepth_quantized_csi
+        mosdepth_thresholds_bed_out = COVERAGE.out.mosdepth_thresholds_bed
+        mosdepth_thresholds_csi_out = COVERAGE.out.mosdepth_thresholds_csi
+        samtools_coverage_out = COVERAGE.out.samtools_coverage
+        panelcoverage_out = COVERAGE.out.panelcoverage
         ch_versions = ch_versions.mix(COVERAGE.out.versions)
     }
 
@@ -446,7 +474,40 @@ workflow PREPROCESSING {
     )
 
     emit:
+    demultiplex_interop = BCL_DEMULTIPLEX.out.interop
+    demultiplex_reports = BCL_DEMULTIPLEX.out.reports
+    demultiplex_logs = BCL_DEMULTIPLEX.out.logs
+    fastp_json = FASTP.out.json
+    fastp_html = FASTP.out.html
+    ucrams = FASTQ_TO_UCRAM.out.cram
+    crams = FASTQ_TO_CRAM.out.cram_crai
+    align_reports = FASTQ_TO_CRAM.out.align_reports
+    sormadup_metrics = FASTQ_TO_CRAM.out.sormadup_metrics
+    mosdepth_global = mosdepth_global_out
+    mosdepth_summary = mosdepth_summary_out
+    mosdepth_regions = mosdepth_regions_out
+    mosdepth_per_base_d4 = mosdepth_per_base_d4_out
+    mosdepth_per_base_bed = mosdepth_per_base_bed_out
+    mosdepth_per_base_csi = mosdepth_per_base_csi_out
+    mosdepth_regions_bed = mosdepth_regions_bed_out
+    mosdepth_regions_csi = mosdepth_regions_csi_out
+    mosdepth_quantized_bed = mosdepth_quantized_bed_out
+    mosdepth_quantized_csi = mosdepth_quantized_csi_out
+    mosdepth_thresholds_bed = mosdepth_thresholds_bed_out
+    mosdepth_thresholds_csi = mosdepth_thresholds_csi_out
+    samtools_coverage = samtools_coverage_out
+    panelcoverage = panelcoverage_out
+    samtools_stats = BAM_QC.out.samtools_stats
+    samtools_flagstat = BAM_QC.out.samtools_flagstat
+    samtools_idxstats = BAM_QC.out.samtools_idxstats
+    picard_multiplemetrics = BAM_QC.out.picard_multiplemetrics
+    picard_multiplemetrics_pdf = BAM_QC.out.picard_multiplemetrics_pdf
+    picard_wgsmetrics = BAM_QC.out.picard_wgsmetrics
+    picard_hsmetrics = BAM_QC.out.picard_hsmetrics
+    md5sums = MD5SUM.out.checksum
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    multiqc_data = MULTIQC.out.data
+    multiqc_plots = MULTIQC.out.plots
     versions       = ch_versions // channel: [ path(versions.yml) ]
 }
 

@@ -57,8 +57,18 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                file(workflow.out.multiqc_report[0][0]).name,
-                workflow.out.versions
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "multiqc_report",
+                    "multiqc_plots",
+                    "multiqc_data",
+                    "md5sums",
+                    "fastp_html",
+                    "crams",
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics"
+                ])
             ).match()
         }
     }
@@ -113,8 +123,18 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                file(workflow.out.multiqc_report[0][0]).name,
-                workflow.out.versions
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "multiqc_report",
+                    "multiqc_plots",
+                    "multiqc_data",
+                    "md5sums",
+                    "fastp_html",
+                    "crams",
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics"
+                ])
             ).match()
         }
     }
@@ -172,8 +192,18 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                file(workflow.out.multiqc_report[0][0]).name,
-                workflow.out.versions
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "multiqc_report",
+                    "multiqc_plots",
+                    "multiqc_data",
+                    "md5sums",
+                    "fastp_html",
+                    "crams",
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics"
+                ])
             ).match()
         }
     }

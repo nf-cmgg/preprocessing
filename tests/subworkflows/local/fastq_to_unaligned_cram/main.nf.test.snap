@@ -1,16 +1,30 @@
 {
     "fastq to unaligned cram": {
         "content": [
-            "test.unaligned.cram",
-            [
-                "versions.yml:md5,422c9b3605121c3528ee755bbdb12a85",
-                "versions.yml:md5,f494e9f15ef064e11d31abca2f2ba51c"
-            ]
+            {
+                "cram": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test.unaligned",
+                                "samplename": "test",
+                                "single_end": false
+                            }
+                        },
+                        "test.unaligned.cram"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,422c9b3605121c3528ee755bbdb12a85",
+                    "versions.yml:md5,f494e9f15ef064e11d31abca2f2ba51c"
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2024-11-19T15:29:54.134408"
+        "timestamp": "2025-11-04T14:30:55.301756415"
     }
 }

@@ -56,10 +56,19 @@ workflow COVERAGE {
     ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)
 
     emit:
-    mosdepth_summary  = MOSDEPTH.out.summary_txt
-    mosdepth_global   = MOSDEPTH.out.global_txt
-    mosdepth_regions  = MOSDEPTH.out.regions_txt
-    samtools_coverage = SAMTOOLS_COVERAGE.out.coverage
-    panelcoverage     = PANELCOVERAGE.out.regiondist
-    versions          = ch_versions
+    mosdepth_global             = MOSDEPTH.out.global_txt
+    mosdepth_summary            = MOSDEPTH.out.summary_txt
+    mosdepth_regions            = MOSDEPTH.out.regions_txt
+    mosdepth_per_base_d4        = MOSDEPTH.out.per_base_d4
+    mosdepth_per_base_bed       = MOSDEPTH.out.per_base_bed
+    mosdepth_per_base_csi       = MOSDEPTH.out.per_base_csi
+    mosdepth_regions_bed        = MOSDEPTH.out.regions_bed
+    mosdepth_regions_csi        = MOSDEPTH.out.regions_csi
+    mosdepth_quantized_bed      = MOSDEPTH.out.quantized_bed
+    mosdepth_quantized_csi      = MOSDEPTH.out.quantized_csi
+    mosdepth_thresholds_bed     = MOSDEPTH.out.thresholds_bed
+    mosdepth_thresholds_csi     = MOSDEPTH.out.thresholds_csi
+    samtools_coverage           = SAMTOOLS_COVERAGE.out.coverage
+    panelcoverage               = PANELCOVERAGE.out.regiondist
+    versions                    = ch_versions
 }

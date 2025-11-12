@@ -1,71 +1,73 @@
 {
     "fastq align rna - star": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "samplename": "test",
-                        "single_end": false,
-                        "sample_type": "RNA",
-                        "genome": {
-                            "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                            "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
-                        }
-                    },
-                    "test.Aligned.out.bam"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "samplename": "test",
-                        "single_end": false,
-                        "sample_type": "RNA",
-                        "genome": {
-                            "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                            "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
-                        }
-                    },
-                    "test.Log.final.out"
+            {
+                "bam": [
+                    [
+                        {
+                            "genome": {
+                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                            },
+                            "id": "test",
+                            "sample_type": "RNA",
+                            "samplename": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.out.bam"
+                    ]
                 ],
-                [
-                    {
-                        "id": "test",
-                        "samplename": "test",
-                        "single_end": false,
-                        "sample_type": "RNA",
-                        "genome": {
-                            "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                            "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
-                        }
-                    },
-                    "test.Log.out"
+                "reports": [
+                    [
+                        {
+                            "genome": {
+                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                            },
+                            "id": "test",
+                            "sample_type": "RNA",
+                            "samplename": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ],
+                    [
+                        {
+                            "genome": {
+                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                            },
+                            "id": "test",
+                            "sample_type": "RNA",
+                            "samplename": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ],
+                    [
+                        {
+                            "genome": {
+                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                            },
+                            "id": "test",
+                            "sample_type": "RNA",
+                            "samplename": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
                 ],
-                [
-                    {
-                        "id": "test",
-                        "samplename": "test",
-                        "single_end": false,
-                        "sample_type": "RNA",
-                        "genome": {
-                            "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                            "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
-                        }
-                    },
-                    "test.Log.progress.out"
+                "versions": [
+                    "versions.yml:md5,a08c174f2d393f0b39c2cfe003ffafb9"
                 ]
-            ],
-            [
-                "versions.yml:md5,a08c174f2d393f0b39c2cfe003ffafb9"
-            ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.1",
-            "nextflow": "24.10.3"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-01-14T10:45:55.903470736"
+        "timestamp": "2025-11-04T14:22:48.650056385"
     },
     "fastq align rna - unknown aligner": {
         "content": [

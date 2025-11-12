@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "25.04.0"
+          - "25.10.0"
         tags:
           - "modules/local/panelcoverage"
           - "subworkflows/local/bam_qc"

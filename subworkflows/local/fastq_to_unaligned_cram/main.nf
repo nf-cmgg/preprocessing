@@ -6,7 +6,6 @@
 // MODULES
 include { SAMTOOLS_CAT    } from '../../../modules/nf-core/samtools/cat/main'
 include { SAMTOOLS_IMPORT } from "../../../modules/nf-core/samtools/import/main"
-include { MD5SUM          } from "../../../modules/nf-core/md5sum/main"
 
 workflow FASTQ_TO_UCRAM {
     take:
