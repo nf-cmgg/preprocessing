@@ -16,18 +16,25 @@ lint:
     - .github/ISSUE_TEMPLATE/bug_report.yml
     - docs/README.md
     - LICENSE
+  merge_markers:
+    - bin/cmgg_genelists
   multiqc_config:
     - report_comment
   nextflow_config:
     - manifest.name
     - manifest.homePage
-  subworkflow_changes: false
   template_strings:
     - bin/cmgg_genelists
-  merge_markers:
-    - bin/cmgg_genelists
+nf_core_version: 3.4.1
 repository_type: pipeline
 template:
-  prefix: nf-cmgg
-  skip: []
-nf_core_version: 3.1.1
+  author: Matthias De Smet, Nicolas Vannieuwkerke
+  description: Demultiplexing, adapter trimming, alignment, and coverage calculation
+    for NGS data.
+  force: false
+  is_nfcore: false
+  name: preprocessing
+  org: nf-cmgg
+  outdir: .
+  skip_features: []
+  version: 2.1.0dev
