@@ -20,10 +20,10 @@ workflow FASTQ_ALIGN_DNA {
 
     main:
 
-        ch_bam_index    = Channel.empty()
-        ch_bam          = Channel.empty()
-        ch_reports      = Channel.empty()
-        ch_versions     = Channel.empty()
+        ch_bam_index    = channel.empty()
+        ch_bam          = channel.empty()
+        ch_reports      = channel.empty()
+        ch_versions     = channel.empty()
 
         ch_reads_aligner_index_fasta.branch { meta, reads, aligner, index, fasta ->
             bowtie2 : aligner == 'bowtie2'

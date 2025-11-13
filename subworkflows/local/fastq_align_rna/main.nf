@@ -12,9 +12,9 @@ workflow FASTQ_ALIGN_RNA {
     ch_reads_aligner_index_gtf // channel: [mandatory] reads, aligner, index, gtf
 
     main:
-    ch_bam = Channel.empty()
-    ch_reports = Channel.empty()
-    ch_versions = Channel.empty()
+    ch_bam = channel.empty()
+    ch_reports = channel.empty()
+    ch_versions = channel.empty()
 
     ch_reads_aligner_index_gtf
         .branch { meta, reads, aligner, index, gtf ->

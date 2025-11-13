@@ -24,8 +24,8 @@ workflow FASTQ_TO_CRAM {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_sormadup_metrics = Channel.empty()
+    ch_versions = channel.empty()
+    ch_sormadup_metrics = channel.empty()
 
     /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -93,7 +93,7 @@ workflow FASTQ_TO_CRAM {
         .set { ch_bam_fasta }
     ch_bam_fasta.dump(tag: "FASTQ_TO_CRAM: aligned bam per sample", pretty: true)
 
-    ch_markdup_index = Channel.empty()
+    ch_markdup_index = channel.empty()
 
     if (markdup == "bamsormadup") {
         // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
