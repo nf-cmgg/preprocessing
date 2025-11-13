@@ -39,8 +39,8 @@ workflow COVERAGE {
                 genelists = [genelists]
             }
             def filtered_genelists = meta.tag.toLowerCase() == "seqcap"
-                ? genelists.findAll { it.name.toLowerCase().contains("seqcap") }
-                : genelists.findAll { !it.name.toLowerCase().contains("seqcap") }
+                ? genelists.findAll { genelist -> genelist.name.toLowerCase().contains("seqcap") }
+                : genelists.findAll { genelist -> !genelist.name.toLowerCase().contains("seqcap") }
 
             if (filtered_genelists.size() > 0) {
                 return [
