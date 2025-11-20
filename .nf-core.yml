@@ -25,6 +25,9 @@ lint:
     - manifest.homePage
   template_strings:
     - bin/cmgg_genelists
+  nf_test_content: false
+  subworkflow_changes:
+    - fastq_align_dna
 nf_core_version: 3.4.1
 repository_type: pipeline
 template:
