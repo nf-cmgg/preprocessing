@@ -14,7 +14,7 @@ workflow BAM_QC {
     disable_picard                // boolean
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     ch_bam_bai_roi_fasta_fai_dict
         .map { meta, bam, bai, _roi, fasta, _fai, _dict ->

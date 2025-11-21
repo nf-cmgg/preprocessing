@@ -13,7 +13,7 @@ workflow FASTQ_TO_UCRAM {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     /*
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -14,6 +14,7 @@ nextflow_pipeline {
                 input = "${projectDir}/tests/inputs/fastq.yml"
                 aligner = "bwamem"
                 igenomes_base = "s3://reference-data/genomes"
+                outdir = "$outputDir"
             }
         }
 
@@ -30,6 +31,7 @@ nextflow_pipeline {
                 input = "${projectDir}/tests/inputs/flowcell.yml"
                 aligner = "bwamem"
                 igenomes_base = "s3://reference-data/genomes"
+                outdir = "$outputDir"
             }
         }
 

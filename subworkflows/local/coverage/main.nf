@@ -12,8 +12,8 @@ workflow COVERAGE {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_coverageqc_files = Channel.empty()
+    ch_versions = channel.empty()
+    ch_coverageqc_files = channel.empty()
 
     MOSDEPTH(
         ch_meta_cram_crai_fasta_fai_roi.map { meta, cram, crai, fasta, _fai, roi ->
@@ -39,8 +39,8 @@ workflow COVERAGE {
                 genelists = [genelists]
             }
             def filtered_genelists = meta.tag.toLowerCase() == "seqcap"
-                ? genelists.findAll { it.name.toLowerCase().contains("seqcap") }
-                : genelists.findAll { !it.name.toLowerCase().contains("seqcap") }
+                ? genelists.findAll { genelist -> genelist.name.toLowerCase().contains("seqcap") }
+                : genelists.findAll { genelist -> !genelist.name.toLowerCase().contains("seqcap") }
 
             if (filtered_genelists.size() > 0) {
                 return [

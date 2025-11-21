@@ -7,8 +7,6 @@
 ----------------------------------------------------------------------------------------
 */
 
-nextflow.enable.dsl = 2
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
@@ -36,6 +34,9 @@ workflow {
         args,
         params.outdir,
         params.input,
+        params.help,
+        params.help_full,
+        params.show_hidden,
     )
 
     //
