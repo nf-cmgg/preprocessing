@@ -66,8 +66,8 @@ workflow {
 
     publish:
     demultiplex_interop = PREPROCESSING.out.demultiplex_interop.transpose(by:1)
-    demultiplex_reports = PREPROCESSING.out.demultiplex_reports.map { meta, reports -> [ meta, files("${reports.toUri()}/*") ] }.transpose(by:1)
-    demultiplex_logs    = PREPROCESSING.out.demultiplex_logs.map { meta, logs -> [ meta, files("${logs.toUri()}/*") ] }.transpose(by:1)
+    demultiplex_reports = PREPROCESSING.out.demultiplex_reports.transpose(by:1)
+    demultiplex_logs    = PREPROCESSING.out.demultiplex_logs.transpose(by:1)
     fastp_json          = PREPROCESSING.out.fastp_json
     fastp_html          = PREPROCESSING.out.fastp_html
     ucrams              = PREPROCESSING.out.ucrams
@@ -107,11 +107,11 @@ output {
         bin >> "Interop/${bin.name}"
     } }
     demultiplex_reports { path { meta, report ->
-        def out_path = meta.lane ? "Reports/LOO${meta.lane}/${report.name}" as String : "Reports/${report.name}"
+        def out_path = meta.lane ? "Reports/L00${meta.lane}/${report.name}" as String : "Reports/${report.name}"
         report >> out_path
     } }
     demultiplex_logs { path { meta, log ->
-        def out_path = meta.lane ? "Logs/LOO${meta.lane}/${log.name}" as String : "Logs/${log.name}"
+        def out_path = meta.lane ? "Logs/L00${meta.lane}/${log.name}" as String : "Logs/${log.name}"
         log >> out_path
     } }
     fastp_json { path { meta, json ->
