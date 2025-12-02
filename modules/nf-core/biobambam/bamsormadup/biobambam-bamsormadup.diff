@@ -1,4 +1,4 @@
-Changes in module 'nf-core/biobambam/bamsormadup'
+Changes in component 'nf-core/biobambam/bamsormadup'
 'modules/nf-core/biobambam/bamsormadup/environment.yml' is unchanged
 'modules/nf-core/biobambam/bamsormadup/meta.yml' is unchanged
 Changes in 'biobambam/bamsormadup/main.nf':
