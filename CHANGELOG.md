@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.1.0dev
 
 - Update the output handling to use the new workflow output definitions.
+- Bump all modules to latest versions.
 
 ## v2.0.6
 
