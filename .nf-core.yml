@@ -38,5 +38,5 @@ template:
   name: preprocessing
   org: nf-cmgg
   outdir: .
-  skip_features: []
+  skip_features: ["fastqc"]
   version: 2.1.0dev
