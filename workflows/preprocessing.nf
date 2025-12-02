@@ -205,7 +205,7 @@ workflow PREPROCESSING {
     // MODULE: fastp
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], adapter_fasta, save_trimmed, save_merged)
-    FASTP(ch_fastq_per_sample, [], false, false, false)
+    FASTP(ch_fastq_per_sample.map{ meta, fastq -> return [meta, fastq, []] }, false, false, false)
     ch_multiqc_files = ch_multiqc_files.mix(
         FASTP.out.json.map { _meta, json ->
             return json

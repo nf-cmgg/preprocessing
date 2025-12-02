@@ -47,7 +47,7 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "d9ec4ef289ad39b8a662a7a12be50409b11df84b",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/fastp/fastp.diff"
                     },
@@ -156,7 +156,7 @@
                     "strobealign": {
                         "branch": "master",
                         "git_sha": "d5cc72b63c4e1565cb66e83f0577b04c0bb54d5c",
-                        "installed_by": ["_", "a", "d", "f", "g", "i", "l", "n", "q", "s", "t"]
+                        "installed_by": ["fastq_align_dna", "modules"]
                     }
                 }
             },
