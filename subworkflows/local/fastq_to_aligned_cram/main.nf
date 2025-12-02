@@ -110,10 +110,9 @@ workflow FASTQ_TO_CRAM {
     }
     else if (markdup == "false" || markdup == false) {
         // Merge bam files and compress
-        // SAMTOOLS_SORT([meta, [bam, bam], fasta])
-        SAMTOOLS_SORT(ch_bam_fasta)
+        // SAMTOOLS_SORT([meta, [bam, bam], fasta],index_format)
+        SAMTOOLS_SORT(ch_bam_fasta, "crai")
         ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch: true, failOnDuplicate: true))
-        ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
     }
     else {
         error("markdup: ${markdup} not supported")
