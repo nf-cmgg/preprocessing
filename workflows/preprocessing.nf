@@ -205,7 +205,7 @@ workflow PREPROCESSING {
     // MODULE: fastp
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], adapter_fasta, save_trimmed, save_merged)
-    FASTP(ch_fastq_per_sample, [], false, false, false)
+    FASTP(ch_fastq_per_sample.map{ meta, fastq -> return [meta, fastq, []] }, false, false, false)
     ch_multiqc_files = ch_multiqc_files.mix(
         FASTP.out.json.map { _meta, json ->
             return json
@@ -446,6 +446,32 @@ workflow PREPROCESSING {
     //
     // Collate and save software versions
     //
+    def topic_versions = Channel.topic("versions")
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+        }
+        .groupTuple(by:0)
+        .map { process, tool_versions ->
+            tool_versions.unique().sort()
+            "${process}:\n${tool_versions.join('\n')}"
+        }
+
+    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+        .mix(topic_versions_string)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_cmgg_preprocessing_software_mqc_versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
+
     softwareVersionsToYAML(ch_versions)
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'preprocessing_software_mqc_versions.yml', sort: true, newLine: true)
         .set { ch_collated_versions }

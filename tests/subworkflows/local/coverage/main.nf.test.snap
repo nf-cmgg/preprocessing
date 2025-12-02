@@ -49,9 +49,9 @@
                     ]
                 ],
                 "14": [
-                    "versions.yml:md5,2d22ebfca674911d28ac60f352a98b1b",
+                    "versions.yml:md5,67ac37f5eff6c19b8c605a2258aa721c",
                     "versions.yml:md5,731a006ffa265ac74ad677b4e5a68640",
-                    "versions.yml:md5,d7c2bc4717e6518d6ce017a70a3f1df0"
+                    "versions.yml:md5,8d8a3cea555f0b04692395a47351d7ef"
                 ],
                 "2": [
                     [
@@ -123,7 +123,7 @@
                             "single_end": false,
                             "tag": "WES"
                         },
-                        "test.quantized.bed.gz.csi:md5,39f0a425a3f11134e247141c0890fa89"
+                        "test.quantized.bed.gz.csi:md5,22e9d1096b7afd3d628526c831b26397"
                     ]
                 ],
                 "mosdepth_global": [
@@ -176,7 +176,7 @@
                             "single_end": false,
                             "tag": "WES"
                         },
-                        "test.quantized.bed.gz.csi:md5,39f0a425a3f11134e247141c0890fa89"
+                        "test.quantized.bed.gz.csi:md5,22e9d1096b7afd3d628526c831b26397"
                     ]
                 ],
                 "mosdepth_regions": [
@@ -246,17 +246,17 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2d22ebfca674911d28ac60f352a98b1b",
+                    "versions.yml:md5,67ac37f5eff6c19b8c605a2258aa721c",
                     "versions.yml:md5,731a006ffa265ac74ad677b4e5a68640",
-                    "versions.yml:md5,d7c2bc4717e6518d6ce017a70a3f1df0"
+                    "versions.yml:md5,8d8a3cea555f0b04692395a47351d7ef"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T14:20:02.213734734"
+        "timestamp": "2025-12-02T12:34:24.897893"
     },
     "Coverage - seqcap": {
         "content": [
@@ -301,8 +301,8 @@
                     
                 ],
                 "14": [
-                    "versions.yml:md5,2d22ebfca674911d28ac60f352a98b1b",
-                    "versions.yml:md5,d7c2bc4717e6518d6ce017a70a3f1df0"
+                    "versions.yml:md5,67ac37f5eff6c19b8c605a2258aa721c",
+                    "versions.yml:md5,8d8a3cea555f0b04692395a47351d7ef"
                 ],
                 "2": [
                     [
@@ -374,7 +374,7 @@
                             "single_end": false,
                             "tag": "seqcap"
                         },
-                        "test.quantized.bed.gz.csi:md5,39f0a425a3f11134e247141c0890fa89"
+                        "test.quantized.bed.gz.csi:md5,22e9d1096b7afd3d628526c831b26397"
                     ]
                 ],
                 "mosdepth_global": [
@@ -427,7 +427,7 @@
                             "single_end": false,
                             "tag": "seqcap"
                         },
-                        "test.quantized.bed.gz.csi:md5,39f0a425a3f11134e247141c0890fa89"
+                        "test.quantized.bed.gz.csi:md5,22e9d1096b7afd3d628526c831b26397"
                     ]
                 ],
                 "mosdepth_regions": [
@@ -490,15 +490,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2d22ebfca674911d28ac60f352a98b1b",
-                    "versions.yml:md5,d7c2bc4717e6518d6ce017a70a3f1df0"
+                    "versions.yml:md5,67ac37f5eff6c19b8c605a2258aa721c",
+                    "versions.yml:md5,8d8a3cea555f0b04692395a47351d7ef"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T14:19:32.672589279"
+        "timestamp": "2025-12-02T12:34:05.200571"
     }
 }

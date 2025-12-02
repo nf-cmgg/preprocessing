@@ -55,7 +55,7 @@
                     "type": "string",
                     "default": "bowtie2",
                     "description": "Which aligner to use",
-                    "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "star"]
+                    "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star"]
                 },
                 "markdup": {
                     "type": "string",

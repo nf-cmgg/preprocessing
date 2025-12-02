@@ -1,11 +1,11 @@
-Changes in module 'nf-core/picard/collectmultiplemetrics'
+Changes in component 'nf-core/picard/collectmultiplemetrics'
 'modules/nf-core/picard/collectmultiplemetrics/environment.yml' is unchanged
 'modules/nf-core/picard/collectmultiplemetrics/meta.yml' is unchanged
 Changes in 'picard/collectmultiplemetrics/main.nf':
 --- modules/nf-core/picard/collectmultiplemetrics/main.nf
 +++ modules/nf-core/picard/collectmultiplemetrics/main.nf
 @@ -8,9 +8,7 @@
-         'biocontainers/picard:3.3.0--hdfd78af_0' }"
+         'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6' }"
  
      input:
 -    tuple val(meta) , path(bam), path(bai)

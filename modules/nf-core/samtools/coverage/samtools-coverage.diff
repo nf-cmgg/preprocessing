@@ -1,11 +1,11 @@
-Changes in module 'nf-core/samtools/coverage'
+Changes in component 'nf-core/samtools/coverage'
 'modules/nf-core/samtools/coverage/environment.yml' is unchanged
 'modules/nf-core/samtools/coverage/meta.yml' is unchanged
 Changes in 'samtools/coverage/main.nf':
 --- modules/nf-core/samtools/coverage/main.nf
 +++ modules/nf-core/samtools/coverage/main.nf
 @@ -8,9 +8,7 @@
-         'biocontainers/samtools:1.21--h50ea8bc_0' }"
+         'biocontainers/samtools:1.22.1--h96c455f_0' }"
  
      input:
 -    tuple val(meta), path(input), path(input_index)
@@ -17,6 +17,5 @@ Changes in 'samtools/coverage/main.nf':
      tuple val(meta), path("*.txt"), emit: coverage
 
 'modules/nf-core/samtools/coverage/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/samtools/coverage/tests/tags.yml' is unchanged
 'modules/nf-core/samtools/coverage/tests/main.nf.test' is unchanged
 ************************************************************

@@ -23,7 +23,6 @@ workflow BAM_QC {
         .set { ch_bam_bai_fasta }
 
     SAMTOOLS_STATS(ch_bam_bai_fasta)
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
 
     ch_bam_bai_fasta
         .map { meta, bam, bai, _fasta ->
