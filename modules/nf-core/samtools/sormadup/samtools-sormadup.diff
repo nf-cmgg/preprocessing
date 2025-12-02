@@ -1,11 +1,11 @@
-Changes in module 'nf-core/samtools/sormadup'
+Changes in component 'nf-core/samtools/sormadup'
 'modules/nf-core/samtools/sormadup/environment.yml' is unchanged
 'modules/nf-core/samtools/sormadup/meta.yml' is unchanged
 Changes in 'samtools/sormadup/main.nf':
 --- modules/nf-core/samtools/sormadup/main.nf
 +++ modules/nf-core/samtools/sormadup/main.nf
 @@ -8,8 +8,7 @@
-         'biocontainers/samtools:1.21--h50ea8bc_0' }"
+         'biocontainers/samtools:1.22.1--h96c455f_0' }"
  
      input:
 -    tuple val(meta), path(input)
@@ -17,7 +17,6 @@ Changes in 'samtools/sormadup/main.nf':
 
 'modules/nf-core/samtools/sormadup/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/samtools/sormadup/tests/bam.config' is unchanged
-'modules/nf-core/samtools/sormadup/tests/tags.yml' is unchanged
 'modules/nf-core/samtools/sormadup/tests/cram.config' is unchanged
 'modules/nf-core/samtools/sormadup/tests/main.nf.test' is unchanged
 ************************************************************

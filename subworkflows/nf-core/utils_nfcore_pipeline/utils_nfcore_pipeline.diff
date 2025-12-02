@@ -1,0 +1,21 @@
+Changes in component 'nf-core/utils_nfcore_pipeline'
+'subworkflows/nf-core/utils_nfcore_pipeline/meta.yml' is unchanged
+Changes in 'utils_nfcore_pipeline/main.nf':
+--- subworkflows/nf-core/utils_nfcore_pipeline/main.nf
++++ subworkflows/nf-core/utils_nfcore_pipeline/main.nf
+@@ -98,7 +98,7 @@
+ // Get channel of software versions used in pipeline in YAML format
+ //
+ def softwareVersionsToYAML(ch_versions) {
+-    return ch_versions.unique().map { version -> processVersionsFromYAML(version) }.unique().mix(channel.of(workflowVersionToYAML()))
++    return ch_versions.unique().map { version -> processVersionsFromYAML(version) }.unique().mix(Channel.of(workflowVersionToYAML()))
+ }
+ 
+ //
+
+'subworkflows/nf-core/utils_nfcore_pipeline/tests/main.function.nf.test' is unchanged
+'subworkflows/nf-core/utils_nfcore_pipeline/tests/main.workflow.nf.test.snap' is unchanged
+'subworkflows/nf-core/utils_nfcore_pipeline/tests/main.function.nf.test.snap' is unchanged
+'subworkflows/nf-core/utils_nfcore_pipeline/tests/nextflow.config' is unchanged
+'subworkflows/nf-core/utils_nfcore_pipeline/tests/main.workflow.nf.test' is unchanged
+************************************************************

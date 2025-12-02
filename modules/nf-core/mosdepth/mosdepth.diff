@@ -1,11 +1,11 @@
-Changes in module 'nf-core/mosdepth'
+Changes in component 'nf-core/mosdepth'
 'modules/nf-core/mosdepth/environment.yml' is unchanged
 'modules/nf-core/mosdepth/meta.yml' is unchanged
 Changes in 'mosdepth/main.nf':
 --- modules/nf-core/mosdepth/main.nf
 +++ modules/nf-core/mosdepth/main.nf
 @@ -8,8 +8,7 @@
-         'biocontainers/mosdepth:0.3.8--hd299d5a_0'}"
+         'community.wave.seqera.io/library/mosdepth_htslib:0f58993cb6d93294'}"
  
      input:
 -    tuple val(meta),  path(bam), path(bai), path(bed)
@@ -18,7 +18,6 @@ Changes in 'mosdepth/main.nf':
 'modules/nf-core/mosdepth/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/mosdepth/tests/threshold.config' is unchanged
 'modules/nf-core/mosdepth/tests/quantized.config' is unchanged
-'modules/nf-core/mosdepth/tests/tags.yml' is unchanged
 'modules/nf-core/mosdepth/tests/main.nf.test' is unchanged
 'modules/nf-core/mosdepth/tests/window.config' is unchanged
 ************************************************************

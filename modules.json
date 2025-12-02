@@ -48,8 +48,7 @@
                     "fastp": {
                         "branch": "master",
                         "git_sha": "d9ec4ef289ad39b8a662a7a12be50409b11df84b",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/fastp/fastp.diff"
+                        "installed_by": ["modules"]
                     },
                     "md5sum": {
                         "branch": "master",
@@ -151,7 +150,8 @@
                     "strobealign": {
                         "branch": "master",
                         "git_sha": "d5cc72b63c4e1565cb66e83f0577b04c0bb54d5c",
-                        "installed_by": ["fastq_align_dna", "modules"]
+                        "installed_by": ["fastq_align_dna", "modules"],
+                        "patch": "modules/nf-core/strobealign/strobealign.diff"
                     }
                 }
             },
@@ -165,8 +165,7 @@
                     "fastq_align_dna": {
                         "branch": "master",
                         "git_sha": "070ddae7fb59384d3d85bf69eb9a1d71ab33ada9",
-                        "installed_by": ["subworkflows"],
-                        "patch": "subworkflows/nf-core/fastq_align_dna/fastq_align_dna.diff"
+                        "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
@@ -176,7 +175,8 @@
                     "utils_nfcore_pipeline": {
                         "branch": "master",
                         "git_sha": "271e7fc14eb1320364416d996fb077421f3faed2",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["subworkflows"],
+                        "patch": "subworkflows/nf-core/utils_nfcore_pipeline/utils_nfcore_pipeline.diff"
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",

@@ -1,11 +1,11 @@
-Changes in module 'nf-core/bwa/mem'
+Changes in component 'nf-core/bwa/mem'
 'modules/nf-core/bwa/mem/environment.yml' is unchanged
 'modules/nf-core/bwa/mem/meta.yml' is unchanged
 Changes in 'bwa/mem/main.nf':
 --- modules/nf-core/bwa/mem/main.nf
 +++ modules/nf-core/bwa/mem/main.nf
 @@ -8,9 +8,7 @@
-         'biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:1bd8542a8a0b42e0981337910954371d0230828e-0' }"
+         'community.wave.seqera.io/library/bwa_htslib_samtools:83b50ff84ead50d0' }"
  
      input:
 -    tuple val(meta) , path(reads)
@@ -17,6 +17,5 @@ Changes in 'bwa/mem/main.nf':
      output:
 
 'modules/nf-core/bwa/mem/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/bwa/mem/tests/tags.yml' is unchanged
 'modules/nf-core/bwa/mem/tests/main.nf.test' is unchanged
 ************************************************************

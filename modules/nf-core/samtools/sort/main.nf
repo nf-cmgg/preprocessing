@@ -9,6 +9,7 @@ process SAMTOOLS_SORT {
 
     input:
     tuple val(meta) , path(bam), path(fasta)
+    val index_format
 
     output:
     tuple val(meta), path("${prefix}.bam"),                 emit: bam,  optional: true
