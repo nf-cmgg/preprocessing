@@ -68,23 +68,22 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+                        "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,1e3d06d4435935cb6c01c1d94dad41c3",
-                    "versions.yml:md5,25efd393aac661d8cb2aa8669127abac",
-                    "versions.yml:md5,28cad528cb128dd7bdad050758f1801c",
-                    "versions.yml:md5,ebcad29c0749995f2306fbcf31b03c8c",
-                    "versions.yml:md5,ff0b9222ca016f9d2a7fa1d24010eccf"
+                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
+                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5",
+                    "versions.yml:md5,593804078c060457d011f7f6b650e500",
+                    "versions.yml:md5,f5507938ec419f55239e3faa9f99376f"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T14:17:45.293786329"
+        "timestamp": "2025-12-02T12:48:55.096074"
     },
     "Bam QC - Samtools": {
         "content": [
@@ -125,21 +124,20 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+                        "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,1e3d06d4435935cb6c01c1d94dad41c3",
-                    "versions.yml:md5,28cad528cb128dd7bdad050758f1801c",
-                    "versions.yml:md5,ff0b9222ca016f9d2a7fa1d24010eccf"
+                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
+                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T14:19:09.897986912"
+        "timestamp": "2025-12-02T12:50:04.027873"
     },
     "Bam QC - WGSmetrics": {
         "content": [
@@ -210,22 +208,21 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,18292ec37f6ff9eff458683e3abf638b"
+                        "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,1e3d06d4435935cb6c01c1d94dad41c3",
-                    "versions.yml:md5,25efd393aac661d8cb2aa8669127abac",
-                    "versions.yml:md5,28cad528cb128dd7bdad050758f1801c",
-                    "versions.yml:md5,5da695471744af2707c6864e2773aa27",
-                    "versions.yml:md5,ff0b9222ca016f9d2a7fa1d24010eccf"
+                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
+                    "versions.yml:md5,3d2d9acb75406ea94b547be23a45601b",
+                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5",
+                    "versions.yml:md5,f5507938ec419f55239e3faa9f99376f"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T14:18:47.271352687"
+        "timestamp": "2025-12-02T12:49:52.298773"
     }
 }
