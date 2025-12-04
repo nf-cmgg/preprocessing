@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The workflow now outputs data in a subdirectory per `library`, including a library specific MultiQC report
 - Drop support for unaligned cram outputs.
 - Add support for untrimmed fastq outputs for unsupported genomes or when aligner is set to `false`.
+- Drop support for globle `aligner` parameter. The aligner must now be specified per sample in the sample sheet or sample info.
 
 ## v2.0.6
 
