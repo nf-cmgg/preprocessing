@@ -39,17 +39,17 @@ TREATMENT_REP3,TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,GRCh38,WES
 
 Following table shows the fields that are used by the `fastq` samplesheet:
 
-| Column       | Description                                                                                                    | Required                                        |
-| ------------ | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `fastq_1`    | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz' | :heavy_check_mark:                              |
-| `fastq_2`    | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                   | :x:                                             |
-| `samplename` | The sample name corresponding to the sample in the Fastq file(s)                                               | :heavy_check_mark:                              |
-| `genome`     | The genome build to use for the analysis. Currently supports GRCh38, GRCm39 and GRCz11                         | :heavy_check_mark: (unless `organism` is given) |
-| `organism`   | Full name of the organism. Currently supports "Homo sapiens", "Mus musculus" and "Danio rerio"                 | :heavy_check_mark: (unless `genome` is given)   |
-| `library`    | Sample library name                                                                                            | :x:                                             |
-| `tag`        | The tag used by the sample. Can be one of WES, WGS or coPGT-M                                                  | :heavy_check_mark:                              |
-| `roi`        | The path to a BED file containing <b>R</b>egions <b>O</b>f <b>I</b>nterest for coverage analysis               | :x:                                             |
-| `aligner`    | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap and snap            | :x:                                             |
+| Column       | Description                                                                                                                                  | Required                                        |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `fastq_1`    | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                               | :heavy_check_mark:                              |
+| `fastq_2`    | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                 | :x:                                             |
+| `samplename` | The sample name corresponding to the sample in the Fastq file(s)                                                                             | :heavy_check_mark:                              |
+| `genome`     | The genome build to use for the analysis. Currently supports GRCh38, GRCm39 and GRCz11                                                       | :heavy_check_mark: (unless `organism` is given) |
+| `organism`   | Full name of the organism. Currently supports "Homo sapiens", "Mus musculus" and "Danio rerio"                                               | :heavy_check_mark: (unless `genome` is given)   |
+| `library`    | Sample library name                                                                                                                          | :x:                                             |
+| `tag`        | The tag used by the sample. Can be one of WES, WGS or coPGT-M                                                                                | :heavy_check_mark:                              |
+| `roi`        | The path to a BED file containing <b>R</b>egions <b>O</b>f <b>I</b>nterest for coverage analysis                                             | :x:                                             |
+| `aligner`    | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap, strobe and snap. set to `false` to output fastq. | :x:                                             |
 
 An [example samplesheet](../tests/inputs/fastq.yml) has been provided with the pipeline.
 
@@ -84,17 +84,17 @@ Sample1,test,Homo sapiens,WES
 
 Following table shows the fields that are used by the `flowcell` samplesheet:
 
-| Column          | Description                                                                                         | Required           |
-| --------------- | --------------------------------------------------------------------------------------------------- | ------------------ |
-| `samplename`    | The sample name                                                                                     | :heavy_check_mark: |
-| `library`       | The library name                                                                                    | :x:                |
-| `tag`           | Sample tag. Has to be one of these: WES, WGS, coPGT-M                                               | :heavy_check_mark: |
-| `organism`      | The organism of the sample. Has to be one of these: "Homo sapiens", "Mus musculus" or "Danio rerio" | :heavy_check_mark: |
-| `vivar_project` | The vivar project name (currently not used by the pipeline)                                         | :x:                |
-| `binsize`       | The binsize for CNV analysis (currently not used by the pipeline)                                   | :x:                |
-| `panels`        | A list of panels for coverage analysis                                                              | :x:                |
-| `roi`           | Region of interest BED file for coverage analysis                                                   | :x:                |
-| `aligner`       | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap and snap | :x:                |
+| Column          | Description                                                                                                                                  | Required           |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| `samplename`    | The sample name                                                                                                                              | :heavy_check_mark: |
+| `library`       | The library name                                                                                                                             | :x:                |
+| `tag`           | Sample tag. Has to be one of these: WES, WGS, coPGT-M                                                                                        | :heavy_check_mark: |
+| `organism`      | The organism of the sample. Has to be one of these: "Homo sapiens", "Mus musculus" or "Danio rerio"                                          | :heavy_check_mark: |
+| `vivar_project` | The vivar project name (currently not used by the pipeline)                                                                                  | :x:                |
+| `binsize`       | The binsize for CNV analysis (currently not used by the pipeline)                                                                            | :x:                |
+| `panels`        | A list of panels for coverage analysis                                                                                                       | :x:                |
+| `roi`           | Region of interest BED file for coverage analysis                                                                                            | :x:                |
+| `aligner`       | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap, strobe and snap. Set to `false` to output fastq. | :x:                |
 
 ### Multiple runs of the same sample
 
