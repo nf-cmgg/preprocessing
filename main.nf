@@ -68,6 +68,7 @@ workflow {
     demultiplex_interop = PREPROCESSING.out.demultiplex_interop.transpose(by:1)
     demultiplex_reports = PREPROCESSING.out.demultiplex_reports.transpose(by:1)
     demultiplex_logs    = PREPROCESSING.out.demultiplex_logs.transpose(by:1)
+    demultiplex_fastq   = PREPROCESSING.out.demultiplex_fastq.transpose()
     fastp_json          = PREPROCESSING.out.fastp_json
     fastp_html          = PREPROCESSING.out.fastp_html
     crams               = PREPROCESSING.out.crams
@@ -114,6 +115,10 @@ output {
     demultiplex_logs { path { meta, log ->
         def out_path = meta.lane ? "Logs/L00${meta.lane}/${log.name}" as String : "Logs/${log.name}"
         log >> out_path
+    } }
+    demultiplex_fastq { path { meta, fastq ->
+        def out_path = meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" as String : "${meta.samplename}/${fastq.name}"
+        fastq >> out_path
     } }
     fastp_json { path { meta, json ->
         def out_path = meta.library ? "${meta.library}/${meta.samplename}/${json.name}" as String : "${meta.samplename}/${json.name}"

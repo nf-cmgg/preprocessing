@@ -205,8 +205,8 @@ workflow PREPROCESSING {
 
     // MODULE: fastp
     // Run QC, trimming and adapter removal
-    // FASTP([meta, fastq], adapter_fasta, save_trimmed, save_merged)
-    FASTP(ch_fastq_per_sample.map{ meta, fastq -> return [meta, fastq, []] }, false, false, false)
+    // FASTP([meta, fastq, adapter_fasta], save_trimmed, save_merged)
+    FASTP(ch_fastq_per_sample.supported.map{ meta, fastq -> return [meta, fastq, []] }, false, false, false)
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
     ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
@@ -485,6 +485,7 @@ workflow PREPROCESSING {
     demultiplex_interop         = BCL_DEMULTIPLEX.out.interop
     demultiplex_reports         = BCL_DEMULTIPLEX.out.reports
     demultiplex_logs            = BCL_DEMULTIPLEX.out.logs
+    demultiplex_fastq           = ch_fastq_per_sample.other
     fastp_json                  = FASTP.out.json
     fastp_html                  = FASTP.out.html
     crams                       = FASTQ_TO_CRAM.out.cram_crai
