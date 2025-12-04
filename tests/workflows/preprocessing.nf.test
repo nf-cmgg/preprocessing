@@ -58,9 +58,12 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
-                    "multiqc_plots",
-                    "multiqc_data",
+                    "multiqc_main_report",
+                    "multiqc_main_data",
+                    "multiqc_main_plots",
+                    "multiqc_library_report",
+                    "multiqc_library_data",
+                    "multiqc_library_plots",
                     "md5sums",
                     "fastp_html",
                     "crams",
@@ -124,9 +127,12 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
-                    "multiqc_plots",
-                    "multiqc_data",
+                    "multiqc_main_report",
+                    "multiqc_main_data",
+                    "multiqc_main_plots",
+                    "multiqc_library_report",
+                    "multiqc_library_data",
+                    "multiqc_library_plots",
                     "md5sums",
                     "fastp_html",
                     "crams",
@@ -193,9 +199,12 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
-                    "multiqc_plots",
-                    "multiqc_data",
+                    "multiqc_main_report",
+                    "multiqc_main_data",
+                    "multiqc_main_plots",
+                    "multiqc_library_report",
+                    "multiqc_library_data",
+                    "multiqc_library_plots",
                     "md5sums",
                     "fastp_html",
                     "crams",

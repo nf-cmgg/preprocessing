@@ -20,6 +20,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "sample_type": "DNA",
@@ -55,6 +56,7 @@
                                 "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                             },
                             "id": "sample1",
+                            "library": "test",
                             "organism": "Homo sapiens",
                             "readgroup": {
                                 "CN": "CMGG",
@@ -78,6 +80,7 @@
                         {
                             "id": "sample1",
                             "samplename": "sample1",
+                            "library": "test",
                             "organism": "Homo sapiens",
                             "tag": "WES",
                             "sample_type": "DNA",
@@ -120,6 +123,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "sample_type": "DNA",
@@ -137,6 +141,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -163,6 +168,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -189,6 +195,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -218,6 +225,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -244,6 +252,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -270,6 +279,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -296,6 +306,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -322,6 +333,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -348,6 +360,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -374,15 +387,28 @@
                 "mosdepth_thresholds_csi": [
                     
                 ],
-                "multiqc_data": [
-                    "multiqc_data"
+                "multiqc_library_data": [
+                    "multiqc_library_test_data"
                 ],
-                "multiqc_plots": [
-                    "multiqc_plots"
+                "multiqc_library_plots": [
+                    "multiqc_library_test_plots"
                 ],
-                "multiqc_report": [
+                "multiqc_library_report": [
+                    "multiqc_library_test.html"
+                ],
+                "multiqc_main_data": [
                     [
-                        "multiqc_report.html"
+                        "multiqc_data"
+                    ]
+                ],
+                "multiqc_main_plots": [
+                    [
+                        
+                    ]
+                ],
+                "multiqc_main_report": [
+                    [
+                        "multiqc.html"
                     ]
                 ],
                 "panelcoverage": [
@@ -403,6 +429,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "sample_type": "DNA",
@@ -429,6 +456,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "sample_type": "DNA",
@@ -460,6 +488,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "sample_type": "DNA",
@@ -485,6 +514,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -511,6 +541,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -537,6 +568,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -563,6 +595,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -589,6 +622,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -632,7 +666,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-02T13:07:39.314799"
+        "timestamp": "2025-12-04T20:36:50.85925"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -655,6 +689,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "sample_type": "DNA",
@@ -690,6 +725,7 @@
                                 "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                             },
                             "id": "sample1",
+                            "library": "test",
                             "organism": "Homo sapiens",
                             "readgroup": {
                                 "CN": "CMGG",
@@ -713,6 +749,7 @@
                         {
                             "id": "sample1",
                             "samplename": "sample1",
+                            "library": "test",
                             "organism": "Homo sapiens",
                             "tag": "WES",
                             "sample_type": "DNA",
@@ -755,6 +792,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "sample_type": "DNA",
@@ -802,15 +840,28 @@
                 "mosdepth_thresholds_csi": [
                     
                 ],
-                "multiqc_data": [
-                    "multiqc_data"
+                "multiqc_library_data": [
+                    "multiqc_library_test_data"
                 ],
-                "multiqc_plots": [
-                    "multiqc_plots"
+                "multiqc_library_plots": [
+                    "multiqc_library_test_plots"
                 ],
-                "multiqc_report": [
+                "multiqc_library_report": [
+                    "multiqc_library_test.html"
+                ],
+                "multiqc_main_data": [
                     [
-                        "multiqc_report.html"
+                        "multiqc_data"
+                    ]
+                ],
+                "multiqc_main_plots": [
+                    [
+                        
+                    ]
+                ],
+                "multiqc_main_report": [
+                    [
+                        "multiqc.html"
                     ]
                 ],
                 "panelcoverage": [
@@ -837,6 +888,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -863,6 +915,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -889,6 +942,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -915,6 +969,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
@@ -954,7 +1009,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-02T13:12:08.110112"
+        "timestamp": "2025-12-04T20:42:53.576667"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -977,6 +1032,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -1011,6 +1067,7 @@
                                 "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                             },
                             "id": "sample1",
+                            "library": "test",
                             "organism": "Homo sapiens",
                             "readgroup": {
                                 "CN": "CMGG",
@@ -1033,6 +1090,7 @@
                         {
                             "id": "sample1",
                             "samplename": "sample1",
+                            "library": "test",
                             "organism": "Homo sapiens",
                             "tag": "WGS",
                             "sample_type": "DNA",
@@ -1074,6 +1132,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -1090,6 +1149,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1115,6 +1175,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1140,6 +1201,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1168,6 +1230,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1193,6 +1256,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1227,6 +1291,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1252,15 +1317,28 @@
                 "mosdepth_thresholds_csi": [
                     
                 ],
-                "multiqc_data": [
-                    "multiqc_data"
+                "multiqc_library_data": [
+                    "multiqc_library_test_data"
                 ],
-                "multiqc_plots": [
-                    "multiqc_plots"
+                "multiqc_library_plots": [
+                    "multiqc_library_test_plots"
                 ],
-                "multiqc_report": [
+                "multiqc_library_report": [
+                    "multiqc_library_test.html"
+                ],
+                "multiqc_main_data": [
                     [
-                        "multiqc_report.html"
+                        "multiqc_data"
+                    ]
+                ],
+                "multiqc_main_plots": [
+                    [
+                        
+                    ]
+                ],
+                "multiqc_main_report": [
+                    [
+                        "multiqc.html"
                     ]
                 ],
                 "panelcoverage": [
@@ -1284,6 +1362,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -1314,6 +1393,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -1344,6 +1424,7 @@
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
                                 "id": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -1360,6 +1441,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1385,6 +1467,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1410,6 +1493,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1435,6 +1519,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1460,6 +1545,7 @@
                             "groupSize": 1,
                             "groupTarget": {
                                 "samplename": "sample1",
+                                "library": "test",
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
@@ -1502,6 +1588,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-02T13:10:35.894317"
+        "timestamp": "2025-12-04T20:39:54.655718"
     }
 }

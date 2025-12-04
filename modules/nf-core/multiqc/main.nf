@@ -1,4 +1,5 @@
 process MULTIQC {
+    tag "$meta.id"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -7,7 +8,7 @@ process MULTIQC {
         'community.wave.seqera.io/library/multiqc:1.32--d58f60e4deb769bf' }"
 
     input:
-    path multiqc_files, stageAs: "?/*"
+    tuple val(meta), path(multiqc_files, stageAs: "?/*")
     path(multiqc_config)
     path(extra_multiqc_config)
     path(multiqc_logo)
@@ -18,7 +19,7 @@ process MULTIQC {
     path "*.html"      , emit: report
     path "*_data"      , emit: data
     path "*_plots"     , optional:true, emit: plots
-    tuple val("${task.process}"), val('multiqc'), eval('multiqc --version | sed "s/.* //g"'), topic: versions, emit: versions_multiqc
+    tuple val("${task.process}"), val('multiqc'), eval('multiqc --version | sed "s/.* //g"'), emit: versions_multiqc
 
     when:
     task.ext.when == null || task.ext.when
