@@ -115,8 +115,7 @@
                     "format": "directory-path",
                     "description": "Directory containing gene list bed files for granular coverage analysis"
                 }
-            },
-            "required": ["aligner"]
+            }
         },
         "institutional_config_options": {
             "title": "Institutional config options",

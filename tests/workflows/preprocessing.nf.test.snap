@@ -33,6 +33,9 @@
                         "sample1.cram.crai"
                     ]
                 ],
+                "demultiplex_fastq": [
+                    
+                ],
                 "demultiplex_interop": [
                     
                 ],
@@ -643,9 +646,6 @@
                         "sample1.merged.metrics.txt:md5,ba50ddef3f0147526ed1f01a98c47ed6"
                     ]
                 ],
-                "ucrams": [
-                    
-                ],
                 "versions": [
                     "versions.yml:md5,02acae00818ba01a01e2bdb03b574343",
                     "versions.yml:md5,23b060bcc18a02fc8f981102ef3a3006",
@@ -666,7 +666,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T20:36:50.85925"
+        "timestamp": "2025-12-04T22:06:58.57247"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -701,6 +701,9 @@
                         "sample1.cram",
                         "sample1.cram.crai"
                     ]
+                ],
+                "demultiplex_fastq": [
+                    
                 ],
                 "demultiplex_interop": [
                     
@@ -990,9 +993,6 @@
                         "sample1.merged.metrics.txt:md5,ba50ddef3f0147526ed1f01a98c47ed6"
                     ]
                 ],
-                "ucrams": [
-                    
-                ],
                 "versions": [
                     "versions.yml:md5,c4fcc95fcd514eab38e980cacf0d4e8c",
                     "versions.yml:md5,c4fcc95fcd514eab38e980cacf0d4e8c",
@@ -1009,7 +1009,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T20:42:53.576667"
+        "timestamp": "2025-12-04T22:11:37.660609"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1043,6 +1043,9 @@
                         "sample1.cram",
                         "sample1.cram.crai"
                     ]
+                ],
+                "demultiplex_fastq": [
+                    
                 ],
                 "demultiplex_interop": [
                     
@@ -1565,9 +1568,6 @@
                         "sample1.merged.metrics.txt:md5,ba50ddef3f0147526ed1f01a98c47ed6"
                     ]
                 ],
-                "ucrams": [
-                    
-                ],
                 "versions": [
                     "versions.yml:md5,1d2a9b13790c70a69a1f62facc9b3a6c",
                     "versions.yml:md5,23b060bcc18a02fc8f981102ef3a3006",
@@ -1588,6 +1588,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T20:39:54.655718"
+        "timestamp": "2025-12-04T22:09:54.979336"
     }
 }

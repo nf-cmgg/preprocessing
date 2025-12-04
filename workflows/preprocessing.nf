@@ -107,6 +107,10 @@ workflow PREPROCESSING {
         .map { meta, fq ->
             return [meta, fq.flatten().unique()]
         }
+        .branch { meta, _fastq ->
+            to_align: meta.aligner && meta.aligner != "false"
+            other: true
+        }
         .set { ch_demultiplexed_fastq_with_sampleinfo }
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,7 +143,7 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
     ch_input_fastq
-        .mix(ch_demultiplexed_fastq_with_sampleinfo)
+        .mix(ch_demultiplexed_fastq_with_sampleinfo.to_align)
         .map { meta, reads ->
             if (meta.organism && !meta.genome) {
                 if (meta.organism ==~ /(?i)Homo[\s_]sapiens/) {
@@ -162,10 +166,11 @@ workflow PREPROCESSING {
                 meta = meta + ["genome_data": [:]]
             }
 
-            // If the aligner is set to `false`, redirect sample to unaligned flow by dropping the genome_data key
-            if (meta.aligner == false || meta.aligner == "false") {
-                meta = meta - meta.subMap('genome_data')
+            // set the aligner
+            if (aligner && !meta.aligner) {
+                meta = meta + ["aligner": aligner]
             }
+
             // set the ROI
             // // Special case for coPGT samples
             // // if there's no global ROI AND no sample speficic ROI
@@ -485,7 +490,7 @@ workflow PREPROCESSING {
     demultiplex_interop         = BCL_DEMULTIPLEX.out.interop
     demultiplex_reports         = BCL_DEMULTIPLEX.out.reports
     demultiplex_logs            = BCL_DEMULTIPLEX.out.logs
-    demultiplex_fastq           = ch_fastq_per_sample.other
+    demultiplex_fastq           = ch_demultiplexed_fastq_with_sampleinfo.other
     fastp_json                  = FASTP.out.json
     fastp_html                  = FASTP.out.html
     crams                       = FASTQ_TO_CRAM.out.cram_crai
