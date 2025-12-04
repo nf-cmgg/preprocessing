@@ -189,7 +189,7 @@ workflow PREPROCESSING {
         .transpose()
         .map { meta_fastq, count -> [meta_fastq[0] + ['count': count], meta_fastq[1]] }
         .map { meta, fastq ->
-            return [meta - meta.subMap('fcid', 'lane', 'library'), fastq]
+            return [meta - meta.subMap('fcid', 'lane'), fastq]
         }
         .set { ch_fastq_per_sample }
 
