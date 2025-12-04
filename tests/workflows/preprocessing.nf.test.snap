@@ -87,6 +87,7 @@
                             "organism": "Homo sapiens",
                             "tag": "WES",
                             "sample_type": "DNA",
+                            "aligner": "bwamem",
                             "single_end": false,
                             "readgroup": {
                                 "CN": "CMGG",
@@ -104,7 +105,6 @@
                                 "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                 "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                             },
-                            "aligner": "bwamem",
                             "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "count": 1
                         },
@@ -148,6 +148,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -157,7 +158,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -175,6 +175,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -184,7 +185,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -202,6 +202,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -211,7 +212,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -232,6 +232,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -241,7 +242,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -259,6 +259,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -268,7 +269,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -286,6 +286,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -295,7 +296,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -313,6 +313,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -322,7 +323,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -340,6 +340,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -349,7 +350,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -367,6 +367,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -376,7 +377,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -521,6 +521,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -530,7 +531,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -548,6 +548,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -557,7 +558,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -575,6 +575,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -584,7 +585,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -602,6 +602,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -611,7 +612,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -629,6 +629,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -638,7 +639,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -666,7 +666,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T22:06:58.57247"
+        "timestamp": "2025-12-04T22:49:24.788115"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -756,6 +756,7 @@
                             "organism": "Homo sapiens",
                             "tag": "WES",
                             "sample_type": "DNA",
+                            "aligner": "bwamem",
                             "single_end": false,
                             "readgroup": {
                                 "CN": "CMGG",
@@ -773,7 +774,6 @@
                                 "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                 "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                             },
-                            "aligner": "bwamem",
                             "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "count": 1
                         },
@@ -895,6 +895,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -904,7 +905,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -922,6 +922,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -931,7 +932,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -949,6 +949,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -958,7 +959,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -976,6 +976,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WES",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -985,7 +986,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "id": "sample1"
                             }
@@ -1009,7 +1009,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T22:11:37.660609"
+        "timestamp": "2025-12-04T22:53:59.211177"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1097,6 +1097,7 @@
                             "organism": "Homo sapiens",
                             "tag": "WGS",
                             "sample_type": "DNA",
+                            "aligner": "bwamem",
                             "single_end": false,
                             "readgroup": {
                                 "CN": "CMGG",
@@ -1114,7 +1115,6 @@
                                 "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                 "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                             },
-                            "aligner": "bwamem",
                             "count": 1
                         },
                         "sample1.fastp.json:md5,caf903cc79784ceaa71d6ef743c02ff3"
@@ -1156,6 +1156,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1165,7 +1166,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1182,6 +1182,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1191,7 +1192,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1208,6 +1208,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1217,7 +1218,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1237,6 +1237,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1246,7 +1247,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1263,6 +1263,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1272,7 +1273,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1298,6 +1298,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1307,7 +1308,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1448,6 +1448,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1457,7 +1458,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1474,6 +1474,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1483,7 +1484,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1500,6 +1500,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1509,7 +1510,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1526,6 +1526,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1535,7 +1536,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1552,6 +1552,7 @@
                                 "organism": "Homo sapiens",
                                 "tag": "WGS",
                                 "sample_type": "DNA",
+                                "aligner": "bwamem",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1561,7 +1562,6 @@
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "aligner": "bwamem",
                                 "id": "sample1"
                             }
                         },
@@ -1588,6 +1588,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T22:09:54.979336"
+        "timestamp": "2025-12-04T22:52:15.051988"
     }
 }
