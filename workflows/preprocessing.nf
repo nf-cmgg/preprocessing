@@ -166,6 +166,11 @@ workflow PREPROCESSING {
             if (aligner && !meta.aligner) {
                 meta = meta + ["aligner": aligner]
             }
+
+            // If the aligner is set to `false`, redirect sample to unaligned flow by dropping the genome_data key
+            if (meta.aligner == false || meta.aligner == "false") {
+                meta = meta - meta.subMap('genome_data')
+            }
             // set the ROI
             // // Special case for coPGT samples
             // // if there's no global ROI AND no sample speficic ROI
@@ -188,12 +193,26 @@ workflow PREPROCESSING {
         .map { meta, fastq ->
             return [meta - meta.subMap('fcid', 'lane'), fastq]
         }
+        .branch { meta, _reads ->
+            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0
+            other: true
+        }
         .set { ch_fastq_per_sample }
 
-    ch_fastq_per_sample.dump(tag: "FASTQ per sample", pretty: true)
+    ch_fastq_per_sample.supported.dump(tag: "Supported FASTQ per sample", pretty: true)
+    ch_fastq_per_sample.other.dump(tag: "Other FASTQ per sample", pretty: true)
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// STEP: FASTQ TO UNALIGNED CRAM CONVERSION
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+    FASTQ_TO_UCRAM(ch_fastq_per_sample.other)
+    ch_versions = ch_versions.mix(FASTQ_TO_UCRAM.out.versions)
 
 
-    /*
+/*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // FASTQ TRIMMING AND QC
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,44 +242,26 @@ workflow PREPROCESSING {
                 reads,
             ]
         }
-        .branch { meta, _reads ->
-            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0
-            other: true
-        }
         .set { ch_trimmed_reads }
 
-    ch_trimmed_reads.supported.dump(tag: "Supported trimmed reads per sample", pretty: true)
-    ch_trimmed_reads.other.dump(tag: "Other trimmed reads per sample", pretty: true)
-
-
-    /*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: FASTQ TO UNALIGNED CRAM CONVERSION
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-    FASTQ_TO_UCRAM(ch_trimmed_reads.other)
-    ch_versions = ch_versions.mix(FASTQ_TO_UCRAM.out.versions)
-
-    /*
+    ch_trimmed_reads.dump(tag: "Supported trimmed reads per sample", pretty: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: FASTQ TO ALIGNED CRAM CONVERSION
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    ch_trimmed_reads.supported
-        .map { meta, reads ->
-            return [
-                meta,
-                reads,
-                meta.aligner,
-                getGenomeAttribute(meta.genome_data, meta.aligner),
-                getGenomeAttribute(meta.genome_data, "fasta"),
-                getGenomeAttribute(meta.genome_data, "gtf"),
-            ]
-        }
-        .set { ch_meta_reads_aligner_index_fasta_gtf }
+    ch_trimmed_reads.map { meta, reads ->
+        return [
+            meta,
+            reads,
+            meta.aligner,
+            getGenomeAttribute(meta.genome_data, meta.aligner),
+            getGenomeAttribute(meta.genome_data, "fasta"),
+            getGenomeAttribute(meta.genome_data, "gtf"),
+        ]
+    }
+    .set { ch_meta_reads_aligner_index_fasta_gtf }
 
     FASTQ_TO_CRAM(
         ch_meta_reads_aligner_index_fasta_gtf,
