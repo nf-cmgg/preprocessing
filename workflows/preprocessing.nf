@@ -15,11 +15,10 @@ include { MULTIQC as MULTIQC_MAIN       } from '../modules/nf-core/multiqc/main'
 include { SAMTOOLS_COVERAGE             } from '../modules/nf-core/samtools/coverage/main'
 
 // Subworkflows
-include { BAM_QC                        } from '../subworkflows/local/bam_qc/main'
-include { BCL_DEMULTIPLEX               } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { COVERAGE                      } from '../subworkflows/local/coverage/main'
-include { FASTQ_TO_UCRAM                } from '../subworkflows/local/fastq_to_unaligned_cram/main'
-include { FASTQ_TO_CRAM                 } from '../subworkflows/local/fastq_to_aligned_cram/main'
+include { BAM_QC                 } from '../subworkflows/local/bam_qc/main'
+include { BCL_DEMULTIPLEX        } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { COVERAGE               } from '../subworkflows/local/coverage/main'
+include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram/main'
 
 // Functions
 include { paramsSummaryMap              } from 'plugin/nf-schema'
@@ -201,16 +200,6 @@ workflow PREPROCESSING {
 
     ch_fastq_per_sample.supported.dump(tag: "Supported FASTQ per sample", pretty: true)
     ch_fastq_per_sample.other.dump(tag: "Other FASTQ per sample", pretty: true)
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: FASTQ TO UNALIGNED CRAM CONVERSION
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-    FASTQ_TO_UCRAM(ch_fastq_per_sample.other)
-    ch_versions = ch_versions.mix(FASTQ_TO_UCRAM.out.versions)
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -502,7 +491,6 @@ workflow PREPROCESSING {
     demultiplex_logs            = BCL_DEMULTIPLEX.out.logs
     fastp_json                  = FASTP.out.json
     fastp_html                  = FASTP.out.html
-    ucrams                      = FASTQ_TO_UCRAM.out.cram
     crams                       = FASTQ_TO_CRAM.out.cram_crai
     align_reports               = FASTQ_TO_CRAM.out.align_reports
     sormadup_metrics            = FASTQ_TO_CRAM.out.sormadup_metrics

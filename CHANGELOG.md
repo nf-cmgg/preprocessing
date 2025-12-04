@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the output handling to use the new workflow output definitions.
 - Bump all modules to latest versions.
 - The workflow now outputs data in a subdirectory per `library`, including a library specific MultiQC report
+- Drop support for unaligned cram outputs.
 
 ## v2.0.6
 

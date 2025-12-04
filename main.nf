@@ -70,7 +70,6 @@ workflow {
     demultiplex_logs    = PREPROCESSING.out.demultiplex_logs.transpose(by:1)
     fastp_json          = PREPROCESSING.out.fastp_json
     fastp_html          = PREPROCESSING.out.fastp_html
-    ucrams              = PREPROCESSING.out.ucrams
     crams               = PREPROCESSING.out.crams
     align_reports       = PREPROCESSING.out.align_reports
     sormadup_metrics    = PREPROCESSING.out.sormadup_metrics
@@ -123,10 +122,6 @@ output {
     fastp_html { path { meta, html ->
         def out_path = meta.library ? "${meta.library}/${meta.samplename}/${html.name}" as String : "${meta.samplename}/${html.name}"
         html >> out_path
-    } }
-    ucrams { path { meta, cram ->
-        def out_path = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.unaligned.cram" as String : "${meta.samplename}/${meta.samplename}.unaligned.cram"
-        cram >> out_path
     } }
     crams { path { meta, cram, crai ->
         def out_cram = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" as String : "${meta.samplename}/${meta.samplename}.cram"
