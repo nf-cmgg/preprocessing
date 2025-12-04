@@ -444,22 +444,26 @@ workflow PREPROCESSING {
             name: 'nf_cmgg_preprocessing_software_mqc_versions.yml',
             sort: true,
             newLine: true
-        ).set { ch_collated_versions }
-
-    softwareVersionsToYAML(ch_versions)
-        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'preprocessing_software_mqc_versions.yml', sort: true, newLine: true)
+        )
+        .map { file -> [[id: 'main'], file] } // add meta for multiqc
         .set { ch_collated_versions }
 
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_config = channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_config        = channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
     ch_multiqc_custom_config = params.multiqc_config ? channel.fromPath(params.multiqc_config, checkIfExists: true) : channel.empty()
-    ch_multiqc_logo = params.multiqc_logo ? channel.fromPath(params.multiqc_logo, checkIfExists: true) : channel.empty()
-    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    ch_multiqc_logo          = params.multiqc_logo ? channel.fromPath(params.multiqc_logo, checkIfExists: true) : channel.empty()
+
+    summary_params           = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml').map{ file -> [[id: 'main'], file] })
+
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
     ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+
+    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true).map{ file -> [[id: 'main'], file] })
 
     ch_multiqc_files = ch_multiqc_files.map { meta, files ->
         return [meta.library ? [id: meta.library] : [id: 'main'], files]
@@ -473,10 +477,6 @@ workflow PREPROCESSING {
     }
     ch_multiqc_files.main.dump(tag: "MULTIQC files - main", pretty: true)
     ch_multiqc_files.library.dump(tag: "MULTIQC files - library", pretty: true)
-
-    ch_multiqc_files.main = ch_multiqc_files.main.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files.main = ch_multiqc_files.main.mix(ch_collated_versions)
-    ch_multiqc_files.main = ch_multiqc_files.main.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
 
     MULTIQC_MAIN(
         ch_multiqc_files.main.collect().map{ files -> [[id: 'main'], files] },
