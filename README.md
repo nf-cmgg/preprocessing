@@ -43,8 +43,8 @@ First, prepare a samplesheet with your input data that looks as follows:
 `samplesheet.csv` for fastq inputs:
 
 ```csv
-id,samplename,organism,library,fastq_1,fastq_2
-sample1,sample1,Homo sapiens,Library_Name,reads1.fq.gz,reads2.fq.gz
+id,samplename,organism,library,aligner,fastq_1,fastq_2
+sample1,sample1,Homo sapiens,Library_Name,bwamem,reads1.fq.gz,reads2.fq.gz
 ```
 
 `samplesheet.csv` for flowcell inputs:
@@ -57,8 +57,8 @@ flowcell_id,/path/to/illumina_samplesheet.csv,1,/path/to/sequencer_uploaddir,/pa
 `sampleinfo.csv` for use with flowcell inputs:
 
 ```csv
-samplename,library,organism,tag
-fc_sample1,test,Homo sapiens,WES
+samplename,library,organism,tag,aligner
+fc_sample1,test,Homo sapiens,WES,bwamem
 ```
 
 Now, you can run the pipeline using:

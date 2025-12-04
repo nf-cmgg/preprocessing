@@ -89,5 +89,12 @@
             }
         }
     },
-    "required": ["samplename", "tag", "organism"]
+    "anyOf": [
+        {
+            "required": ["samplename", "organism", "aligner", "tag"]
+        },
+        {
+            "required": ["samplename", "genome", "aligner", "tag"]
+        }
+    ]
 }

@@ -45,7 +45,6 @@ workflow {
     PREPROCESSING(
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
-        params.aligner,
         params.markdup,
         params.roi,
         params.genelists,

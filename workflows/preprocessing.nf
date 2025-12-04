@@ -37,7 +37,6 @@ workflow PREPROCESSING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     genomes        // map: genome reference files
-    aligner        // string: global aligner to use
     markdup        // string: markdup method to use
     roi            // file: regions of interest bed file to be applied to all samples
     genelists      // file: directory containing genelist bed files for coverage analysis
@@ -164,11 +163,6 @@ workflow PREPROCESSING {
             }
             else {
                 meta = meta + ["genome_data": [:]]
-            }
-
-            // set the aligner
-            if (aligner && !meta.aligner) {
-                meta = meta + ["aligner": aligner]
             }
 
             // set the ROI
