@@ -1,4 +1,5 @@
 process MULTIQC {
+    tag "$meta.id"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -7,7 +8,7 @@ process MULTIQC {
         'community.wave.seqera.io/library/multiqc:1.32--d58f60e4deb769bf' }"
 
     input:
-    path multiqc_files, stageAs: "?/*"
+    tuple val(meta), path(multiqc_files, stageAs: "?/*")
     path(multiqc_config)
     path(extra_multiqc_config)
     path(multiqc_logo)

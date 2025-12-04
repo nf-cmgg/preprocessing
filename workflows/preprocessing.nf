@@ -7,25 +7,26 @@ include { samplesheetToList      } from 'plugin/nf-schema'
 */
 
 // Modules
-include { FASTP                  } from '../modules/nf-core/fastp/main'
-include { MD5SUM                 } from '../modules/nf-core/md5sum/main'
-include { MOSDEPTH               } from '../modules/nf-core/mosdepth/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { SAMTOOLS_COVERAGE      } from '../modules/nf-core/samtools/coverage/main'
+include { FASTP                         } from '../modules/nf-core/fastp/main'
+include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
+include { MOSDEPTH                      } from '../modules/nf-core/mosdepth/main'
+include { MULTIQC as MULTIQC_LIBRARY    } from '../modules/nf-core/multiqc/main'
+include { MULTIQC as MULTIQC_MAIN       } from '../modules/nf-core/multiqc/main'
+include { SAMTOOLS_COVERAGE             } from '../modules/nf-core/samtools/coverage/main'
 
 // Subworkflows
-include { BAM_QC                 } from '../subworkflows/local/bam_qc/main'
-include { BCL_DEMULTIPLEX        } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { COVERAGE               } from '../subworkflows/local/coverage/main'
-include { FASTQ_TO_UCRAM         } from '../subworkflows/local/fastq_to_unaligned_cram/main'
-include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram/main'
+include { BAM_QC                        } from '../subworkflows/local/bam_qc/main'
+include { BCL_DEMULTIPLEX               } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { COVERAGE                      } from '../subworkflows/local/coverage/main'
+include { FASTQ_TO_UCRAM                } from '../subworkflows/local/fastq_to_unaligned_cram/main'
+include { FASTQ_TO_CRAM                 } from '../subworkflows/local/fastq_to_aligned_cram/main'
 
 // Functions
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
-include { getGenomeAttribute     } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { paramsSummaryMap              } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getGenomeAttribute            } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -78,12 +79,8 @@ workflow PREPROCESSING {
     BCL_DEMULTIPLEX(ch_illumina_flowcell.flowcell, "bclconvert")
     BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq", pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(
-        BCL_DEMULTIPLEX.out.reports.map { _meta, reports ->
-            return reports
-        },
-        BCL_DEMULTIPLEX.out.stats.map { _meta, stats ->
-            return stats
-        },
+        BCL_DEMULTIPLEX.out.reports,
+        BCL_DEMULTIPLEX.out.stats
     )
     ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
@@ -206,11 +203,7 @@ workflow PREPROCESSING {
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq], adapter_fasta, save_trimmed, save_merged)
     FASTP(ch_fastq_per_sample.map{ meta, fastq -> return [meta, fastq, []] }, false, false, false)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        FASTP.out.json.map { _meta, json ->
-            return json
-        }
-    )
+    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
     ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
     // edit meta.id to match sample name
@@ -274,7 +267,7 @@ workflow PREPROCESSING {
         markdup,
     )
 
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics.map { _meta, metrics -> metrics })
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
     ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
 
@@ -339,18 +332,10 @@ workflow PREPROCESSING {
     if (params.run_coverage) {
         COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
         ch_multiqc_files = ch_multiqc_files.mix(
-            COVERAGE.out.mosdepth_summary.map { _meta, txt ->
-                return txt
-            },
-            COVERAGE.out.mosdepth_global.map { _meta, txt ->
-                return txt
-            },
-            COVERAGE.out.mosdepth_regions.map { _meta, txt ->
-                return txt
-            },
-            COVERAGE.out.samtools_coverage.map { _meta, txt ->
-                return txt
-            },
+            COVERAGE.out.mosdepth_summary,
+            COVERAGE.out.mosdepth_global,
+            COVERAGE.out.mosdepth_regions,
+            COVERAGE.out.samtools_coverage,
         )
         mosdepth_global_out = COVERAGE.out.mosdepth_global
         mosdepth_summary_out = COVERAGE.out.mosdepth_summary
@@ -403,24 +388,13 @@ workflow PREPROCESSING {
 
     BAM_QC(ch_cram_crai_roi_fasta_fai_dict, params.disable_picard_metrics)
     ch_multiqc_files = ch_multiqc_files.mix(
-        BAM_QC.out.samtools_stats.map { _meta, txt ->
-            return txt
-        },
-        BAM_QC.out.samtools_flagstat.map { _meta, txt ->
-            return txt
-        },
-        BAM_QC.out.samtools_idxstats.map { _meta, txt ->
-            return txt
-        },
-        BAM_QC.out.picard_multiplemetrics.map { _meta, txt ->
-            return txt
-        },
-        BAM_QC.out.picard_wgsmetrics.map { _meta, txt ->
-            return txt
-        },
-        BAM_QC.out.picard_hsmetrics.map { _meta, txt ->
-            return txt
-        },
+        BAM_QC.out.samtools_stats,
+        BAM_QC.out.samtools_flagstat,
+        BAM_QC.out.samtools_idxstats,
+        BAM_QC.out.picard_multiplemetrics,
+        BAM_QC.out.picard_wgsmetrics,
+        BAM_QC.out.picard_wgsmetrics,
+        BAM_QC.out.picard_hsmetrics,
     )
     ch_versions = ch_versions.mix(BAM_QC.out.versions)
 
@@ -486,11 +460,24 @@ workflow PREPROCESSING {
     ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
     ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+
+    ch_multiqc_library_files = ch_multiqc_files
+    .filter { meta, _file ->
+        meta.library != null && meta.library != ""
+    }
+    .map { meta, file ->
+        return [["id": meta.library] ?: meta.samplename, file]
+    }
+    .groupTuple()
+    ch_multiqc_library_files.dump(tag: "MULTIQC files per library", pretty: true)
+
+    ch_multiqc_files = ch_multiqc_files.map{ _meta, files -> files }.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
+    ch_multiqc_files = ch_multiqc_files.map { file -> [["id": "main"], file] }.groupTuple()
+    ch_multiqc_files.dump(tag: "MULTIQC files", pretty: true)
 
-    MULTIQC(
+    MULTIQC_MAIN(
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
@@ -499,42 +486,54 @@ workflow PREPROCESSING {
         [],
     )
 
+    MULTIQC_LIBRARY(
+        ch_multiqc_library_files,
+        ch_multiqc_config.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList(),
+        [],
+        [],
+    )
+
     emit:
-    demultiplex_interop = BCL_DEMULTIPLEX.out.interop
-    demultiplex_reports = BCL_DEMULTIPLEX.out.reports
-    demultiplex_logs = BCL_DEMULTIPLEX.out.logs
-    fastp_json = FASTP.out.json
-    fastp_html = FASTP.out.html
-    ucrams = FASTQ_TO_UCRAM.out.cram
-    crams = FASTQ_TO_CRAM.out.cram_crai
-    align_reports = FASTQ_TO_CRAM.out.align_reports
-    sormadup_metrics = FASTQ_TO_CRAM.out.sormadup_metrics
-    mosdepth_global = mosdepth_global_out
-    mosdepth_summary = mosdepth_summary_out
-    mosdepth_regions = mosdepth_regions_out
-    mosdepth_per_base_d4 = mosdepth_per_base_d4_out
-    mosdepth_per_base_bed = mosdepth_per_base_bed_out
-    mosdepth_per_base_csi = mosdepth_per_base_csi_out
-    mosdepth_regions_bed = mosdepth_regions_bed_out
-    mosdepth_regions_csi = mosdepth_regions_csi_out
-    mosdepth_quantized_bed = mosdepth_quantized_bed_out
-    mosdepth_quantized_csi = mosdepth_quantized_csi_out
-    mosdepth_thresholds_bed = mosdepth_thresholds_bed_out
-    mosdepth_thresholds_csi = mosdepth_thresholds_csi_out
-    samtools_coverage = samtools_coverage_out
-    panelcoverage = panelcoverage_out
-    samtools_stats = BAM_QC.out.samtools_stats
-    samtools_flagstat = BAM_QC.out.samtools_flagstat
-    samtools_idxstats = BAM_QC.out.samtools_idxstats
-    picard_multiplemetrics = BAM_QC.out.picard_multiplemetrics
-    picard_multiplemetrics_pdf = BAM_QC.out.picard_multiplemetrics_pdf
-    picard_wgsmetrics = BAM_QC.out.picard_wgsmetrics
-    picard_hsmetrics = BAM_QC.out.picard_hsmetrics
-    md5sums = MD5SUM.out.checksum
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    multiqc_data = MULTIQC.out.data
-    multiqc_plots = MULTIQC.out.plots
-    versions       = ch_versions // channel: [ path(versions.yml) ]
+    demultiplex_interop         = BCL_DEMULTIPLEX.out.interop
+    demultiplex_reports         = BCL_DEMULTIPLEX.out.reports
+    demultiplex_logs            = BCL_DEMULTIPLEX.out.logs
+    fastp_json                  = FASTP.out.json
+    fastp_html                  = FASTP.out.html
+    ucrams                      = FASTQ_TO_UCRAM.out.cram
+    crams                       = FASTQ_TO_CRAM.out.cram_crai
+    align_reports               = FASTQ_TO_CRAM.out.align_reports
+    sormadup_metrics            = FASTQ_TO_CRAM.out.sormadup_metrics
+    mosdepth_global             = mosdepth_global_out
+    mosdepth_summary            = mosdepth_summary_out
+    mosdepth_regions            = mosdepth_regions_out
+    mosdepth_per_base_d4        = mosdepth_per_base_d4_out
+    mosdepth_per_base_bed       = mosdepth_per_base_bed_out
+    mosdepth_per_base_csi       = mosdepth_per_base_csi_out
+    mosdepth_regions_bed        = mosdepth_regions_bed_out
+    mosdepth_regions_csi        = mosdepth_regions_csi_out
+    mosdepth_quantized_bed      = mosdepth_quantized_bed_out
+    mosdepth_quantized_csi      = mosdepth_quantized_csi_out
+    mosdepth_thresholds_bed     = mosdepth_thresholds_bed_out
+    mosdepth_thresholds_csi     = mosdepth_thresholds_csi_out
+    samtools_coverage           = samtools_coverage_out
+    panelcoverage               = panelcoverage_out
+    samtools_stats              = BAM_QC.out.samtools_stats
+    samtools_flagstat           = BAM_QC.out.samtools_flagstat
+    samtools_idxstats           = BAM_QC.out.samtools_idxstats
+    picard_multiplemetrics      = BAM_QC.out.picard_multiplemetrics
+    picard_multiplemetrics_pdf  = BAM_QC.out.picard_multiplemetrics_pdf
+    picard_wgsmetrics           = BAM_QC.out.picard_wgsmetrics
+    picard_hsmetrics            = BAM_QC.out.picard_hsmetrics
+    md5sums                     = MD5SUM.out.checksum
+    multiqc_main_report         = MULTIQC_MAIN.out.report.toList()
+    multiqc_main_data           = MULTIQC_MAIN.out.data
+    multiqc_main_plots          = MULTIQC_MAIN.out.plots
+    multiqc_library_report      = MULTIQC_LIBRARY.out.report.toList()
+    multiqc_library_data        = MULTIQC_LIBRARY.out.data
+    multiqc_library_plots       = MULTIQC_LIBRARY.out.plots
+    versions                    = ch_versions
 }
 
 /*

@@ -61,7 +61,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        PREPROCESSING.out.multiqc_report,
+        PREPROCESSING.out.multiqc_main_report,
     )
 
     publish:
@@ -96,10 +96,12 @@ workflow {
     picard_wgsmetrics = PREPROCESSING.out.picard_wgsmetrics
     picard_hsmetrics = PREPROCESSING.out.picard_hsmetrics
     md5sums = PREPROCESSING.out.md5sums
-    multiqc_report = PREPROCESSING.out.multiqc_report
-    multiqc_data = PREPROCESSING.out.multiqc_data
-    multiqc_plots = PREPROCESSING.out.multiqc_plots
-
+    multiqc_main_report = PREPROCESSING.out.multiqc_main_report
+    multiqc_main_data = PREPROCESSING.out.multiqc_main_data
+    multiqc_main_plots = PREPROCESSING.out.multiqc_main_plots
+    multiqc_library_report = PREPROCESSING.out.multiqc_library_report
+    multiqc_library_data = PREPROCESSING.out.multiqc_library_data
+    multiqc_library_plots = PREPROCESSING.out.multiqc_library_plots
 }
 
 output {
@@ -228,7 +230,10 @@ output {
         def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
         return out_path
     } }
-    multiqc_report { path "multiqc/" }
-    multiqc_data { path "multiqc/" }
-    multiqc_plots { path "multiqc/" }
+    multiqc_main_report { path "multiqc/" }
+    multiqc_main_data { path "multiqc/" }
+    multiqc_main_plots { path "multiqc/" }
+    multiqc_library_report { path "multiqc/" }
+    multiqc_library_data { path "multiqc/" }
+    multiqc_library_plots { path "multiqc/" }
 }
