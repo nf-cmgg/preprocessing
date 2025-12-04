@@ -468,12 +468,11 @@ workflow PREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.map { meta, files ->
         return [meta.library ? [id: meta.library] : [id: 'main'], files]
     }
-    .groupTuple()
     .branch { meta, files ->
         main: meta.id == 'main'
-            return files.flatten()
+            return files
         library: meta.id != 'main'
-            return [meta, files.flatten()]
+            return [meta, files instanceof List ? files : [files]]
     }
     ch_multiqc_files.main.dump(tag: "MULTIQC files - main", pretty: true)
     ch_multiqc_files.library.dump(tag: "MULTIQC files - library", pretty: true)
@@ -488,7 +487,7 @@ workflow PREPROCESSING {
     )
 
     MULTIQC_LIBRARY(
-        ch_multiqc_files.library,
+        ch_multiqc_files.library.transpose(by:1).groupTuple(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),
@@ -529,9 +528,9 @@ workflow PREPROCESSING {
     picard_hsmetrics            = BAM_QC.out.picard_hsmetrics
     md5sums                     = MD5SUM.out.checksum
     multiqc_main_report         = MULTIQC_MAIN.out.report.toList()
-    multiqc_main_data           = MULTIQC_MAIN.out.data
-    multiqc_main_plots          = MULTIQC_MAIN.out.plots
-    multiqc_library_report      = MULTIQC_LIBRARY.out.report.toList()
+    multiqc_main_data           = MULTIQC_MAIN.out.data.toList()
+    multiqc_main_plots          = MULTIQC_MAIN.out.plots.toList()
+    multiqc_library_report      = MULTIQC_LIBRARY.out.report
     multiqc_library_data        = MULTIQC_LIBRARY.out.data
     multiqc_library_plots       = MULTIQC_LIBRARY.out.plots
     versions                    = ch_versions
