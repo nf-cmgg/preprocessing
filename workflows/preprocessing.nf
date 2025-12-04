@@ -161,10 +161,6 @@ workflow PREPROCESSING {
             else {
                 meta = meta + ["genome_data": [:]]
             }
-            // set the aligner
-            if (aligner && !meta.aligner) {
-                meta = meta + ["aligner": aligner]
-            }
 
             // If the aligner is set to `false`, redirect sample to unaligned flow by dropping the genome_data key
             if (meta.aligner == false || meta.aligner == "false") {
@@ -193,7 +189,7 @@ workflow PREPROCESSING {
             return [meta - meta.subMap('fcid', 'lane'), fastq]
         }
         .branch { meta, _reads ->
-            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0
+            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && meta.aligner
             other: true
         }
         .set { ch_fastq_per_sample }
