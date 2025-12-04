@@ -461,24 +461,25 @@ workflow PREPROCESSING {
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
     ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
 
-    ch_multiqc_library_files = ch_multiqc_files
-    .filter { meta, _file ->
-        meta.library != null && meta.library != ""
-    }
-    .map { meta, file ->
-        return [["id": meta.library] ?: meta.samplename, file]
+    ch_multiqc_files = ch_multiqc_files.map { meta, files ->
+        return [meta.library ? [id: meta.library] : [id: 'main'], files]
     }
     .groupTuple()
-    ch_multiqc_library_files.dump(tag: "MULTIQC files per library", pretty: true)
+    .branch { meta, files ->
+        main: meta.id == 'main'
+            return files.flatten()
+        library: meta.id != 'main'
+            return [meta, files.flatten()]
+    }
+    ch_multiqc_files.main.dump(tag: "MULTIQC files - main", pretty: true)
+    ch_multiqc_files.library.dump(tag: "MULTIQC files - library", pretty: true)
 
-    ch_multiqc_files = ch_multiqc_files.map{ _meta, files -> files }.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
-    ch_multiqc_files = ch_multiqc_files.map { file -> [["id": "main"], file] }.groupTuple()
-    ch_multiqc_files.dump(tag: "MULTIQC files", pretty: true)
+    ch_multiqc_files.main = ch_multiqc_files.main.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files.main = ch_multiqc_files.main.mix(ch_collated_versions)
+    ch_multiqc_files.main = ch_multiqc_files.main.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
 
     MULTIQC_MAIN(
-        ch_multiqc_files.collect(),
+        ch_multiqc_files.main.collect().map{ files -> [[id: 'main'], files] },
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),
@@ -487,7 +488,7 @@ workflow PREPROCESSING {
     )
 
     MULTIQC_LIBRARY(
-        ch_multiqc_library_files,
+        ch_multiqc_files.library,
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),
