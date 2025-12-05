@@ -15,11 +15,10 @@ include { MULTIQC as MULTIQC_MAIN       } from '../modules/nf-core/multiqc/main'
 include { SAMTOOLS_COVERAGE             } from '../modules/nf-core/samtools/coverage/main'
 
 // Subworkflows
-include { BAM_QC                        } from '../subworkflows/local/bam_qc/main'
-include { BCL_DEMULTIPLEX               } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { COVERAGE                      } from '../subworkflows/local/coverage/main'
-include { FASTQ_TO_UCRAM                } from '../subworkflows/local/fastq_to_unaligned_cram/main'
-include { FASTQ_TO_CRAM                 } from '../subworkflows/local/fastq_to_aligned_cram/main'
+include { BAM_QC                 } from '../subworkflows/local/bam_qc/main'
+include { BCL_DEMULTIPLEX        } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { COVERAGE               } from '../subworkflows/local/coverage/main'
+include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram/main'
 
 // Functions
 include { paramsSummaryMap              } from 'plugin/nf-schema'
@@ -38,7 +37,6 @@ workflow PREPROCESSING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     genomes        // map: genome reference files
-    aligner        // string: global aligner to use
     markdup        // string: markdup method to use
     roi            // file: regions of interest bed file to be applied to all samples
     genelists      // file: directory containing genelist bed files for coverage analysis
@@ -108,6 +106,10 @@ workflow PREPROCESSING {
         .map { meta, fq ->
             return [meta, fq.flatten().unique()]
         }
+        .branch { meta, _fastq ->
+            to_align: meta.aligner && meta.aligner != "false"
+            other: true
+        }
         .set { ch_demultiplexed_fastq_with_sampleinfo }
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -140,7 +142,7 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
     ch_input_fastq
-        .mix(ch_demultiplexed_fastq_with_sampleinfo)
+        .mix(ch_demultiplexed_fastq_with_sampleinfo.to_align)
         .map { meta, reads ->
             if (meta.organism && !meta.genome) {
                 if (meta.organism ==~ /(?i)Homo[\s_]sapiens/) {
@@ -162,10 +164,7 @@ workflow PREPROCESSING {
             else {
                 meta = meta + ["genome_data": [:]]
             }
-            // set the aligner
-            if (aligner && !meta.aligner) {
-                meta = meta + ["aligner": aligner]
-            }
+
             // set the ROI
             // // Special case for coPGT samples
             // // if there's no global ROI AND no sample speficic ROI
@@ -188,12 +187,16 @@ workflow PREPROCESSING {
         .map { meta, fastq ->
             return [meta - meta.subMap('fcid', 'lane'), fastq]
         }
+        .branch { meta, _reads ->
+            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && meta.aligner
+            other: true
+        }
         .set { ch_fastq_per_sample }
 
-    ch_fastq_per_sample.dump(tag: "FASTQ per sample", pretty: true)
+    ch_fastq_per_sample.supported.dump(tag: "Supported FASTQ per sample", pretty: true)
+    ch_fastq_per_sample.other.dump(tag: "Other FASTQ per sample", pretty: true)
 
-
-    /*
+/*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // FASTQ TRIMMING AND QC
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -201,8 +204,8 @@ workflow PREPROCESSING {
 
     // MODULE: fastp
     // Run QC, trimming and adapter removal
-    // FASTP([meta, fastq], adapter_fasta, save_trimmed, save_merged)
-    FASTP(ch_fastq_per_sample.map{ meta, fastq -> return [meta, fastq, []] }, false, false, false)
+    // FASTP([meta, fastq, adapter_fasta], save_trimmed, save_merged)
+    FASTP(ch_fastq_per_sample.supported.map{ meta, fastq -> return [meta, fastq, []] }, false, false, false)
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
     ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
@@ -223,44 +226,26 @@ workflow PREPROCESSING {
                 reads,
             ]
         }
-        .branch { meta, _reads ->
-            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0
-            other: true
-        }
         .set { ch_trimmed_reads }
 
-    ch_trimmed_reads.supported.dump(tag: "Supported trimmed reads per sample", pretty: true)
-    ch_trimmed_reads.other.dump(tag: "Other trimmed reads per sample", pretty: true)
-
-
-    /*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: FASTQ TO UNALIGNED CRAM CONVERSION
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-    FASTQ_TO_UCRAM(ch_trimmed_reads.other)
-    ch_versions = ch_versions.mix(FASTQ_TO_UCRAM.out.versions)
-
-    /*
+    ch_trimmed_reads.dump(tag: "Supported trimmed reads per sample", pretty: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: FASTQ TO ALIGNED CRAM CONVERSION
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    ch_trimmed_reads.supported
-        .map { meta, reads ->
-            return [
-                meta,
-                reads,
-                meta.aligner,
-                getGenomeAttribute(meta.genome_data, meta.aligner),
-                getGenomeAttribute(meta.genome_data, "fasta"),
-                getGenomeAttribute(meta.genome_data, "gtf"),
-            ]
-        }
-        .set { ch_meta_reads_aligner_index_fasta_gtf }
+    ch_trimmed_reads.map { meta, reads ->
+        return [
+            meta,
+            reads,
+            meta.aligner,
+            getGenomeAttribute(meta.genome_data, meta.aligner),
+            getGenomeAttribute(meta.genome_data, "fasta"),
+            getGenomeAttribute(meta.genome_data, "gtf"),
+        ]
+    }
+    .set { ch_meta_reads_aligner_index_fasta_gtf }
 
     FASTQ_TO_CRAM(
         ch_meta_reads_aligner_index_fasta_gtf,
@@ -499,9 +484,9 @@ workflow PREPROCESSING {
     demultiplex_interop         = BCL_DEMULTIPLEX.out.interop
     demultiplex_reports         = BCL_DEMULTIPLEX.out.reports
     demultiplex_logs            = BCL_DEMULTIPLEX.out.logs
+    demultiplex_fastq           = ch_demultiplexed_fastq_with_sampleinfo.other
     fastp_json                  = FASTP.out.json
     fastp_html                  = FASTP.out.html
-    ucrams                      = FASTQ_TO_UCRAM.out.cram
     crams                       = FASTQ_TO_CRAM.out.cram_crai
     align_reports               = FASTQ_TO_CRAM.out.align_reports
     sormadup_metrics            = FASTQ_TO_CRAM.out.sormadup_metrics

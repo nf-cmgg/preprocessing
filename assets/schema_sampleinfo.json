@@ -83,11 +83,18 @@
             },
             "aligner": {
                 "meta": ["aligner"],
-                "type": "string",
+                "type": ["string", "boolean"],
                 "description": "Aligner to use to align sample to the reference genome",
-                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star"]
+                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star", "false", false]
             }
         }
     },
-    "required": ["samplename", "tag", "organism"]
+    "anyOf": [
+        {
+            "required": ["samplename", "organism", "aligner", "tag"]
+        },
+        {
+            "required": ["samplename", "genome", "aligner", "tag"]
+        }
+    ]
 }

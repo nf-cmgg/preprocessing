@@ -6,7 +6,7 @@
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.4.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.4.1)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -43,8 +43,8 @@ First, prepare a samplesheet with your input data that looks as follows:
 `samplesheet.csv` for fastq inputs:
 
 ```csv
-id,samplename,organism,library,fastq_1,fastq_2
-sample1,sample1,Homo sapiens,Library_Name,reads1.fq.gz,reads2.fq.gz
+id,samplename,organism,library,aligner,fastq_1,fastq_2
+sample1,sample1,Homo sapiens,Library_Name,bwamem,reads1.fq.gz,reads2.fq.gz
 ```
 
 `samplesheet.csv` for flowcell inputs:
@@ -57,8 +57,8 @@ flowcell_id,/path/to/illumina_samplesheet.csv,1,/path/to/sequencer_uploaddir,/pa
 `sampleinfo.csv` for use with flowcell inputs:
 
 ```csv
-samplename,library,organism,tag
-fc_sample1,test,Homo sapiens,WES
+samplename,library,organism,tag,aligner
+fc_sample1,test,Homo sapiens,WES,bwamem
 ```
 
 Now, you can run the pipeline using:

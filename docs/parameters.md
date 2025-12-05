@@ -17,7 +17,6 @@ Define where the pipeline should find input data and save output data.
 
 | Parameter                | Description                                                             | Type      | Default     | Required | Hidden |
 | ------------------------ | ----------------------------------------------------------------------- | --------- | ----------- | -------- | ------ |
-| `aligner`                | Which aligner to use                                                    | `string`  | bowtie2     | True     |        |
 | `markdup`                | Which alignment postprocessor to use                                    | `string`  | bamsormadup |          |        |
 | `run_coverage`           | Run coverage analysis steps                                             | `boolean` | True        |          |        |
 | `skip_trimming`          | Skip adapter trimming                                                   | `boolean` | False       |          |        |

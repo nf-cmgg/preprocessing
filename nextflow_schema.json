@@ -51,12 +51,6 @@
             "description": "",
             "default": "",
             "properties": {
-                "aligner": {
-                    "type": "string",
-                    "default": "bowtie2",
-                    "description": "Which aligner to use",
-                    "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star"]
-                },
                 "markdup": {
                     "type": "string",
                     "default": "bamsormadup",
@@ -115,8 +109,7 @@
                     "format": "directory-path",
                     "description": "Directory containing gene list bed files for granular coverage analysis"
                 }
-            },
-            "required": ["aligner"]
+            }
         },
         "institutional_config_options": {
             "title": "Institutional config options",

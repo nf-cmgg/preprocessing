@@ -35,9 +35,9 @@
             },
             "aligner": {
                 "meta": ["aligner"],
-                "type": "string",
+                "type": ["string", "boolean"],
                 "description": "Aligner to use to align sample to the reference genome",
-                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star"]
+                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star", "false", false]
             },
             "tag": {
                 "meta": ["tag"],
@@ -110,10 +110,10 @@
         },
         "anyOf": [
             {
-                "required": ["id", "samplename", "organism", "tag", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "organism", "aligner", "tag", "fastq_1", "fastq_2"]
             },
             {
-                "required": ["id", "samplename", "genome", "tag", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "genome", "aligner", "tag", "fastq_1", "fastq_2"]
             },
             {
                 "required": ["id", "samplesheet", "sample_info", "flowcell"]

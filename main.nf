@@ -45,7 +45,6 @@ workflow {
     PREPROCESSING(
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
-        params.aligner,
         params.markdup,
         params.roi,
         params.genelists,
@@ -68,9 +67,9 @@ workflow {
     demultiplex_interop = PREPROCESSING.out.demultiplex_interop.transpose(by:1)
     demultiplex_reports = PREPROCESSING.out.demultiplex_reports.transpose(by:1)
     demultiplex_logs    = PREPROCESSING.out.demultiplex_logs.transpose(by:1)
+    demultiplex_fastq   = PREPROCESSING.out.demultiplex_fastq.transpose()
     fastp_json          = PREPROCESSING.out.fastp_json
     fastp_html          = PREPROCESSING.out.fastp_html
-    ucrams              = PREPROCESSING.out.ucrams
     crams               = PREPROCESSING.out.crams
     align_reports       = PREPROCESSING.out.align_reports
     sormadup_metrics    = PREPROCESSING.out.sormadup_metrics
@@ -116,6 +115,10 @@ output {
         def out_path = meta.lane ? "Logs/L00${meta.lane}/${log.name}" as String : "Logs/${log.name}"
         log >> out_path
     } }
+    demultiplex_fastq { path { meta, fastq ->
+        def out_path = meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" as String : "${meta.samplename}/${fastq.name}"
+        fastq >> out_path
+    } }
     fastp_json { path { meta, json ->
         def out_path = meta.library ? "${meta.library}/${meta.samplename}/${json.name}" as String : "${meta.samplename}/${json.name}"
         json >> out_path
@@ -123,10 +126,6 @@ output {
     fastp_html { path { meta, html ->
         def out_path = meta.library ? "${meta.library}/${meta.samplename}/${html.name}" as String : "${meta.samplename}/${html.name}"
         html >> out_path
-    } }
-    ucrams { path { meta, cram ->
-        def out_path = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.unaligned.cram" as String : "${meta.samplename}/${meta.samplename}.unaligned.cram"
-        cram >> out_path
     } }
     crams { path { meta, cram, crai ->
         def out_cram = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" as String : "${meta.samplename}/${meta.samplename}.cram"
