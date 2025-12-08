@@ -20,6 +20,7 @@ Define where the pipeline should find input data and save output data.
 | `markdup`                | Which alignment postprocessor to use                                    | `string`  | bamsormadup |          |        |
 | `run_coverage`           | Run coverage analysis steps                                             | `boolean` | True        |          |        |
 | `skip_trimming`          | Skip adapter trimming                                                   | `boolean` | False       |          |        |
+| `split_fastq`            | Number of reads per FastQ split (0 to disable splitting)                | `integer` | 100000000   |          |        |
 | `trim_front`             | Number of bases to trim from the front of the read                      | `integer` | 0           |          |        |
 | `trim_tail`              | Number of bases to trim from the tail of the read                       | `integer` | 0           |          |        |
 | `adapter_R1`             | Adapter sequence to be trimmed                                          | `string`  | None        |          |        |
