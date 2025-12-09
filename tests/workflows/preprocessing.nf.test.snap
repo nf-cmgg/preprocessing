@@ -108,7 +108,7 @@
                             "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,caf903cc79784ceaa71d6ef743c02ff3"
+                        "sample1.fastp.json:md5,2edca71b00e4804eb7b39ff72f1c304a"
                     ]
                 ],
                 "md5sums": [
@@ -189,7 +189,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.per-base.bed.gz:md5,46115d39863826ae9199340c2eb888a6"
+                        "sample1.per-base.bed.gz:md5,e5c10c94f3870f6ed2c75a904e9ade7f"
                     ]
                 ],
                 "mosdepth_per_base_csi": [
@@ -216,7 +216,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.per-base.bed.gz.csi:md5,12fdbaf668bda28541b869adecc15dc7"
+                        "sample1.per-base.bed.gz.csi:md5,b9223463b0f024768ebbbb3e42ace8da"
                     ]
                 ],
                 "mosdepth_per_base_d4": [
@@ -327,7 +327,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.regions.bed.gz:md5,63a7fee57ae572a661fba2d14c6db1b4"
+                        "sample1.regions.bed.gz:md5,6b7cc84380695011ffd0681dc79cefaa"
                     ]
                 ],
                 "mosdepth_regions_csi": [
@@ -354,7 +354,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.regions.bed.gz.csi:md5,531956423eb6b53186ae4adc39e0e61e"
+                        "sample1.regions.bed.gz.csi:md5,45cbd8c0f3d231c114a2d79d7dd21a80"
                     ]
                 ],
                 "mosdepth_summary": [
@@ -381,7 +381,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.mosdepth.summary.txt:md5,cfd81f854b864f9630e8831b48cfc9a0"
+                        "sample1.mosdepth.summary.txt:md5,f1f18d9bd23783bedb7f9e246e192a7e"
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
@@ -391,13 +391,13 @@
                     
                 ],
                 "multiqc_library_data": [
-                    "multiqc_library_test_data"
+                    "test_data"
                 ],
                 "multiqc_library_plots": [
-                    "multiqc_library_test_plots"
+                    "test_plots"
                 ],
                 "multiqc_library_report": [
-                    "multiqc_library_test.html"
+                    "test.html"
                 ],
                 "multiqc_main_data": [
                     [
@@ -535,7 +535,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.coverage.txt:md5,82e6e6b4163459aeca0b9dd40ef67d13"
+                        "sample1.coverage.txt:md5,656b7371132475783094d80b7d2292b5"
                     ]
                 ],
                 "samtools_flagstat": [
@@ -562,7 +562,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.flagstat:md5,da197e74ff53116dd9b8b1241f468aac"
+                        "sample1.flagstat:md5,cd826b1749737d52499cf543d101ecd2"
                     ]
                 ],
                 "samtools_idxstats": [
@@ -589,7 +589,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.idxstats:md5,4e1b204d3bb59e42022c5d84be705ed8"
+                        "sample1.idxstats:md5,ecc89a474dced28b0610f17a82785007"
                     ]
                 ],
                 "samtools_stats": [
@@ -616,7 +616,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.stats:md5,33a10d02ce404301e012f07841815f59"
+                        "sample1.stats:md5,bbe2999c6baf17c96d4f00370c6b9501"
                     ]
                 ],
                 "sormadup_metrics": [
@@ -643,7 +643,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.merged.metrics.txt:md5,ba50ddef3f0147526ed1f01a98c47ed6"
+                        "sample1.merged.metrics.txt:md5,01b7286134f5cb6530c3bab2c86fd169"
                     ]
                 ],
                 "versions": [
@@ -666,7 +666,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T22:49:24.788115"
+        "timestamp": "2025-12-09T11:03:22.986076"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -777,7 +777,7 @@
                             "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,caf903cc79784ceaa71d6ef743c02ff3"
+                        "sample1.fastp.json:md5,2edca71b00e4804eb7b39ff72f1c304a"
                     ]
                 ],
                 "md5sums": [
@@ -844,13 +844,13 @@
                     
                 ],
                 "multiqc_library_data": [
-                    "multiqc_library_test_data"
+                    "test_data"
                 ],
                 "multiqc_library_plots": [
-                    "multiqc_library_test_plots"
+                    "test_plots"
                 ],
                 "multiqc_library_report": [
-                    "multiqc_library_test.html"
+                    "test.html"
                 ],
                 "multiqc_main_data": [
                     [
@@ -909,7 +909,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.flagstat:md5,da197e74ff53116dd9b8b1241f468aac"
+                        "sample1.flagstat:md5,cd826b1749737d52499cf543d101ecd2"
                     ]
                 ],
                 "samtools_idxstats": [
@@ -936,7 +936,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.idxstats:md5,4e1b204d3bb59e42022c5d84be705ed8"
+                        "sample1.idxstats:md5,ecc89a474dced28b0610f17a82785007"
                     ]
                 ],
                 "samtools_stats": [
@@ -963,7 +963,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.stats:md5,33a10d02ce404301e012f07841815f59"
+                        "sample1.stats:md5,bbe2999c6baf17c96d4f00370c6b9501"
                     ]
                 ],
                 "sormadup_metrics": [
@@ -990,7 +990,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.merged.metrics.txt:md5,ba50ddef3f0147526ed1f01a98c47ed6"
+                        "sample1.merged.metrics.txt:md5,01b7286134f5cb6530c3bab2c86fd169"
                     ]
                 ],
                 "versions": [
@@ -1009,7 +1009,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T22:53:59.211177"
+        "timestamp": "2025-12-09T11:09:14.114309"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1117,7 +1117,7 @@
                             },
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,caf903cc79784ceaa71d6ef743c02ff3"
+                        "sample1.fastp.json:md5,2edca71b00e4804eb7b39ff72f1c304a"
                     ]
                 ],
                 "md5sums": [
@@ -1195,7 +1195,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.per-base.bed.gz:md5,46115d39863826ae9199340c2eb888a6"
+                        "sample1.per-base.bed.gz:md5,e5c10c94f3870f6ed2c75a904e9ade7f"
                     ]
                 ],
                 "mosdepth_per_base_csi": [
@@ -1221,7 +1221,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.per-base.bed.gz.csi:md5,12fdbaf668bda28541b869adecc15dc7"
+                        "sample1.per-base.bed.gz.csi:md5,b9223463b0f024768ebbbb3e42ace8da"
                     ]
                 ],
                 "mosdepth_per_base_d4": [
@@ -1311,7 +1311,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.mosdepth.summary.txt:md5,9799b90b7db86a6eab36f33b04a67ae0"
+                        "sample1.mosdepth.summary.txt:md5,699b955719b06ff290edbe0692492213"
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
@@ -1321,13 +1321,13 @@
                     
                 ],
                 "multiqc_library_data": [
-                    "multiqc_library_test_data"
+                    "test_data"
                 ],
                 "multiqc_library_plots": [
-                    "multiqc_library_test_plots"
+                    "test_plots"
                 ],
                 "multiqc_library_report": [
-                    "multiqc_library_test.html"
+                    "test.html"
                 ],
                 "multiqc_main_data": [
                     [
@@ -1461,7 +1461,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.coverage.txt:md5,82e6e6b4163459aeca0b9dd40ef67d13"
+                        "sample1.coverage.txt:md5,656b7371132475783094d80b7d2292b5"
                     ]
                 ],
                 "samtools_flagstat": [
@@ -1487,7 +1487,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.flagstat:md5,da197e74ff53116dd9b8b1241f468aac"
+                        "sample1.flagstat:md5,cd826b1749737d52499cf543d101ecd2"
                     ]
                 ],
                 "samtools_idxstats": [
@@ -1513,7 +1513,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.idxstats:md5,4e1b204d3bb59e42022c5d84be705ed8"
+                        "sample1.idxstats:md5,ecc89a474dced28b0610f17a82785007"
                     ]
                 ],
                 "samtools_stats": [
@@ -1539,7 +1539,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.stats:md5,33a10d02ce404301e012f07841815f59"
+                        "sample1.stats:md5,bbe2999c6baf17c96d4f00370c6b9501"
                     ]
                 ],
                 "sormadup_metrics": [
@@ -1565,7 +1565,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.merged.metrics.txt:md5,ba50ddef3f0147526ed1f01a98c47ed6"
+                        "sample1.merged.metrics.txt:md5,01b7286134f5cb6530c3bab2c86fd169"
                     ]
                 ],
                 "versions": [
@@ -1588,6 +1588,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T22:52:15.051988"
+        "timestamp": "2025-12-09T11:06:50.62591"
     }
 }
