@@ -35,7 +35,7 @@
                             "single_end": false,
                             "tag": "WES"
                         },
-                        "test.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
                     ]
                 ],
                 "13": [
@@ -242,7 +242,7 @@
                             "single_end": false,
                             "tag": "WES"
                         },
-                        "test.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
                     ]
                 ],
                 "versions": [
@@ -256,7 +256,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-02T12:34:24.897893"
+        "timestamp": "2025-12-09T12:02:48.263146"
     },
     "Coverage - seqcap": {
         "content": [
@@ -294,7 +294,7 @@
                             "single_end": false,
                             "tag": "seqcap"
                         },
-                        "test.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
                     ]
                 ],
                 "13": [
@@ -486,7 +486,7 @@
                             "single_end": false,
                             "tag": "seqcap"
                         },
-                        "test.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
                     ]
                 ],
                 "versions": [
@@ -499,6 +499,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-02T12:34:05.200571"
+        "timestamp": "2025-12-09T12:02:26.604953"
     }
 }
