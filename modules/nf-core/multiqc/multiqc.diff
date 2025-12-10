@@ -11,7 +11,7 @@ Changes in 'multiqc/main.nf':
  
      conda "${moduleDir}/environment.yml"
 @@ -7,7 +8,7 @@
-         'community.wave.seqera.io/library/multiqc:1.32--d58f60e4deb769bf' }"
+         'community.wave.seqera.io/library/multiqc:1.33--ee7739d47738383b' }"
  
      input:
 -    path multiqc_files, stageAs: "?/*"
@@ -19,15 +19,6 @@ Changes in 'multiqc/main.nf':
      path(multiqc_config)
      path(extra_multiqc_config)
      path(multiqc_logo)
-@@ -18,7 +19,7 @@
-     path "*.html"      , emit: report
-     path "*_data"      , emit: data
-     path "*_plots"     , optional:true, emit: plots
--    tuple val("${task.process}"), val('multiqc'), eval('multiqc --version | sed "s/.* //g"'), topic: versions, emit: versions_multiqc
-+    tuple val("${task.process}"), val('multiqc'), eval('multiqc --version | sed "s/.* //g"'), emit: versions_multiqc
- 
-     when:
-     task.ext.when == null || task.ext.when
 
 'modules/nf-core/multiqc/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/multiqc/tests/nextflow.config' is unchanged
