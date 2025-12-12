@@ -63,7 +63,6 @@ process SAMTOOLS_SORMADUP {
         -u \\
         -T ${prefix}.sort \\
         --threads $task.cpus \\
-        -m ${sort_memory}M \\
         - \\
     | \\
     samtools markdup \\

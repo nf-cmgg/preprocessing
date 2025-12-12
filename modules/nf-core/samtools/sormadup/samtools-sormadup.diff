@@ -14,6 +14,14 @@ Changes in 'samtools/sormadup/main.nf':
  
      output:
      tuple val(meta), path("*.bam")      , emit: bam,  optional: true
+@@ -64,7 +63,6 @@
+         -u \\
+         -T ${prefix}.sort \\
+         --threads $task.cpus \\
+-        -m ${sort_memory}M \\
+         - \\
+     | \\
+     samtools markdup \\
 
 'modules/nf-core/samtools/sormadup/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/samtools/sormadup/tests/bam.config' is unchanged
