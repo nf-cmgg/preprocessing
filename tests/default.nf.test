@@ -39,4 +39,20 @@ nextflow_pipeline {
 
     }
 
+    test("main - fastq RNA input") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/inputs/fastq_rna.yml"
+                igenomes_base = "s3://reference-data/genomes"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
 }

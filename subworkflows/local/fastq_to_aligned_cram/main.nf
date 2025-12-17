@@ -151,8 +151,10 @@ workflow FASTQ_TO_CRAM {
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
     emit:
-    cram_crai           = ch_cram_crai
-    sormadup_metrics    = ch_sormadup_metrics
-    align_reports       = FASTQ_ALIGN_DNA.out.reports
-    versions            = ch_versions
+    cram_crai               = ch_cram_crai
+    rna_splice_junctions    = FASTQ_ALIGN_RNA.out.splice_junctions
+    rna_junctions           = FASTQ_ALIGN_RNA.out.junctions
+    sormadup_metrics        = ch_sormadup_metrics
+    align_reports           = FASTQ_ALIGN_DNA.out.reports
+    versions                = ch_versions
 }

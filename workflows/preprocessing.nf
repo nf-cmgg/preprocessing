@@ -488,6 +488,8 @@ workflow PREPROCESSING {
     fastp_json                  = FASTP.out.json
     fastp_html                  = FASTP.out.html
     crams                       = FASTQ_TO_CRAM.out.cram_crai
+    rna_splice_junctions        = FASTQ_TO_CRAM.out.rna_splice_junctions
+    rna_junctions               = FASTQ_TO_CRAM.out.rna_junctions
     align_reports               = FASTQ_TO_CRAM.out.align_reports
     sormadup_metrics            = FASTQ_TO_CRAM.out.sormadup_metrics
     mosdepth_global             = mosdepth_global_out
