@@ -522,26 +522,26 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "samplename": "sample1",
-                                "library": "test",
-                                "organism": "Homo sapiens",
-                                "tag": "WES",
-                                "sample_type": "DNA",
                                 "aligner": "bwamem",
-                                "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
+                                "id": "sample1",
+                                "library": "test",
+                                "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
-                                "id": "sample1"
+                                "sample_type": "DNA",
+                                "samplename": "sample1",
+                                "single_end": false,
+                                "tag": "WES"
                             }
                         },
-                        "sample1.coverage.txt:md5,2273df8af027c91ad1a51ab62ff39f13"
+                        "sample1.coverage.txt"
                     ]
                 ],
                 "samtools_flagstat": [
@@ -549,26 +549,26 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "samplename": "sample1",
-                                "library": "test",
-                                "organism": "Homo sapiens",
-                                "tag": "WES",
-                                "sample_type": "DNA",
                                 "aligner": "bwamem",
-                                "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
+                                "id": "sample1",
+                                "library": "test",
+                                "organism": "Homo sapiens",
                                 "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
-                                "id": "sample1"
+                                "sample_type": "DNA",
+                                "samplename": "sample1",
+                                "single_end": false,
+                                "tag": "WES"
                             }
                         },
-                        "sample1.flagstat:md5,cd826b1749737d52499cf543d101ecd2"
+                        "sample1.flagstat"
                     ]
                 ],
                 "samtools_idxstats": [
@@ -622,7 +622,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.stats:md5,48c3d9d21314717edf49cfd80014be2a"
+                        "sample1.stats:md5,bbe2999c6baf17c96d4f00370c6b9501"
                     ]
                 ],
                 "sormadup_metrics": [
@@ -672,7 +672,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-17T14:17:54.029873192"
+        "timestamp": "2025-12-17T15:25:16.549534093"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
