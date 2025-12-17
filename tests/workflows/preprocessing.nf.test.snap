@@ -511,6 +511,12 @@
                 "picard_wgsmetrics": [
                     
                 ],
+                "rna_junctions": [
+                    
+                ],
+                "rna_splice_junctions": [
+                    
+                ],
                 "samtools_coverage": [
                     [
                         {
@@ -535,7 +541,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.coverage.txt:md5,656b7371132475783094d80b7d2292b5"
+                        "sample1.coverage.txt:md5,2273df8af027c91ad1a51ab62ff39f13"
                     ]
                 ],
                 "samtools_flagstat": [
@@ -616,7 +622,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.stats:md5,bbe2999c6baf17c96d4f00370c6b9501"
+                        "sample1.stats:md5,48c3d9d21314717edf49cfd80014be2a"
                     ]
                 ],
                 "sormadup_metrics": [
@@ -663,10 +669,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.2",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-09T11:03:22.986076"
+        "timestamp": "2025-12-17T14:17:54.029873192"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -882,6 +888,12 @@
                 "picard_wgsmetrics": [
                     
                 ],
+                "rna_junctions": [
+                    
+                ],
+                "rna_splice_junctions": [
+                    
+                ],
                 "samtools_coverage": [
                     
                 ],
@@ -1006,10 +1018,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.2",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-09T11:09:14.114309"
+        "timestamp": "2025-12-17T14:25:25.520000109"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1438,6 +1450,12 @@
                         "sample1.CollectWgsMetrics.coverage_metrics"
                     ]
                 ],
+                "rna_junctions": [
+                    
+                ],
+                "rna_splice_junctions": [
+                    
+                ],
                 "samtools_coverage": [
                     [
                         {
@@ -1585,9 +1603,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.2",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-09T11:06:50.62591"
+        "timestamp": "2025-12-17T14:22:40.972493649"
     }
 }
