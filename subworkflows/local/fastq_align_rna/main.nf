@@ -5,7 +5,11 @@
 //
 
 
-include { STAR_ALIGN } from "../../../modules/nf-core/star/align/main.nf"
+include { STAR_ALIGN                        } from "../../../modules/nf-core/star/align/main.nf"
+include { CAT_CAT as CAT_JUNCTIONS          } from "../../../modules/nf-core/cat/cat/main.nf"
+include { CAT_CAT as CAT_SPLICE_JUNCTIONS   } from "../../../modules/nf-core/cat/cat/main.nf"
+include { GNU_SORT as SORT_JUNCTIONS        } from "../../../modules/nf-core/gnu/sort/main.nf"
+include { GNU_SORT as SORT_SPLICE_JUNCTIONS } from "../../../modules/nf-core/gnu/sort/main.nf"
 
 workflow FASTQ_ALIGN_RNA {
     take:
@@ -40,8 +44,52 @@ workflow FASTQ_ALIGN_RNA {
     )
     ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
+    // Concatenate splice junction files
+    def ch_splice_junctions_to_merge = group_junctions(STAR_ALIGN.out.spl_junc_tab)
+
+    CAT_SPLICE_JUNCTIONS(ch_splice_junctions_to_merge)
+    SORT_SPLICE_JUNCTIONS(CAT_SPLICE_JUNCTIONS.out.file_out)
+    ch_versions = ch_versions.mix(SORT_SPLICE_JUNCTIONS.out.versions.first())
+
+    // Concatenate junction files
+    def ch_junctions_to_merge = group_junctions(STAR_ALIGN.out.junction)
+
+    CAT_JUNCTIONS(ch_junctions_to_merge)
+    SORT_JUNCTIONS(CAT_JUNCTIONS.out.file_out)
+    ch_versions = ch_versions.mix(SORT_JUNCTIONS.out.versions.first())
+
     emit:
-    bam      = ch_bam // channel: [ [meta], bam       ]
-    reports  = ch_reports // channel: [ [meta], log       ]
-    versions = ch_versions // channel: [ versions.yml      ]
+    bam                 = ch_bam // channel: [ [meta], bam       ]
+    splice_junctions    = SORT_SPLICE_JUNCTIONS.out.sorted // channel: [ [meta], splice_junctions ]
+    junctions           = SORT_JUNCTIONS.out.sorted // channel: [ [meta], junctions  ]
+    reports             = ch_reports // channel: [ [meta], log       ]
+    versions            = ch_versions // channel: [ versions.yml      ]
+}
+
+def group_junctions(ch) {
+    return ch.map { meta, files ->
+            def gk = (meta.chunks as Integer ?: 1)
+            return [
+                groupKey(
+                    meta - meta.subMap('readgroup', 'chunks') + [id: meta.id ==~ /^\d{4}\..*$/ ? meta.id[5..-1] : meta.id],
+                    gk,
+                ),
+                files,
+            ]
+        }
+        .groupTuple()
+        .map { meta, files ->
+            def gk = (meta.count as Integer ?: 1)
+            return [
+                groupKey(
+                    meta - meta.subMap('count') + [id: meta.samplename ?: meta.id],
+                    gk,
+                ),
+                files,
+            ]
+        }
+        .groupTuple()
+        .map { meta, files ->
+            return [meta, files.flatten()]
+        }
 }

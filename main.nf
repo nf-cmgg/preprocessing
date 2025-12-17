@@ -71,6 +71,8 @@ workflow {
     fastp_json          = PREPROCESSING.out.fastp_json
     fastp_html          = PREPROCESSING.out.fastp_html
     crams               = PREPROCESSING.out.crams
+    rna_splice_junctions = PREPROCESSING.out.rna_splice_junctions
+    rna_junctions        = PREPROCESSING.out.rna_junctions
     align_reports       = PREPROCESSING.out.align_reports
     sormadup_metrics    = PREPROCESSING.out.sormadup_metrics
     mosdepth_global = PREPROCESSING.out.mosdepth_global
@@ -132,6 +134,14 @@ output {
         def out_crai = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram.crai" as String : "${meta.samplename}/${meta.samplename}.cram.crai"
         cram >> out_cram
         crai >> out_crai
+    } }
+    rna_splice_junctions { path { meta, sjt ->
+        def out_path = meta.library ? "${meta.library}/${meta.samplename}/${sjt.name}" as String : "${meta.samplename}/${sjt.name}"
+        sjt >> out_path
+    } }
+    rna_junctions { path { meta, junctions ->
+        def out_path = meta.library ? "${meta.library}/${meta.samplename}/${junctions.name}" as String : "${meta.samplename}/${junctions.name}"
+        junctions >> out_path
     } }
     align_reports { path { meta, log ->
         def out_path = meta.library ? "${meta.library}/${meta.samplename}/${log.name}" as String : "${meta.samplename}/${log.name}"
