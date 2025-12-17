@@ -139,7 +139,9 @@ nextflow_workflow {
                     "picard_wgsmetrics",
                     "picard_multiplemetrics_pdf",
                     "picard_multiplemetrics",
-                    "picard_hsmetrics"
+                    "picard_hsmetrics",
+                    "samtools_flagstat",
+                    "samtools_coverage"
                 ])
             ).match()
         }
@@ -210,7 +212,9 @@ nextflow_workflow {
                     "picard_wgsmetrics",
                     "picard_multiplemetrics_pdf",
                     "picard_multiplemetrics",
-                    "picard_hsmetrics"
+                    "picard_hsmetrics",
+                    "samtools_flagstat",
+                    "samtools_coverage"
                 ])
             ).match()
         }
