@@ -64,7 +64,8 @@ nextflow_workflow {
                         sample_type:'RNA',
                         genome_data: [
                             fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                            star: "s3://test-data/genomics/homo_sapiens/genome/star/"
                         ]
                     ], // meta map
                     [

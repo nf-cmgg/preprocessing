@@ -71,7 +71,8 @@ nextflow_workflow {
                     "picard_multiplemetrics",
                     "picard_hsmetrics",
                     "samtools_flagstat",
-                    "samtools_coverage"
+                    "samtools_coverage",
+                    "samtools_stats"
                 ])
             ).match()
         }
@@ -141,7 +142,8 @@ nextflow_workflow {
                     "picard_multiplemetrics",
                     "picard_hsmetrics",
                     "samtools_flagstat",
-                    "samtools_coverage"
+                    "samtools_coverage",
+                    "samtools_stats"
                 ])
             ).match()
         }
@@ -214,7 +216,8 @@ nextflow_workflow {
                     "picard_multiplemetrics",
                     "picard_hsmetrics",
                     "samtools_flagstat",
-                    "samtools_coverage"
+                    "samtools_coverage",
+                    "samtools_stats"
                 ])
             ).match()
         }
