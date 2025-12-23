@@ -220,7 +220,7 @@ workflow PREPROCESSING {
         }
         .transpose()
         .map { meta, reads ->
-            def new_id = reads instanceof List ? reads[0].getName() - ~/_1.fastp.*/ : reads.getName() - ~/.fastp.*/
+            def new_id = reads instanceof List ? reads[0].getName() - ~/_R1.fastp.*/ : reads.getName() - ~/.fastp.*/
             return [
                 meta - meta.subMap('id') + [id: new_id],
                 reads,
