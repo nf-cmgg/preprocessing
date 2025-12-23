@@ -108,7 +108,7 @@
                             "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,2edca71b00e4804eb7b39ff72f1c304a"
+                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
                     ]
                 ],
                 "md5sums": [
@@ -669,10 +669,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-17T16:32:55.414537131"
+        "timestamp": "2025-12-23T13:59:59.404732"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -783,7 +783,7 @@
                             "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,2edca71b00e4804eb7b39ff72f1c304a"
+                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
                     ]
                 ],
                 "md5sums": [
@@ -1018,10 +1018,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-17T16:40:10.119231711"
+        "timestamp": "2025-12-23T14:06:35.503463"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1129,7 +1129,7 @@
                             },
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,2edca71b00e4804eb7b39ff72f1c304a"
+                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
                     ]
                 ],
                 "md5sums": [
@@ -1603,9 +1603,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-17T16:37:31.272800991"
+        "timestamp": "2025-12-23T14:04:00.643521"
     }
 }
