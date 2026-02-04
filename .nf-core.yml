@@ -19,15 +19,14 @@ lint:
     - LICENSE
   merge_markers:
     - bin/cmgg_genelists
-  multiqc_config:
-    - report_comment
+  multiqc_config: false
   nextflow_config:
     - manifest.name
     - manifest.homePage
   template_strings:
     - bin/cmgg_genelists
   nf_test_content: false
-nf_core_version: 3.5.1
+nf_core_version: 3.5.2
 repository_type: pipeline
 template:
   author: Matthias De Smet, Nicolas Vannieuwkerke
