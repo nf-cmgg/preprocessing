@@ -394,7 +394,7 @@
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-                    "test_plots"
+
                 ],
                 "multiqc_library_report": [
                     "test.html"
@@ -853,7 +853,7 @@
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-                    "test_plots"
+
                 ],
                 "multiqc_library_report": [
                     "test.html"
@@ -1336,7 +1336,7 @@
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-                    "test_plots"
+
                 ],
                 "multiqc_library_report": [
                     "test.html"
