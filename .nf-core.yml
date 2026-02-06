@@ -20,9 +20,7 @@ lint:
   merge_markers:
     - bin/cmgg_genelists
   multiqc_config: false
-  nextflow_config:
-    - manifest.name
-    - manifest.homePage
+  nextflow_config: false
   template_strings:
     - bin/cmgg_genelists
   nf_test_content: false
