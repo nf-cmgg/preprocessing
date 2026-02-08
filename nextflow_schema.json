@@ -184,7 +184,7 @@
                 "cmgg_custom_config_version": {
                     "type": "string",
                     "description": "Git commit id for nf-cmgg configs.",
-                    "default": "master",
+                    "default": "main",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
