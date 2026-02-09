@@ -44,11 +44,7 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
-                // markdup
-                input[2] = "bamsormadup"
-                // roi
-                input[3] = "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
-                input[4] = null
+                input[2] = null
                 """
             }
         }
@@ -115,11 +111,7 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
-                // markdup
-                input[2] = "bamsormadup"
-                // roi
-                input[3] = ""
-                input[4] = null
+                input[2] = null
                 """
             }
         }
@@ -189,11 +181,7 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
-                // markdup
-                input[2] = "bamsormadup"
-                // roi
-                input[3] = "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
-                input[4] = null
+                input[2] = null
                 """
             }
         }

@@ -22,8 +22,6 @@ workflow BAM_QC {
     .set { ch_bam_bai_fasta_fai }
 
     SAMTOOLS_STATS(ch_bam_bai_fasta_fai)
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
-
     SAMTOOLS_FLAGSTAT(ch_bam_bai_fasta_fai)
     ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions.first())
 
