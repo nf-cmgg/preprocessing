@@ -16,7 +16,7 @@ workflow BAM_QC {
     ch_versions = channel.empty()
 
     ch_bam_bai_roi_fasta_fai_dict
-    .map { meta, bam, bai, _roi, fasta, _fai, _dict ->
+    .map { meta, bam, bai, _roi, fasta, fai, _dict ->
         return [meta, bam, bai, fasta, fai]
     }
     .set { ch_bam_bai_fasta_fai }
@@ -52,7 +52,8 @@ workflow BAM_QC {
             return [meta, bam, bai, roi, fasta, fai, dict]
         wgsmetrics: roi == []
             return [meta, bam, bai, fasta, fai, dict]
-    .set { ch_picard_coverage } }
+    }
+    .set { ch_picard_coverage }
 
     PICARD_COLLECTWGSMETRICS(ch_picard_coverage.wgsmetrics, [])
     ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions.first())
