@@ -22,14 +22,20 @@
             "@id": "./",
             "@type": "Dataset",
             "creativeWorkStatus": "InProgress",
-            "datePublished": "2025-11-13T15:11:21+00:00",
+            "datePublished": "2026-02-09T13:16:20+00:00",
             "description": "# nf-cmgg/preprocessing\n\n[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/nf-cmgg/preprocessing)\n[![GitHub Actions CI Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-cmgg/preprocessing)\n\n## Introduction\n\n**nf-cmgg/preprocessing** is a bioinformatics pipeline that demultiplexes and aligns raw sequencing data.\nIt also performs basic QC and coverage analysis.\n\nThe pipeline is built using Nextflow, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.\n\nSteps inlcude:\n\n1. Demultiplexing using [`BCLconvert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)\n2. Read QC and trimming using [`fastp`](https://github.com/OpenGene/fastp)\n3. Alignment using either [`bwa`](https://github.com/lh3/bwa), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bowtie2`](https://github.com/BenLangmead/bowtie2), [`dragmap`](https://github.com/Illumina/DRAGMAP), [`snap`](https://github.com/amplab/snap) or [`strobe`](https://github.com/ksahlin/strobealign) for DNA-seq and [`STAR`](https://github.com/alexdobin/STAR) for RNA-seq\n4. Duplicate marking using [`bamsormadup`](https://gitlab.com/german.tischler/biobambam2) or [`samtools markdup`](http://www.htslib.org/doc/samtools-markdup.html)\n5. Coverage analysis using [`mosdepth`](https://github.com/brentp/mosdepth) and [`samtools coverage`](http://www.htslib.org/doc/samtools-coverage.html)\n6. Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`picard CollecHsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectHsMetrics), [`picard CollectWgsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics), [`picard CollectMultipleMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics)\n7. QC aggregation using [`multiqc`](https://multiqc.info/)\n\n![metro map](docs/images/metro_map.png)\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\nThe full documentation can be found [here](docs/README.md)\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv` for fastq inputs:\n\n```csv\nid,samplename,organism,library,aligner,fastq_1,fastq_2\nsample1,sample1,Homo sapiens,Library_Name,bwamem,reads1.fq.gz,reads2.fq.gz\n```\n\n`samplesheet.csv` for flowcell inputs:\n\n```csv\nid,samplesheet,lane,flowcell,sample_info\nflowcell_id,/path/to/illumina_samplesheet.csv,1,/path/to/sequencer_uploaddir,/path/to/sampleinfo.csv\n```\n\n`sampleinfo.csv` for use with flowcell inputs:\n\n```csv\nsamplename,library,organism,tag,aligner\nfc_sample1,test,Homo sapiens,WES,bwamem\n```\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run nf-cmgg/preprocessing \\\n   -profile <docker/singularity/.../institute> \\\n   --igenomes_base /path/to/genomes \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;\n> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).\n\n## Credits\n\nnf-cmgg/preprocessing was originally written by the CMGG ICT team.\n\n## Support\n\nThis pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
             "hasPart": [
                 {
                     "@id": "main.nf"
                 },
                 {
+                    "@id": "docs/images/metro_map.png"
+                },
+                {
                     "@id": "assets/"
+                },
+                {
+                    "@id": "bin/"
                 },
                 {
                     "@id": "conf/"
@@ -38,7 +44,13 @@
                     "@id": "docs/"
                 },
                 {
+                    "@id": "docs/images/"
+                },
+                {
                     "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
                 },
                 {
                     "@id": "modules/nf-core/"
@@ -93,7 +105,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#3be06551-eaa0-4c8e-8ad8-cf70f05fb90c"
+                    "@id": "#e939b96d-700d-40a2-9ff8-added4e0ade4"
                 }
             ],
             "name": "nf-cmgg/preprocessing"
@@ -120,15 +132,31 @@
                 "SoftwareSourceCode",
                 "ComputationalWorkflow"
             ],
+            "creator": [
+                {
+                    "@id": "https://orcid.org/0000-0003-2555-3114"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0003-5619-1555"
+                }
+            ],
             "dateCreated": "",
-            "dateModified": "2025-11-13T16:11:21Z",
+            "dateModified": "2026-02-09T14:16:20Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
+            "image": {
+                "@id": "docs/images/metro_map.png"
+            },
             "keywords": [
                 "nf-core",
                 "nextflow"
             ],
             "license": [
                 "MIT"
+            ],
+            "maintainer": [
+                {
+                    "@id": "https://orcid.org/0000-0003-2555-3114"
+                }
             ],
             "name": [
                 "nf-cmgg/preprocessing"
@@ -144,7 +172,7 @@
                 "https://nf-co.re/nf-cmgg/preprocessing/dev/"
             ],
             "version": [
-                "2.1.0dev"
+                "3.0.0dev"
             ]
         },
         {
@@ -157,14 +185,22 @@
             "url": {
                 "@id": "https://www.nextflow.io/"
             },
-            "version": "!>=25.04.0"
+            "version": "!>=25.10.0"
         },
         {
-            "@id": "#3be06551-eaa0-4c8e-8ad8-cf70f05fb90c",
+            "@id": "docs/images/metro_map.png",
+            "@type": [
+                "File",
+                "ImageObject"
+            ],
+            "name": "Workflow diagram"
+        },
+        {
+            "@id": "#e939b96d-700d-40a2-9ff8-added4e0ade4",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#4d67a865-3114-4fc8-94e4-c36091fb7276"
+                    "@id": "#a6c6a5a5-b7e8-4825-8dce-3f467dbc2c91"
                 }
             ],
             "mainEntity": {
@@ -173,7 +209,7 @@
             "name": "Test suite for nf-cmgg/preprocessing"
         },
         {
-            "@id": "#4d67a865-3114-4fc8-94e4-c36091fb7276",
+            "@id": "#a6c6a5a5-b7e8-4825-8dce-3f467dbc2c91",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-cmgg/preprocessing",
             "resource": "repos/nf-cmgg/preprocessing/actions/workflows/nf-test.yml",
@@ -196,6 +232,11 @@
             "description": "Additional files"
         },
         {
+            "@id": "bin/",
+            "@type": "Dataset",
+            "description": "Scripts that must be callable from a pipeline process"
+        },
+        {
             "@id": "conf/",
             "@type": "Dataset",
             "description": "Configuration files"
@@ -206,9 +247,19 @@
             "description": "Markdown files for documenting the pipeline"
         },
         {
+            "@id": "docs/images/",
+            "@type": "Dataset",
+            "description": "Images for the documentation files"
+        },
+        {
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",
@@ -290,6 +341,18 @@
             "@type": "Organization",
             "name": "nf-core",
             "url": "https://nf-co.re/"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-2555-3114",
+            "@type": "Person",
+            "email": "11850640+matthdsm@users.noreply.github.com",
+            "name": "Matthias De Smet"
+        },
+        {
+            "@id": "https://orcid.org/0009-0003-5619-1555",
+            "@type": "Person",
+            "email": "101190534+nvnieuwk@users.noreply.github.com",
+            "name": "Nicolas Vannieuwkerke"
         }
     ]
 }

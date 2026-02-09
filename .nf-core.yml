@@ -28,12 +28,11 @@ nf_core_version: 3.5.2
 repository_type: pipeline
 template:
   author: Matthias De Smet, Nicolas Vannieuwkerke
-  description: Demultiplexing, adapter trimming, alignment, and coverage calculation
-    for NGS data.
+  description: Demultiplexing, adapter trimming, alignment, and coverage calculation for NGS data.
   force: false
   is_nfcore: false
   name: preprocessing
   org: nf-cmgg
   outdir: .
   skip_features: ["fastqc"]
-  version: 2.1.0dev
+  version: 3.0.0dev
