@@ -37,19 +37,77 @@
                 "meta": ["aligner"],
                 "type": ["string", "boolean"],
                 "description": "Aligner to use to align sample to the reference genome",
-                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star", "false", false]
+                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star", "false", false],
+                "default": "false"
+            },
+            "markdup": {
+                "meta": ["markdup"],
+                "type": ["string", "boolean"],
+                "description": "Mark duplicates tool to use",
+                "enum": ["bamsormadup", "samtools", "false", false],
+                "default": "bamsormadup"
+            },
+            "umi_aware": {
+                "meta": ["umi_aware"],
+                "type": "boolean",
+                "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name.",
+                "default": false
+            },
+            "skip_trimming": {
+                "meta": ["skip_trimming"],
+                "type": "boolean",
+                "description": "Skip adapter trimming",
+                "default": false
+            },
+            "trim_front": {
+                "meta": ["trim_front"],
+                "type": "integer",
+                "description": "Number of bases to trim from the front of each read",
+                "default": 0
+            },
+            "trim_tail": {
+                "meta": ["trim_tail"],
+                "type": "integer",
+                "description": "Number of bases to trim from the tail of each read",
+                "default": 0
+            },
+            "adapter_R1": {
+                "meta": ["adapter_R1"],
+                "type": "string",
+                "description": "Adapter sequence to trim from read 1",
+                "default": null
+            },
+            "adapter_R2": {
+                "meta": ["adapter_R2"],
+                "type": "string",
+                "description": "Adapter sequence to trim from read 2",
+                "default": null
+            },
+            "run_coverage": {
+                "meta": ["run_coverage"],
+                "type": "boolean",
+                "description": "Whether to run coverage analysis for the sample",
+                "default": false
+            },
+            "disable_picard_metrics": {
+                "meta": ["disable_picard_metrics"],
+                "type": "boolean",
+                "description": "Whether to disable Picard metrics calculation. This can be used to speed up processing if Picard is not needed.",
+                "default": true
+            },
+            "roi": {
+                "meta": ["roi"],
+                "type": "string",
+                "format": "file-path",
+                "description": "Region of interest BED file for coverage analysis",
+                "pattern": "^\\S+\\.bed$",
+                "default": null
             },
             "tag": {
                 "meta": ["tag"],
                 "type": "string",
                 "description": "Sample tag",
                 "pattern": "^[a-zA-Z0-9_-]+$"
-            },
-            "purpose": {
-                "meta": ["purpose"],
-                "type": "string",
-                "description": "Sample purpose, can be either 'research' or 'diagnostic'",
-                "enum": ["research", "diagnostic"]
             },
             "sample_type": {
                 "meta": ["sample_type"],
@@ -63,14 +121,6 @@
                 "type": "string",
                 "pattern": "^[a-zA-Z0-9_-]+$",
                 "description": "Sample library name"
-            },
-            "roi": {
-                "meta": ["roi"],
-                "type": "string",
-                "format": "file-path",
-                "description": "Region of interest BED file for coverage analysis",
-                "pattern": "^\\S+\\.bed$",
-                "default": null
             },
             "lane": {
                 "type": "integer",

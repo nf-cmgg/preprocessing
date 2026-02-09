@@ -51,27 +51,6 @@
             "description": "",
             "default": "",
             "properties": {
-                "markdup": {
-                    "type": "string",
-                    "default": "bamsormadup",
-                    "description": "Which alignment postprocessor to use",
-                    "enum": ["bamsormadup", "samtools", "false"]
-                },
-                "umi_aware": {
-                    "type": "boolean",
-                    "default": "false",
-                    "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name."
-                },
-                "run_coverage": {
-                    "type": "boolean",
-                    "description": "Run coverage analysis steps",
-                    "default": true
-                },
-                "skip_trimming": {
-                    "type": "boolean",
-                    "description": "Skip adapter trimming",
-                    "default": false
-                },
                 "split_fastq": {
                     "type": "integer",
                     "oneOf": [
@@ -86,36 +65,6 @@
                     "fa_icon": "fas fa-clock",
                     "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.",
                     "help_text": "Use the the tool FastP to split FASTQ file by number of reads. This parallelizes across fastq file shards speeding up mapping. Note although the minimum value is 250 reads, if you have fewer than 250 reads a single FASTQ shard will still be created."
-                },
-                "trim_front": {
-                    "type": "integer",
-                    "default": 0,
-                    "description": "Number of bases to trim from the front of the read"
-                },
-                "trim_tail": {
-                    "type": "integer",
-                    "default": 0,
-                    "description": "Number of bases to trim from the tail of the read"
-                },
-                "adapter_R1": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Adapter sequence to be trimmed"
-                },
-                "adapter_R2": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Adapter sequence to be trimmed"
-                },
-                "disable_picard_metrics": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Disable the calculation of (slow) Picard metrics"
-                },
-                "roi": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Region of interest for coverage analysis to be applied to all samples"
                 },
                 "genelists": {
                     "type": "string",

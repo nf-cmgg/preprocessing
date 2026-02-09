@@ -8,7 +8,7 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6' }"
 
     input:
-    tuple val(meta) , path(bam), path(bai) ,path(fasta) ,path(fai)
+    tuple val(meta) , path(bam), path(bai), path(intervals), path(fasta) ,path(fai), path(dict)
 
     output:
     tuple val(meta), path("*_metrics"), emit: metrics
@@ -21,6 +21,7 @@ process PICARD_COLLECTMULTIPLEMETRICS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def intervals = intervals ? "--INTERVALS ${intervals.join(',')}" : ""
     def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
     def avail_mem = 3072
     if (!task.memory) {
@@ -35,6 +36,7 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         $args \\
         --INPUT $bam \\
         --OUTPUT ${prefix}.CollectMultipleMetrics \\
+        $intervals \\
         $reference
 
     cat <<-END_VERSIONS > versions.yml
