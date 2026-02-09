@@ -39,7 +39,8 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         --OUTPUT ${prefix}.CollectMultipleMetrics \\
         $intervals_cmd \\
         --TMP_DIR . \\
-        $reference_cmd
+        $reference_cmd \\
+        $intervals_cmd
     """
 
     stub:
