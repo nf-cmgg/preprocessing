@@ -258,7 +258,7 @@ workflow PREPROCESSING {
 */
     FASTQ_TO_CRAM.out.cram_crai
         .filter { meta, _cram, _crai ->
-            meta.run_coverage && meta.run_coverage.toBoolean()
+            meta.run_coverage.toBoolean()
         }
         .map { meta, cram, crai ->
             return [
@@ -424,20 +424,20 @@ workflow PREPROCESSING {
     rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
     align_reports              = FASTQ_TO_CRAM.out.align_reports
     sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
-    mosdepth_global            = mosdepth_global_out
-    mosdepth_summary           = mosdepth_summary_out
-    mosdepth_regions           = mosdepth_regions_out
-    mosdepth_per_base_d4       = mosdepth_per_base_d4_out
-    mosdepth_per_base_bed      = mosdepth_per_base_bed_out
-    mosdepth_per_base_csi      = mosdepth_per_base_csi_out
-    mosdepth_regions_bed       = mosdepth_regions_bed_out
-    mosdepth_regions_csi       = mosdepth_regions_csi_out
-    mosdepth_quantized_bed     = mosdepth_quantized_bed_out
-    mosdepth_quantized_csi     = mosdepth_quantized_csi_out
-    mosdepth_thresholds_bed    = mosdepth_thresholds_bed_out
-    mosdepth_thresholds_csi    = mosdepth_thresholds_csi_out
-    samtools_coverage          = samtools_coverage_out
-    panelcoverage              = panelcoverage_out
+    mosdepth_global            = COVERAGE.out.mosdepth_global
+    mosdepth_summary           = COVERAGE.out.mosdepth_summary
+    mosdepth_regions           = COVERAGE.out.mosdepth_regions
+    mosdepth_per_base_d4       = COVERAGE.out.mosdepth_per_base_d4
+    mosdepth_per_base_bed      = COVERAGE.out.mosdepth_per_base_bed
+    mosdepth_per_base_csi      = COVERAGE.out.mosdepth_per_base_csi
+    mosdepth_regions_bed       = COVERAGE.out.mosdepth_regions_bed
+    mosdepth_regions_csi       = COVERAGE.out.mosdepth_regions_csi
+    mosdepth_quantized_bed     = COVERAGE.out.mosdepth_quantized_bed
+    mosdepth_quantized_csi     = COVERAGE.out.mosdepth_quantized_csi
+    mosdepth_thresholds_bed    = COVERAGE.out.mosdepth_thresholds_bed
+    mosdepth_thresholds_csi    = COVERAGE.out.mosdepth_thresholds_csi
+    samtools_coverage          = COVERAGE.out.samtools_coverage
+    panelcoverage              = COVERAGE.out.panelcoverage
     samtools_stats             = BAM_QC.out.samtools_stats
     samtools_flagstat          = BAM_QC.out.samtools_flagstat
     samtools_idxstats          = BAM_QC.out.samtools_idxstats
