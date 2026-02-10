@@ -52,7 +52,6 @@ workflow BAM_QC {
 
     PICARD_COLLECTHSMETRICS(ch_picard_coverage.hsmetrics)
     ch_picard_hsmetrics = PICARD_COLLECTHSMETRICS.out.metrics
-    ch_picard_hsmetrics = PICARD_COLLECTHSMETRICS.out.metrics
 
     emit:
     samtools_stats             = SAMTOOLS_STATS.out.stats
