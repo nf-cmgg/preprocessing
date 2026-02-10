@@ -269,7 +269,6 @@ workflow PREPROCESSING {
         COVERAGE.out.mosdepth_regions,
         COVERAGE.out.samtools_coverage,
     )
-    ch_versions = ch_versions.mix(COVERAGE.out.versions)
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
