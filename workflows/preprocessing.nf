@@ -251,7 +251,7 @@ workflow PREPROCESSING {
 */
     FASTQ_TO_CRAM.out.cram_crai
         .filter { meta, _cram, _crai ->
-            meta.run_coverage.toBoolean()
+            meta.run_coverage && meta.run_coverage.toBoolean()
         }
         .map { meta, cram, crai ->
             return [

@@ -127,7 +127,7 @@
                 "meta": ["run_coverage"],
                 "type": "boolean",
                 "description": "Whether to run coverage analysis for the sample",
-                "default": false
+                "default": true
             },
             "disable_picard_metrics": {
                 "meta": ["disable_picard_metrics"],
