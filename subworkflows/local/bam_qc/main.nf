@@ -13,8 +13,6 @@ workflow BAM_QC {
     ch_bam_bai_roi_fasta_fai_dict // channel: [ val(meta), path(bam), path(bai), path(roi), path(fasta), path(fai), path(dict)]
 
     main:
-    ch_versions = channel.empty()
-
     ch_bam_bai_roi_fasta_fai_dict
         .map { meta, bam, bai, _roi, fasta, fai, _dict ->
             return [meta, bam, bai, fasta, fai]
@@ -23,10 +21,7 @@ workflow BAM_QC {
 
     SAMTOOLS_STATS(ch_bam_bai_fasta_fai)
     SAMTOOLS_FLAGSTAT(ch_bam_bai_fasta_fai)
-    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions.first())
-
     SAMTOOLS_IDXSTATS(ch_bam_bai_fasta_fai)
-    ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions.first())
 
     ch_picard_hsmetrics = channel.empty()
     ch_picard_multiplemetrics = channel.empty()
@@ -40,7 +35,6 @@ workflow BAM_QC {
         .set { ch_picard }
 
     PICARD_COLLECTMULTIPLEMETRICS(ch_picard)
-    ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
     ch_picard_multiplemetrics = PICARD_COLLECTMULTIPLEMETRICS.out.metrics
     ch_picard_multiplemetrics_pdf = PICARD_COLLECTMULTIPLEMETRICS.out.pdf
 
@@ -54,11 +48,10 @@ workflow BAM_QC {
         .set { ch_picard_coverage }
 
     PICARD_COLLECTWGSMETRICS(ch_picard_coverage.wgsmetrics, [])
-    ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions.first())
     ch_picard_wgsmetrics = PICARD_COLLECTWGSMETRICS.out.metrics
 
     PICARD_COLLECTHSMETRICS(ch_picard_coverage.hsmetrics)
-    ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
+    ch_picard_hsmetrics = PICARD_COLLECTHSMETRICS.out.metrics
     ch_picard_hsmetrics = PICARD_COLLECTHSMETRICS.out.metrics
 
     emit:
@@ -69,5 +62,4 @@ workflow BAM_QC {
     picard_multiplemetrics_pdf = ch_picard_multiplemetrics_pdf
     picard_wgsmetrics          = ch_picard_wgsmetrics
     picard_hsmetrics           = ch_picard_hsmetrics
-    versions                   = ch_versions
 }

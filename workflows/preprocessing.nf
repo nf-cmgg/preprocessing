@@ -303,7 +303,6 @@ workflow PREPROCESSING {
         BAM_QC.out.picard_wgsmetrics,
         BAM_QC.out.picard_hsmetrics,
     )
-    ch_versions = ch_versions.mix(BAM_QC.out.versions)
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

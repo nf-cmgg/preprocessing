@@ -105,12 +105,12 @@
                     },
                     "samtools/flagstat": {
                         "branch": "master",
-                        "git_sha": "e334e12a1e985adc5ffc3fc78a68be1de711de45",
+                        "git_sha": "1d2fbdcbca677bbe8da0f9d0d2bb7c02f2cab1c9",
                         "installed_by": ["modules"]
                     },
                     "samtools/idxstats": {
                         "branch": "master",
-                        "git_sha": "c8be52dba1166c678e74cda9c3a3c221635c8bb1",
+                        "git_sha": "1d2fbdcbca677bbe8da0f9d0d2bb7c02f2cab1c9",
                         "installed_by": ["modules"]
                     },
                     "samtools/sormadup": {
@@ -127,7 +127,7 @@
                     },
                     "samtools/stats": {
                         "branch": "master",
-                        "git_sha": "0b2435805036a16dcdcf21533632d956b8273ac4",
+                        "git_sha": "fe93fde0845f907fc91ad7cc7d797930408824df",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/stats/samtools-stats.diff"
                     },
