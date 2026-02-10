@@ -101,7 +101,7 @@
                 "format": "file-path",
                 "description": "Region of interest BED file for coverage analysis",
                 "pattern": "^\\S+\\.bed$",
-                "default": null
+                "default": "[]"
             },
             "tag": {
                 "meta": ["tag"],
