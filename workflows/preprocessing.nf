@@ -7,6 +7,7 @@ include { samplesheetToList      } from 'plugin/nf-schema'
 */
 
 // Modules
+include { FALCO                         } from '../modules/nf-core/falcon/main'
 include { FASTP                         } from '../modules/nf-core/fastp/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
 include { MOSDEPTH                      } from '../modules/nf-core/mosdepth/main'
@@ -201,6 +202,14 @@ workflow PREPROCESSING {
 // FASTQ TRIMMING AND QC
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+    // MODULE: FALCO
+    // Run FALCO for "unsupported" fastq QC
+    // FALCO([meta, fastq])
+        FALCO(ch_fastq_per_sample.other, false)
+        ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.html)
+        ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.txt)
+        ch_versions = ch_versions.mix(FALCO.out.versions.first())
 
     // MODULE: fastp
     // Run QC, trimming and adapter removal
@@ -485,6 +494,8 @@ workflow PREPROCESSING {
     demultiplex_reports         = BCL_DEMULTIPLEX.out.reports
     demultiplex_logs            = BCL_DEMULTIPLEX.out.logs
     demultiplex_fastq           = ch_demultiplexed_fastq_with_sampleinfo.other
+    falco_html                  = FALCO.out.html
+    falco_txt                   = FALCO.out.txt
     fastp_json                  = FASTP.out.json
     fastp_html                  = FASTP.out.html
     crams                       = FASTQ_TO_CRAM.out.cram_crai
