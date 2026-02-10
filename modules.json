@@ -46,6 +46,11 @@
                         "installed_by": ["fastq_align_dna"],
                         "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
+                    "falco": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "a331ecfd1aa48b2b2298aab23bb4516c800e410b",

@@ -7,12 +7,13 @@ include { samplesheetToList          } from 'plugin/nf-schema'
 */
 
 // Modules
-include { FASTP                      } from '../modules/nf-core/fastp/main'
-include { MD5SUM                     } from '../modules/nf-core/md5sum/main'
-include { MOSDEPTH                   } from '../modules/nf-core/mosdepth/main'
-include { MULTIQC as MULTIQC_LIBRARY } from '../modules/nf-core/multiqc/main'
-include { MULTIQC as MULTIQC_MAIN    } from '../modules/nf-core/multiqc/main'
-include { SAMTOOLS_COVERAGE          } from '../modules/nf-core/samtools/coverage/main'
+include { FALCO                         } from '../modules/nf-core/falcon/main'
+include { FASTP                         } from '../modules/nf-core/fastp/main'
+include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
+include { MOSDEPTH                      } from '../modules/nf-core/mosdepth/main'
+include { MULTIQC as MULTIQC_LIBRARY    } from '../modules/nf-core/multiqc/main'
+include { MULTIQC as MULTIQC_MAIN       } from '../modules/nf-core/multiqc/main'
+include { SAMTOOLS_COVERAGE             } from '../modules/nf-core/samtools/coverage/main'
 
 // Subworkflows
 include { BAM_QC                     } from '../subworkflows/local/bam_qc/main'
@@ -183,6 +184,14 @@ workflow PREPROCESSING {
 // FASTQ TRIMMING AND QC
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+    // MODULE: FALCO
+    // Run FALCO for "unsupported" fastq QC
+    // FALCO([meta, fastq])
+        FALCO(ch_fastq_per_sample.other, false)
+        ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.html)
+        ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.txt)
+        ch_versions = ch_versions.mix(FALCO.out.versions.first())
 
     // MODULE: fastp
     // Run QC, trimming and adapter removal
@@ -399,46 +408,48 @@ workflow PREPROCESSING {
     )
 
     emit:
-    demultiplex_interop        = BCL_DEMULTIPLEX.out.interop
-    demultiplex_reports        = BCL_DEMULTIPLEX.out.reports
-    demultiplex_logs           = BCL_DEMULTIPLEX.out.logs
-    demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
-    fastp_json                 = FASTP.out.json
-    fastp_html                 = FASTP.out.html
-    crams                      = FASTQ_TO_CRAM.out.cram_crai
-    rna_splice_junctions       = FASTQ_TO_CRAM.out.rna_splice_junctions
-    rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
-    align_reports              = FASTQ_TO_CRAM.out.align_reports
-    sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
-    mosdepth_global            = COVERAGE.out.mosdepth_global
-    mosdepth_summary           = COVERAGE.out.mosdepth_summary
-    mosdepth_regions           = COVERAGE.out.mosdepth_regions
-    mosdepth_per_base_d4       = COVERAGE.out.mosdepth_per_base_d4
-    mosdepth_per_base_bed      = COVERAGE.out.mosdepth_per_base_bed
-    mosdepth_per_base_csi      = COVERAGE.out.mosdepth_per_base_csi
-    mosdepth_regions_bed       = COVERAGE.out.mosdepth_regions_bed
-    mosdepth_regions_csi       = COVERAGE.out.mosdepth_regions_csi
-    mosdepth_quantized_bed     = COVERAGE.out.mosdepth_quantized_bed
-    mosdepth_quantized_csi     = COVERAGE.out.mosdepth_quantized_csi
-    mosdepth_thresholds_bed    = COVERAGE.out.mosdepth_thresholds_bed
-    mosdepth_thresholds_csi    = COVERAGE.out.mosdepth_thresholds_csi
-    samtools_coverage          = COVERAGE.out.samtools_coverage
-    panelcoverage              = COVERAGE.out.panelcoverage
-    samtools_stats             = BAM_QC.out.samtools_stats
-    samtools_flagstat          = BAM_QC.out.samtools_flagstat
-    samtools_idxstats          = BAM_QC.out.samtools_idxstats
-    picard_multiplemetrics     = BAM_QC.out.picard_multiplemetrics
-    picard_multiplemetrics_pdf = BAM_QC.out.picard_multiplemetrics_pdf
-    picard_wgsmetrics          = BAM_QC.out.picard_wgsmetrics
-    picard_hsmetrics           = BAM_QC.out.picard_hsmetrics
-    md5sums                    = MD5SUM.out.checksum
-    multiqc_main_report        = MULTIQC_MAIN.out.report.toList()
-    multiqc_main_data          = MULTIQC_MAIN.out.data.toList()
-    multiqc_main_plots         = MULTIQC_MAIN.out.plots.toList()
-    multiqc_library_report     = MULTIQC_LIBRARY.out.report
-    multiqc_library_data       = MULTIQC_LIBRARY.out.data
-    multiqc_library_plots      = MULTIQC_LIBRARY.out.plots
-    versions                   = ch_versions
+    demultiplex_interop         = BCL_DEMULTIPLEX.out.interop
+    demultiplex_reports         = BCL_DEMULTIPLEX.out.reports
+    demultiplex_logs            = BCL_DEMULTIPLEX.out.logs
+    demultiplex_fastq           = ch_demultiplexed_fastq_with_sampleinfo.other
+    falco_html                  = FALCO.out.html
+    falco_txt                   = FALCO.out.txt
+    fastp_json                  = FASTP.out.json
+    fastp_html                  = FASTP.out.html
+    crams                       = FASTQ_TO_CRAM.out.cram_crai
+    rna_splice_junctions        = FASTQ_TO_CRAM.out.rna_splice_junctions
+    rna_junctions               = FASTQ_TO_CRAM.out.rna_junctions
+    align_reports               = FASTQ_TO_CRAM.out.align_reports
+    sormadup_metrics            = FASTQ_TO_CRAM.out.sormadup_metrics
+    mosdepth_global             = mosdepth_global_out
+    mosdepth_summary            = mosdepth_summary_out
+    mosdepth_regions            = mosdepth_regions_out
+    mosdepth_per_base_d4        = mosdepth_per_base_d4_out
+    mosdepth_per_base_bed       = mosdepth_per_base_bed_out
+    mosdepth_per_base_csi       = mosdepth_per_base_csi_out
+    mosdepth_regions_bed        = mosdepth_regions_bed_out
+    mosdepth_regions_csi        = mosdepth_regions_csi_out
+    mosdepth_quantized_bed      = mosdepth_quantized_bed_out
+    mosdepth_quantized_csi      = mosdepth_quantized_csi_out
+    mosdepth_thresholds_bed     = mosdepth_thresholds_bed_out
+    mosdepth_thresholds_csi     = mosdepth_thresholds_csi_out
+    samtools_coverage           = samtools_coverage_out
+    panelcoverage               = panelcoverage_out
+    samtools_stats              = BAM_QC.out.samtools_stats
+    samtools_flagstat           = BAM_QC.out.samtools_flagstat
+    samtools_idxstats           = BAM_QC.out.samtools_idxstats
+    picard_multiplemetrics      = BAM_QC.out.picard_multiplemetrics
+    picard_multiplemetrics_pdf  = BAM_QC.out.picard_multiplemetrics_pdf
+    picard_wgsmetrics           = BAM_QC.out.picard_wgsmetrics
+    picard_hsmetrics            = BAM_QC.out.picard_hsmetrics
+    md5sums                     = MD5SUM.out.checksum
+    multiqc_main_report         = MULTIQC_MAIN.out.report.toList()
+    multiqc_main_data           = MULTIQC_MAIN.out.data.toList()
+    multiqc_main_plots          = MULTIQC_MAIN.out.plots.toList()
+    multiqc_library_report      = MULTIQC_LIBRARY.out.report
+    multiqc_library_data        = MULTIQC_LIBRARY.out.data
+    multiqc_library_plots       = MULTIQC_LIBRARY.out.plots
+    versions                    = ch_versions
 }
 
 /*
