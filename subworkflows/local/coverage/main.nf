@@ -66,5 +66,4 @@ workflow COVERAGE {
     mosdepth_thresholds_csi = MOSDEPTH.out.thresholds_csi
     samtools_coverage       = SAMTOOLS_COVERAGE.out.coverage
     panelcoverage           = PANELCOVERAGE.out.regiondist
-    versions                = ch_versions
 }
