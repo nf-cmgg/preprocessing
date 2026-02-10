@@ -8,8 +8,7 @@ process SAMTOOLS_CONVERT {
         'biocontainers/samtools:1.22.1--h96c455f_0' }"
 
     input:
-    tuple val(meta), path(input), path(index)
-    tuple val(meta2), path(fasta), path(fai)
+    tuple val(meta), path(input), path(index), path(fasta), path(fai)
 
     output:
     tuple val(meta), path("*.bam")  , emit: bam ,   optional: true

@@ -22,8 +22,6 @@ workflow FASTQ_TO_CRAM {
     ch_meta_reads_aligner_index_fasta_gtf // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta, gtf]
 
     main:
-
-    ch_versions = channel.empty()
     ch_sormadup_metrics = channel.empty()
 
     /*
@@ -33,7 +31,6 @@ workflow FASTQ_TO_CRAM {
     */
 
     ch_meta_reads_aligner_index_fasta_gtf.dump(tag: "FASTQ_TO_CRAM: reads to align", pretty: true)
-
     ch_meta_reads_aligner_index_fasta_gtf
         .branch { meta, reads, aligner, index, fasta, gtf ->
             rna: meta.sample_type == "RNA"
@@ -51,12 +48,9 @@ workflow FASTQ_TO_CRAM {
         ch_meta_reads_aligner_index_fasta_datatype.dna,
         false,
     )
-    ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
-
     FASTQ_ALIGN_RNA(
         ch_meta_reads_aligner_index_fasta_datatype.rna
     )
-    ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,13 +104,11 @@ workflow FASTQ_TO_CRAM {
     BIOBAMBAM_BAMSORMADUP(ch_bam_fasta.bamsormadup)
     ch_markdup_index = ch_markdup_index.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index, failOnMismatch: true, failOnDuplicate: true))
     ch_sormadup_metrics = ch_sormadup_metrics.mix(BIOBAMBAM_BAMSORMADUP.out.metrics)
-    ch_versions = ch_versions.mix(BIOBAMBAM_BAMSORMADUP.out.versions.first())
 
     // SAMTOOLS_SORMADUP([meta, [bam, bam]], fasta)
     SAMTOOLS_SORMADUP(ch_bam_fasta.samtools)
     ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORMADUP.out.cram.join(SAMTOOLS_SORMADUP.out.crai, failOnMismatch: true, failOnDuplicate: true))
     ch_sormadup_metrics = ch_sormadup_metrics.mix(SAMTOOLS_SORMADUP.out.metrics)
-    ch_versions = ch_versions.mix(SAMTOOLS_SORMADUP.out.versions.first())
 
     // Merge bam files and compress
     // SAMTOOLS_SORT([meta, [bam, bam], fasta],index_format)
@@ -147,7 +139,6 @@ workflow FASTQ_TO_CRAM {
         .set { ch_bam_bai_fasta_fai }
 
     SAMTOOLS_CONVERT(ch_bam_bai_fasta_fai)
-    ch_versions = ch_versions.mix(SAMTOOLS_CONVERT.out.versions.first())
 
     ch_markdup_index.cram
         .mix(
@@ -162,5 +153,4 @@ workflow FASTQ_TO_CRAM {
     rna_junctions        = FASTQ_ALIGN_RNA.out.junctions
     sormadup_metrics     = ch_sormadup_metrics
     align_reports        = FASTQ_ALIGN_DNA.out.reports
-    versions             = ch_versions
 }

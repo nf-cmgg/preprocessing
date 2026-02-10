@@ -196,7 +196,6 @@ workflow PREPROCESSING {
         false,
     )
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
-    ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
     // edit meta.id to match sample name
     FASTP.out.reads
@@ -240,9 +239,7 @@ workflow PREPROCESSING {
     FASTQ_TO_CRAM(
         ch_meta_reads_aligner_index_fasta_gtf
     )
-
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
-    ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
