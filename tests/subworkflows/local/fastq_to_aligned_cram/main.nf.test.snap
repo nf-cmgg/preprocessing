@@ -3,7 +3,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -15,6 +15,7 @@
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
                                 },
                                 "id": "test",
+                                "markdup": "false",
                                 "sample_type": "DNA",
                                 "samplename": "test",
                                 "single_end": false
@@ -25,13 +26,13 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ],
                 "versions": [
                     "versions.yml:md5,5f142fd2dfa129d6b28f1368516bca75",
@@ -40,16 +41,16 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-17T14:52:18.252297311"
+        "timestamp": "2026-02-10T09:29:24.149695"
     },
     "fastq to cram - bwa - bamsormadup": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -61,6 +62,7 @@
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
                                 },
                                 "id": "test",
+                                "markdup": "bamsormadup",
                                 "sample_type": "DNA",
                                 "samplename": "test",
                                 "single_end": false
@@ -71,10 +73,10 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
                     [
@@ -85,6 +87,7 @@
                                 "samplename": "test",
                                 "single_end": false,
                                 "sample_type": "DNA",
+                                "markdup": "bamsormadup",
                                 "genome_data": {
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
@@ -103,16 +106,16 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-17T14:46:54.525880067"
+        "timestamp": "2026-02-10T09:24:26.615795"
     },
     "fastq to cram - bwa - samtools sormadup": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -124,6 +127,7 @@
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
                                 },
                                 "id": "test",
+                                "markdup": "samtools",
                                 "sample_type": "DNA",
                                 "samplename": "test",
                                 "single_end": false
@@ -134,10 +138,10 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
                     [
@@ -148,6 +152,7 @@
                                 "samplename": "test",
                                 "single_end": false,
                                 "sample_type": "DNA",
+                                "markdup": "samtools",
                                 "genome_data": {
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
@@ -165,16 +170,16 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-17T14:50:28.614932101"
+        "timestamp": "2026-02-10T09:27:45.908866"
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -187,6 +192,7 @@
                                     "star": "s3://test-data/genomics/homo_sapiens/genome/star/"
                                 },
                                 "id": "test",
+                                "markdup": "bamsormadup",
                                 "sample_type": "RNA",
                                 "samplename": "test",
                                 "single_end": false
@@ -205,6 +211,7 @@
                                 "samplename": "test",
                                 "single_end": false,
                                 "sample_type": "RNA",
+                                "markdup": "bamsormadup",
                                 "genome_data": {
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
@@ -224,6 +231,7 @@
                                 "samplename": "test",
                                 "single_end": false,
                                 "sample_type": "RNA",
+                                "markdup": "bamsormadup",
                                 "genome_data": {
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
@@ -243,6 +251,7 @@
                                 "samplename": "test",
                                 "single_end": false,
                                 "sample_type": "RNA",
+                                "markdup": "bamsormadup",
                                 "genome_data": {
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
@@ -260,16 +269,16 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-17T16:27:53.162318921"
+        "timestamp": "2026-02-10T09:26:55.879993"
     },
     "fastq to cram - bwa - samtools sort": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -281,6 +290,7 @@
                                     "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
                                 },
                                 "id": "test",
+                                "markdup": "false",
                                 "sample_type": "DNA",
                                 "samplename": "test",
                                 "single_end": false
@@ -291,13 +301,13 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ],
                 "versions": [
                     "versions.yml:md5,5f142fd2dfa129d6b28f1368516bca75",
@@ -306,9 +316,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-17T14:51:22.925873858"
+        "timestamp": "2026-02-10T09:28:34.042629"
     }
 }
