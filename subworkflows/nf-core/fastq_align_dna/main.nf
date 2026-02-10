@@ -5,12 +5,12 @@
 //
 
 
-include { BOWTIE2_ALIGN             } from "../../../modules/nf-core/bowtie2/align/main"
-include { BWA_MEM as BWAMEM1_MEM    } from '../../../modules/nf-core/bwa/mem/main'
-include { BWAMEM2_MEM               } from '../../../modules/nf-core/bwamem2/mem/main'
-include { DRAGMAP_ALIGN             } from "../../../modules/nf-core/dragmap/align/main"
-include { SNAPALIGNER_ALIGN         } from '../../../modules/nf-core/snapaligner/align/main'
-include { STROBEALIGN               } from "../../../modules/nf-core/strobealign/main"
+include { BOWTIE2_ALIGN                     } from "../../../modules/nf-core/bowtie2/align/main"
+include { BWA_MEM as BWAMEM1_MEM            } from '../../../modules/nf-core/bwa/mem/main'
+include { BWAMEM2_MEM as BWAMEM2_MEM        } from '../../../modules/nf-core/bwamem2/mem/main'
+include { DRAGMAP_ALIGN                     } from "../../../modules/nf-core/dragmap/align/main"
+include { SNAPALIGNER_ALIGN as SNAP_ALIGN   } from '../../../modules/nf-core/snapaligner/align/main'
+include { STROBEALIGN                       } from "../../../modules/nf-core/strobealign/main"
 
 
 
@@ -73,8 +73,8 @@ workflow FASTQ_ALIGN_DNA {
         ch_versions = ch_versions.mix(SNAPALIGNER_ALIGN.out.versions.first())
 
         STROBEALIGN(ch_to_align.strobe, sort)      // If aligner is strobealign
-                ch_bam = ch_bam.mix(STROBEALIGN.out.bam)
-                ch_bam_index = ch_bam_index.mix(STROBEALIGN.out.csi)
+            ch_bam = ch_bam.mix(STROBEALIGN.out.bam)
+            ch_bam_index = ch_bam_index.mix(STROBEALIGN.out.csi)
         ch_versions = ch_versions.mix(STROBEALIGN.out.versions.first())
 
     emit:
