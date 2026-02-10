@@ -40,7 +40,6 @@ workflow FASTQ_ALIGN_RNA {
         STAR_ALIGN.out.log_progress,
         STAR_ALIGN.out.log_out,
     )
-    ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
     // Concatenate splice junction files
     def ch_splice_junctions_to_merge = group_junctions(STAR_ALIGN.out.spl_junc_tab)

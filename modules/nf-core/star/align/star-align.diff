@@ -16,7 +16,7 @@ Changes in 'star/align/main.nf':
      val seq_platform
      val seq_center
  
-@@ -44,7 +41,7 @@
+@@ -46,7 +43,7 @@
      def reads1 = []
      def reads2 = []
      meta.single_end ? [reads].flatten().each{ read -> reads1 << read} : reads.eachWithIndex{ v, ix -> ( ix & 1 ? reads2 : reads1) << v }
