@@ -16,8 +16,6 @@ Changes in 'mosdepth/main.nf':
      tuple val(meta), path('*.global.dist.txt')      , emit: global_txt
 
 'modules/nf-core/mosdepth/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/mosdepth/tests/threshold.config' is unchanged
-'modules/nf-core/mosdepth/tests/quantized.config' is unchanged
+'modules/nf-core/mosdepth/tests/nextflow.config' is unchanged
 'modules/nf-core/mosdepth/tests/main.nf.test' is unchanged
-'modules/nf-core/mosdepth/tests/window.config' is unchanged
 ************************************************************
