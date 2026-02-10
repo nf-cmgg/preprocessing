@@ -35,7 +35,7 @@ workflow BAM_QC {
 
     ch_bam_bai_roi_fasta_fai_dict
         .filter { meta, _bam, _bai, _roi, _fasta, _fai, _dict ->
-            meta.disable_picard_metrics != true
+            !meta.disable_picard_metrics
         }
         .set { ch_picard }
 
