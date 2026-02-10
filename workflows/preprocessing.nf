@@ -285,7 +285,7 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
+                (meta.roi && meta.roi) != [] ? file(meta.roi, checkIfExists: true) : [],
                 getGenomeAttribute(meta.genome_data, "fasta"),
                 getGenomeAttribute(meta.genome_data, "fai"),
                 getGenomeAttribute(meta.genome_data, "dict"),
