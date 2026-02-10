@@ -16,10 +16,10 @@ workflow BAM_QC {
     ch_versions = channel.empty()
 
     ch_bam_bai_roi_fasta_fai_dict
-    .map { meta, bam, bai, _roi, fasta, fai, _dict ->
-        return [meta, bam, bai, fasta, fai]
-    }
-    .set { ch_bam_bai_fasta_fai }
+        .map { meta, bam, bai, _roi, fasta, fai, _dict ->
+            return [meta, bam, bai, fasta, fai]
+        }
+        .set { ch_bam_bai_fasta_fai }
 
     SAMTOOLS_STATS(ch_bam_bai_fasta_fai)
     SAMTOOLS_FLAGSTAT(ch_bam_bai_fasta_fai)
@@ -34,10 +34,10 @@ workflow BAM_QC {
     ch_picard_wgsmetrics = channel.empty()
 
     ch_bam_bai_roi_fasta_fai_dict
-    .filter { meta, _bam, _bai, _roi, _fasta, _fai, _dict ->
-        meta.disable_picard_metrics != true
-    }
-    .set { ch_picard }
+        .filter { meta, _bam, _bai, _roi, _fasta, _fai, _dict ->
+            meta.disable_picard_metrics != true
+        }
+        .set { ch_picard }
 
     PICARD_COLLECTMULTIPLEMETRICS(ch_picard)
     ch_versions = ch_versions.mix(PICARD_COLLECTMULTIPLEMETRICS.out.versions.first())
@@ -45,13 +45,13 @@ workflow BAM_QC {
     ch_picard_multiplemetrics_pdf = PICARD_COLLECTMULTIPLEMETRICS.out.pdf
 
     ch_picard
-    .branch { meta, bam, bai, roi, fasta, fai, dict ->
-        hsmetrics: roi != []
+        .branch { meta, bam, bai, roi, fasta, fai, dict ->
+            hsmetrics: roi != []
             return [meta, bam, bai, roi, fasta, fai, dict]
-        wgsmetrics: roi == []
+            wgsmetrics: roi == []
             return [meta, bam, bai, fasta, fai, dict]
-    }
-    .set { ch_picard_coverage }
+        }
+        .set { ch_picard_coverage }
 
     PICARD_COLLECTWGSMETRICS(ch_picard_coverage.wgsmetrics, [])
     ch_versions = ch_versions.mix(PICARD_COLLECTWGSMETRICS.out.versions.first())
@@ -61,14 +61,13 @@ workflow BAM_QC {
     ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
     ch_picard_hsmetrics = PICARD_COLLECTHSMETRICS.out.metrics
 
-
     emit:
-    samtools_stats              = SAMTOOLS_STATS.out.stats
-    samtools_flagstat           = SAMTOOLS_FLAGSTAT.out.flagstat
-    samtools_idxstats           = SAMTOOLS_IDXSTATS.out.idxstats
-    picard_multiplemetrics      = ch_picard_multiplemetrics
-    picard_multiplemetrics_pdf  = ch_picard_multiplemetrics_pdf
-    picard_wgsmetrics           = ch_picard_wgsmetrics
-    picard_hsmetrics            = ch_picard_hsmetrics
-    versions                    = ch_versions
+    samtools_stats             = SAMTOOLS_STATS.out.stats
+    samtools_flagstat          = SAMTOOLS_FLAGSTAT.out.flagstat
+    samtools_idxstats          = SAMTOOLS_IDXSTATS.out.idxstats
+    picard_multiplemetrics     = ch_picard_multiplemetrics
+    picard_multiplemetrics_pdf = ch_picard_multiplemetrics_pdf
+    picard_wgsmetrics          = ch_picard_wgsmetrics
+    picard_hsmetrics           = ch_picard_hsmetrics
+    versions                   = ch_versions
 }

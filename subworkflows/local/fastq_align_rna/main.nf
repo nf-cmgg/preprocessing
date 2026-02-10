@@ -5,9 +5,9 @@
 //
 
 
-include { STAR_ALIGN                                } from "../../../modules/nf-core/star/align/main.nf"
-include { GNU_SORT as SORT_MERGE_JUNCTIONS          } from "../../../modules/nf-core/gnu/sort/main.nf"
-include { GNU_SORT as SORT_MERGE_SPLICE_JUNCTIONS   } from "../../../modules/nf-core/gnu/sort/main.nf"
+include { STAR_ALIGN                              } from "../../../modules/nf-core/star/align/main.nf"
+include { GNU_SORT as SORT_MERGE_JUNCTIONS        } from "../../../modules/nf-core/gnu/sort/main.nf"
+include { GNU_SORT as SORT_MERGE_SPLICE_JUNCTIONS } from "../../../modules/nf-core/gnu/sort/main.nf"
 
 workflow FASTQ_ALIGN_RNA {
     take:
@@ -55,15 +55,16 @@ workflow FASTQ_ALIGN_RNA {
     ch_versions = ch_versions.mix(SORT_MERGE_JUNCTIONS.out.versions.first())
 
     emit:
-    bam                 = ch_bam // channel: [ [meta], bam       ]
-    splice_junctions    = SORT_MERGE_SPLICE_JUNCTIONS.out.sorted // channel: [ [meta], splice_junctions ]
-    junctions           = SORT_MERGE_JUNCTIONS.out.sorted // channel: [ [meta], junctions  ]
-    reports             = ch_reports // channel: [ [meta], log       ]
-    versions            = ch_versions // channel: [ versions.yml      ]
+    bam              = ch_bam // channel: [ [meta], bam       ]
+    splice_junctions = SORT_MERGE_SPLICE_JUNCTIONS.out.sorted // channel: [ [meta], splice_junctions ]
+    junctions        = SORT_MERGE_JUNCTIONS.out.sorted // channel: [ [meta], junctions  ]
+    reports          = ch_reports // channel: [ [meta], log       ]
+    versions         = ch_versions // channel: [ versions.yml      ]
 }
 
 def group_junctions(ch) {
-    return ch.map { meta, files ->
+    return ch
+        .map { meta, files ->
             def gk = (meta.chunks as Integer ?: 1)
             return [
                 groupKey(

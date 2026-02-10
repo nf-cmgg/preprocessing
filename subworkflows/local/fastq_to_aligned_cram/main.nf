@@ -38,7 +38,8 @@ workflow FASTQ_TO_CRAM {
         .branch { meta, reads, aligner, index, fasta, gtf ->
             rna: meta.sample_type == "RNA"
             return [meta, reads, "star", getGenomeAttribute(meta.genome_data, 'star'), gtf]
-            dna: true // catch all non-RNA samples as DNA, as some may be missing sample_type or have other sample types (e.g. tissue, cell line, etc.) that should be aligned with the DNA aligner
+            dna: true
+            // catch all non-RNA samples as DNA, as some may be missing sample_type or have other sample types (e.g. tissue, cell line, etc.) that should be aligned with the DNA aligner
             //dna: meta.sample_type == "DNA" || meta.sample_type == "Tissue"
             return [meta, reads, aligner, index, fasta]
         }
@@ -93,13 +94,13 @@ workflow FASTQ_TO_CRAM {
         .dump(tag: "FASTQ_TO_CRAM: aligned bam per sample", pretty: true)
         .branch { meta, files, fasta ->
             bamsormadup: meta.markdup == "bamsormadup"
-                return [meta, files, fasta]
+            return [meta, files, fasta]
             samtools: meta.markdup == "samtools"
-                return [meta, files, fasta]
+            return [meta, files, fasta]
             sort: meta.markdup == "false" || meta.markdup == false
-                return [meta, files, fasta]
+            return [meta, files, fasta]
             unknown: true
-                error("markdup option ${meta.markdup} not supported")
+            error("markdup option ${meta.markdup} not supported")
         }
         .set { ch_bam_fasta }
 
@@ -156,10 +157,10 @@ workflow FASTQ_TO_CRAM {
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
     emit:
-    cram_crai               = ch_cram_crai
-    rna_splice_junctions    = FASTQ_ALIGN_RNA.out.splice_junctions
-    rna_junctions           = FASTQ_ALIGN_RNA.out.junctions
-    sormadup_metrics        = ch_sormadup_metrics
-    align_reports           = FASTQ_ALIGN_DNA.out.reports
-    versions                = ch_versions
+    cram_crai            = ch_cram_crai
+    rna_splice_junctions = FASTQ_ALIGN_RNA.out.splice_junctions
+    rna_junctions        = FASTQ_ALIGN_RNA.out.junctions
+    sormadup_metrics     = ch_sormadup_metrics
+    align_reports        = FASTQ_ALIGN_DNA.out.reports
+    versions             = ch_versions
 }
