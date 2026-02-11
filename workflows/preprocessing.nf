@@ -55,7 +55,7 @@ workflow PREPROCESSING {
         }
         .set { ch_inputs_from_samplesheet }
     // construct a value channel containing an array of files, because the coverage subworkflow expects a channel of arrays of genelist files (to allow for multiple genelist files per sample)
-    ch_genelists = genelists ? channel.fromPath(genelists + "/*.bed").collect().map { files -> [ files ] } : channel.empty()
+    ch_genelists = genelists ? channel.fromPath(genelists + "/*.bed").collect().map { files -> [files] } : channel.empty()
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -251,7 +251,7 @@ workflow PREPROCESSING {
     )
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
 
-/*
+    /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: COVERAGE ANALYSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -272,7 +272,7 @@ workflow PREPROCESSING {
         }
         .set { ch_cram_crai_fasta_fai_roi }
 
-    COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
+    COVERAGE(ch_cram_crai_fasta_fai_roi, ch_genelists)
     ch_multiqc_files = ch_multiqc_files.mix(
         COVERAGE.out.mosdepth_summary,
         COVERAGE.out.mosdepth_global,

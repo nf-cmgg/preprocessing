@@ -28,9 +28,7 @@ workflow COVERAGE {
     ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
 
     PANELCOVERAGE(
-        MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi).combine(ch_genelists)
-        .view()
-        .map { meta, bed, index, genelists ->
+        MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi).combine(ch_genelists).view().map { meta, bed, index, genelists ->
             // Because groovy typing sucks ass; apparently an array of 1 is automatically converted to a string...
             if (genelists !instanceof List) {
                 genelists = [genelists]
