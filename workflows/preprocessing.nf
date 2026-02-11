@@ -333,7 +333,7 @@ workflow PREPROCESSING {
     def samtools_coverage_out = channel.empty()
     def panelcoverage_out = channel.empty()
     if (params.run_coverage) {
-        COVERAGE(ch_cram_crai_fasta_fai_roi, genelists)
+        COVERAGE(ch_cram_crai_fasta_fai_roi, ch_genelists)
         ch_multiqc_files = ch_multiqc_files.mix(
             COVERAGE.out.mosdepth_summary,
             COVERAGE.out.mosdepth_global,
