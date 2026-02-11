@@ -270,9 +270,9 @@ workflow PREPROCESSING {
                 meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
             ]
         }
-        .set { ch_cram_crai_fasta_fai_roi }
+        .set { ch_coverage }
 
-    COVERAGE(ch_cram_crai_fasta_fai_roi, ch_genelists)
+    COVERAGE(ch_coverage, ch_genelists)
     ch_multiqc_files = ch_multiqc_files.mix(
         COVERAGE.out.mosdepth_summary,
         COVERAGE.out.mosdepth_global,
@@ -291,15 +291,15 @@ workflow PREPROCESSING {
                 meta,
                 cram,
                 crai,
-                (meta.roi && meta.roi) != [] ? file(meta.roi, checkIfExists: true) : [],
+                meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
                 getGenomeAttribute(meta.genome_data, "fasta"),
                 getGenomeAttribute(meta.genome_data, "fai"),
                 getGenomeAttribute(meta.genome_data, "dict"),
             ]
         }
-        .set { ch_cram_crai_roi_fasta_fai_dict }
+        .set { ch_bam_qc }
 
-    BAM_QC(ch_cram_crai_roi_fasta_fai_dict)
+    BAM_QC(ch_bam_qc)
     ch_multiqc_files = ch_multiqc_files.mix(
         BAM_QC.out.samtools_stats,
         BAM_QC.out.samtools_flagstat,

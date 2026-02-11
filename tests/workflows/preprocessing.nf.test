@@ -24,7 +24,8 @@ nextflow_workflow {
                             sample_type: "DNA",
                             aligner: "bwamem",
                             markdup: "bamsormadup",
-                            run_coverage: true
+                            run_coverage: true,
+                            roi: file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true)
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -46,6 +47,7 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
+                // genelists
                 input[2] = null
                 """
             }
@@ -115,6 +117,7 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
+                // genelists
                 input[2] = null
                 """
             }
@@ -165,7 +168,9 @@ nextflow_workflow {
                             sample_type: "DNA",
                             aligner: "bwamem",
                             markdup: "bamsormadup",
-                            run_coverage: true
+                            run_coverage: false,
+                            disable_picard_metrics: true,
+                            roi: file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true)
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -187,6 +192,7 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
+                // genelists
                 input[2] = null
                 """
             }
