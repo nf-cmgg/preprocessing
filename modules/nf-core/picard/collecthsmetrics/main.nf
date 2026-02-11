@@ -45,6 +45,7 @@ process PICARD_COLLECTHSMETRICS {
 
 
     """
+    export TMP=\$PWD
 
     $bait_intervallist_cmd
     $target_intervallist_cmd
@@ -57,8 +58,8 @@ process PICARD_COLLECTHSMETRICS {
         --BAIT_INTERVALS $bait_interval_list \\
         --TARGET_INTERVALS $target_interval_list \\
         --INPUT $bam \\
-        --OUTPUT ${prefix}.CollectHsMetrics.coverage_metrics
-
+        --OUTPUT ${prefix}.CollectHsMetrics.coverage_metrics \\
+        --TMP_DIR .
     """
 
     stub:

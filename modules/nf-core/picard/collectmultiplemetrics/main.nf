@@ -30,6 +30,7 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
+    export TMP=\$PWD
     picard \\
         -Xmx${avail_mem}M \\
         CollectMultipleMetrics \\
@@ -37,6 +38,7 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         --INPUT $bam \\
         --OUTPUT ${prefix}.CollectMultipleMetrics \\
         $intervals_cmd \\
+        --TMP_DIR . \\
         $reference_cmd
     """
 

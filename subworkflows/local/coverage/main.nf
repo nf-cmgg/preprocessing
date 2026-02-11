@@ -30,13 +30,11 @@ workflow COVERAGE {
 
     PANELCOVERAGE(
         MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi).combine(ch_genelists).map { meta, bed, index, genelists ->
-            if (genelists !instanceof List) {
-                // Because groovy typing sucks ass; apparently an array of 1 is automatically converted to a string...
-                genelists = [genelists]
-            }
+            // Because groovy typing sucks ass; apparently an array of 1 is automatically converted to a string...
+            def genelists_array = genelists !instanceof List ? [genelists] : genelists
             def filtered_genelists = meta.tag.toLowerCase() == "seqcap"
-                ? genelists.findAll { genelist -> genelist.name.toLowerCase().contains("seqcap") }
-                : genelists.findAll { genelist -> !genelist.name.toLowerCase().contains("seqcap") }
+                ? genelists_array.findAll { genelist -> genelist.name.toLowerCase().contains("seqcap") }
+                : genelists_array.findAll { genelist -> !genelist.name.toLowerCase().contains("seqcap") }
 
             if (filtered_genelists.size() > 0) {
                 return [
