@@ -45,7 +45,10 @@
                             "single_end": false,
                             "tag": "WES"
                         },
-                        "test_genelist_chr21_per_exon.mosdepth.region.dist.txt:md5,e5c7b4f381721888249c57aa55be2d34"
+                        [
+                            "test_Treatable_ID_per_exon.mosdepth.region.dist.txt:md5,6c2b5237d98e0a2f118a3553c2ba478e",
+                            "test_bladder_cancer_per_exon.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "14": [
@@ -232,7 +235,10 @@
                             "single_end": false,
                             "tag": "WES"
                         },
-                        "test_genelist_chr21_per_exon.mosdepth.region.dist.txt:md5,e5c7b4f381721888249c57aa55be2d34"
+                        [
+                            "test_Treatable_ID_per_exon.mosdepth.region.dist.txt:md5,6c2b5237d98e0a2f118a3553c2ba478e",
+                            "test_bladder_cancer_per_exon.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "samtools_coverage": [
@@ -254,9 +260,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-09T12:02:48.263146"
+        "timestamp": "2026-02-11T14:05:13.106828"
     },
     "Coverage - seqcap": {
         "content": [
@@ -298,10 +304,18 @@
                     ]
                 ],
                 "13": [
-                    
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test_seqcap_Connective_tissue_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
+                    ]
                 ],
                 "14": [
                     "versions.yml:md5,67ac37f5eff6c19b8c605a2258aa721c",
+                    "versions.yml:md5,731a006ffa265ac74ad677b4e5a68640",
                     "versions.yml:md5,8d8a3cea555f0b04692395a47351d7ef"
                 ],
                 "2": [
@@ -477,7 +491,14 @@
                     
                 ],
                 "panelcoverage": [
-                    
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test_seqcap_Connective_tissue_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
+                    ]
                 ],
                 "samtools_coverage": [
                     [
@@ -491,14 +512,15 @@
                 ],
                 "versions": [
                     "versions.yml:md5,67ac37f5eff6c19b8c605a2258aa721c",
+                    "versions.yml:md5,731a006ffa265ac74ad677b4e5a68640",
                     "versions.yml:md5,8d8a3cea555f0b04692395a47351d7ef"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-09T12:02:26.604953"
+        "timestamp": "2026-02-11T13:54:02.513877"
     }
 }

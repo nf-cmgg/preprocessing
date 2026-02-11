@@ -13,7 +13,6 @@ workflow COVERAGE {
     main:
 
     ch_versions = channel.empty()
-    ch_coverageqc_files = channel.empty()
 
     MOSDEPTH(
         ch_meta_cram_crai_fasta_fai_roi.map { meta, cram, crai, fasta, _fai, roi ->
@@ -28,14 +27,13 @@ workflow COVERAGE {
         }
     )
     ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
-    ch_coverageqc_files = ch_coverageqc_files.merge(SAMTOOLS_COVERAGE.out.coverage)
-
-    ch_genelists.view()
 
     PANELCOVERAGE(
-        MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi).combine(ch_genelists).map { meta, bed, index, genelists ->
+        MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi).combine(ch_genelists)
+        .view()
+        .map { meta, bed, index, genelists ->
+            // Because groovy typing sucks ass; apparently an array of 1 is automatically converted to a string...
             if (genelists !instanceof List) {
-                // Because groovy typing sucks ass; apparently an array of 1 is automatically converted to a string...
                 genelists = [genelists]
             }
             def filtered_genelists = meta.tag.toLowerCase() == "seqcap"
@@ -53,7 +51,6 @@ workflow COVERAGE {
         }
     )
     ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions.first())
-    ch_coverageqc_files = ch_coverageqc_files.mix(PANELCOVERAGE.out.regiondist)
 
     emit:
     mosdepth_global             = MOSDEPTH.out.global_txt

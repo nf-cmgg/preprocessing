@@ -15,6 +15,21 @@ Changes in 'picard/collectmultiplemetrics/main.nf':
  
      output:
      tuple val(meta), path("*_metrics"), emit: metrics
+@@ -31,12 +29,14 @@
+         avail_mem = (task.memory.mega*0.8).intValue()
+     }
+     """
++    export TMP=\$PWD
+     picard \\
+         -Xmx${avail_mem}M \\
+         CollectMultipleMetrics \\
+         $args \\
+         --INPUT $bam \\
+         --OUTPUT ${prefix}.CollectMultipleMetrics \\
++        --TMP_DIR . \\
+         $reference
+ 
+     cat <<-END_VERSIONS > versions.yml
 
 'modules/nf-core/picard/collectmultiplemetrics/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/picard/collectmultiplemetrics/tests/main.nf.test' is unchanged

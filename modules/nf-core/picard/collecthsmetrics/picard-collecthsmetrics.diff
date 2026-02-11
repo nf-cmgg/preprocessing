@@ -26,7 +26,7 @@ Changes in 'picard/collecthsmetrics/main.nf':
  
      def avail_mem = 3072
      if (!task.memory) {
-@@ -37,14 +33,14 @@
+@@ -37,18 +33,19 @@
      def bait_intervallist_cmd = ""
      if (bait_intervals =~ /.(bed|bed.gz)$/){
          bait_interval_list = bait_intervals.toString().replaceAll(/.(bed|bed.gz)$/, ".interval_list")
@@ -43,6 +43,22 @@ Changes in 'picard/collecthsmetrics/main.nf':
      }
  
  
+     """
++    export TMP=\$PWD
+ 
+     $bait_intervallist_cmd
+     $target_intervallist_cmd
+@@ -61,8 +58,8 @@
+         --BAIT_INTERVALS $bait_interval_list \\
+         --TARGET_INTERVALS $target_interval_list \\
+         --INPUT $bam \\
+-        --OUTPUT ${prefix}.CollectHsMetrics.coverage_metrics
+-
++        --OUTPUT ${prefix}.CollectHsMetrics.coverage_metrics \\
++        --TMP_DIR .
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
 
 'modules/nf-core/picard/collecthsmetrics/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/picard/collecthsmetrics/tests/main.nf.test' is unchanged

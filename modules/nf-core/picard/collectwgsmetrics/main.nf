@@ -29,6 +29,7 @@ process PICARD_COLLECTWGSMETRICS {
         avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
+    export TMP=\$PWD
     picard \\
         -Xmx${avail_mem}M \\
         CollectWgsMetrics \\
@@ -36,6 +37,7 @@ process PICARD_COLLECTWGSMETRICS {
         --INPUT $bam \\
         --OUTPUT ${prefix}.CollectWgsMetrics.coverage_metrics \\
         --REFERENCE_SEQUENCE ${fasta} \\
+        --TMP_DIR . \\
         $interval
 
 

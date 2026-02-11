@@ -15,6 +15,22 @@ Changes in 'picard/collectwgsmetrics/main.nf':
      path  intervallist
  
      output:
+@@ -31,6 +29,7 @@
+         avail_mem = (task.memory.mega*0.8).intValue()
+     }
+     """
++    export TMP=\$PWD
+     picard \\
+         -Xmx${avail_mem}M \\
+         CollectWgsMetrics \\
+@@ -38,6 +37,7 @@
+         --INPUT $bam \\
+         --OUTPUT ${prefix}.CollectWgsMetrics.coverage_metrics \\
+         --REFERENCE_SEQUENCE ${fasta} \\
++        --TMP_DIR . \\
+         $interval
+ 
+ 
 
 'modules/nf-core/picard/collectwgsmetrics/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/picard/collectwgsmetrics/tests/main.nf.test' is unchanged
