@@ -3,13 +3,46 @@
         "content": [
             {
                 "picard_hsmetrics": [
-                    
+                    [
+                        {
+                            "disable_picard_metrics": false,
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.CollectHsMetrics.coverage_metrics"
+                    ]
                 ],
                 "picard_multiplemetrics": [
-                    
+                    [
+                        {
+                            "disable_picard_metrics": false,
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.CollectMultipleMetrics.alignment_summary_metrics",
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle_metrics",
+                            "test.CollectMultipleMetrics.insert_size_metrics",
+                            "test.CollectMultipleMetrics.quality_by_cycle_metrics",
+                            "test.CollectMultipleMetrics.quality_distribution_metrics"
+                        ]
+                    ]
                 ],
                 "picard_multiplemetrics_pdf": [
-                    
+                    [
+                        {
+                            "disable_picard_metrics": false,
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle.pdf",
+                            "test.CollectMultipleMetrics.insert_size_histogram.pdf",
+                            "test.CollectMultipleMetrics.quality_by_cycle.pdf",
+                            "test.CollectMultipleMetrics.quality_distribution.pdf",
+                            "test.CollectMultipleMetrics.read_length_histogram.pdf"
+                        ]
+                    ]
                 ],
                 "picard_wgsmetrics": [
                     
@@ -43,18 +76,14 @@
                         },
                         "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
-                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-10T19:21:23.498543"
+        "timestamp": "2026-02-11T20:41:14.126057"
     },
     "Bam QC - Samtools": {
         "content": [
@@ -75,7 +104,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": true
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
                     ]
@@ -84,7 +114,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": true
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
                     ]
@@ -93,22 +124,19 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": true
                         },
                         "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
-                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-02T12:50:04.027873"
+        "timestamp": "2026-02-11T20:27:00.941719"
     },
     "Bam QC - WGSmetrics": {
         "content": [
@@ -117,13 +145,46 @@
                     
                 ],
                 "picard_multiplemetrics": [
-                    
+                    [
+                        {
+                            "disable_picard_metrics": false,
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.CollectMultipleMetrics.alignment_summary_metrics",
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle_metrics",
+                            "test.CollectMultipleMetrics.insert_size_metrics",
+                            "test.CollectMultipleMetrics.quality_by_cycle_metrics",
+                            "test.CollectMultipleMetrics.quality_distribution_metrics"
+                        ]
+                    ]
                 ],
                 "picard_multiplemetrics_pdf": [
-                    
+                    [
+                        {
+                            "disable_picard_metrics": false,
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.CollectMultipleMetrics.base_distribution_by_cycle.pdf",
+                            "test.CollectMultipleMetrics.insert_size_histogram.pdf",
+                            "test.CollectMultipleMetrics.quality_by_cycle.pdf",
+                            "test.CollectMultipleMetrics.quality_distribution.pdf",
+                            "test.CollectMultipleMetrics.read_length_histogram.pdf"
+                        ]
+                    ]
                 ],
                 "picard_wgsmetrics": [
-                    
+                    [
+                        {
+                            "disable_picard_metrics": false,
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.CollectWgsMetrics.coverage_metrics"
+                    ]
                 ],
                 "samtools_flagstat": [
                     [
@@ -154,17 +215,13 @@
                         },
                         "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
-                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-10T19:25:10.626677"
+        "timestamp": "2026-02-11T20:26:15.482881"
     }
 }

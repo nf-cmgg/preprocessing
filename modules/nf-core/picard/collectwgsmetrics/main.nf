@@ -8,7 +8,7 @@ process PICARD_COLLECTWGSMETRICS {
         'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6' }"
 
     input:
-    tuple val(meta), path(bam), path(bai) ,path(fasta) ,path(fai)
+    tuple val(meta), path(bam), path(bai) ,path(fasta) ,path(fai), path(dict)
     path  intervallist
 
     output:

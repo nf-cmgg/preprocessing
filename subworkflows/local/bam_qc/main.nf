@@ -41,7 +41,7 @@ workflow BAM_QC {
     ch_picard
         .branch { meta, bam, bai, roi, fasta, fai, dict ->
             hsmetrics: roi != []
-            return [meta, bam, bai, roi, fasta, fai, dict]
+            return [meta, bam, bai, roi, roi, fasta, fai, dict]
             wgsmetrics: roi == []
             return [meta, bam, bai, fasta, fai, dict]
         }
