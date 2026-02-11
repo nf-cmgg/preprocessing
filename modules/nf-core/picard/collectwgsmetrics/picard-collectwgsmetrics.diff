@@ -30,7 +30,7 @@ Changes in 'picard/collectwgsmetrics/main.nf':
 +        --TMP_DIR . \\
          $interval
  
- 
+     """
 
 'modules/nf-core/picard/collectwgsmetrics/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/picard/collectwgsmetrics/tests/main.nf.test' is unchanged

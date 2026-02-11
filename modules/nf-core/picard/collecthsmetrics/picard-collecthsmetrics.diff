@@ -56,9 +56,9 @@ Changes in 'picard/collecthsmetrics/main.nf':
 -
 +        --OUTPUT ${prefix}.CollectHsMetrics.coverage_metrics \\
 +        --TMP_DIR .
+     """
  
-     cat <<-END_VERSIONS > versions.yml
-     "${task.process}":
+     stub:
 
 'modules/nf-core/picard/collecthsmetrics/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/picard/collecthsmetrics/tests/main.nf.test' is unchanged
