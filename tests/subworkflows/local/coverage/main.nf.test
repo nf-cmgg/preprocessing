@@ -23,9 +23,8 @@ nextflow_workflow {
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
                 ])
                 // genelists
-                input[1] = Channel.value([
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/genelists/genelist_chr21_per_exon.bed",checkIfExists:true)
-                ])
+                def genelists_path = "s3://test-data/genomics/homo_sapiens/genome/regions/genelists/*.bed"
+                input[1] = channel.fromPath(genelists_path).collect().map{ files -> [ files ] }.ifEmpty { channel.empty() }
                 """
             }
         }
@@ -52,9 +51,8 @@ nextflow_workflow {
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
                 ])
                 // genelists
-                input[1] = Channel.value([
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/genelists/genelist_chr21_per_exon.bed",checkIfExists:true)
-                ])
+                def genelists_path = "s3://test-data/genomics/homo_sapiens/genome/regions/genelists/*.bed"
+                input[1] = channel.fromPath(genelists_path).collect().map{ files -> [ files ] }.ifEmpty { channel.empty() }
                 """
             }
         }
