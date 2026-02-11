@@ -83,16 +83,16 @@ workflow FASTQ_TO_CRAM {
         }
         .groupTuple()
         .map { meta, files ->
-            return [meta, files.flatten(), getGenomeAttribute(meta.genome_data, 'fasta')]
+            return [meta, files.flatten(), getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai')]
         }
         .dump(tag: "FASTQ_TO_CRAM: aligned bam per sample", pretty: true)
-        .branch { meta, files, fasta ->
+        .branch { meta, files, fasta, fai ->
             bamsormadup: meta.markdup == "bamsormadup"
-            return [meta, files, fasta]
+            return [meta, files, fasta, fai]
             samtools: meta.markdup == "samtools"
-            return [meta, files, fasta]
+            return [meta, files, fasta, fai]
             sort: meta.markdup == "false" || meta.markdup == false
-            return [meta, files, fasta]
+            return [meta, files, fasta, fai]
             unknown: true
             error("markdup option ${meta.markdup} not supported")
         }
@@ -100,12 +100,12 @@ workflow FASTQ_TO_CRAM {
 
     ch_markdup_index = channel.empty()
 
-    // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta)
+    // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta, fai)
     BIOBAMBAM_BAMSORMADUP(ch_bam_fasta.bamsormadup)
     ch_markdup_index = ch_markdup_index.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index, failOnMismatch: true, failOnDuplicate: true))
     ch_sormadup_metrics = ch_sormadup_metrics.mix(BIOBAMBAM_BAMSORMADUP.out.metrics)
 
-    // SAMTOOLS_SORMADUP([meta, [bam, bam]], fasta)
+    // SAMTOOLS_SORMADUP([meta, [bam, bam]], fasta, fai)
     SAMTOOLS_SORMADUP(ch_bam_fasta.samtools)
     ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORMADUP.out.cram.join(SAMTOOLS_SORMADUP.out.crai, failOnMismatch: true, failOnDuplicate: true))
     ch_sormadup_metrics = ch_sormadup_metrics.mix(SAMTOOLS_SORMADUP.out.metrics)

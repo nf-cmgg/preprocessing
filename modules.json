@@ -8,7 +8,8 @@
                     "bcl2fastq": {
                         "branch": "master",
                         "git_sha": "051e7c60dbdcc5d96ce7814c31426ce776f5319b",
-                        "installed_by": ["bcl_demultiplex"]
+                        "installed_by": ["bcl_demultiplex"],
+                        "patch": "modules/nf-core/bcl2fastq/bcl2fastq.diff"
                     },
                     "bclconvert": {
                         "branch": "master",
