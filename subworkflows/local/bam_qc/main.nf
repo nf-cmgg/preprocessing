@@ -11,7 +11,7 @@ include { PICARD_COLLECTWGSMETRICS      } from '../../../modules/nf-core/picard/
 workflow BAM_QC {
     take:
     ch_bam_bai_roi_fasta_fai_dict // channel: [ val(meta), path(bam), path(bai), path(roi), path(fasta), path(fai), path(dict)]
-    disable_picard                // boolean
+    disable_picard // boolean
 
     main:
     ch_versions = channel.empty()
@@ -72,12 +72,12 @@ workflow BAM_QC {
     }
 
     emit:
-    samtools_stats              = SAMTOOLS_STATS.out.stats
-    samtools_flagstat           = SAMTOOLS_FLAGSTAT.out.flagstat
-    samtools_idxstats           = SAMTOOLS_IDXSTATS.out.idxstats
-    picard_multiplemetrics      = ch_picard_multiplemetrics
-    picard_multiplemetrics_pdf  = ch_picard_multiplemetrics_pdf
-    picard_wgsmetrics           = ch_picard_wgsmetrics
-    picard_hsmetrics            = ch_picard_hsmetrics
-    versions                    = ch_versions
+    samtools_stats             = SAMTOOLS_STATS.out.stats
+    samtools_flagstat          = SAMTOOLS_FLAGSTAT.out.flagstat
+    samtools_idxstats          = SAMTOOLS_IDXSTATS.out.idxstats
+    picard_multiplemetrics     = ch_picard_multiplemetrics
+    picard_multiplemetrics_pdf = ch_picard_multiplemetrics_pdf
+    picard_wgsmetrics          = ch_picard_wgsmetrics
+    picard_hsmetrics           = ch_picard_hsmetrics
+    versions                   = ch_versions
 }

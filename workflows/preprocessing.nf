@@ -59,7 +59,8 @@ workflow PREPROCESSING {
 
     roi = roi ? file(roi, checkIfExists: true) : null
 
-    genelists = genelists ? channel.value(file(genelists + "/*.bed", checkIfExists: true)) : channel.empty()
+    // construct a value channel containing an array of files, because the coverage subworkflow expects a channel of arrays of genelist files (to allow for multiple genelist files per sample)
+    ch_genelists = genelists ? channel.fromPath(genelists).collect().map { files -> [ files ] } : channel.empty()
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
