@@ -11,9 +11,6 @@ workflow COVERAGE {
     ch_genelists // channel: [optional] [genelists]
 
     main:
-
-    ch_versions = channel.empty()
-
     MOSDEPTH(
         ch_meta_cram_crai_fasta_fai_roi.map { meta, cram, crai, fasta, _fai, roi ->
             return [meta, cram, crai, roi, fasta]
@@ -46,7 +43,6 @@ workflow COVERAGE {
             }
         }
     )
-    ch_versions = ch_versions.mix(PANELCOVERAGE.out.versions.first())
 
     emit:
     mosdepth_global         = MOSDEPTH.out.global_txt
