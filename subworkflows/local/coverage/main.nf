@@ -25,7 +25,6 @@ workflow COVERAGE {
             return [meta, cram, crai, fasta, fai]
         }
     )
-    ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
 
     PANELCOVERAGE(
         MOSDEPTH.out.per_base_bed.join(MOSDEPTH.out.per_base_csi).combine(ch_genelists).map { meta, bed, index, genelists ->
