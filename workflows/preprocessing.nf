@@ -214,9 +214,14 @@ workflow PREPROCESSING {
     // MODULE: fastp
     // Run QC, trimming and adapter removal
     // FASTP([meta, fastq, adapter_fasta], save_trimmed, save_merged)
-    FASTP(ch_fastq_per_sample.supported.map { meta, fastq ->
-        return [meta, fastq, []]
-    }, false, false, false)
+    FASTP(
+        ch_fastq_per_sample.supported.map { meta, fastq ->
+            return [meta, fastq, []]
+        },
+        false,
+        false,
+        false,
+    )
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
     ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
@@ -402,9 +407,11 @@ workflow PREPROCESSING {
 */
 
     MD5SUM(
-        FASTQ_TO_CRAM.out.cram_crai.map { meta, cram, _crai ->
-            return [meta, cram]
-        },
+        ch_fastq_per_sample.other.mix(
+            FASTQ_TO_CRAM.out.cram_crai.map { meta, cram, _crai ->
+                return [meta, cram]
+            }
+        ),
         false,
     )
     ch_versions = ch_versions.mix(MD5SUM.out.versions.first())
