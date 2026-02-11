@@ -3,7 +3,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -25,13 +25,13 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ],
                 "versions": [
                     "versions.yml:md5,5f142fd2dfa129d6b28f1368516bca75",
@@ -49,7 +49,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -71,10 +71,10 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
                     [
@@ -112,7 +112,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -134,10 +134,10 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
                     [
@@ -174,7 +174,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -269,7 +269,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -291,13 +291,13 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ],
                 "versions": [
                     "versions.yml:md5,5f142fd2dfa129d6b28f1368516bca75",

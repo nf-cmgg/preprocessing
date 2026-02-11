@@ -29,12 +29,14 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
+    export TMP=\$PWD
     picard \\
         -Xmx${avail_mem}M \\
         CollectMultipleMetrics \\
         $args \\
         --INPUT $bam \\
         --OUTPUT ${prefix}.CollectMultipleMetrics \\
+        --TMP_DIR . \\
         $reference
 
     cat <<-END_VERSIONS > versions.yml
