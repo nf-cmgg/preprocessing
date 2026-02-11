@@ -45,6 +45,12 @@
                 "demultiplex_reports": [
                     
                 ],
+                "falco_html": [
+                    
+                ],
+                "falco_txt": [
+                    
+                ],
                 "fastp_html": [
                     [
                         {
@@ -394,7 +400,7 @@
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-
+                    
                 ],
                 "multiqc_library_report": [
                     "test.html"
@@ -670,9 +676,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-23T13:59:59.404732"
+        "timestamp": "2026-02-11T12:00:40.443933"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -718,6 +724,12 @@
                     
                 ],
                 "demultiplex_reports": [
+                    
+                ],
+                "falco_html": [
+                    
+                ],
+                "falco_txt": [
                     
                 ],
                 "fastp_html": [
@@ -853,7 +865,7 @@
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-
+                    
                 ],
                 "multiqc_library_report": [
                     "test.html"
@@ -1019,9 +1031,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-23T14:06:35.503463"
+        "timestamp": "2026-02-11T12:11:20.398961"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1066,6 +1078,12 @@
                     
                 ],
                 "demultiplex_reports": [
+                    
+                ],
+                "falco_html": [
+                    
+                ],
+                "falco_txt": [
                     
                 ],
                 "fastp_html": [
@@ -1336,7 +1354,7 @@
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-
+                    
                 ],
                 "multiqc_library_report": [
                     "test.html"
@@ -1604,8 +1622,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-23T14:04:00.643521"
+        "timestamp": "2026-02-11T12:06:12.331519"
     }
 }
