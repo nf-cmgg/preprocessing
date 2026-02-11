@@ -4,13 +4,12 @@ Changes in component 'nf-core/samtools/coverage'
 Changes in 'samtools/coverage/main.nf':
 --- modules/nf-core/samtools/coverage/main.nf
 +++ modules/nf-core/samtools/coverage/main.nf
-@@ -8,9 +8,7 @@
+@@ -8,8 +8,7 @@
          'biocontainers/samtools:1.22.1--h96c455f_0' }"
  
      input:
 -    tuple val(meta), path(input), path(input_index)
--    tuple val(meta2), path(fasta)
--    tuple val(meta3), path(fai)
+-    tuple val(meta2), path(fasta), path(fai)
 +    tuple val(meta), path(input), path(input_index), path(fasta), path(fai)
  
      output:

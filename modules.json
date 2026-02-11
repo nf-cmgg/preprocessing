@@ -13,7 +13,7 @@
                     "bclconvert": {
                         "branch": "master",
                         "git_sha": "051e7c60dbdcc5d96ce7814c31426ce776f5319b",
-                        "installed_by": ["bcl_demultiplex", "modules"],
+                        "installed_by": ["bcl_demultiplex"],
                         "patch": "modules/nf-core/bclconvert/bclconvert.diff"
                     },
                     "biobambam/bamsormadup": {
@@ -104,7 +104,7 @@
                     },
                     "samtools/coverage": {
                         "branch": "master",
-                        "git_sha": "4154ced8a82f5f17b57e48c68dbb03ecb0e9ca14",
+                        "git_sha": "b2e78932ef01165fd85829513eaca29eff8e640a",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/coverage/samtools-coverage.diff"
                     },
