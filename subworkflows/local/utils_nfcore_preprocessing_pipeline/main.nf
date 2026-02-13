@@ -188,7 +188,12 @@ def toolCitationText() {
     // TODO nf-core: Optionally add in-text citation tools to this list.
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
-    def citation_text = ["Tools used in the workflow included:", "FastQC (Andrews 2010),", "MultiQC (Ewels et al. 2016)", "."].join(' ').trim()
+    def citation_text = [
+        "Tools used in the workflow included:",
+        "FastQC (Andrews 2010),",
+        "MultiQC (Ewels et al. 2016)",
+        ".",
+    ].join(' ').trim()
 
     return citation_text
 }
@@ -197,7 +202,10 @@ def toolBibliographyText() {
     // TODO nf-core: Optionally add bibliographic entries to this list.
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
-    def reference_text = ["<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>", "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"].join(' ').trim()
+    def reference_text = [
+        "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
+        "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>",
+    ].join(' ').trim()
 
     return reference_text
 }

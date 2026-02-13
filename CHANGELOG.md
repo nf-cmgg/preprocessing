@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drop support for unaligned cram outputs.
 - Add support for untrimmed fastq outputs for unsupported genomes or when aligner is set to `false`.
 - Drop support for global `aligner` parameter. The aligner must now be specified per sample in the sample sheet or sample info.
+- Drop support for global `markdup` and `umi_aware` parameters. Marking duplicates must now be specified per sample in the sample sheet or sample info.
+- Drop support for global `run_coverage` and `disable_picard_metrics` parameters. Running coverage analysis must now be specified per sample in the sample sheet or sample info.
+- Drop support for global `skip_trimming`, `trim_front`, `trim_tail`, `adapter_R1` and `adapter_R2` parameters. Trimming must now be specified per sample in the sample sheet or sample info.
+- Drop support for global `roi` parameter. Regions of interest must now be specified per sample in the sample sheet or sample info.
 - Simplify fastq sharding and make it user configurable via the `split_fastq` parameter.
 - Added splice junctions and junctions outputs for RNA-seq alignments using STAR.
 

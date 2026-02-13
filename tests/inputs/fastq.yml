@@ -6,6 +6,8 @@
   organism: Homo sapiens
   tag: WES
   aligner: bwamem
+  markdup: bamsormadup
+  run_coverage: true
   fastq_1: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz
   fastq_2: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz
 - id: sample1_L002
@@ -14,5 +16,7 @@
   organism: Homo sapiens
   tag: WES
   aligner: bwamem
+  markdup: bamsormadup
+  run_coverage: true
   fastq_1: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz
   fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz

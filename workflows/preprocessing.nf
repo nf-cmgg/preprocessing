@@ -38,8 +38,6 @@ workflow PREPROCESSING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     genomes // map: genome reference files
-    markdup // string: markdup method to use
-    roi // file: regions of interest bed file to be applied to all samples
     genelists // file: directory containing genelist bed files for coverage analysis
 
     main:
@@ -56,11 +54,8 @@ workflow PREPROCESSING {
             error("Unable to determine input type, please check inputs")
         }
         .set { ch_inputs_from_samplesheet }
-
-    roi = roi ? file(roi, checkIfExists: true) : null
-
     // construct a value channel containing an array of files, because the coverage subworkflow expects a channel of arrays of genelist files (to allow for multiple genelist files per sample)
-    ch_genelists = genelists ? channel.fromPath(genelists + "/*.bed").collect().map { files -> [ files ] } : channel.empty()
+    ch_genelists = genelists ? channel.fromPath(genelists + "/*.bed").collect().map { files -> [files] } : channel.empty()
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -166,19 +161,6 @@ workflow PREPROCESSING {
             else {
                 meta = meta + ["genome_data": [:]]
             }
-
-            // set the ROI
-            // // Special case for coPGT samples
-            // // if there's no global ROI AND no sample speficic ROI
-            // // AND the sample tag is "coPGT-M", set the sample ROI to "roi_copgt"
-            if (!roi && !meta.roi && meta.tag == "coPGT-M") {
-                meta = meta + ["roi": getGenomeAttribute(meta.genome_data, "roi_copgt")]
-            }
-            // // if there's a global ROI AND no sample specific ROI
-            // // set the global ROI to the sample
-            if (roi && !meta.roi) {
-                meta = meta + ["roi": roi]
-            }
             return [meta, reads]
         }
         .map { meta, reads -> [meta.samplename, [meta, reads]] }
@@ -224,7 +206,6 @@ workflow PREPROCESSING {
         false,
     )
     ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
-    ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
     // edit meta.id to match sample name
     FASTP.out.reads
@@ -266,130 +247,59 @@ workflow PREPROCESSING {
         .set { ch_meta_reads_aligner_index_fasta_gtf }
 
     FASTQ_TO_CRAM(
-        ch_meta_reads_aligner_index_fasta_gtf,
-        markdup,
+        ch_meta_reads_aligner_index_fasta_gtf
     )
-
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
-    ch_versions = ch_versions.mix(FASTQ_TO_CRAM.out.versions)
-
-
-    /*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: FILTER SAMPLES WITH 'SNP' TAG
-// samples with SNP tag contain only data for sample tracking
-// and as such don't need all the QC steps
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-    FASTQ_TO_CRAM.out.cram_crai
-        .filter { meta, _cram, _crai ->
-            meta.tag != "SNP"
-        }
-        .set { ch_no_snp_samples }
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: COVERAGE ANALYSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    ch_no_snp_samples
-        .map { meta, cram, crai ->
-            if (meta.roi) {
-                return [
-                    meta,
-                    cram,
-                    crai,
-                    getGenomeAttribute(meta.genome_data, "fasta"),
-                    getGenomeAttribute(meta.genome_data, "fai"),
-                    file(meta.roi, checkIfExists: true),
-                ]
-            }
-            else {
-                return [
-                    meta,
-                    cram,
-                    crai,
-                    getGenomeAttribute(meta.genome_data, "fasta"),
-                    getGenomeAttribute(meta.genome_data, "fai"),
-                    [],
-                ]
-            }
+    FASTQ_TO_CRAM.out.cram_crai
+        .filter { meta, _cram, _crai ->
+            meta.run_coverage.toBoolean()
         }
-        .set { ch_cram_crai_fasta_fai_roi }
+        .map { meta, cram, crai ->
+            return [
+                meta,
+                cram,
+                crai,
+                getGenomeAttribute(meta.genome_data, "fasta"),
+                getGenomeAttribute(meta.genome_data, "fai"),
+                meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
+            ]
+        }
+        .set { ch_coverage }
 
-    def mosdepth_global_out = channel.empty()
-    def mosdepth_summary_out = channel.empty()
-    def mosdepth_regions_out = channel.empty()
-    def mosdepth_per_base_d4_out = channel.empty()
-    def mosdepth_per_base_bed_out = channel.empty()
-    def mosdepth_per_base_csi_out = channel.empty()
-    def mosdepth_regions_bed_out = channel.empty()
-    def mosdepth_regions_csi_out = channel.empty()
-    def mosdepth_quantized_bed_out = channel.empty()
-    def mosdepth_quantized_csi_out = channel.empty()
-    def mosdepth_thresholds_bed_out = channel.empty()
-    def mosdepth_thresholds_csi_out = channel.empty()
-    def samtools_coverage_out = channel.empty()
-    def panelcoverage_out = channel.empty()
-    if (params.run_coverage) {
-        COVERAGE(ch_cram_crai_fasta_fai_roi, ch_genelists)
-        ch_multiqc_files = ch_multiqc_files.mix(
-            COVERAGE.out.mosdepth_summary,
-            COVERAGE.out.mosdepth_global,
-            COVERAGE.out.mosdepth_regions,
-            COVERAGE.out.samtools_coverage,
-        )
-        mosdepth_global_out = COVERAGE.out.mosdepth_global
-        mosdepth_summary_out = COVERAGE.out.mosdepth_summary
-        mosdepth_regions_out = COVERAGE.out.mosdepth_regions
-        mosdepth_per_base_d4_out = COVERAGE.out.mosdepth_per_base_d4
-        mosdepth_per_base_bed_out = COVERAGE.out.mosdepth_per_base_bed
-        mosdepth_per_base_csi_out = COVERAGE.out.mosdepth_per_base_csi
-        mosdepth_regions_bed_out = COVERAGE.out.mosdepth_regions_bed
-        mosdepth_regions_csi_out = COVERAGE.out.mosdepth_regions_csi
-        mosdepth_quantized_bed_out = COVERAGE.out.mosdepth_quantized_bed
-        mosdepth_quantized_csi_out = COVERAGE.out.mosdepth_quantized_csi
-        mosdepth_thresholds_bed_out = COVERAGE.out.mosdepth_thresholds_bed
-        mosdepth_thresholds_csi_out = COVERAGE.out.mosdepth_thresholds_csi
-        samtools_coverage_out = COVERAGE.out.samtools_coverage
-        panelcoverage_out = COVERAGE.out.panelcoverage
-        ch_versions = ch_versions.mix(COVERAGE.out.versions)
-    }
+    COVERAGE(ch_coverage, ch_genelists)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        COVERAGE.out.mosdepth_summary,
+        COVERAGE.out.mosdepth_global,
+        COVERAGE.out.mosdepth_regions,
+        COVERAGE.out.samtools_coverage,
+    )
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: QC FOR ALIGNMENTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    ch_no_snp_samples
+    FASTQ_TO_CRAM.out.cram_crai
         .map { meta, cram, crai ->
-            if (meta.roi) {
-                return [
-                    meta,
-                    cram,
-                    crai,
-                    file(meta.roi, checkIfExists: true),
-                    getGenomeAttribute(meta.genome_data, "fasta"),
-                    getGenomeAttribute(meta.genome_data, "fai"),
-                    getGenomeAttribute(meta.genome_data, "dict"),
-                ]
-            }
-            else {
-                return [
-                    meta,
-                    cram,
-                    crai,
-                    [],
-                    getGenomeAttribute(meta.genome_data, "fasta"),
-                    getGenomeAttribute(meta.genome_data, "fai"),
-                    getGenomeAttribute(meta.genome_data, "dict"),
-                ]
-            }
+            return [
+                meta,
+                cram,
+                crai,
+                meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
+                getGenomeAttribute(meta.genome_data, "fasta"),
+                getGenomeAttribute(meta.genome_data, "fai"),
+                getGenomeAttribute(meta.genome_data, "dict"),
+            ]
         }
-        .set { ch_cram_crai_roi_fasta_fai_dict }
+        .set { ch_bam_qc }
 
-    BAM_QC(ch_cram_crai_roi_fasta_fai_dict, params.disable_picard_metrics)
+    BAM_QC(ch_bam_qc)
     ch_multiqc_files = ch_multiqc_files.mix(
         BAM_QC.out.samtools_stats,
         BAM_QC.out.samtools_flagstat,
@@ -399,7 +309,6 @@ workflow PREPROCESSING {
         BAM_QC.out.picard_wgsmetrics,
         BAM_QC.out.picard_hsmetrics,
     )
-    ch_versions = ch_versions.mix(BAM_QC.out.versions)
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -515,20 +424,20 @@ workflow PREPROCESSING {
     rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
     align_reports              = FASTQ_TO_CRAM.out.align_reports
     sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
-    mosdepth_global            = mosdepth_global_out
-    mosdepth_summary           = mosdepth_summary_out
-    mosdepth_regions           = mosdepth_regions_out
-    mosdepth_per_base_d4       = mosdepth_per_base_d4_out
-    mosdepth_per_base_bed      = mosdepth_per_base_bed_out
-    mosdepth_per_base_csi      = mosdepth_per_base_csi_out
-    mosdepth_regions_bed       = mosdepth_regions_bed_out
-    mosdepth_regions_csi       = mosdepth_regions_csi_out
-    mosdepth_quantized_bed     = mosdepth_quantized_bed_out
-    mosdepth_quantized_csi     = mosdepth_quantized_csi_out
-    mosdepth_thresholds_bed    = mosdepth_thresholds_bed_out
-    mosdepth_thresholds_csi    = mosdepth_thresholds_csi_out
-    samtools_coverage          = samtools_coverage_out
-    panelcoverage              = panelcoverage_out
+    mosdepth_global            = COVERAGE.out.mosdepth_global
+    mosdepth_summary           = COVERAGE.out.mosdepth_summary
+    mosdepth_regions           = COVERAGE.out.mosdepth_regions
+    mosdepth_per_base_d4       = COVERAGE.out.mosdepth_per_base_d4
+    mosdepth_per_base_bed      = COVERAGE.out.mosdepth_per_base_bed
+    mosdepth_per_base_csi      = COVERAGE.out.mosdepth_per_base_csi
+    mosdepth_regions_bed       = COVERAGE.out.mosdepth_regions_bed
+    mosdepth_regions_csi       = COVERAGE.out.mosdepth_regions_csi
+    mosdepth_quantized_bed     = COVERAGE.out.mosdepth_quantized_bed
+    mosdepth_quantized_csi     = COVERAGE.out.mosdepth_quantized_csi
+    mosdepth_thresholds_bed    = COVERAGE.out.mosdepth_thresholds_bed
+    mosdepth_thresholds_csi    = COVERAGE.out.mosdepth_thresholds_csi
+    samtools_coverage          = COVERAGE.out.samtools_coverage
+    panelcoverage              = COVERAGE.out.panelcoverage
     samtools_stats             = BAM_QC.out.samtools_stats
     samtools_flagstat          = BAM_QC.out.samtools_flagstat
     samtools_idxstats          = BAM_QC.out.samtools_idxstats

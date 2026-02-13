@@ -16,7 +16,6 @@ workflow FASTQ_ALIGN_RNA {
     main:
     ch_bam = channel.empty()
     ch_reports = channel.empty()
-    ch_versions = channel.empty()
 
     ch_reads_aligner_index_gtf
         .branch { meta, reads, aligner, index, gtf ->
@@ -40,26 +39,17 @@ workflow FASTQ_ALIGN_RNA {
         STAR_ALIGN.out.log_progress,
         STAR_ALIGN.out.log_out,
     )
-    ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
     // Concatenate splice junction files
-    def ch_splice_junctions_to_merge = group_junctions(STAR_ALIGN.out.spl_junc_tab)
-
-    SORT_MERGE_SPLICE_JUNCTIONS(ch_splice_junctions_to_merge)
-    ch_versions = ch_versions.mix(SORT_MERGE_SPLICE_JUNCTIONS.out.versions.first())
-
+    SORT_MERGE_SPLICE_JUNCTIONS(group_junctions(STAR_ALIGN.out.spl_junc_tab))
     // Concatenate junction files
-    def ch_junctions_to_merge = group_junctions(STAR_ALIGN.out.junction)
-
-    SORT_MERGE_JUNCTIONS(ch_junctions_to_merge)
-    ch_versions = ch_versions.mix(SORT_MERGE_JUNCTIONS.out.versions.first())
+    SORT_MERGE_JUNCTIONS(group_junctions(STAR_ALIGN.out.junction))
 
     emit:
     bam              = ch_bam // channel: [ [meta], bam       ]
     splice_junctions = SORT_MERGE_SPLICE_JUNCTIONS.out.sorted // channel: [ [meta], splice_junctions ]
     junctions        = SORT_MERGE_JUNCTIONS.out.sorted // channel: [ [meta], junctions  ]
     reports          = ch_reports // channel: [ [meta], log       ]
-    versions         = ch_versions // channel: [ versions.yml      ]
 }
 
 def group_junctions(ch) {

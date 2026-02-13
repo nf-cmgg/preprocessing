@@ -4,34 +4,16 @@ Changes in component 'nf-core/biobambam/bamsormadup'
 Changes in 'biobambam/bamsormadup/main.nf':
 --- modules/nf-core/biobambam/bamsormadup/main.nf
 +++ modules/nf-core/biobambam/bamsormadup/main.nf
-@@ -6,8 +6,7 @@
-     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ? 'https://depot.galaxyproject.org/singularity/biobambam:2.0.183--h9f5acd7_1' : 'biocontainers/biobambam:2.0.183--h9f5acd7_1'}"
+@@ -8,8 +8,7 @@
+         'biocontainers/biobambam:2.0.185--h85de650_1'}"
  
      input:
 -    tuple val(meta) , path(bams, stageAs: "?/*")
 -    tuple val(meta2), path(fasta)
-+    tuple val(meta) , path(bams, stageAs: "?/*"), path(fasta)
++    tuple val(meta) , path(bams, stageAs: "?/*"), path(fasta), path(fai)
  
      output:
      tuple val(meta), path("*.bam")              ,optional:true, emit: bam
-@@ -25,7 +24,7 @@
-     def prefix = task.ext.prefix ?: "${meta.id}"
-     def suffix = args.contains("outputformat=cram") ? "cram" : "bam"
-     def input_string = bams instanceof List ? bams.join(" I=") : bams
--    if (args.contains("outputformat=cram") && reference == null) error "Reference required for CRAM output."
-+    if (args.contains("outputformat=cram") && fasta == null) error "Reference required for CRAM output."
- 
-     """
-     bamcat \\
-@@ -53,7 +52,7 @@
-     def args = task.ext.args ?: ''
-     def prefix = task.ext.prefix ?: "${meta.id}"
-     def suffix = args.contains("outputformat=cram") ? "cram" : "bam"
--    if (args.contains("outputformat=cram") && reference == null) error "Reference required for CRAM output."
-+    if (args.contains("outputformat=cram") && fasta == null) error "Reference required for CRAM output."
- 
-     """
-     touch ${prefix}.${suffix}
 
 'modules/nf-core/biobambam/bamsormadup/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/biobambam/bamsormadup/tests/main.nf.test' is unchanged

@@ -8,12 +8,12 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6' }"
 
     input:
-    tuple val(meta) , path(bam), path(bai) ,path(fasta) ,path(fai)
+    tuple val(meta) , path(bam), path(bai), path(intervals), path(fasta) ,path(fai), path(dict)
 
     output:
     tuple val(meta), path("*_metrics"), emit: metrics
     tuple val(meta), path("*.pdf")    , emit: pdf, optional: true
-    path  "versions.yml"              , emit: versions
+    tuple val("${task.process}"), val('picard'), eval("picard CollectMultipleMetrics --version 2>&1 | sed -n 's/^Version:*//p'"), topic: versions, emit: versions_picard
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,7 +21,8 @@ process PICARD_COLLECTMULTIPLEMETRICS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
+    def intervals_cmd = intervals ? "--INTERVALS ${intervals.join(',')}" : ""
+    def reference_cmd = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
     def avail_mem = 3072
     if (!task.memory) {
         log.info '[Picard CollectMultipleMetrics] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
@@ -37,12 +38,8 @@ process PICARD_COLLECTMULTIPLEMETRICS {
         --INPUT $bam \\
         --OUTPUT ${prefix}.CollectMultipleMetrics \\
         --TMP_DIR . \\
-        $reference
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        picard: \$(picard CollectMultipleMetrics --version 2>&1 | grep -o 'Version.*' | cut -f2- -d:)
-    END_VERSIONS
+        $reference_cmd \\
+        $intervals_cmd
     """
 
     stub:
@@ -58,10 +55,5 @@ process PICARD_COLLECTMULTIPLEMETRICS {
     touch ${prefix}.CollectMultipleMetrics.quality_by_cycle.pdf
     touch ${prefix}.CollectMultipleMetrics.insert_size_histogram.pdf
     touch ${prefix}.CollectMultipleMetrics.quality_distribution_metrics
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        picard: \$(echo \$(picard CollectMultipleMetrics --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d:)
-    END_VERSIONS
     """
 }

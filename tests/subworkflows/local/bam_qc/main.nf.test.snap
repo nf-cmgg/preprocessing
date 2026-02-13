@@ -5,6 +5,7 @@
                 "picard_hsmetrics": [
                     [
                         {
+                            "disable_picard_metrics": false,
                             "id": "test",
                             "single_end": false
                         },
@@ -14,6 +15,7 @@
                 "picard_multiplemetrics": [
                     [
                         {
+                            "disable_picard_metrics": false,
                             "id": "test",
                             "single_end": false
                         },
@@ -29,6 +31,7 @@
                 "picard_multiplemetrics_pdf": [
                     [
                         {
+                            "disable_picard_metrics": false,
                             "id": "test",
                             "single_end": false
                         },
@@ -48,7 +51,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": false
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
                     ]
@@ -57,7 +61,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": false
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
                     ]
@@ -66,24 +71,19 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": false
                         },
                         "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
-                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5",
-                    "versions.yml:md5,593804078c060457d011f7f6b650e500",
-                    "versions.yml:md5,f5507938ec419f55239e3faa9f99376f"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-02T12:48:55.096074"
+        "timestamp": "2026-02-11T20:41:14.126057"
     },
     "Bam QC - Samtools": {
         "content": [
@@ -104,7 +104,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": true
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
                     ]
@@ -113,7 +114,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": true
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
                     ]
@@ -122,22 +124,19 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": true
                         },
                         "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
-                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-02T12:50:04.027873"
+        "timestamp": "2026-02-11T20:27:00.941719"
     },
     "Bam QC - WGSmetrics": {
         "content": [
@@ -148,6 +147,7 @@
                 "picard_multiplemetrics": [
                     [
                         {
+                            "disable_picard_metrics": false,
                             "id": "test",
                             "single_end": false
                         },
@@ -163,6 +163,7 @@
                 "picard_multiplemetrics_pdf": [
                     [
                         {
+                            "disable_picard_metrics": false,
                             "id": "test",
                             "single_end": false
                         },
@@ -178,6 +179,7 @@
                 "picard_wgsmetrics": [
                     [
                         {
+                            "disable_picard_metrics": false,
                             "id": "test",
                             "single_end": false
                         },
@@ -188,7 +190,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": false
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
                     ]
@@ -197,7 +200,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": false
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
                     ]
@@ -206,23 +210,18 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "disable_picard_metrics": false
                         },
                         "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,15389a9f97668f320b9628da1903a93b",
-                    "versions.yml:md5,3d2d9acb75406ea94b547be23a45601b",
-                    "versions.yml:md5,3fa45af2ff85005c0421d10e0b686bb5",
-                    "versions.yml:md5,f5507938ec419f55239e3faa9f99376f"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-02T12:49:52.298773"
+        "timestamp": "2026-02-11T20:26:15.482881"
     }
 }

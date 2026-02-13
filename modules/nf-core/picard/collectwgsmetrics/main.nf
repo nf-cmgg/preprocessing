@@ -8,12 +8,12 @@ process PICARD_COLLECTWGSMETRICS {
         'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6' }"
 
     input:
-    tuple val(meta), path(bam), path(bai) ,path(fasta) ,path(fai)
+    tuple val(meta), path(bam), path(bai) ,path(fasta) ,path(fai), path(dict)
     path  intervallist
 
     output:
     tuple val(meta), path("*_metrics"), emit: metrics
-    path  "versions.yml"              , emit: versions
+    tuple val("${task.process}"), val('picard'), eval("picard CollectWgsMetrics --version 2>&1 | sed -n 's/^Version:*//p'"), topic: versions, emit: versions_picard
 
     when:
     task.ext.when == null || task.ext.when
@@ -40,11 +40,6 @@ process PICARD_COLLECTWGSMETRICS {
         --TMP_DIR . \\
         $interval
 
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        picard: \$(picard CollectWgsMetrics --version 2>&1 | grep -o 'Version.*' | cut -f2- -d:)
-    END_VERSIONS
     """
 
     stub:
@@ -52,9 +47,5 @@ process PICARD_COLLECTWGSMETRICS {
     """
     touch ${prefix}.CollectWgsMetrics.coverage_metrics
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        picard: \$(picard CollectWgsMetrics --version 2>&1 | grep -o 'Version.*' | cut -f2- -d:)
-    END_VERSIONS
     """
 }
