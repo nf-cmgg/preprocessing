@@ -42,7 +42,6 @@ workflow PREPROCESSING {
     genelists // file: directory containing genelist bed files for coverage analysis
 
     main:
-    ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
 
     ch_samplesheet
@@ -323,7 +322,6 @@ workflow PREPROCESSING {
         ),
         false,
     )
-    ch_versions = ch_versions.mix(MD5SUM.out.versions.first())
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -350,7 +348,7 @@ workflow PREPROCESSING {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
@@ -451,7 +449,6 @@ workflow PREPROCESSING {
     multiqc_library_report     = MULTIQC_LIBRARY.out.report
     multiqc_library_data       = MULTIQC_LIBRARY.out.data
     multiqc_library_plots      = MULTIQC_LIBRARY.out.plots
-    versions                   = ch_versions
 }
 
 /*
