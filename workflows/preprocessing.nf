@@ -7,6 +7,7 @@ include { samplesheetToList          } from 'plugin/nf-schema'
 */
 
 // Modules
+include { BCLCONVERT                 } from '../modules/nf-core/bclconvert/main'
 include { FALCO                      } from '../modules/nf-core/falco/main'
 include { FASTP                      } from '../modules/nf-core/fastp/main'
 include { MD5SUM                     } from '../modules/nf-core/md5sum/main'
@@ -17,11 +18,11 @@ include { SAMTOOLS_COVERAGE          } from '../modules/nf-core/samtools/coverag
 
 // Subworkflows
 include { BAM_QC                     } from '../subworkflows/local/bam_qc/main'
-include { BCL_DEMULTIPLEX            } from '../subworkflows/nf-core/bcl_demultiplex/main'
 include { COVERAGE                   } from '../subworkflows/local/coverage/main'
 include { FASTQ_TO_CRAM              } from '../subworkflows/local/fastq_to_aligned_cram/main'
 
 // Functions
+include { generateReadgroup          } from '../modules/nf-core/bclconvert/main'
 include { paramsSummaryMap           } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc       } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML     } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -70,17 +71,16 @@ workflow PREPROCESSING {
         }
         .set { ch_illumina_flowcell }
 
-    // BCL_DEMULTIPLEX([meta, samplesheet, flowcell], demultiplexer)
-    BCL_DEMULTIPLEX(ch_illumina_flowcell.flowcell, "bclconvert")
-    BCL_DEMULTIPLEX.out.fastq.dump(tag: "DEMULTIPLEX: fastq", pretty: true)
+    // BCLCONVERT([meta, samplesheet, flowcell])
+    BCLCONVERT(ch_illumina_flowcell.flowcell)
+    BCLCONVERT.out.fastq.dump(tag: "DEMULTIPLEX: fastq", pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(
-        BCL_DEMULTIPLEX.out.reports,
-        BCL_DEMULTIPLEX.out.stats,
+        BCLCONVERT.out.reports,
+        BCLCONVERT.out.stats,
     )
-    ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
-    BCL_DEMULTIPLEX.out.fastq
-        .map { meta, fastq -> [meta.samplename, meta, fastq] }
+    generateReadgroup(BCLCONVERT.out.fastq)
+        .map { meta, fastq -> [meta.rg.SM, meta, fastq] }
         .set { ch_demultiplexed_fastq }
 
     ch_illumina_flowcell.info
@@ -94,9 +94,6 @@ workflow PREPROCESSING {
         .combine(ch_sampleinfo, by: 0)
         .map { samplename, meta, fastq, sampleinfo ->
             def new_meta = meta + sampleinfo
-            def readgroup = readgroup_from_fastq(fastq[0])
-            readgroup = readgroup + ['SM': samplename, 'LB': new_meta.library ?: ""]
-            new_meta = new_meta + ['readgroup': readgroup]
             return [new_meta, fastq]
         }
         .groupTuple(by: [0])
@@ -490,8 +487,8 @@ def readgroup_from_fastq(path) {
         def lane = fields[3]
         def index = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
-        rg.ID = [fcid, lane].join(".")
-        rg.PU = [fcid, lane, index].findAll().join(".")
+        rg.ID = [index, lane].join(".")
+        rg.PU = [fcid, lane].join(".")
         rg.PL = "ILLUMINA"
     }
     else if (fields.size() == 5) {
