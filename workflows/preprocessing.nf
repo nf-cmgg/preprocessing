@@ -76,12 +76,15 @@ workflow PREPROCESSING {
     BCLCONVERT.out.fastq.dump(tag: "DEMULTIPLEX: fastq", pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(
         BCLCONVERT.out.reports,
-        BCLCONVERT.out.stats,
+        BCLCONVERT.out.logs,
     )
 
-    generateReadgroup(BCLCONVERT.out.fastq)
-        .map { meta, fastq -> [meta.rg.SM, meta, fastq] }
-        .set { ch_demultiplexed_fastq }
+    generateReadgroup(
+        BCLCONVERT.out.reports.map { meta, reports ->
+            return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
+        },
+        BCLCONVERT.out.fastq,
+    ).map { meta, fastq -> [meta.rg.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
 
     ch_illumina_flowcell.info
         .flatten()
@@ -92,7 +95,7 @@ workflow PREPROCESSING {
     // Merge fastq meta with sample info
     ch_demultiplexed_fastq
         .combine(ch_sampleinfo, by: 0)
-        .map { samplename, meta, fastq, sampleinfo ->
+        .map { _samplename, meta, fastq, sampleinfo ->
             def new_meta = meta + sampleinfo
             return [new_meta, fastq]
         }
@@ -189,7 +192,6 @@ workflow PREPROCESSING {
     FALCO(ch_fastq_per_sample.other)
     ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.html)
     ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.txt)
-    ch_versions = ch_versions.mix(FALCO.out.versions.first())
 
     // MODULE: fastp
     // Run QC, trimming and adapter removal
@@ -408,9 +410,9 @@ workflow PREPROCESSING {
     )
 
     emit:
-    demultiplex_interop        = BCL_DEMULTIPLEX.out.interop
-    demultiplex_reports        = BCL_DEMULTIPLEX.out.reports
-    demultiplex_logs           = BCL_DEMULTIPLEX.out.logs
+    demultiplex_interop        = BCLCONVERT.out.interop
+    demultiplex_reports        = BCLCONVERT.out.reports
+    demultiplex_logs           = BCLCONVERT.out.logs
     demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
     falco_html                 = FALCO.out.html
     falco_txt                  = FALCO.out.txt
@@ -487,7 +489,7 @@ def readgroup_from_fastq(path) {
         def lane = fields[3]
         def index = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
-        rg.ID = [index, lane].join(".")
+        rg.ID = [index ?: fcid, lane].join(".")
         rg.PU = [fcid, lane].join(".")
         rg.PL = "ILLUMINA"
     }
