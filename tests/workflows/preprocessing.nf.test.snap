@@ -3,7 +3,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "crams": [
                     [
@@ -36,22 +36,22 @@
                     ]
                 ],
                 "demultiplex_fastq": [
-
+                    
                 ],
                 "demultiplex_interop": [
-
+                    
                 ],
                 "demultiplex_logs": [
-
+                    
                 ],
                 "demultiplex_reports": [
-
+                    
                 ],
                 "falco_html": [
-
+                    
                 ],
                 "falco_txt": [
-
+                    
                 ],
                 "fastp_html": [
                     [
@@ -240,7 +240,7 @@
                     ]
                 ],
                 "mosdepth_per_base_d4": [
-
+                    
                 ],
                 "mosdepth_quantized_bed": [
                     [
@@ -417,16 +417,16 @@
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
-
+                    
                 ],
                 "mosdepth_thresholds_csi": [
-
+                    
                 ],
                 "multiqc_library_data": [
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-
+                    
                 ],
                 "multiqc_library_report": [
                     "test.html"
@@ -438,7 +438,7 @@
                 ],
                 "multiqc_main_plots": [
                     [
-
+                        
                     ]
                 ],
                 "multiqc_main_report": [
@@ -447,7 +447,7 @@
                     ]
                 ],
                 "panelcoverage": [
-
+                    
                 ],
                 "picard_hsmetrics": [
                     [
@@ -547,13 +547,13 @@
                     ]
                 ],
                 "picard_wgsmetrics": [
-
+                    
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "samtools_coverage": [
                     [
@@ -702,17 +702,17 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T21:21:37.068608",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-02-11T21:21:37.068608"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "crams": [
                     [
@@ -746,22 +746,22 @@
                     ]
                 ],
                 "demultiplex_fastq": [
-
+                    
                 ],
                 "demultiplex_interop": [
-
+                    
                 ],
                 "demultiplex_logs": [
-
+                    
                 ],
                 "demultiplex_reports": [
-
+                    
                 ],
                 "falco_html": [
-
+                    
                 ],
                 "falco_txt": [
-
+                    
                 ],
                 "fastp_html": [
                     [
@@ -866,46 +866,46 @@
                     ]
                 ],
                 "mosdepth_global": [
-
+                    
                 ],
                 "mosdepth_per_base_bed": [
-
+                    
                 ],
                 "mosdepth_per_base_csi": [
-
+                    
                 ],
                 "mosdepth_per_base_d4": [
-
+                    
                 ],
                 "mosdepth_quantized_bed": [
-
+                    
                 ],
                 "mosdepth_quantized_csi": [
-
+                    
                 ],
                 "mosdepth_regions": [
-
+                    
                 ],
                 "mosdepth_regions_bed": [
-
+                    
                 ],
                 "mosdepth_regions_csi": [
-
+                    
                 ],
                 "mosdepth_summary": [
-
+                    
                 ],
                 "mosdepth_thresholds_bed": [
-
+                    
                 ],
                 "mosdepth_thresholds_csi": [
-
+                    
                 ],
                 "multiqc_library_data": [
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-
+                    
                 ],
                 "multiqc_library_report": [
                     "test.html"
@@ -917,7 +917,7 @@
                 ],
                 "multiqc_main_plots": [
                     [
-
+                        
                     ]
                 ],
                 "multiqc_main_report": [
@@ -926,28 +926,28 @@
                     ]
                 ],
                 "panelcoverage": [
-
+                    
                 ],
                 "picard_hsmetrics": [
-
+                    
                 ],
                 "picard_multiplemetrics": [
-
+                    
                 ],
                 "picard_multiplemetrics_pdf": [
-
+                    
                 ],
                 "picard_wgsmetrics": [
-
+                    
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "samtools_coverage": [
-
+                    
                 ],
                 "samtools_flagstat": [
                     [
@@ -1071,17 +1071,17 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T21:25:53.804729",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-02-11T21:25:53.804729"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "crams": [
                     [
@@ -1113,22 +1113,22 @@
                     ]
                 ],
                 "demultiplex_fastq": [
-
+                    
                 ],
                 "demultiplex_interop": [
-
+                    
                 ],
                 "demultiplex_logs": [
-
+                    
                 ],
                 "demultiplex_reports": [
-
+                    
                 ],
                 "falco_html": [
-
+                    
                 ],
                 "falco_txt": [
-
+                    
                 ],
                 "fastp_html": [
                     [
@@ -1311,7 +1311,7 @@
                     ]
                 ],
                 "mosdepth_per_base_d4": [
-
+                    
                 ],
                 "mosdepth_quantized_bed": [
                     [
@@ -1370,13 +1370,13 @@
                     ]
                 ],
                 "mosdepth_regions": [
-
+                    
                 ],
                 "mosdepth_regions_bed": [
-
+                    
                 ],
                 "mosdepth_regions_csi": [
-
+                    
                 ],
                 "mosdepth_summary": [
                     [
@@ -1407,16 +1407,16 @@
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
-
+                    
                 ],
                 "mosdepth_thresholds_csi": [
-
+                    
                 ],
                 "multiqc_library_data": [
                     "test_data"
                 ],
                 "multiqc_library_plots": [
-
+                    
                 ],
                 "multiqc_library_report": [
                     "test.html"
@@ -1428,7 +1428,7 @@
                 ],
                 "multiqc_main_plots": [
                     [
-
+                        
                     ]
                 ],
                 "multiqc_main_report": [
@@ -1437,10 +1437,10 @@
                     ]
                 ],
                 "panelcoverage": [
-
+                    
                 ],
                 "picard_hsmetrics": [
-
+                    
                 ],
                 "picard_multiplemetrics": [
                     [
@@ -1537,10 +1537,10 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "samtools_coverage": [
                     [
@@ -1684,10 +1684,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-18T15:49:18.459258",
         "meta": {
             "nf-test": "0.9.4",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-02-18T15:49:18.459258"
     }
 }

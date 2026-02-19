@@ -3,7 +3,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "cram_crai": [
                     [
@@ -26,13 +26,13 @@
                     ]
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "sormadup_metrics": [
-                    
+
                 ]
             }
         ],
@@ -46,7 +46,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "cram_crai": [
                     [
@@ -69,10 +69,10 @@
                     ]
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "sormadup_metrics": [
                     [
@@ -105,7 +105,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "cram_crai": [
                     [
@@ -128,10 +128,10 @@
                     ]
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "sormadup_metrics": [
                     [
@@ -164,7 +164,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "cram_crai": [
                     [
@@ -204,7 +204,7 @@
                                 }
                             }
                         },
-                        "test.Chimeric.out.junction:md5,b560229eb850489cf0cc6f60baee57b5"
+                        "test.Chimeric.out.junction"
                     ]
                 ],
                 "rna_splice_junctions": [
@@ -259,7 +259,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "cram_crai": [
                     [
@@ -282,13 +282,13 @@
                     ]
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "sormadup_metrics": [
-                    
+
                 ]
             }
         ],
