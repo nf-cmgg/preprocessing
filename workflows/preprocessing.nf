@@ -83,7 +83,7 @@ workflow PREPROCESSING {
             return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
         },
         BCLCONVERT.out.fastq,
-    ).map { meta, fastq -> [meta.rg.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
+    ).map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
 
     ch_illumina_flowcell.info
         .flatten()
@@ -386,11 +386,17 @@ workflow PREPROCESSING {
             library: meta.id != 'main'
             return [meta, files instanceof List ? files : [files]]
         }
-    ch_multiqc_files.main.dump(tag: "MULTIQC files - main", pretty: true)
-    ch_multiqc_files.library.dump(tag: "MULTIQC files - library", pretty: true)
 
+
+
+    ch_library_multiqc_files = ch_multiqc_files.library.transpose(by: 1).groupTuple()
+    ch_library_multiqc_files.dump(tag: "MULTIQC files - library", pretty: true)
+
+
+    ch_main_multiqc_files = ch_multiqc_files.main.collect().map { files -> [[id: 'main'], files] }
+    ch_main_multiqc_files.dump(tag: "MULTIQC files - main", pretty: true)
     MULTIQC_MAIN(
-        ch_multiqc_files.main.collect().map { files -> [[id: 'main'], files] },
+        ch_main_multiqc_files,
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),
@@ -399,7 +405,7 @@ workflow PREPROCESSING {
     )
 
     MULTIQC_LIBRARY(
-        ch_multiqc_files.library.transpose(by: 1).groupTuple(),
+        ch_library_multiqc_files,
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),

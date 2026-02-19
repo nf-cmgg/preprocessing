@@ -154,7 +154,7 @@
                 "nf-core": {
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "cf0eb2bed12c39c5b714d44dd02039a0cefaedb1",
+                        "git_sha": "51cf05a850f58964b0d12ab92230348e567819e3",
                         "installed_by": ["subworkflows"],
                         "patch": "subworkflows/nf-core/fastq_align_dna/fastq_align_dna.diff"
                     },
