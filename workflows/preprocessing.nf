@@ -11,7 +11,6 @@ include { BCLCONVERT                 } from '../modules/nf-core/bclconvert/main'
 include { FALCO                      } from '../modules/nf-core/falco/main'
 include { FASTP                      } from '../modules/nf-core/fastp/main'
 include { MD5SUM                     } from '../modules/nf-core/md5sum/main'
-include { MOSDEPTH                   } from '../modules/nf-core/mosdepth/main'
 include { MULTIQC as MULTIQC_LIBRARY } from '../modules/nf-core/multiqc/main'
 include { MULTIQC as MULTIQC_MAIN    } from '../modules/nf-core/multiqc/main'
 include { SAMTOOLS_COVERAGE          } from '../modules/nf-core/samtools/coverage/main'
@@ -38,8 +37,8 @@ include { getGenomeAttribute         } from '../subworkflows/local/utils_nfcore_
 workflow PREPROCESSING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
-    genomes // map: genome reference files
-    genelists // file: directory containing genelist bed files for coverage analysis
+    genomes        // map: genome reference files
+    genelists      // file: directory containing genelist bed files for coverage analysis
 
     main:
     ch_multiqc_files = channel.empty()
@@ -331,7 +330,8 @@ workflow PREPROCESSING {
     //
     // Collate and save software versions
     //
-    def topic_versions = channel.topic("versions")
+    def topic_versions = channel
+        .topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path
