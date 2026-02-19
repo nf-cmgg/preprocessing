@@ -5,10 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.0.0dev
 
+- Update pipeline to use topic channels only, deprecation `versions` channels
+- Drop `bcl_demultiplex` subworkflow in favour of `bcl-convert` module
 - Update the output handling to use the new workflow output definitions.
 - Bump all modules to latest versions.
 - The workflow now outputs data in a subdirectory per `library`, including a library specific MultiQC report
-- Drop support for unaligned cram outputs.
+- Drop support for unaligned cram outputs in favor of untrimmed fastq outputs, which are more widely supported and can be used for a wider range of downstream analyses.
 - Add support for untrimmed fastq outputs for unsupported genomes or when aligner is set to `false`.
 - Drop support for global `aligner` parameter. The aligner must now be specified per sample in the sample sheet or sample info.
 - Drop support for global `markdup` and `umi_aware` parameters. Marking duplicates must now be specified per sample in the sample sheet or sample info.
