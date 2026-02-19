@@ -705,11 +705,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-11T21:21:37.068608",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-11T21:21:37.068608"
+        }
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -1077,11 +1077,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-11T21:25:53.804729",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-11T21:25:53.804729"
+        }
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1687,16 +1687,13 @@
                         },
                         "sample1.merged.metrics.txt:md5,01b7286134f5cb6530c3bab2c86fd169"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,c7a35abdd7b3bdda729b3e782bf5f73d"
                 ]
             }
         ],
+        "timestamp": "2026-02-18T15:49:18.459258",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.4",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-11T22:18:07.06828"
+        }
     }
 }
