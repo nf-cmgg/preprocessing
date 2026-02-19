@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.0.0dev
+## 3.0.0
 
 - Update pipeline to use topic channels only, deprecation `versions` channels
 - Drop `bcl_demultiplex` subworkflow in favour of `bcl-convert` module
