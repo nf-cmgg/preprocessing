@@ -3,7 +3,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -26,27 +26,27 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:19:51.825749",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-02-11T20:19:51.825749"
     },
     "fastq to cram - bwa - bamsormadup": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -69,10 +69,10 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
                     [
@@ -95,17 +95,17 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:10:31.616836",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-02-11T20:10:31.616836"
     },
     "fastq to cram - bwa - samtools sormadup": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -128,10 +128,10 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
                     [
@@ -154,17 +154,17 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:15:15.495706",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-02-11T20:15:15.495706"
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -192,16 +192,16 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "id": "test",
-                                "samplename": "test",
-                                "single_end": false,
-                                "sample_type": "RNA",
-                                "markdup": "bamsormadup",
                                 "genome_data": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "star": "s3://test-data/genomics/homo_sapiens/genome/star/"
-                                }
+                                },
+                                "id": "test",
+                                "markdup": "bamsormadup",
+                                "sample_type": "RNA",
+                                "samplename": "test",
+                                "single_end": false
                             }
                         },
                         "test.Chimeric.out.junction"
@@ -249,17 +249,17 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:13:35.19973",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-02-19T11:32:22.214357"
     },
     "fastq to cram - bwa - samtools sort": {
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -282,20 +282,20 @@
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:16:26.285299",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-02-11T20:16:26.285299"
     }
 }

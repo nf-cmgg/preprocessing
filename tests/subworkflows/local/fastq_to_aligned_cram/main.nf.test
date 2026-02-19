@@ -86,7 +86,7 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        sanitizeOutput(workflow.out, unstableKeys:["cram_crai","junctions"])
+                        sanitizeOutput(workflow.out, unstableKeys:["cram_crai","rna_junctions"])
                     ).match()
                 }
             )
