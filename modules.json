@@ -72,6 +72,11 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/multiqc/multiqc.diff"
                     },
+                    "multiqc_sav": {
+                        "branch": "master",
+                        "git_sha": "edc1b3b560fef9b06c0c84ec5157d48e5f130479",
+                        "installed_by": ["modules"]
+                    },
                     "picard/collecthsmetrics": {
                         "branch": "master",
                         "git_sha": "976ed20e328a92cb24ab6c63a8983ed31bf48469",
