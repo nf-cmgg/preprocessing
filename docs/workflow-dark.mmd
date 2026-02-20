@@ -1,197 +1,143 @@
 %%metro title: nf-cmgg/preprocessing
 %%metro logo: images/nf-cmgg-preprocessing_logo_dark.png
-%%metro style: light
-
-graph LR
-%%metro entry: bcl_in | BCL
-%%metro entry: fastq_in | FASTQ
-%%metro file: fastq_in | FASTQ
-%%metro file: bcl_in | BCL
+%%metro style: dark
 
 %%metro line: main | Main | #4CAF50
+%%metro line: align_rna | RNA Alignment | #FF9800
+%%metro line: align_dna | DNA Alignment | #ff1e00ff
+%%metro line: align_postprocessing | Alignment Postprocessing | #9C27B0
+%%metro line: qc | Quality Control | #2196F3
 
-%%metro line: demux | Demultiplexing | #4CAF50
+%%metro file: fastq_in | FASTQ
+%%metro file: bcl_in | BCL
+%%metro file: cram_out | CRAM
+%%metro file: fastq_out | FASTQ
+%%metro file: reports_out | HTML
 
-%%metro line: align_bwamem1_bamsormadup_samtools_convert | Aligner: BWA MEM, Markdup: Biobambam Bamsormadup | #2196F3
-%%metro line: align_bwamem2_bamsormadup_samtools_convert | Aligner: BWA MEM2, Markdup: Biobambam Bamsormadup | #2196F3
-%%metro line: align_snapaligner_bamsormadup_samtools_convert | Aligner: Snap-aligner, Markdup: Biobambam Bamsormadup | #2196F3
-%%metro line: align_star_bamsormadup_samtools_convert | Aligner: STAR, Markdup: Biobambam Bamsormadup | #2196F3
-%%metro line: align_bowtie2_bamsormadup_samtools_convert | Aligner: Bowtie2, Markdup: Biobambam Bamsormadup | #2196F3
-%%metro line: align_dragen_bamsormadup_samtools_convert | Aligner: Dragen, Markdup: Biobambam Bamsormadup | #2196F3
-%%metro line: align_strobealigner_bamsormadup_samtools_convert | Aligner: Strobe-aligner, Markdup: Biobambam Bamsormadup | #2196F3
+graph LR
+    %% define nodes
+    bcl_in[]
+    fastq_in[]
+    fastq_out[]
+    cram_out[]
+    reports_out[]
 
-%%metro line: align_bwamem1_samtools_sormadup | Aligner: BWA MEM, Markdup: SAMtools Sormadup | #2196F3
-%%metro line: align_bwamem2_samtools_sormadup | Aligner: BWA MEM2, Markdup: SAMtools Sormadup | #2196F3
-%%metro line: align_snapaligner_samtools_sormadup | Aligner: Snap-aligner, Markdup: SAMtools Sormadup | #2196F3
-%%metro line: align_star_samtools_sormadup | Aligner: STAR, Markdup: SAMtools Sormadup | #2196F3
-%%metro line: align_bowtie2_samtools_sormadup | Aligner: Bowtie2, Markdup: SAMtools Sormadup | #2196F3
-%%metro line: align_dragen_samtools_sormadup | Aligner: Dragen, Markdup: SAMtools Sormadup | #2196F3
-%%metro line: align_strobealigner_samtools_sormadup | Aligner: Strobe-aligner, Markdup: SAMtools Sormadup | #2196F3
-
-%%metro line: align_bwamem1_samtools_sort | Aligner: BWA MEM, Markdup: SAMtools Sort | #2196F3
-%%metro line: align_bwamem2_samtools_sort | Aligner: BWA MEM2, Markdup: SAMtools Sort | #2196F3
-%%metro line: align_snapaligner_samtools_sort | Aligner: Snap-aligner, Markdup: SAMtools Sort | #2196F3
-%%metro line: align_star_samtools_sort | Aligner: STAR, Markdup: SAMtools Sort | #2196F3
-%%metro line: align_bowtie2_samtools_sort | Aligner: Bowtie2, Markdup: SAMtools Sort | #2196F3
-%%metro line: align_dragen_samtools_sort | Aligner: Dragen, Markdup: SAMtools Sort | #2196F3
-%%metro line: align_strobealigner_samtools_sort | Aligner: Strobe-aligner, Markdup: SAMtools Sort | #2196F3
-
-%%metro line: coverage | Coverage QC | #f38721ff
-
-%%metro line: bam_qc_roi | BAM QC - ROI| #f32121ff
-%%metro line: bam_qc_wgs | BAM QC - WGS| #f321e9ff
-
-    subgraph demultiplexing [Basecalling & Demultiplexing]
+    subgraph demultiplexing
+        %%metro exit: right | main
+        %%metro exit: bottom | qc
         bcl_in[BCL]
         bclconvert[bcl-convert]
-        multiqc_sav[MultiQC-SAV]
-        demultiplex_out[Fastq]
-        sav_out[SAV]
-
-        bcl_in -->|demux| bclconvert
-        bclconvert -->|demux| demultiplex_out
-        bclconvert -->|demux| multiqc_sav
-        multiqc_sav -->|demux| sav_out
+        bcl_in -->|main| bclconvert
     end
 
-    subgraph genome_alignment [Genome Alignment]
-        alignment_fastq_in[]
-        bwamem[bwa mem]
-        bwamem2[bwa mem2]
-        snapaligner[snap-aligner]
-        star[star]
-        bowtie2[bowtie2]
-        dragen[dragen]
-        strobealigner[strobe-align]
+    subgraph fastq_qc
+        fastp[fastp]
+        falco[falco]
+        bclconvert -->|main| fastp
+        bclconvert -->|main| fastq_out
+        bclconvert -->|qc| falco
+        fastq_in -->|main| fastp
+    end
 
-        bamsormadup[biobambam bamsormadup]
-        samtools_convert[samtools convert]
-        samtools_sormadup[samtools sormadup]
+    subgraph alignment_dna
+        bwamem[BWA-MEM]
+        bwamem2[BWA-MEM2]
+        dragmap[Dragmap]
+        snapaligner[SNAP]
+        strobealign[StrobeAlign]
+        _dna_bam_out[]
+
+        fastp -->|align_dna| bwamem
+        fastp -->|align_dna| bwamem2
+        fastp -->|align_dna| dragmap
+        fastp -->|align_dna| snapaligner
+        fastp -->|align_dna| strobealign
+    end
+
+    subgraph alignment_rna
+        star[STAR]
+        _rna_bam_out[]
+
+        fastp -->|align_rna| star
+    end
+
+    subgraph alignment_postprocessing
+        _postprocess_bam_in[]
+        bamsormadup[bamsormadup]
         samtools_sort[samtools sort]
+        samtools_sormadup[samtools sormadup]
+        samtools_convert[samtools convert]
 
-        cram_out[cram]
+        bwamem -->|align_postprocessing| _postprocess_bam_in
+        bwamem2 -->|align_postprocessing| _postprocess_bam_in
+        dragmap -->|align_postprocessing| _postprocess_bam_in
+        snapaligner -->|align_postprocessing| _postprocess_bam_in
+        strobealign -->|align_postprocessing| _postprocess_bam_in
+        star -->|align_postprocessing| _postprocess_bam_in
 
-        alignment_fastq_in -->|align_bwamem1_bamsormadup_samtools_convert,align_bwamem1_samtools_sormadup,align_bwamem1_samtools_sort| bwamem
-        alignment_fastq_in -->|align_bwamem2_bamsormadup_samtools_convert,align_bwamem2_samtools_sormadup,align_bwamem2_samtools_sort| bwamem2
-        alignment_fastq_in -->|align_snapaligner_bamsormadup_samtools_convert,align_snapaligner_samtools_sormadup,align_snapaligner_samtools_sort| snapaligner
-        alignment_fastq_in -->|align_star_bamsormadup_samtools_convert,align_star_samtools_sormadup,align_star_samtools_sort| star
-        alignment_fastq_in -->|align_bowtie2_bamsormadup_samtools_convert,align_bowtie2_samtools_sormadup,align_bowtie2_samtools_sort| bowtie2
-        alignment_fastq_in -->|align_dragen_bamsormadup_samtools_convert,align_dragen_samtools_sormadup,align_dragen_samtools_sort| dragen
-        alignment_fastq_in -->|align_strobealigner_bamsormadup_samtools_convert,align_strobealigner_samtools_sormadup,align_strobealigner_samtools_sort| strobealigner
+        _postprocess_bam_in -->|align_postprocessing| bamsormadup
+        _postprocess_bam_in -->|align_postprocessing| samtools_sort
+        _postprocess_bam_in -->|align_postprocessing| samtools_sormadup
+        _postprocess_bam_in -->|align_postprocessing| samtools_convert
 
-        bwamem -->|align_bwamem1_bamsormadup_samtools_convert| bamsormadup
-        bwamem2 -->|align_bwamem2_bamsormadup_samtools_convert| bamsormadup
-        snapaligner -->|align_snapaligner_bamsormadup_samtools_convert| bamsormadup
-        star -->|align_star_bamsormadup_samtools_convert| bamsormadup
-        bowtie2 -->|align_bowtie2_bamsormadup_samtools_convert| bamsormadup
-        dragen -->|align_dragen_bamsormadup_samtools_convert| bamsormadup
-        strobealigner -->|align_strobealigner_bamsormadup_samtools_convert| bamsormadup
+        bamsormadup -->|align_postprocessing| samtools_convert
 
-        bamsormadup -->|align_bwamem1_bamsormadup_samtools_convert| samtools_convert
-        bamsormadup -->|align_bwamem2_bamsormadup_samtools_convert| samtools_convert
-        bamsormadup -->|align_snapaligner_bamsormadup_samtools_convert| samtools_convert
-        bamsormadup -->|align_star_bamsormadup_samtools_convert| samtools_convert
-        bamsormadup -->|align_bowtie2_bamsormadup_samtools_convert| samtools_convert
-        bamsormadup -->|align_dragen_bamsormadup_samtools_convert| samtools_convert
-        bamsormadup -->|align_strobealigner_bamsormadup_samtools_convert| samtools_convert
-
-        bwamem -->|align_bwamem1_samtools_sormadup| samtools_sormadup
-        bwamem2 -->|align_bwamem2_samtools_sormadup| samtools_sormadup
-        snapaligner -->|align_snapaligner_samtools_sormadup| samtools_sormadup
-        star -->|align_star_samtools_sormadup| samtools_sormadup
-        bowtie2 -->|align_bowtie2_samtools_sormadup| samtools_sormadup
-        dragen -->|align_dragen_samtools_sormadup| samtools_sormadup
-        strobealigner -->|align_strobealigner_samtools_sormadup| samtools_sormadup
-
-        bwamem -->|align_bwamem1_samtools_sort| samtools_sort
-        bwamem2 -->|align_bwamem2_samtools_sort| samtools_sort
-        snapaligner -->|align_snapaligner_samtools_sort| samtools_sort
-        star -->|align_star_samtools_sort| samtools_sort
-        bowtie2 -->|align_bowtie2_samtools_sort| samtools_sort
-        dragen -->|align_dragen_samtools_sort| samtools_sort
-        strobealigner -->|align_strobealigner_samtools_sort| samtools_sort
-
-        samtools_convert -->|align_bwamem1_bamsormadup_samtools_convert| cram_out
-        samtools_sormadup -->|align_bwamem1_samtools_sormadup| cram_out
-        samtools_sort -->|align_bwamem1_samtools_sort| cram_out
-
-        samtools_convert -->|align_bwamem2_bamsormadup_samtools_convert| cram_out
-        samtools_sormadup -->|align_bwamem2_samtools_sormadup| cram_out
-        samtools_sort -->|align_bwamem2_samtools_sort| cram_out
-
-        samtools_convert -->|align_snapaligner_bamsormadup_samtools_convert| cram_out
-        samtools_sormadup -->|align_snapaligner_samtools_sormadup| cram_out
-        samtools_sort -->|align_snapaligner_samtools_sort| cram_out
-
-        samtools_convert -->|align_star_bamsormadup_samtools_convert| cram_out
-        samtools_sormadup -->|align_star_samtools_sormadup| cram_out
-        samtools_sort -->|align_star_samtools_sort| cram_out
-
-        samtools_convert -->|align_bowtie2_bamsormadup_samtools_convert| cram_out
-        samtools_sormadup -->|align_bowtie2_samtools_sormadup| cram_out
-        samtools_sort -->|align_bowtie2_samtools_sort| cram_out
-
-        samtools_convert -->|align_dragen_bamsormadup_samtools_convert| cram_out
-        samtools_sormadup -->|align_dragen_samtools_sormadup| cram_out
-        samtools_sort -->|align_dragen_samtools_sort| cram_out
-
-        samtools_convert -->|align_strobealigner_bamsormadup_samtools_convert| cram_out
-        samtools_sormadup -->|align_strobealigner_samtools_sormadup| cram_out
-        samtools_sort -->|align_strobealigner_samtools_sort| cram_out
-
+        samtools_convert -->|align_postprocessing| cram_out
+        samtools_sort -->|align_postprocessing| cram_out
+        samtools_sormadup -->|align_postprocessing| cram_out
     end
 
-    subgraph coverage_qc [Coverage QC]
-        coverage_qc_in[]
+   subgraph alignment_qc
+        %%metro direction: TB
+        samtools_flagstat[samtools flagstat]
+        samtools_stats[samtools stats]
+        samtools_idxstats[samtools idxstats]
+        picard_collectmultiplemetrics[picard collectmultiplemetrics]
+
+        cram_out -->|qc| samtools_flagstat
+        cram_out -->|qc| samtools_stats
+        cram_out -->|qc| samtools_idxstats
+        cram_out -->|qc| picard_collectmultiplemetrics
+   end
+
+   subgraph alignment_qc_wgs
+        picard_collectwgsmetrics[picard collectwgsmetrics]
+        cram_out -->|qc| picard_collectwgsmetrics
+   end
+
+   subgraph alignment_qc_targetted
+        picard_collecthsmetrics[picard collecthsmetrics]
+        cram_out -->|qc| picard_collecthsmetrics
+   end
+
+   subgraph coverage_qc
         mosdepth[mosdepth]
         samtools_coverage[samtools coverage]
-        panelcoverage[Panel Coverage]
-        coverage_qc_reports_out[Coverage Reports]
+        panelcoverage[panelcoverage]
 
-        coverage_qc_in -->|coverage| mosdepth
-        coverage_qc_in -->|coverage| samtools_coverage
-        coverage_qc_in -->|coverage| panelcoverage
+        cram_out -->|qc| mosdepth
+        cram_out -->|qc| samtools_coverage
+        cram_out -->|qc| panelcoverage
+   end
 
-        mosdepth -->|coverage| coverage_qc_reports_out
-        samtools_coverage -->|coverage| coverage_qc_reports_out
-        panelcoverage -->|coverage| coverage_qc_reports_out
+    subgraph reporting
+    mqc_sav[MultiQC-SAV]
+    mqc_library[Library MultiQC]
+    reports_out[QC Reports]
 
+    bclconvert -->|qc| mqc_sav
+    fastp -->|qc| mqc_library
+    falco -->|qc| mqc_library
+    samtools_flagstat -->|qc| mqc_library
+    samtools_stats -->|qc| mqc_library
+    samtools_idxstats -->|qc| mqc_library
+    picard_collectmultiplemetrics -->|qc| mqc_library
+    picard_collectwgsmetrics -->|qc| mqc_library
+    picard_collecthsmetrics -->|qc| mqc_library
+    mosdepth -->|qc| mqc_library
+    samtools_coverage -->|qc| mqc_library
+    panelcoverage -->|qc| mqc_library
+
+    mqc_sav -->|qc| reports_out
+    mqc_library -->|qc| reports_out
     end
-
-    subgraph bam_qc [BAM QC]
-        bam_qc_in[]
-        samtools_stats[samtools stats]
-        samtools_flagstat[samtools flagstat]
-        samtools_idxstats[samtools idxstats]
-        picard_multiplemetrics[picard CollectMultipleMetrics]
-        picard_hsmetrics[picard CollectHsMetrics]
-        picard_wgsmetrics[picard CollectWgsMetrics]
-        bam_qc_reports_out[QC Reports]
-
-        bam_qc_in -->|bam_qc_roi,bam_qc_wgs| samtools_stats
-        bam_qc_in -->|bam_qc_roi,bam_qc_wgs| samtools_flagstat
-        bam_qc_in -->|bam_qc_roi,bam_qc_wgs| samtools_idxstats
-        bam_qc_in -->|bam_qc_roi,bam_qc_wgs| picard_multiplemetrics
-        bam_qc_in -->|bam_qc_roi| picard_hsmetrics
-        bam_qc_in -->|bam_qc_wgs| picard_wgsmetrics
-
-        samtools_stats -->|bam_qc_roi,bam_qc_wgs| bam_qc_reports_out
-        samtools_flagstat -->|bam_qc_roi,bam_qc_wgs| bam_qc_reports_out
-        samtools_idxstats -->|bam_qc_roi,bam_qc_wgs| bam_qc_reports_out
-        picard_multiplemetrics -->|bam_qc_roi,bam_qc_wgs| bam_qc_reports_out
-        picard_hsmetrics -->|bam_qc_roi| bam_qc_reports_out
-        picard_wgsmetrics -->|bam_qc_wgs| bam_qc_reports_out
-    end
-
-    md5sum[md5sum]
-    multiqc_main[Main MultiQC]
-    multiqc_library[Library MultiQC]
-
-    fastq_in -->|main| alignment_fastq_in
-    demultiplex_out -->|main| alignment_fastq_in
-    cram_out -->|main| coverage_qc_in
-    cram_out -->|main| bam_qc_in
-    cram_out -->|main| md5sum
-    sav_out -->|main| multiqc_main
-    coverage_qc_reports_out -->|main| multiqc_library
-    bam_qc_reports_out -->|main| multiqc_library
