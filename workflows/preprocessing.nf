@@ -37,8 +37,8 @@ include { getGenomeAttribute         } from '../subworkflows/local/utils_nfcore_
 workflow PREPROCESSING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
-    genomes        // map: genome reference files
-    genelists      // file: directory containing genelist bed files for coverage analysis
+    genomes // map: genome reference files
+    genelists // file: directory containing genelist bed files for coverage analysis
 
     main:
     ch_multiqc_files = channel.empty()
@@ -77,14 +77,12 @@ workflow PREPROCESSING {
         BCLCONVERT.out.logs,
     )
 
-    ch_fastq_with_meta = ch_fastq_with_meta.mix(
-        generateReadgroup(
-            BCLCONVERT.out.reports.map { meta, reports ->
-                return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
-            },
-            BCLCONVERT.out.fastq,
-        )
-    )
+    generateReadgroup(
+        BCLCONVERT.out.reports.map { meta, reports ->
+            return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
+        },
+        BCLCONVERT.out.fastq,
+    ).set { ch_fastq_with_meta }
     ch_fastq_with_meta.dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true)
 
     ch_fastq_with_meta.map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
@@ -335,8 +333,7 @@ workflow PREPROCESSING {
     //
     // Collate and save software versions
     //
-    def topic_versions = channel
-        .topic("versions")
+    def topic_versions = channel.topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path
