@@ -77,12 +77,17 @@ workflow PREPROCESSING {
         BCLCONVERT.out.logs,
     )
 
-    generateReadgroup(
-        BCLCONVERT.out.reports.map { meta, reports ->
-            return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
-        },
-        BCLCONVERT.out.fastq,
-    ).map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
+    ch_fastq_with_meta = ch_fastq_with_meta.mix(
+        generateReadgroup(
+            BCLCONVERT.out.reports.map { meta, reports ->
+                return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
+            },
+            BCLCONVERT.out.fastq,
+        )
+    )
+    ch_fastq_with_meta.dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true)
+
+    ch_fastq_with_meta.map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
 
     ch_illumina_flowcell.info
         .flatten()
