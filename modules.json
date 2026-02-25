@@ -7,8 +7,9 @@
                 "nf-core": {
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "547b6a0078c2f4499b64d59edb8ae038b31971b2",
-                        "installed_by": ["modules"]
+                        "git_sha": "18e1a9566d76569b8a40dc60184d4eb7413cf6e1",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/bclconvert/bclconvert.diff"
                     },
                     "biobambam/bamsormadup": {
                         "branch": "master",
