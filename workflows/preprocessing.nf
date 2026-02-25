@@ -97,7 +97,12 @@ workflow PREPROCESSING {
     ch_demultiplexed_fastq
         .combine(ch_sampleinfo, by: 0)
         .map { _samplename, meta, fastq, sampleinfo ->
-            def new_meta = meta + sampleinfo
+            if (sampleinfo.library) {
+                new_rg = meta.readgroup + ['LB': sampleinfo.library]
+            } else {
+                new_rg = meta.readgroup
+            }
+            def new_meta = meta + sampleinfo + ['readgroup': new_rg]
             return [new_meta, fastq]
         }
         .groupTuple(by: [0])
