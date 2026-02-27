@@ -123,8 +123,8 @@ workflow PREPROCESSING {
     // Run QC
     ch_run_qc_files = ch_illumina_flowcell.flowcell
         .map { meta, _samplesheet, flowcell ->
-            def interop = files("${flowcell}/InterOp/*.bin", checkIfExists: true)
-            def xml = files("${flowcell}/*.xml", checkIfExists: true)
+            def interop = files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)
+            def xml = files(flowcell.resolve("*.xml"), checkIfExists: true)
             return [meta, interop, xml]
         }
         .multiMap { meta, interop, xml ->
