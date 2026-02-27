@@ -347,4 +347,6 @@ output {
         path { meta, _file ->
             def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
             return out_path
+        }
+    }
 }
