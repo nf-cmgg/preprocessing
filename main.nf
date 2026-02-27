@@ -46,6 +46,11 @@ workflow {
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
         params.genelists,
+        channel.from([
+            file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true),
+            params.multiqc_config ?: channel.fromPath(params.multiqc_config, checkIfExists: true)
+        ]).collect(),
+        params.multiqc_logo ? channel.value(file(params.multiqc_logo, checkIfExists: true)) : channel.empty()
     )
 
     //
@@ -317,22 +322,29 @@ output {
             return out_path
         }
     }
-    multiqc_main_report {
+    multiqcsav_report {
         path "multiqc/"
     }
-    multiqc_main_data {
+    multiqcsav_data {
         path "multiqc/"
     }
-    multiqc_main_plots {
+    multiqcsav_plots {
         path "multiqc/"
     }
     multiqc_library_report {
-        path "multiqc/"
+        path { meta, _file ->
+            def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
+            return out_path
+        }
     }
     multiqc_library_data {
-        path "multiqc/"
+        path { meta, _file ->
+            def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
+            return out_path
+        }
     }
     multiqc_library_plots {
-        path "multiqc/"
-    }
+        path { meta, _file ->
+            def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
+            return out_path
 }
