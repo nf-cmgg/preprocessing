@@ -125,15 +125,9 @@ workflow PREPROCESSING {
             // if no fastq_2, then single-end
             def single_end = fastq[1] ? false : true
             // add readgroup metadata
-            def rg = readgroup_from_fastq(fastq[0])
             // if the sample name starts with "snp_", remove it so the sampletracking works later on.
             def samplename = meta.samplename.startsWith("snp_") ? meta.samplename.substring(4) : meta.samplename
-            rg = rg + [
-                'SM': samplename,
-                'LB': meta.library ?: "",
-                'PL': meta.platform ?: rg.PL,
-                'ID': meta.readgroup ?: rg.ID,
-            ]
+            def rg = new FastqReadgroup(fastq[0]).getReadgroup(samplename, meta.library, meta.platform)
             def meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
             return [meta_with_readgroup, fastq]
         }
@@ -456,56 +450,10 @@ workflow PREPROCESSING {
     picard_wgsmetrics          = BAM_QC.out.picard_wgsmetrics
     picard_hsmetrics           = BAM_QC.out.picard_hsmetrics
     md5sums                    = MD5SUM.out.checksum
-    multiqc_main_report        = MULTIQC_MAIN.out.report.toList()
-    multiqc_main_data          = MULTIQC_MAIN.out.data.toList()
-    multiqc_main_plots         = MULTIQC_MAIN.out.plots.toList()
-    multiqc_library_report     = MULTIQC_LIBRARY.out.report
-    multiqc_library_data       = MULTIQC_LIBRARY.out.data
-    multiqc_library_plots      = MULTIQC_LIBRARY.out.plots
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
-def readgroup_from_fastq(path) {
-    // expected format:
-    // xx:yy:FLOWCELLID:LANE:... (seven fields)
-    // or
-    // FLOWCELLID:LANE:xx:... (five fields)
-    def line
-
-    path.withInputStream { fq ->
-        def gzipStream = new java.util.zip.GZIPInputStream(fq) as InputStream
-        def decoder = new InputStreamReader(gzipStream, 'ASCII')
-        def buffered = new BufferedReader(decoder)
-        line = buffered.readLine()
-    }
-    assert line.startsWith('@')
-    line = line.substring(1)
-    def fields = line.split(':')
-    def rg = [:]
-    rg.CN = "CMGG"
-
-    if (fields.size() >= 7) {
-        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-        // def sequencer_serial = fields[0]
-        // def run_number       = fields[1]
-        def fcid = fields[2]
-        def lane = fields[3]
-        def index = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
-
-        rg.ID = [index ?: fcid, lane].join(".")
-        rg.PU = [fcid, lane].join(".")
-        rg.PL = "ILLUMINA"
-    }
-    else if (fields.size() == 5) {
-        def fcid = fields[0]
-        rg.ID = fcid
-    }
-    return rg
+    multiqcsav_report          = MULTIQCSAV.out.report.toList()
+    multiqcsav_data            = MULTIQCSAV.out.data.toList()
+    multiqcsav_plots           = MULTIQCSAV.out.plots.toList()
+    multiqc_library_report     = MULTIQC.out.report
+    multiqc_library_data       = MULTIQC.out.data
+    multiqc_library_plots      = MULTIQC.out.plots
 }
