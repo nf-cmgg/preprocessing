@@ -46,11 +46,10 @@ workflow {
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
         params.genelists,
-        channel.from([
-            file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true),
-            params.multiqc_config ?: channel.fromPath(params.multiqc_config, checkIfExists: true)
-        ]).collect(),
-        params.multiqc_logo ? channel.value(file(params.multiqc_logo, checkIfExists: true)) : channel.empty()
+        channel.value(
+            params.multiqc_config ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(params.multiqc_config, checkIfExists: true)] : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
+        ),
+        params.multiqc_logo ? channel.value(file(params.multiqc_logo, checkIfExists: true)) : channel.empty(),
     )
 
     //
@@ -63,7 +62,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        PREPROCESSING.out.multiqc_main_report,
+        PREPROCESSING.out.multiqc_report,
     )
 
     publish:
@@ -102,12 +101,12 @@ workflow {
     picard_wgsmetrics          = PREPROCESSING.out.picard_wgsmetrics
     picard_hsmetrics           = PREPROCESSING.out.picard_hsmetrics
     md5sums                    = PREPROCESSING.out.md5sums
-    multiqc_main_report        = PREPROCESSING.out.multiqc_main_report
-    multiqc_main_data          = PREPROCESSING.out.multiqc_main_data
-    multiqc_main_plots         = PREPROCESSING.out.multiqc_main_plots
-    multiqc_library_report     = PREPROCESSING.out.multiqc_library_report
-    multiqc_library_data       = PREPROCESSING.out.multiqc_library_data
-    multiqc_library_plots      = PREPROCESSING.out.multiqc_library_plots
+    multiqc_report             = PREPROCESSING.out.multiqc_report
+    multiqc_data               = PREPROCESSING.out.multiqc_data
+    multiqc_plots              = PREPROCESSING.out.multiqc_plots
+    multiqcsav_report          = PREPROCESSING.out.multiqcsav_report
+    multiqcsav_data            = PREPROCESSING.out.multiqcsav_data
+    multiqcsav_plots           = PREPROCESSING.out.multiqcsav_plots
 }
 
 output {
@@ -331,19 +330,19 @@ output {
     multiqcsav_plots {
         path "multiqc/"
     }
-    multiqc_library_report {
+    multiqc_report {
         path { meta, _file ->
             def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
             return out_path
         }
     }
-    multiqc_library_data {
+    multiqc_data {
         path { meta, _file ->
             def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
             return out_path
         }
     }
-    multiqc_library_plots {
+    multiqc_plots {
         path { meta, _file ->
             def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
             return out_path

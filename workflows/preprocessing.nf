@@ -7,21 +7,22 @@ include { samplesheetToList      } from 'plugin/nf-schema'
 */
 
 // Modules
-include { BCLCONVERT             } from '../modules/nf-core/bclconvert/main'
-include { FALCO                  } from '../modules/nf-core/falco/main'
-include { FASTP                  } from '../modules/nf-core/fastp/main'
-include { MD5SUM                 } from '../modules/nf-core/md5sum/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { MULTIQCSAV             } from '../modules/nf-core/multiqcsav/main'
-include { SAMTOOLS_COVERAGE      } from '../modules/nf-core/samtools/coverage/main'
+include { BCLCONVERT             } from '../modules/nf-core/bclconvert'
+include { FALCO                  } from '../modules/nf-core/falco'
+include { FASTP                  } from '../modules/nf-core/fastp'
+include { MD5SUM                 } from '../modules/nf-core/md5sum'
+include { MULTIQC                } from '../modules/nf-core/multiqc'
+include { MULTIQCSAV             } from '../modules/nf-core/multiqcsav'
+include { SAMTOOLS_COVERAGE      } from '../modules/nf-core/samtools/coverage'
 
 // Subworkflows
-include { BAM_QC                 } from '../subworkflows/local/bam_qc/main'
-include { COVERAGE               } from '../subworkflows/local/coverage/main'
-include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram/main'
+include { BAM_QC                 } from '../subworkflows/local/bam_qc'
+include { COVERAGE               } from '../subworkflows/local/coverage'
+include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram'
 
 // Functions
-include { generateReadgroup      } from '../modules/nf-core/bclconvert/main'
+include { generateReadgroup      } from '../modules/nf-core/bclconvert'
+include { getReadgroupFromFastq  } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -122,8 +123,8 @@ workflow PREPROCESSING {
     // Run QC
     ch_run_qc_files = ch_illumina_flowcell.flowcell
         .map { meta, _samplesheet, flowcell ->
-            def interop = file("${flowcell}/InterOp/*.bin", checkIfExists: true)
-            def xml = file("${flowcell}/*.xml", checkIfExists: true)
+            def interop = files("${flowcell}/InterOp/*.bin", checkIfExists: true)
+            def xml = files("${flowcell}/*.xml", checkIfExists: true)
             return [meta, interop, xml]
         }
         .multiMap { meta, interop, xml ->
@@ -161,7 +162,7 @@ workflow PREPROCESSING {
             // add readgroup metadata
             // if the sample name starts with "snp_", remove it so the sampletracking works later on.
             def samplename = meta.samplename.startsWith("snp_") ? meta.samplename.substring(4) : meta.samplename
-            def rg = new FastqReadgroup(fastq[0]).getReadgroup(samplename, meta.library, meta.platform)
+            def rg = getReadgroupFromFastq(fastq[0], samplename, meta.library, meta.platform)
             def meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
             return [meta_with_readgroup, fastq]
         }
@@ -461,7 +462,7 @@ workflow PREPROCESSING {
     multiqcsav_report          = MULTIQCSAV.out.report.toList()
     multiqcsav_data            = MULTIQCSAV.out.data.toList()
     multiqcsav_plots           = MULTIQCSAV.out.plots.toList()
-    multiqc_library_report     = MULTIQC.out.report
-    multiqc_library_data       = MULTIQC.out.data
-    multiqc_library_plots      = MULTIQC.out.plots
+    multiqc_report             = MULTIQC.out.report
+    multiqc_data               = MULTIQC.out.data
+    multiqc_plots              = MULTIQC.out.plots
 }

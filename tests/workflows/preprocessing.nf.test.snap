@@ -71,7 +71,7 @@
                             "markdup": "bamsormadup",
                             "organism": "Homo sapiens",
                             "readgroup": {
-                                "CN": "CMGG",
+                                "CN": "",
                                 "ID": "H5T2YDSX3.1",
                                 "LB": "test",
                                 "PL": "ILLUMINA",
@@ -103,12 +103,12 @@
                             "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "single_end": false,
                             "readgroup": {
-                                "CN": "CMGG",
-                                "ID": "H5T2YDSX3.1",
-                                "PU": "H5T2YDSX3.1",
+                                "LB": "test",
+                                "CN": "",
                                 "PL": "ILLUMINA",
                                 "SM": "sample1",
-                                "LB": "test"
+                                "ID": "H5T2YDSX3.1",
+                                "PU": "H5T2YDSX3.1"
                             },
                             "genome": "GRCh38",
                             "genome_data": {
@@ -422,28 +422,28 @@
                 "mosdepth_thresholds_csi": [
                     
                 ],
-                "multiqc_library_data": [
-                    "test_data"
-                ],
-                "multiqc_library_plots": [
+                "multiqc_data": [
                     
                 ],
-                "multiqc_library_report": [
-                    "test.html"
+                "multiqc_plots": [
+                    
                 ],
-                "multiqc_main_data": [
-                    [
-                        "multiqc_data"
-                    ]
+                "multiqc_report": [
+                    
                 ],
-                "multiqc_main_plots": [
+                "multiqcsav_data": [
                     [
                         
                     ]
                 ],
-                "multiqc_main_report": [
+                "multiqcsav_plots": [
                     [
-                        "multiqc.html"
+                        
+                    ]
+                ],
+                "multiqcsav_report": [
+                    [
+                        
                     ]
                 ],
                 "panelcoverage": [
@@ -706,7 +706,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-11T21:21:37.068608"
+        "timestamp": "2026-02-27T12:45:33.134303"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -782,7 +782,7 @@
                             "markdup": "bamsormadup",
                             "organism": "Homo sapiens",
                             "readgroup": {
-                                "CN": "CMGG",
+                                "CN": "",
                                 "ID": "H5T2YDSX3.1",
                                 "LB": "test",
                                 "PL": "ILLUMINA",
@@ -815,12 +815,12 @@
                             "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "single_end": false,
                             "readgroup": {
-                                "CN": "CMGG",
-                                "ID": "H5T2YDSX3.1",
-                                "PU": "H5T2YDSX3.1",
+                                "LB": "test",
+                                "CN": "",
                                 "PL": "ILLUMINA",
                                 "SM": "sample1",
-                                "LB": "test"
+                                "ID": "H5T2YDSX3.1",
+                                "PU": "H5T2YDSX3.1"
                             },
                             "genome": "GRCh38",
                             "genome_data": {
@@ -901,28 +901,28 @@
                 "mosdepth_thresholds_csi": [
                     
                 ],
-                "multiqc_library_data": [
-                    "test_data"
-                ],
-                "multiqc_library_plots": [
+                "multiqc_data": [
                     
                 ],
-                "multiqc_library_report": [
-                    "test.html"
+                "multiqc_plots": [
+                    
                 ],
-                "multiqc_main_data": [
-                    [
-                        "multiqc_data"
-                    ]
+                "multiqc_report": [
+                    
                 ],
-                "multiqc_main_plots": [
+                "multiqcsav_data": [
                     [
                         
                     ]
                 ],
-                "multiqc_main_report": [
+                "multiqcsav_plots": [
                     [
-                        "multiqc.html"
+                        
+                    ]
+                ],
+                "multiqcsav_report": [
+                    [
+                        
                     ]
                 ],
                 "panelcoverage": [
@@ -1075,7 +1075,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-11T21:25:53.804729"
+        "timestamp": "2026-02-27T12:50:06.871724"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1148,7 +1148,7 @@
                             "markdup": "bamsormadup",
                             "organism": "Homo sapiens",
                             "readgroup": {
-                                "CN": "CMGG",
+                                "CN": "",
                                 "ID": "H5T2YDSX3.1",
                                 "LB": "test",
                                 "PL": "ILLUMINA",
@@ -1178,12 +1178,12 @@
                             "run_coverage": true,
                             "single_end": false,
                             "readgroup": {
-                                "CN": "CMGG",
-                                "ID": "H5T2YDSX3.1",
-                                "PU": "H5T2YDSX3.1",
+                                "LB": "test",
+                                "CN": "",
                                 "PL": "ILLUMINA",
                                 "SM": "sample1",
-                                "LB": "test"
+                                "ID": "H5T2YDSX3.1",
+                                "PU": "H5T2YDSX3.1"
                             },
                             "genome": "GRCh38",
                             "genome_data": {
@@ -1412,28 +1412,28 @@
                 "mosdepth_thresholds_csi": [
                     
                 ],
-                "multiqc_library_data": [
-                    "test_data"
-                ],
-                "multiqc_library_plots": [
+                "multiqc_data": [
                     
                 ],
-                "multiqc_library_report": [
-                    "test.html"
+                "multiqc_plots": [
+                    
                 ],
-                "multiqc_main_data": [
-                    [
-                        "multiqc_data"
-                    ]
+                "multiqc_report": [
+                    
                 ],
-                "multiqc_main_plots": [
+                "multiqcsav_data": [
                     [
                         
                     ]
                 ],
-                "multiqc_main_report": [
+                "multiqcsav_plots": [
                     [
-                        "multiqc.html"
+                        
+                    ]
+                ],
+                "multiqcsav_report": [
+                    [
+                        
                     ]
                 ],
                 "panelcoverage": [
@@ -1685,9 +1685,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-18T15:49:18.459258"
+        "timestamp": "2026-02-27T12:48:25.815678"
     }
 }
