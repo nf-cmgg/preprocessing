@@ -49,7 +49,7 @@ workflow PREPROCESSING {
     ch_samplesheet
         .branch { meta, fastq_1, fastq_2, samplesheet, sampleinfo, flowcell ->
             illumina_flowcell: (flowcell && samplesheet && sampleinfo) && !(fastq_1 || fastq_2)
-            return [meta, samplesheet, sampleinfo, flowcell]
+            return [["id": meta.id, "lane": meta.lane], samplesheet, sampleinfo, flowcell]
             fastq: (fastq_1) && !(flowcell || samplesheet || sampleinfo)
             return [meta, [fastq_1, fastq_2].findAll()]
             other: true
@@ -77,7 +77,6 @@ workflow PREPROCESSING {
     BCLCONVERT.out.fastq.dump(tag: "DEMULTIPLEX: fastq", pretty: true)
     ch_multiqc_files = ch_multiqc_files.mix(
         BCLCONVERT.out.reports,
-        BCLCONVERT.out.logs,
     )
 
     generateReadgroup(
@@ -133,17 +132,20 @@ workflow PREPROCESSING {
         }
 
     ch_mqcsav_interop = ch_run_qc_files.interop.join(BCLCONVERT.out.interop)
-    ch_mqcsav_xml = ch_run_qc_files.xml.join(BCLCONVERT.out.reports)
+    .map { meta, interop_run, interop_bclconvert ->
+        def all_interop = (interop_run + interop_bclconvert).flatten().unique()
+        return [meta, all_interop]
+    }
 
-    ch_mqcsav_input = ch_mqcsav_xml
-        .join(ch_mqcsav_interop, by: 0)
-        .combine(ch_multiqc_files, by: 0)
-        .combine(ch_multiqc_config, by: 0)
-        .combine(ch_multiqc_logo, by: 0)
+    ch_mqcsav_input = ch_run_qc_files.xml       // XML
+        .join(ch_mqcsav_interop, by: 0)         // XML, InterOp
+        .join(BCLCONVERT.out.reports, by: 0)    // XML, InterOp, bclconvert reports
+        .combine(ch_multiqc_config)             // XML, InterOp, MultiQC files, MultiQC config
+        .combine(ch_multiqc_logo)               // XML, InterOp, MultiQC files, MultiQC config, MultiQC logo
+        .dump(tag: "MULTIQC SAV input", pretty: true)
         .map { meta, xml, interop, multiqc_files, multiqc_config, multiqc_logo ->
             return [meta, xml, interop, multiqc_files, multiqc_config, multiqc_logo, [], []]
         }
-    ch_mqcsav_input.dump(tag: "MULTIQC SAV input", pretty: true)
 
     MULTIQCSAV(
         ch_mqcsav_input
