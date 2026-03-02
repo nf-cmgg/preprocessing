@@ -4,8 +4,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// Mock subworkflow to please linting
 workflow UTILS_NFCMGG_PREPROCESSING_PIPELINE {
-    // Mock subworkflow to please linting
 }
 
 /*

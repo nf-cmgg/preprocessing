@@ -75,9 +75,6 @@ workflow PREPROCESSING {
     // BCLCONVERT([meta, samplesheet, flowcell])
     BCLCONVERT(ch_illumina_flowcell.flowcell)
     BCLCONVERT.out.fastq.dump(tag: "DEMULTIPLEX: fastq", pretty: true)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        BCLCONVERT.out.reports,
-    )
 
     generateReadgroup(
         BCLCONVERT.out.reports.map { meta, reports ->
@@ -131,17 +128,18 @@ workflow PREPROCESSING {
             xml: [meta, xml]
         }
 
-    ch_mqcsav_interop = ch_run_qc_files.interop.join(BCLCONVERT.out.interop)
-    .map { meta, interop_run, interop_bclconvert ->
-        def all_interop = (interop_run + interop_bclconvert).flatten().unique()
-        return [meta, all_interop]
-    }
+    ch_mqcsav_interop = ch_run_qc_files.interop
+        .join(BCLCONVERT.out.interop)
+        .map { meta, interop_run, interop_bclconvert ->
+            def all_interop = (interop_run + interop_bclconvert).flatten().unique()
+            return [meta, all_interop]
+        }
 
-    ch_mqcsav_input = ch_run_qc_files.xml       // XML
-        .join(ch_mqcsav_interop, by: 0)         // XML, InterOp
-        .join(BCLCONVERT.out.reports, by: 0)    // XML, InterOp, bclconvert reports
-        .combine(ch_multiqc_config)             // XML, InterOp, MultiQC files, MultiQC config
-        .combine(ch_multiqc_logo)               // XML, InterOp, MultiQC files, MultiQC config, MultiQC logo
+    ch_mqcsav_input = ch_run_qc_files.xml
+        .join(ch_mqcsav_interop, by: 0)
+        .join(BCLCONVERT.out.reports, by: 0)
+        .combine(ch_multiqc_config)
+        .combine(ch_multiqc_logo)
         .dump(tag: "MULTIQC SAV input", pretty: true)
         .map { meta, xml, interop, multiqc_files, multiqc_config, multiqc_logo ->
             return [meta, xml, interop, multiqc_files, multiqc_config, multiqc_logo, [], []]

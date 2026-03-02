@@ -46,9 +46,9 @@ workflow {
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
         params.genelists,
-        params.multiqc_config ?
-            channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(params.multiqc_config, checkIfExists: true)]) :
-            channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]),
+        params.multiqc_config
+            ? channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(params.multiqc_config, checkIfExists: true)])
+            : channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]),
         params.multiqc_logo ? channel.value(file(params.multiqc_logo, checkIfExists: true)) : channel.value([]),
     )
 
