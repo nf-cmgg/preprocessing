@@ -375,36 +375,38 @@ workflow PREPROCESSING {
             sort: true,
             newLine: true,
         )
-        .map { file -> [[id: 'main'], file] }
         .set { ch_collated_versions }
 
     //
     // MODULE: MultiQC
     //
+    // summary files without meta, e.g. versions, params
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml').map { file -> [[id: 'main'], file] })
-
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
     ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
 
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true).map { file -> [[id: 'main'], file] })
+    ch_summary_files = channel.empty()
+        .mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        .mix(ch_collated_versions)
+        .mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
+        .toList()
+        .dump(tag: "Summary files for MultiQC", pretty: true)
 
-    ch_multiqc_files = ch_multiqc_files.map { meta, files ->
-        def new_meta = meta.library ? meta + [id: meta.library] : meta + [id: 'main']
-        return [new_meta, files]
-    }
-
-    ch_multiqc_files.dump(tag: "MULTIQC files", pretty: true)
-
-
-    ch_multiqc_input = channel.empty()
+    ch_multiqc_input = ch_multiqc_files
+        .map { meta, files ->
+            def new_meta = meta.library ? [id: meta.library] : [id: 'main']
+            return [new_meta, files]
+        }
+        .groupTuple(by: 0)
+        .combine(ch_summary_files)
+        .dump(tag: "MULTIQC files", pretty: true)
+        .map { meta, multiqc_files, summary_files ->
+            return [meta, (multiqc_files + summary_files.collect().flatten()), multiqc_config, multiqc_logo, [], []]
+        }
 
     // MULTIQC([meta, multiqc_files, multiqc_config, multiqc_logo, replace_names, sample_names])
-    MULTIQC(
-        ch_multiqc_input
-    )
+    MULTIQC(ch_multiqc_input)
 
     emit:
     demultiplex_reports        = BCLCONVERT.out.reports
