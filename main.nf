@@ -47,9 +47,9 @@ workflow {
         params.genomes,
         params.genelists,
         params.multiqc_config
-            ? channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(params.multiqc_config, checkIfExists: true)])
-            : channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]),
-        params.multiqc_logo ? channel.value(file(params.multiqc_logo, checkIfExists: true)) : channel.value([]),
+            ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(params.multiqc_config, checkIfExists: true)]
+            : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
+        params.multiqc_logo ? file(params.multiqc_logo, checkIfExists: true) : [],
     )
 
     //
@@ -66,7 +66,6 @@ workflow {
     )
 
     publish:
-    demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose(by: 1)
     demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.transpose(by: 1)
     demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.transpose(by: 1)
     demultiplex_fastq          = PREPROCESSING.out.demultiplex_fastq.transpose()
@@ -110,11 +109,6 @@ workflow {
 }
 
 output {
-    demultiplex_interop {
-        path { _meta, bin ->
-            bin >> "Interop/${bin.name}"
-        }
-    }
     demultiplex_reports {
         path { meta, report ->
             def out_path = meta.lane ? "Reports/L00${meta.lane}/${report.name}" as String : "Reports/${report.name}"

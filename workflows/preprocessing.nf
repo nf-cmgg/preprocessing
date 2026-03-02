@@ -40,8 +40,8 @@ workflow PREPROCESSING {
     ch_samplesheet // channel: samplesheet read in from --input
     genomes // map: genome reference files
     genelists // file: directory containing genelist bed files for coverage analysis
-    ch_multiqc_config // channel: MultiQC config file(s)
-    ch_multiqc_logo // channel: MultiQC logo file
+    multiqc_config // file(s): MultiQC config file(s)
+    multiqc_logo // file: MultiQC logo file
 
     main:
     ch_multiqc_files = channel.empty()
@@ -81,18 +81,34 @@ workflow PREPROCESSING {
             return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
         },
         BCLCONVERT.out.fastq,
-    ).set { ch_fastq_with_meta }
-    ch_fastq_with_meta.dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true)
+    )
+    .dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true)
+    .map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
 
-    ch_fastq_with_meta.map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
+    // Run QC
+    ch_mqcsav_input = ch_illumina_flowcell.flowcell
+        .map { meta, _samplesheet, flowcell ->
+            def interop = files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)
+            def xml = files(flowcell.resolve("*.xml"), checkIfExists: true)
+            return [meta, xml, interop]
+        }
+        .join(BCLCONVERT.out.reports, by: 0)
+        .map { meta, xml, interop, reports ->
+            return [meta, xml, interop, reports, multiqc_config, multiqc_logo, [], []]
+        }
+        .dump(tag: "MULTIQC SAV input", pretty: true)
 
+    MULTIQCSAV(
+        ch_mqcsav_input
+    )
+
+    // Merge fastq meta with sample info
     ch_illumina_flowcell.info
         .flatten()
         .transpose()
         .map { sampleinfo -> [sampleinfo.samplename, sampleinfo] }
         .set { ch_sampleinfo }
 
-    // Merge fastq meta with sample info
     ch_demultiplexed_fastq
         .combine(ch_sampleinfo, by: 0)
         .map { _samplename, meta, fastq, sampleinfo ->
@@ -115,39 +131,6 @@ workflow PREPROCESSING {
             other: true
         }
         .set { ch_demultiplexed_fastq_with_sampleinfo }
-
-    // Run QC
-    ch_run_qc_files = ch_illumina_flowcell.flowcell
-        .map { meta, _samplesheet, flowcell ->
-            def interop = files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)
-            def xml = files(flowcell.resolve("*.xml"), checkIfExists: true)
-            return [meta, interop, xml]
-        }
-        .multiMap { meta, interop, xml ->
-            interop: [meta, interop]
-            xml: [meta, xml]
-        }
-
-    ch_mqcsav_interop = ch_run_qc_files.interop
-        .join(BCLCONVERT.out.interop)
-        .map { meta, interop_run, interop_bclconvert ->
-            def all_interop = (interop_run + interop_bclconvert).flatten().unique()
-            return [meta, all_interop]
-        }
-
-    ch_mqcsav_input = ch_run_qc_files.xml
-        .join(ch_mqcsav_interop, by: 0)
-        .join(BCLCONVERT.out.reports, by: 0)
-        .combine(ch_multiqc_config)
-        .combine(ch_multiqc_logo)
-        .dump(tag: "MULTIQC SAV input", pretty: true)
-        .map { meta, xml, interop, multiqc_files, multiqc_config, multiqc_logo ->
-            return [meta, xml, interop, multiqc_files, multiqc_config, multiqc_logo, [], []]
-        }
-
-    MULTIQCSAV(
-        ch_mqcsav_input
-    )
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -424,7 +407,6 @@ workflow PREPROCESSING {
     )
 
     emit:
-    demultiplex_interop        = BCLCONVERT.out.interop
     demultiplex_reports        = BCLCONVERT.out.reports
     demultiplex_logs           = BCLCONVERT.out.logs
     demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
