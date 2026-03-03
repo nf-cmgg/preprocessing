@@ -95,7 +95,11 @@ workflow PREPROCESSING {
         }
         .join(BCLCONVERT.out.reports, by: 0)
         .map { meta, xml, interop, reports ->
-            return [meta, xml, interop, reports, multiqc_config, multiqc_logo, [], []]
+            return [meta - meta.subMap(['lane']), xml, interop, reports]
+        }
+        .groupTuple(by: [0])
+        .map { meta, xml, interop, reports ->
+            return [meta, xml.flatten().unique(), interop.flatten().unique(), reports.flatten().unique(), multiqc_config, multiqc_logo, [], []]
         }
         .dump(tag: "MULTIQC SAV input", pretty: true)
 
