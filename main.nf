@@ -326,19 +326,19 @@ output {
     }
     multiqc_report {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
+            def out_path = meta.id ? "${meta.id}/multiqc/" as String : "multiqc/"
             return out_path
         }
     }
     multiqc_data {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
+            def out_path = meta.id ? "${meta.id}/multiqc/" as String : "multiqc/"
             return out_path
         }
     }
     multiqc_plots {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/multiqc/" as String : "multiqc/"
+            def out_path = meta.id ? "${meta.id}/multiqc/" as String : "multiqc/"
             return out_path
         }
     }

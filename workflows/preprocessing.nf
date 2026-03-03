@@ -396,7 +396,7 @@ workflow PREPROCESSING {
 
     ch_multiqc_input = ch_multiqc_files
         .map { meta, files ->
-            def new_meta = meta.library ? [id: meta.library] : [id: 'main']
+            def new_meta = meta.library ? [id: meta.library] : [id: 'multiqc']
             return [new_meta, files]
         }
         .groupTuple(by: 0)
