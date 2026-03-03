@@ -111,76 +111,63 @@ workflow {
 output {
     demultiplex_reports {
         path { meta, report ->
-            def out_path = meta.lane ? "Reports/L00${meta.lane}/${report.name}" as String : "Reports/${report.name}"
-            report >> out_path
+            report >> (meta.lane ? "Reports/L00${meta.lane}/${report.name}" : "Reports/${report.name}")
         }
     }
     demultiplex_logs {
         path { meta, log ->
-            def out_path = meta.lane ? "Logs/L00${meta.lane}/${log.name}" as String : "Logs/${log.name}"
-            log >> out_path
+            log >> (meta.lane ? "Logs/L00${meta.lane}/${log.name}" : "Logs/${log.name}")
         }
     }
     demultiplex_fastq {
         path { meta, fastq ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" as String : "${meta.samplename}/${fastq.name}"
-            fastq >> out_path
+            fastq >> (meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" as String : "${meta.samplename}/${fastq.name}")
         }
     }
     falco_html {
         path { meta, html ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${html.name}" as String : "${meta.samplename}/${html.name}"
-            html >> out_path
+            html >> (meta.library ? "${meta.library}/${meta.samplename}/${html.name}" as String : "${meta.samplename}/${html.name}")
         }
     }
     falco_txt {
         path { meta, txt ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${txt.name}" as String : "${meta.samplename}/${txt.name}"
-            txt >> out_path
+            txt >> (meta.library ? "${meta.library}/${meta.samplename}/${txt.name}" as String : "${meta.samplename}/${txt.name}")
         }
     }
     fastp_json {
         path { meta, json ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${json.name}" as String : "${meta.samplename}/${json.name}"
-            json >> out_path
+            json >> (meta.library ? "${meta.library}/${meta.samplename}/${json.name}" as String : "${meta.samplename}/${json.name}")
         }
     }
     fastp_html {
         path { meta, html ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${html.name}" as String : "${meta.samplename}/${html.name}"
-            html >> out_path
+            html >> (meta.library ? "${meta.library}/${meta.samplename}/${html.name}" as String : "${meta.samplename}/${html.name}")
         }
     }
     crams {
         path { meta, cram, crai ->
-            def out_cram = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" as String : "${meta.samplename}/${meta.samplename}.cram"
-            def out_crai = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram.crai" as String : "${meta.samplename}/${meta.samplename}.cram.crai"
-            cram >> out_cram
-            crai >> out_crai
+            cram >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" as String : "${meta.samplename}/${meta.samplename}.cram")
+            crai >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram.crai" as String : "${meta.samplename}/${meta.samplename}.cram.crai")
         }
     }
     rna_splice_junctions {
         path { meta, sjt ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${sjt.name}" as String : "${meta.samplename}/${sjt.name}"
-            sjt >> out_path
+            sjt >> (meta.library ? "${meta.library}/${meta.samplename}/${sjt.name}" as String : "${meta.samplename}/${sjt.name}")
         }
     }
     rna_junctions {
         path { meta, junctions ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${junctions.name}" as String : "${meta.samplename}/${junctions.name}"
-            junctions >> out_path
+            junctions >> (meta.library ? "${meta.library}/${meta.samplename}/${junctions.name}" as String : "${meta.samplename}/${junctions.name}")
         }
     }
     align_reports {
         path { meta, log ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${log.name}" as String : "${meta.samplename}/${log.name}"
-            log >> out_path
+            log >> (meta.library ? "${meta.library}/${meta.samplename}/${log.name}" as String : "${meta.samplename}/${log.name}")
         }
     }
     sormadup_metrics {
         path { meta, metrics ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.duplicate_metrics.txt" as String : "${meta.samplename}/${meta.samplename}.duplicate_metrics.txt"
-            metrics >> out_path
+            metrics >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.duplicate_metrics.txt" as String : "${meta.samplename}/${meta.samplename}.duplicate_metrics.txt")
         }
     }
     mosdepth_global {
