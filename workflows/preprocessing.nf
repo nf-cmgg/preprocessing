@@ -83,7 +83,8 @@ workflow PREPROCESSING {
         BCLCONVERT.out.fastq,
     )
     .dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true)
-    .map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
+    .map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }
+    .set { ch_demultiplexed_fastq }
 
     // Run QC
     ch_mqcsav_input = ch_illumina_flowcell.flowcell
@@ -390,7 +391,7 @@ workflow PREPROCESSING {
         .mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         .mix(ch_collated_versions)
         .mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
-        .toList()
+        .toList().map { files -> [files] }
         .dump(tag: "Summary files for MultiQC", pretty: true)
 
     ch_multiqc_input = ch_multiqc_files
@@ -400,10 +401,11 @@ workflow PREPROCESSING {
         }
         .groupTuple(by: 0)
         .combine(ch_summary_files)
-        .dump(tag: "MULTIQC files", pretty: true)
         .map { meta, multiqc_files, summary_files ->
-            return [meta, (multiqc_files + summary_files.collect().flatten()), multiqc_config, multiqc_logo, [], []]
+            return [meta, (multiqc_files + summary_files), multiqc_config, multiqc_logo, [], []]
         }
+        .dump(tag: "MULTIQC files", pretty: true)
+
 
     // MULTIQC([meta, multiqc_files, multiqc_config, multiqc_logo, replace_names, sample_names])
     MULTIQC(ch_multiqc_input)
