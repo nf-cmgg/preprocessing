@@ -12,8 +12,9 @@ process BCLCONVERT {
     tuple val(meta), path("output/**_S[1-9]*_I?_00?.fastq.gz"), emit: fastq_idx, optional: true
     tuple val(meta), path("output/**Undetermined_S0*_R?_00?.fastq.gz"), emit: undetermined, optional: true
     tuple val(meta), path("output/**Undetermined_S0*_I?_00?.fastq.gz"), emit: undetermined_idx, optional: true
-    tuple val(meta), path("output/Reports/*.{csv,xml,bin}"), emit: reports
-    tuple val(meta), path("output/Logs/*.{log,txt}"), emit: logs
+    tuple val(meta), path("output/Reports"), emit: reports
+    tuple val(meta), path("output/Logs"), emit: logs
+    tuple val(meta), path("output/InterOp/*.bin"), emit: interop, optional: true
     tuple val("${task.process}"), val('bclconvert'), eval("bcl-convert -V 2>&1 | head -n 1 | sed 's/^.*Version //'"), topic: versions, emit: versions_bclconvert
 
     when:
@@ -60,6 +61,10 @@ process BCLCONVERT {
         --output-directory output \\
         --bcl-input-directory ${input_dir} \\
         --sample-sheet ${samplesheet}
+
+    # copy the InterOp folder contents to ensure it gets picked up when using fusion
+    mkdir -p output/InterOp/
+    cp -n **/InterOp/*.bin output/InterOp/
     """
 
     stub:
@@ -87,6 +92,15 @@ process BCLCONVERT {
     echo "fake log file" > output/Logs/FastqComplete.log
     echo "fake log file" > output/Logs/Info.log
     echo "fake log file" > output/Logs/Warnings.log
+
+    mkdir -p output/InterOp
+    echo "fake InterOp file" > output/InterOp/ControlMetricsOut.bin
+    echo "fake InterOp file" > output/InterOp/CorrectedIntMetricsOut.bin
+    echo "fake InterOp file" > output/InterOp/ErrorMetricsOut.bin
+    echo "fake InterOp file" > output/InterOp/ExtractionMetricsOut.bin
+    echo "fake InterOp file" > output/InterOp/IndexMetricsOut.bin
+    echo "fake InterOp file" > output/InterOp/QMetricsOut.bin
+    echo "fake InterOp file" > output/InterOp/TileMetricsOut.bin
     """
 }
 

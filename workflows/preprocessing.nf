@@ -78,7 +78,7 @@ workflow PREPROCESSING {
 
     generateReadgroup(
         BCLCONVERT.out.reports.map { meta, reports ->
-            return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
+            return [meta, file(reports).resolve("fastq_list.csv")]
         },
         BCLCONVERT.out.fastq,
     )
@@ -99,7 +99,7 @@ workflow PREPROCESSING {
         }
         .groupTuple(by: [0])
         .map { meta, xml, interop, reports ->
-            return [meta, xml.flatten().unique(), interop.flatten().unique(), reports.flatten().unique(), multiqc_config, multiqc_logo, [], []]
+            return [meta, xml.flatten().unique(), interop.flatten().unique(), reports.flatten(), multiqc_config, multiqc_logo, [], []]
         }
         .dump(tag: "MULTIQC SAV input", pretty: true)
 
