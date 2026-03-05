@@ -103,7 +103,7 @@
                     },
                     "samtools/coverage": {
                         "branch": "master",
-                        "git_sha": "b2e78932ef01165fd85829513eaca29eff8e640a",
+                        "git_sha": "440edf75d8782913115a7b72a88392a227f72cc1",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/coverage/samtools-coverage.diff"
                     },
