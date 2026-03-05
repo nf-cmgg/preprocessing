@@ -7,9 +7,8 @@
                 "nf-core": {
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "18e1a9566d76569b8a40dc60184d4eb7413cf6e1",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/bclconvert/bclconvert.diff"
+                        "git_sha": "e4a7e011bee58ded839f4da6bf9bb3fbfbebdebd",
+                        "installed_by": ["modules"]
                     },
                     "biobambam/bamsormadup": {
                         "branch": "master",
@@ -19,7 +18,7 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "ab146e7909edbf6dcc6459de57eef29dceb61d42",
+                        "git_sha": "92b8df948fd8cdb223e051f5f5e414818a073ee0",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/bowtie2/align/bowtie2-align.diff"
                     },
@@ -31,7 +30,7 @@
                     },
                     "bwamem2/mem": {
                         "branch": "master",
-                        "git_sha": "5dd46a36fca68d6ad1a6b22ec47adc8c6863717d",
+                        "git_sha": "8325a8155a77a336a613a504b8e4d6cea7a2344a",
                         "installed_by": ["fastq_align_dna"],
                         "patch": "modules/nf-core/bwamem2/mem/bwamem2-mem.diff"
                     },
@@ -69,25 +68,30 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "575e1a4b51a9bad7a8cd1316a88fb85684ef7c7b",
+                        "git_sha": "2c73cc8fa92cf48de3da0b643fdf357a8a290b36",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/multiqc/multiqc.diff"
                     },
+                    "multiqcsav": {
+                        "branch": "master",
+                        "git_sha": "2c73cc8fa92cf48de3da0b643fdf357a8a290b36",
+                        "installed_by": ["modules"]
+                    },
                     "picard/collecthsmetrics": {
                         "branch": "master",
-                        "git_sha": "976ed20e328a92cb24ab6c63a8983ed31bf48469",
+                        "git_sha": "a631e12055f6c23ba2c942d3902b3ed1b9eed859",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collecthsmetrics/picard-collecthsmetrics.diff"
                     },
                     "picard/collectmultiplemetrics": {
                         "branch": "master",
-                        "git_sha": "74ec93d00bef147da3fb1f2262e8d31c14108f88",
+                        "git_sha": "a631e12055f6c23ba2c942d3902b3ed1b9eed859",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collectmultiplemetrics/picard-collectmultiplemetrics.diff"
                     },
                     "picard/collectwgsmetrics": {
                         "branch": "master",
-                        "git_sha": "66d5808eaaabd9de8997c4c31a9e8cdd3b56c080",
+                        "git_sha": "a631e12055f6c23ba2c942d3902b3ed1b9eed859",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collectwgsmetrics/picard-collectwgsmetrics.diff"
                     },
@@ -139,7 +143,7 @@
                     },
                     "star/align": {
                         "branch": "master",
-                        "git_sha": "d6419d592de78e193625b209c1d0a5cc09206df3",
+                        "git_sha": "cebe21bbd158c15c8fab172e37cfe97a239f4b77",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/star/align/star-align.diff"
                     },
@@ -155,7 +159,7 @@
                 "nf-core": {
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "51cf05a850f58964b0d12ab92230348e567819e3",
+                        "git_sha": "9afa0584136287aa20fc18296f45f103c0c4e69a",
                         "installed_by": ["subworkflows"],
                         "patch": "subworkflows/nf-core/fastq_align_dna/fastq_align_dna.diff"
                     },

@@ -51,7 +51,7 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `roi`        | The path to a BED file containing <b>R</b>egions <b>O</b>f <b>I</b>nterest for coverage analysis                                             | :x:                                             |
 | `aligner`    | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap, strobe and snap. set to `false` to output fastq. | :x:                                             |
 
-An [example samplesheet](../tests/inputs/fastq.yml) has been provided with the pipeline.
+An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
 ### Flowcell samplesheet
 
@@ -64,22 +64,26 @@ RUN_NAME,RUN_NAME_samplesheet.csv,RUN_NAME_sampleinfo.csv,RUN_NAME_flowcell/
 
 Following table shows the fields that are used by the `flowcell` samplesheet:
 
-| Column        | Description                                                                                            | Required           |
-| ------------- | ------------------------------------------------------------------------------------------------------ | ------------------ |
-| `samplesheet` | Illumina flowcell for the flowcell lane                                                                | :heavy_check_mark: |
-| `sample_info` | CSV file with sample information. See the [flowcell sample info](#flowcell-sample-info) documentation. | :heavy_check_mark: |
-| `flowcell`    | Illumina flowcell directory                                                                            | :heavy_check_mark: |
-| `lane`        | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'           | :x:                |
+| Column        | Description                                                                                                 | Required           |
+| ------------- | ----------------------------------------------------------------------------------------------------------- | ------------------ |
+| `samplesheet` | Illumina flowcell for the flowcell lane                                                                     | :heavy_check_mark: |
+| `sample_info` | JSON/YML file with sample information. See the [flowcell sample info](#flowcell-sample-info) documentation. | :heavy_check_mark: |
+| `flowcell`    | Illumina flowcell directory                                                                                 | :heavy_check_mark: |
+| `lane`        | Lane number                                                                                                 | :x:                |
 
-An [example samplesheet](../tests/inputs/flowcell.yml) has been provided with the pipeline.
+An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
 ### Flowcell sample info
 
-A `flowcell` sample info CSV file consisting for one sequencing run may look something like the one below.
+A `flowcell` sample info JSON/YML file consisting for one sequencing run may look something like the one below.
 
-```csv title="sample_info.csv"
-samplename,library,organism,tag
-Sample1,test,Homo sapiens,WES
+```json title="sample_info.json"
+{
+  "samplename": "Sample1",
+  "library": "test",
+  "organism": "Homo sapiens",
+  "tag": "WES"
+}
 ```
 
 Following table shows the fields that are used by the `flowcell` samplesheet:
@@ -182,11 +186,7 @@ These options are part of Nextflow and use a _single_ hyphen (pipeline parameter
 
 Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
 
-Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
-
-:::info
-We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
-:::
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer) - see below.
 
 The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 
@@ -210,8 +210,6 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
-- `conda`
-  - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
 ### `-resume`
 
@@ -233,9 +231,9 @@ To change the resource requests, please see the [max resources](https://nf-co.re
 
 ### Custom Containers
 
-In some cases you may wish to change which container or conda environment a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version maybe out of date.
+In some cases you may wish to change which container a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version maybe out of date.
 
-To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
+To use a different container from the default container specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
 ### Custom Tool Arguments
 

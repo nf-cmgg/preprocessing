@@ -5,18 +5,18 @@ Changes in 'picard/collecthsmetrics/main.nf':
 --- modules/nf-core/picard/collecthsmetrics/main.nf
 +++ modules/nf-core/picard/collecthsmetrics/main.nf
 @@ -8,11 +8,7 @@
-         'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6' }"
+         : 'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6'}"
  
      input:
 -    tuple val(meta), path(bam), path(bai), path(bait_intervals, stageAs: "baits/*"), path(target_intervals, stageAs: 'targets/*')
 -    tuple val(meta2), path(ref)
 -    tuple val(meta3), path(ref_fai)
 -    tuple val(meta4), path(ref_dict)
--    tuple val(meta5), path(ref_gzi) // ref_gzi only required if reference is gzipped
+-    tuple val(meta5), path(ref_gzi)
 +    tuple val(meta), path(bam), path(bai), path(bait_intervals, stageAs: "bait/*"), path(target_intervals, stageAs: "target/*") ,path(fasta) ,path(fai) ,path(dict)
  
      output:
-     tuple val(meta), path("*_metrics")  , emit: metrics
+     tuple val(meta), path("*_metrics"), emit: metrics
 @@ -24,7 +20,7 @@
      script:
      def args = task.ext.args ?: ''
@@ -26,9 +26,9 @@ Changes in 'picard/collecthsmetrics/main.nf':
  
      def avail_mem = 3072
      if (!task.memory) {
-@@ -37,18 +33,19 @@
+@@ -38,16 +34,17 @@
      def bait_intervallist_cmd = ""
-     if (bait_intervals =~ /.(bed|bed.gz)$/){
+     if (bait_intervals =~ /.(bed|bed.gz)$/) {
          bait_interval_list = bait_intervals.toString().replaceAll(/.(bed|bed.gz)$/, ".interval_list")
 -        bait_intervallist_cmd = "picard -Xmx${avail_mem}M BedToIntervalList --INPUT ${bait_intervals} --OUTPUT ${bait_interval_list} --SEQUENCE_DICTIONARY ${ref_dict} --TMP_DIR ."
 +        bait_intervallist_cmd = "picard -Xmx${avail_mem}M BedToIntervalList --INPUT ${bait_intervals} --OUTPUT ${bait_interval_list} --SEQUENCE_DICTIONARY ${dict} --TMP_DIR ."
@@ -36,24 +36,21 @@ Changes in 'picard/collecthsmetrics/main.nf':
  
      def target_interval_list = target_intervals
      def target_intervallist_cmd = ""
-     if (target_intervals =~ /.(bed|bed.gz)$/){
+     if (target_intervals =~ /.(bed|bed.gz)$/) {
          target_interval_list = target_intervals.toString().replaceAll(/.(bed|bed.gz)$/, ".interval_list")
 -        target_intervallist_cmd = "picard -Xmx${avail_mem}M BedToIntervalList --INPUT ${target_intervals} --OUTPUT ${target_interval_list} --SEQUENCE_DICTIONARY ${ref_dict} --TMP_DIR ."
 +        target_intervallist_cmd = "picard -Xmx${avail_mem}M BedToIntervalList --INPUT ${target_intervals} --OUTPUT ${target_interval_list} --SEQUENCE_DICTIONARY ${dict} --TMP_DIR ."
      }
- 
- 
      """
 +    export TMP=\$PWD
+     ${bait_intervallist_cmd}
+     ${target_intervallist_cmd}
  
-     $bait_intervallist_cmd
-     $target_intervallist_cmd
-@@ -61,8 +58,8 @@
-         --BAIT_INTERVALS $bait_interval_list \\
-         --TARGET_INTERVALS $target_interval_list \\
-         --INPUT $bam \\
+@@ -59,7 +56,8 @@
+         --BAIT_INTERVALS ${bait_interval_list} \\
+         --TARGET_INTERVALS ${target_interval_list} \\
+         --INPUT ${bam} \\
 -        --OUTPUT ${prefix}.CollectHsMetrics.coverage_metrics
--
 +        --OUTPUT ${prefix}.CollectHsMetrics.coverage_metrics \\
 +        --TMP_DIR .
      """

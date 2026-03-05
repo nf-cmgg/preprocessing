@@ -4,17 +4,19 @@ Changes in component 'nf-core/bwamem2/mem'
 Changes in 'bwamem2/mem/main.nf':
 --- modules/nf-core/bwamem2/mem/main.nf
 +++ modules/nf-core/bwamem2/mem/main.nf
-@@ -8,9 +8,7 @@
-         'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:db98f81f55b64113' }"
+@@ -8,10 +8,8 @@
+         : 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:db98f81f55b64113'}"
  
      input:
 -    tuple val(meta), path(reads)
 -    tuple val(meta2), path(index)
 -    tuple val(meta3), path(fasta)
+-    val sort_bam
 +    tuple val(meta), path(reads), path(index), path(fasta)
-     val   sort_bam
++    val   sort_bam
  
      output:
+     tuple val(meta), path("*.sam"), emit: sam, optional: true
 
 'modules/nf-core/bwamem2/mem/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/bwamem2/mem/tests/main.nf.test' is unchanged

@@ -46,6 +46,11 @@ workflow {
         PIPELINE_INITIALISATION.out.samplesheet,
         params.genomes,
         params.genelists,
+        params.multiqc_config
+            ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(params.multiqc_config, checkIfExists: true)]
+            : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
+        params.multiqc_logo ? file(params.multiqc_logo, checkIfExists: true) : [],
+        params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
     )
 
     //
@@ -58,14 +63,14 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        PREPROCESSING.out.multiqc_main_report,
+        PREPROCESSING.out.multiqc_report,
     )
 
     publish:
-    demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose(by: 1)
-    demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.transpose(by: 1)
-    demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.transpose(by: 1)
+    demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.transpose()
+    demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.transpose()
     demultiplex_fastq          = PREPROCESSING.out.demultiplex_fastq.transpose()
+    demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose()
     falco_html                 = PREPROCESSING.out.falco_html
     falco_txt                  = PREPROCESSING.out.falco_txt
     fastp_json                 = PREPROCESSING.out.fastp_json
@@ -97,242 +102,211 @@ workflow {
     picard_wgsmetrics          = PREPROCESSING.out.picard_wgsmetrics
     picard_hsmetrics           = PREPROCESSING.out.picard_hsmetrics
     md5sums                    = PREPROCESSING.out.md5sums
-    multiqc_main_report        = PREPROCESSING.out.multiqc_main_report
-    multiqc_main_data          = PREPROCESSING.out.multiqc_main_data
-    multiqc_main_plots         = PREPROCESSING.out.multiqc_main_plots
-    multiqc_library_report     = PREPROCESSING.out.multiqc_library_report
-    multiqc_library_data       = PREPROCESSING.out.multiqc_library_data
-    multiqc_library_plots      = PREPROCESSING.out.multiqc_library_plots
+    multiqc_report             = PREPROCESSING.out.multiqc_report
+    multiqc_data               = PREPROCESSING.out.multiqc_data
+    multiqc_plots              = PREPROCESSING.out.multiqc_plots
+    multiqcsav_report          = PREPROCESSING.out.multiqcsav_report
+    multiqcsav_data            = PREPROCESSING.out.multiqcsav_data
+    multiqcsav_plots           = PREPROCESSING.out.multiqcsav_plots
 }
 
 output {
-    demultiplex_interop {
-        path { _meta, bin ->
-            bin >> "Interop/${bin.name}"
-        }
-    }
     demultiplex_reports {
         path { meta, report ->
-            def out_path = meta.lane ? "Reports/L00${meta.lane}/${report.name}" as String : "Reports/${report.name}"
-            report >> out_path
+            report >> (meta.lane ? "Reports/L00${meta.lane}/${report.name}" : "Reports/${report.name}")
         }
     }
     demultiplex_logs {
         path { meta, log ->
-            def out_path = meta.lane ? "Logs/L00${meta.lane}/${log.name}" as String : "Logs/${log.name}"
-            log >> out_path
+            log >> (meta.lane ? "Logs/L00${meta.lane}/${log.name}" : "Logs/${log.name}")
         }
+    }
+    demultiplex_interop {
+        path "InterOp/"
     }
     demultiplex_fastq {
         path { meta, fastq ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" as String : "${meta.samplename}/${fastq.name}"
-            fastq >> out_path
+            fastq >> (meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" : "${meta.samplename}/${fastq.name}")
         }
     }
     falco_html {
         path { meta, html ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${html.name}" as String : "${meta.samplename}/${html.name}"
-            html >> out_path
+            html >> (meta.library ? "${meta.library}/${meta.samplename}/${html.name}" : "${meta.samplename}/${html.name}")
         }
     }
     falco_txt {
         path { meta, txt ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${txt.name}" as String : "${meta.samplename}/${txt.name}"
-            txt >> out_path
+            txt >> (meta.library ? "${meta.library}/${meta.samplename}/${txt.name}" : "${meta.samplename}/${txt.name}")
         }
     }
     fastp_json {
         path { meta, json ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${json.name}" as String : "${meta.samplename}/${json.name}"
-            json >> out_path
+            json >> (meta.library ? "${meta.library}/${meta.samplename}/${json.name}" : "${meta.samplename}/${json.name}")
         }
     }
     fastp_html {
         path { meta, html ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${html.name}" as String : "${meta.samplename}/${html.name}"
-            html >> out_path
+            html >> (meta.library ? "${meta.library}/${meta.samplename}/${html.name}" : "${meta.samplename}/${html.name}")
         }
     }
     crams {
         path { meta, cram, crai ->
-            def out_cram = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" as String : "${meta.samplename}/${meta.samplename}.cram"
-            def out_crai = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram.crai" as String : "${meta.samplename}/${meta.samplename}.cram.crai"
-            cram >> out_cram
-            crai >> out_crai
+            cram >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" : "${meta.samplename}/${meta.samplename}.cram")
+            crai >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram.crai" : "${meta.samplename}/${meta.samplename}.cram.crai")
         }
     }
     rna_splice_junctions {
         path { meta, sjt ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${sjt.name}" as String : "${meta.samplename}/${sjt.name}"
-            sjt >> out_path
+            sjt >> (meta.library ? "${meta.library}/${meta.samplename}/${sjt.name}" : "${meta.samplename}/${sjt.name}")
         }
     }
     rna_junctions {
         path { meta, junctions ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${junctions.name}" as String : "${meta.samplename}/${junctions.name}"
-            junctions >> out_path
+            junctions >> (meta.library ? "${meta.library}/${meta.samplename}/${junctions.name}" : "${meta.samplename}/${junctions.name}")
         }
     }
     align_reports {
         path { meta, log ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${log.name}" as String : "${meta.samplename}/${log.name}"
-            log >> out_path
+            log >> (meta.library ? "${meta.library}/${meta.samplename}/${log.name}" : "${meta.samplename}/${log.name}")
         }
     }
     sormadup_metrics {
         path { meta, metrics ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.duplicate_metrics.txt" as String : "${meta.samplename}/${meta.samplename}.duplicate_metrics.txt"
-            metrics >> out_path
+            metrics >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.duplicate_metrics.txt" : "${meta.samplename}/${meta.samplename}.duplicate_metrics.txt")
         }
     }
     mosdepth_global {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_summary {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_regions {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_per_base_d4 {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_per_base_bed {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_per_base_csi {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_regions_bed {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_regions_csi {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_quantized_bed {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_quantized_csi {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_thresholds_bed {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     mosdepth_thresholds_csi {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     samtools_coverage {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     panelcoverage {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     samtools_stats {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     samtools_flagstat {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     samtools_idxstats {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     picard_multiplemetrics {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     picard_multiplemetrics_pdf {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     picard_wgsmetrics {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     picard_hsmetrics {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     md5sums {
         path { meta, _file ->
-            def out_path = meta.library ? "${meta.library}/${meta.samplename}/" as String : "${meta.samplename}/"
-            return out_path
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
-    multiqc_main_report {
+    multiqcsav_report {
         path "multiqc/"
     }
-    multiqc_main_data {
+    multiqcsav_data {
         path "multiqc/"
     }
-    multiqc_main_plots {
+    multiqcsav_plots {
         path "multiqc/"
     }
-    multiqc_library_report {
-        path "multiqc/"
+    multiqc_report {
+        path { meta, _file ->
+            return (meta.id ? "${meta.id}/multiqc/" : "multiqc/")
+        }
     }
-    multiqc_library_data {
-        path "multiqc/"
+    multiqc_data {
+        path { meta, _file ->
+            return (meta.id ? "${meta.id}/multiqc/" : "multiqc/")
+        }
     }
-    multiqc_library_plots {
-        path "multiqc/"
+    multiqc_plots {
+        path { meta, _file ->
+            return (meta.id ? "${meta.id}/multiqc/" : "multiqc/")
+        }
     }
 }

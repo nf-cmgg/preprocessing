@@ -1,10 +1,13 @@
-name: multiqc
+name: multiqcsav
 description: Aggregate results from bioinformatics analyses across many samples
-  into a single report
+  into a single report, with support for multiqc_sav plugin
 keywords:
   - QC
   - bioinformatics tools
   - Beautiful stand-alone HTML report
+  - Illumina
+  - Sequencing Analysis Viewer
+  - SAV
 tools:
   - multiqc:
       description: |
@@ -21,7 +24,19 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. [ id:'sample1', single_end:false ]
-    - multiqc_files:
+    - xml:
+        type: file
+        description: xml files from an Illumina sequencing run
+        pattern: "*.xml"
+        ontologies:
+          - edam: http://edamontology.org/format_2332
+    - interop_bin:
+        type: file
+        description: Illumina InterOp binary files
+        pattern: "InterOp/*.bin"
+        ontologies:
+          - edam: http://edamontology.org/format_2333
+    - extra_multiqc_files:
         type: file
         description: |
           List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
@@ -85,7 +100,7 @@ output:
       - "*_plots":
           type: file
           description: Plots created by MultiQC
-          pattern: "*_plots"
+          pattern: "*_data"
           ontologies: []
   versions:
     - - ${task.process}:
@@ -97,37 +112,28 @@ output:
       - multiqc --version | sed "s/.* //g":
           type: eval
           description: The expression to obtain the version of the tool
+  versions_interop:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - interop:
+          type: string
+          description: The tool name
+      - python -c "import interop; print(interop.__version__)":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_multiqcsav:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - multiqcsav:
+          type: string
+          description: The name of the tool
+      - python -c "import multiqc_sav; print(multiqc_sav.__version__)":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
-  - "@abhi18av"
-  - "@bunop"
-  - "@drpatelh"
-  - "@jfy133"
+  - "@matthdsm"
+  - "@delfiterradas"
 maintainers:
-  - "@abhi18av"
-  - "@bunop"
-  - "@drpatelh"
-  - "@jfy133"
-containers:
-  conda:
-    linux/amd64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-ee7739d47738383b_1/condalock
-    linux/arm64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-58d7dee710ab3aa8_1/condalock
-  docker:
-    linux/amd64:
-      build_id: bd-ee7739d47738383b_1
-      name: community.wave.seqera.io/library/multiqc:1.33--ee7739d47738383b
-      scanId: sc-6ddec592dcadd583_4
-    linux/arm64:
-      build_id: bd-58d7dee710ab3aa8_1
-      name: community.wave.seqera.io/library/multiqc:1.33--58d7dee710ab3aa8
-      scanId: sc-a04c42273e34c55c_2
-  singularity:
-    linux/amd64:
-      build_id: bd-e3576ddf588fa00d_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/34/34e733a9ae16a27e80fe00f863ea1479c96416017f24a907996126283e7ecd4d/data
-      name: oras://community.wave.seqera.io/library/multiqc:1.33--e3576ddf588fa00d
-    linux/arm64:
-      build_id: bd-2537ca5f8445e3c2_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/78/78b89e91d89e9cc99ad5ade5be311f347838cb2acbfb4f13bc343b170be09ce4/data
-      name: oras://community.wave.seqera.io/library/multiqc:1.33--2537ca5f8445e3c2
+  - "@matthdsm"

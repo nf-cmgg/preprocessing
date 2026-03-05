@@ -1,4 +1,4 @@
-include { samplesheetToList          } from 'plugin/nf-schema'
+include { samplesheetToList           } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -7,26 +7,27 @@ include { samplesheetToList          } from 'plugin/nf-schema'
 */
 
 // Modules
-include { BCLCONVERT                 } from '../modules/nf-core/bclconvert/main'
-include { FALCO                      } from '../modules/nf-core/falco/main'
-include { FASTP                      } from '../modules/nf-core/fastp/main'
-include { MD5SUM                     } from '../modules/nf-core/md5sum/main'
-include { MULTIQC as MULTIQC_LIBRARY } from '../modules/nf-core/multiqc/main'
-include { MULTIQC as MULTIQC_MAIN    } from '../modules/nf-core/multiqc/main'
-include { SAMTOOLS_COVERAGE          } from '../modules/nf-core/samtools/coverage/main'
+include { BCLCONVERT                  } from '../modules/nf-core/bclconvert'
+include { FALCO                       } from '../modules/nf-core/falco'
+include { FASTP                       } from '../modules/nf-core/fastp'
+include { MD5SUM                      } from '../modules/nf-core/md5sum'
+include { MULTIQC                     } from '../modules/nf-core/multiqc'
+include { MULTIQCSAV                  } from '../modules/nf-core/multiqcsav'
+include { SAMTOOLS_COVERAGE           } from '../modules/nf-core/samtools/coverage'
 
 // Subworkflows
-include { BAM_QC                     } from '../subworkflows/local/bam_qc/main'
-include { COVERAGE                   } from '../subworkflows/local/coverage/main'
-include { FASTQ_TO_CRAM              } from '../subworkflows/local/fastq_to_aligned_cram/main'
+include { BAM_QC                      } from '../subworkflows/local/bam_qc'
+include { COVERAGE                    } from '../subworkflows/local/coverage'
+include { FASTQ_TO_CRAM               } from '../subworkflows/local/fastq_to_aligned_cram'
 
 // Functions
-include { generateReadgroup          } from '../modules/nf-core/bclconvert/main'
-include { paramsSummaryMap           } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc       } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML     } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText     } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
-include { getGenomeAttribute         } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getReadgroupsFromBclconvert } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
+include { getReadgroupFromFastq       } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
+include { paramsSummaryMap            } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML      } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText      } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getGenomeAttribute          } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,6 +40,9 @@ workflow PREPROCESSING {
     ch_samplesheet // channel: samplesheet read in from --input
     genomes // map: genome reference files
     genelists // file: directory containing genelist bed files for coverage analysis
+    multiqc_config // file(s): MultiQC config file(s)
+    multiqc_logo // file: MultiQC logo file
+    multiqc_methods_description // file: custom methods description for MultiQC report
 
     main:
     ch_multiqc_files = channel.empty()
@@ -46,7 +50,7 @@ workflow PREPROCESSING {
     ch_samplesheet
         .branch { meta, fastq_1, fastq_2, samplesheet, sampleinfo, flowcell ->
             illumina_flowcell: (flowcell && samplesheet && sampleinfo) && !(fastq_1 || fastq_2)
-            return [meta, samplesheet, sampleinfo, flowcell]
+            return [["id": meta.id, "lane": meta.lane], samplesheet, sampleinfo, flowcell]
             fastq: (fastq_1) && !(flowcell || samplesheet || sampleinfo)
             return [meta, [fastq_1, fastq_2].findAll()]
             other: true
@@ -72,34 +76,50 @@ workflow PREPROCESSING {
     // BCLCONVERT([meta, samplesheet, flowcell])
     BCLCONVERT(ch_illumina_flowcell.flowcell)
     BCLCONVERT.out.fastq.dump(tag: "DEMULTIPLEX: fastq", pretty: true)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        BCLCONVERT.out.reports,
-        BCLCONVERT.out.logs,
-    )
 
-    generateReadgroup(
+    getReadgroupsFromBclconvert(
         BCLCONVERT.out.reports.map { meta, reports ->
-            return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
+            return [meta, file(reports).resolve("fastq_list.csv")]
         },
         BCLCONVERT.out.fastq,
-    ).set { ch_fastq_with_meta }
-    ch_fastq_with_meta.dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true)
+    ).dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true).map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
 
-    ch_fastq_with_meta.map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
+    // Run QC
+    ch_mqcsav_input = ch_illumina_flowcell.flowcell
+        .map { meta, _samplesheet, flowcell ->
+            def interop = files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)
+            def xml = files(flowcell.resolve("*.xml"), checkIfExists: true)
+            return [meta, xml, interop]
+        }
+        .join(BCLCONVERT.out.reports, by: 0)
+        .map { meta, xml, interop, reports ->
+            return [meta - meta.subMap(['lane']), xml, interop, reports]
+        }
+        .groupTuple(by: [0])
+        .map { meta, xml, interop, reports ->
+            return [meta, xml.flatten().unique(), interop.flatten().unique(), reports.flatten(), multiqc_config, multiqc_logo, [], []]
+        }
+        .dump(tag: "MULTIQC SAV input", pretty: true)
 
+    MULTIQCSAV(
+        ch_mqcsav_input
+    )
+
+    // Merge fastq meta with sample info
     ch_illumina_flowcell.info
         .flatten()
         .transpose()
         .map { sampleinfo -> [sampleinfo.samplename, sampleinfo] }
         .set { ch_sampleinfo }
 
-    // Merge fastq meta with sample info
     ch_demultiplexed_fastq
         .combine(ch_sampleinfo, by: 0)
         .map { _samplename, meta, fastq, sampleinfo ->
+            def new_rg = [:]
             if (sampleinfo.library) {
                 new_rg = meta.readgroup + ['LB': sampleinfo.library]
-            } else {
+            }
+            else {
                 new_rg = meta.readgroup
             }
             def new_meta = meta + sampleinfo + ['readgroup': new_rg]
@@ -114,6 +134,7 @@ workflow PREPROCESSING {
             other: true
         }
         .set { ch_demultiplexed_fastq_with_sampleinfo }
+
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // PROCESS FASTQ INPUTS
@@ -125,15 +146,9 @@ workflow PREPROCESSING {
             // if no fastq_2, then single-end
             def single_end = fastq[1] ? false : true
             // add readgroup metadata
-            def rg = readgroup_from_fastq(fastq[0])
             // if the sample name starts with "snp_", remove it so the sampletracking works later on.
             def samplename = meta.samplename.startsWith("snp_") ? meta.samplename.substring(4) : meta.samplename
-            rg = rg + [
-                'SM': samplename,
-                'LB': meta.library ?: "",
-                'PL': meta.platform ?: rg.PL,
-                'ID': meta.readgroup ?: rg.ID,
-            ]
+            def rg = getReadgroupFromFastq(fastq[0], samplename, meta.library, meta.platform)
             def meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
             return [meta_with_readgroup, fastq]
         }
@@ -363,67 +378,50 @@ workflow PREPROCESSING {
             sort: true,
             newLine: true,
         )
-        .map { file -> [[id: 'main'], file] }
         .set { ch_collated_versions }
 
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_config = channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config = params.multiqc_config ? channel.fromPath(params.multiqc_config, checkIfExists: true) : channel.empty()
-    ch_multiqc_logo = params.multiqc_logo ? channel.fromPath(params.multiqc_logo, checkIfExists: true) : channel.empty()
-
+    // summary files without meta, e.g. versions, params
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml').map { file -> [[id: 'main'], file] })
+    ch_methods_description = channel.value(multiqc_methods_description ? methodsDescriptionText(multiqc_methods_description) : "")
 
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    ch_summary_files = channel.empty()
+        .mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        .mix(ch_collated_versions)
+        .mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
+        .toList()
+        .map { files -> [files] }
+        .dump(tag: "Summary files for MultiQC", pretty: true)
 
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true).map { file -> [[id: 'main'], file] })
-
-    ch_multiqc_files = ch_multiqc_files
+    ch_multiqc_input = ch_multiqc_files
         .map { meta, files ->
-            return [meta.library ? [id: meta.library] : [id: 'main'], files]
+            def new_meta = meta.library ? [id: meta.library] : [id: 'multiqc']
+            return [new_meta, files]
         }
-        .branch { meta, files ->
-            main: meta.id == 'main'
-            return files
-            library: meta.id != 'main'
-            return [meta, files instanceof List ? files : [files]]
+        .groupTuple(by: 0)
+        .combine(ch_summary_files)
+        .map { meta, multiqc_files, summary_files ->
+            return [meta, (multiqc_files + summary_files).flatten(), multiqc_config.flatten(), multiqc_logo, [], []]
         }
+        .dump(tag: "MULTIQC files", pretty: true)
 
 
-
-    ch_library_multiqc_files = ch_multiqc_files.library.transpose(by: 1).groupTuple()
-    ch_library_multiqc_files.dump(tag: "MULTIQC files - library", pretty: true)
-
-
-    ch_main_multiqc_files = ch_multiqc_files.main.collect().map { files -> [[id: 'main'], files] }
-    ch_main_multiqc_files.dump(tag: "MULTIQC files - main", pretty: true)
-    MULTIQC_MAIN(
-        ch_main_multiqc_files,
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        [],
-    )
-
-    MULTIQC_LIBRARY(
-        ch_library_multiqc_files,
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        [],
-    )
+    // MULTIQC([meta, multiqc_files, multiqc_config, multiqc_logo, replace_names, sample_names])
+    MULTIQC(ch_multiqc_input)
 
     emit:
-    demultiplex_interop        = BCLCONVERT.out.interop
-    demultiplex_reports        = BCLCONVERT.out.reports
-    demultiplex_logs           = BCLCONVERT.out.logs
+    demultiplex_reports        = BCLCONVERT.out.reports.map { meta, reports ->
+        return [meta, files(reports.resolve("*"))]
+    }
+    demultiplex_logs           = BCLCONVERT.out.logs.map { meta, logs ->
+        return [meta, files(logs.resolve("*"))]
+    }
+    demultiplex_interop        = ch_illumina_flowcell.flowcell.map { meta, _samplesheet, flowcell ->
+        return [meta, files(flowcell.resolve("InterOp/*.bin"))]
+    }
     demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
     falco_html                 = FALCO.out.html
     falco_txt                  = FALCO.out.txt
@@ -456,56 +454,10 @@ workflow PREPROCESSING {
     picard_wgsmetrics          = BAM_QC.out.picard_wgsmetrics
     picard_hsmetrics           = BAM_QC.out.picard_hsmetrics
     md5sums                    = MD5SUM.out.checksum
-    multiqc_main_report        = MULTIQC_MAIN.out.report.toList()
-    multiqc_main_data          = MULTIQC_MAIN.out.data.toList()
-    multiqc_main_plots         = MULTIQC_MAIN.out.plots.toList()
-    multiqc_library_report     = MULTIQC_LIBRARY.out.report
-    multiqc_library_data       = MULTIQC_LIBRARY.out.data
-    multiqc_library_plots      = MULTIQC_LIBRARY.out.plots
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
-def readgroup_from_fastq(path) {
-    // expected format:
-    // xx:yy:FLOWCELLID:LANE:... (seven fields)
-    // or
-    // FLOWCELLID:LANE:xx:... (five fields)
-    def line
-
-    path.withInputStream { fq ->
-        def gzipStream = new java.util.zip.GZIPInputStream(fq) as InputStream
-        def decoder = new InputStreamReader(gzipStream, 'ASCII')
-        def buffered = new BufferedReader(decoder)
-        line = buffered.readLine()
-    }
-    assert line.startsWith('@')
-    line = line.substring(1)
-    def fields = line.split(':')
-    def rg = [:]
-    rg.CN = "CMGG"
-
-    if (fields.size() >= 7) {
-        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-        // def sequencer_serial = fields[0]
-        // def run_number       = fields[1]
-        def fcid = fields[2]
-        def lane = fields[3]
-        def index = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
-
-        rg.ID = [index ?: fcid, lane].join(".")
-        rg.PU = [fcid, lane].join(".")
-        rg.PL = "ILLUMINA"
-    }
-    else if (fields.size() == 5) {
-        def fcid = fields[0]
-        rg.ID = fcid
-    }
-    return rg
+    multiqcsav_report          = MULTIQCSAV.out.report.toList()
+    multiqcsav_data            = MULTIQCSAV.out.data.toList()
+    multiqcsav_plots           = MULTIQCSAV.out.plots.toList()
+    multiqc_report             = MULTIQC.out.report
+    multiqc_data               = MULTIQC.out.data
+    multiqc_plots              = MULTIQC.out.plots
 }
