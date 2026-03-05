@@ -70,7 +70,7 @@ workflow {
     demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.transpose()
     demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.transpose()
     demultiplex_fastq          = PREPROCESSING.out.demultiplex_fastq.transpose()
-    demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose()
+    demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose(by: 1)
     falco_html                 = PREPROCESSING.out.falco_html
     falco_txt                  = PREPROCESSING.out.falco_txt
     fastp_json                 = PREPROCESSING.out.fastp_json
@@ -122,7 +122,9 @@ output {
         }
     }
     demultiplex_interop {
-        path "InterOp/"
+        path { _meta, bin ->
+            bin >> "Interop/${bin.name}"
+        }
     }
     demultiplex_fastq {
         path { meta, fastq ->
