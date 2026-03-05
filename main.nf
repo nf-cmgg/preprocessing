@@ -67,8 +67,8 @@ workflow {
     )
 
     publish:
-    demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.map { meta, report -> [meta, file(report).resolve()] }.transpose()
-    demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.map { meta, log -> [meta, file(log).resolve()] }.transpose()
+    demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.transpose()
+    demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.transpose()
     demultiplex_fastq          = PREPROCESSING.out.demultiplex_fastq.transpose()
     demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose()
     falco_html                 = PREPROCESSING.out.falco_html

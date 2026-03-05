@@ -420,7 +420,7 @@ workflow PREPROCESSING {
         return [meta, files(logs.resolve("*"))]
     }
     demultiplex_interop        = ch_illumina_flowcell.flowcell.map { meta, _samplesheet, flowcell ->
-        return [meta, files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)]
+        return [meta, files(flowcell.resolve("InterOp/*.bin"))]
     }
     demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
     falco_html                 = FALCO.out.html
