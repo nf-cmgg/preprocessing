@@ -419,9 +419,7 @@ workflow PREPROCESSING {
     demultiplex_logs           = BCLCONVERT.out.logs.map { meta, logs ->
         return [meta, files(logs.resolve("*"))]
     }
-    demultiplex_interop        = ch_illumina_flowcell.flowcell.map { meta, _samplesheet, flowcell ->
-        return [meta, files(flowcell.resolve("InterOp/*.bin"))]
-    }
+    demultiplex_interop        = BCLCONVERT.out.interop
     demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
     falco_html                 = FALCO.out.html
     falco_txt                  = FALCO.out.txt
