@@ -116,7 +116,7 @@ CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-cmgg/preprocessing --input ./samplesheet.csv --outdir ./results -profile docker
+nextflow run nf-cmgg/preprocessing --input ./samplesheet.<csv|json|yaml> --outdir ./results -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -195,6 +195,12 @@ They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer enviroment.
 
+- `debug`
+  - A generic profile with settings to help with debugging the pipeline. It will use more verbose logging.
+- `arm64`
+  - A generic profile with settings to run the pipeline on ARM64 architecture machines (eg. Apple Silicon). It will use software containers built for ARM64 where available.
+- `emulate_amd64`
+  - A generic profile with settings to run the pipeline on ARM64 architecture machines (eg. Apple Silicon) using AMD64 software containers. This is for when ARM64 containers are not available but you still want to run the pipeline on an ARM64 machine. Note that this will be slower than using ARM64 containers.
 - `test`
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
@@ -241,21 +247,13 @@ A pipeline might not always support every possible argument or option of a parti
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
 
-### nf-core/configs
+### nf-core/configs and nf-cmgg/configs
 
-In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-core pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
+In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-cmgg pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
-
-## Azure Resource Requests
-
-To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
-We recommend providing a compute `params.vm_type` of `Standard_D16_v3` VMs by default but these options can be changed if required.
-
-Note that the choice of VM size depends on your quota and the overall workload during the analysis.
-For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
 
 ## Running in the background
 
