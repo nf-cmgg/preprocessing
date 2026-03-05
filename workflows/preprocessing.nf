@@ -21,13 +21,13 @@ include { COVERAGE               } from '../subworkflows/local/coverage'
 include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram'
 
 // Functions
-include { generateReadgroup      } from '../modules/nf-core/bclconvert'
-include { getReadgroupFromFastq  } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
-include { getGenomeAttribute     } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getReadgroupsFromBclconvert   } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
+include { getReadgroupFromFastq         } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
+include { paramsSummaryMap              } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getGenomeAttribute            } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,7 +77,7 @@ workflow PREPROCESSING {
     BCLCONVERT(ch_illumina_flowcell.flowcell)
     BCLCONVERT.out.fastq.dump(tag: "DEMULTIPLEX: fastq", pretty: true)
 
-    generateReadgroup(
+    getReadgroupsFromBclconvert(
         BCLCONVERT.out.reports.map { meta, reports ->
             return [meta, file(reports).resolve("fastq_list.csv")]
         },
