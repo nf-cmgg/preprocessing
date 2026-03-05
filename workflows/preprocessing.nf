@@ -42,6 +42,7 @@ workflow PREPROCESSING {
     genelists // file: directory containing genelist bed files for coverage analysis
     multiqc_config // file(s): MultiQC config file(s)
     multiqc_logo // file: MultiQC logo file
+    multiqc_methods_description // file: custom methods description for MultiQC report
 
     main:
     ch_multiqc_files = channel.empty()
@@ -388,8 +389,7 @@ workflow PREPROCESSING {
     // summary files without meta, e.g. versions, params
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    ch_methods_description = channel.value(methodsDescriptionText(multiqc_methods_description))
 
     ch_summary_files = channel.empty()
         .mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
@@ -406,7 +406,7 @@ workflow PREPROCESSING {
         .groupTuple(by: 0)
         .combine(ch_summary_files)
         .map { meta, multiqc_files, summary_files ->
-            return [meta, (multiqc_files + summary_files), multiqc_config, multiqc_logo, [], []]
+            return [meta, (multiqc_files + summary_files).flatten(), multiqc_config, multiqc_logo, [], []]
         }
         .dump(tag: "MULTIQC files", pretty: true)
 

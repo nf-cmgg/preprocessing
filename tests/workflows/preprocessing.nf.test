@@ -53,6 +53,8 @@ nextflow_workflow {
                 input[3] = channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)])
                 // mqc_logo
                 input[4] = channel.empty()
+                // mqc methods description
+                input[5] = channel.value(file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true))
                 """
             }
         }
@@ -127,6 +129,8 @@ nextflow_workflow {
                 input[3] = channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)])
                 // mqc_logo
                 input[4] = channel.empty()
+                // mqc methods description
+                input[5] = channel.value(file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true))
                 """
             }
         }
@@ -206,6 +210,8 @@ nextflow_workflow {
                 input[3] = channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)])
                 // mqc_logo
                 input[4] = channel.empty()
+                // mqc methods description
+                input[5] = channel.value(file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true))
                 """
             }
         }
@@ -270,6 +276,8 @@ nextflow_workflow {
                 input[3] = channel.value([file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)])
                 // mqc_logo
                 input[4] = channel.empty()
+                // mqc methods description
+                input[5] = channel.value(file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true))
                 """
             }
         }
