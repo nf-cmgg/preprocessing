@@ -286,6 +286,8 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
+                    "demultiplex_logs",
+                    "demultiplex_reports",
                     "multiqc_report",
                     "multiqc_data",
                     "multiqc_plots",

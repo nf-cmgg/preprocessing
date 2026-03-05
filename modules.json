@@ -8,8 +8,7 @@
                     "bclconvert": {
                         "branch": "master",
                         "git_sha": "e4a7e011bee58ded839f4da6bf9bb3fbfbebdebd",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/bclconvert/bclconvert.diff"
+                        "installed_by": ["modules"]
                     },
                     "biobambam/bamsormadup": {
                         "branch": "master",

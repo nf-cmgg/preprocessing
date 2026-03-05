@@ -50,7 +50,7 @@ workflow {
             ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(params.multiqc_config, checkIfExists: true)]
             : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
         params.multiqc_logo ? file(params.multiqc_logo, checkIfExists: true) : [],
-        params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
+        params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
     )
 
     //

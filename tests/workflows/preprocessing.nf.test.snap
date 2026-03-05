@@ -716,7 +716,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-05T10:58:27.25969"
+        "timestamp": "2026-03-05T12:18:59.859304"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -1095,7 +1095,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-05T11:02:09.947002"
+        "timestamp": "2026-03-05T12:22:34.173123"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1718,7 +1718,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-05T11:00:53.083681"
+        "timestamp": "2026-03-05T12:21:18.469379"
     },
     "preprocessing - flowcell - bwa - bamsormadup - roi": {
         "content": [
@@ -1856,10 +1856,10 @@
                             "lane": 1
                         },
                         [
-                            "Errors.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "FastqComplete.txt:md5,119954a3c3a2ef05f920cfe7146d031b",
-                            "Info.log:md5,4073e56a6938a1d3ce93d256047a07b8",
-                            "Warnings.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "Warnings.log",
+                            "Info.log",
+                            "Errors.log",
+                            "FastqComplete.txt"
                         ]
                     ]
                 ],
@@ -1870,19 +1870,19 @@
                             "lane": 1
                         },
                         [
-                            "Adapter_Cycle_Metrics.csv:md5,9ce65d3801abd2abc61b88990cb426ca",
-                            "Adapter_Metrics.csv:md5,33b5b49dda5080d6439b553bf7d79e64",
-                            "Demultiplex_Detailed_Stats.csv:md5,dbcffbfe408240c927d3797b7766ec95",
-                            "Demultiplex_Stats.csv:md5,8de22e8a461e2d9fe36fc4392437ae69",
-                            "Demultiplex_Tile_Stats.csv:md5,be9589966a2a1ae21c63dfa63fe27e71",
-                            "IndexMetricsOut.bin:md5,448b938c436c62344c17e6f6b91d515d",
-                            "Index_Hopping_Counts.csv:md5,e2f580f5100e855777cdaf5ce208c44c",
-                            "Quality_Metrics.csv:md5,dd7cd6744e8f1e90021a5aef1de50876",
-                            "Quality_Tile_Metrics.csv:md5,42a12f0e2168942b862bca996d4609e3",
-                            "RunInfo.xml:md5,f283cb4600235db9261ee1e319b1407e",
-                            "SampleSheet.csv:md5,7e3da7b5827151fb03cd18806abbd3c5",
-                            "Top_Unknown_Barcodes.csv:md5,2177e2eb84fba346822d68be7d8ee12e",
-                            "fastq_list.csv:md5,06ecf0d1ed63132aa467911f11f41175"
+                            "Top_Unknown_Barcodes.csv",
+                            "fastq_list.csv",
+                            "RunInfo.xml",
+                            "Quality_Tile_Metrics.csv",
+                            "Quality_Metrics.csv",
+                            "Index_Hopping_Counts.csv",
+                            "Demultiplex_Stats.csv",
+                            "IndexMetricsOut.bin",
+                            "Adapter_Cycle_Metrics.csv",
+                            "Adapter_Metrics.csv",
+                            "Demultiplex_Tile_Stats.csv",
+                            "SampleSheet.csv",
+                            "Demultiplex_Detailed_Stats.csv"
                         ]
                     ]
                 ],
@@ -2663,6 +2663,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-05T11:02:55.356458"
+        "timestamp": "2026-03-05T12:23:19.657791"
     }
 }

@@ -1,4 +1,4 @@
-include { samplesheetToList      } from 'plugin/nf-schema'
+include { samplesheetToList           } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -7,27 +7,27 @@ include { samplesheetToList      } from 'plugin/nf-schema'
 */
 
 // Modules
-include { BCLCONVERT             } from '../modules/nf-core/bclconvert'
-include { FALCO                  } from '../modules/nf-core/falco'
-include { FASTP                  } from '../modules/nf-core/fastp'
-include { MD5SUM                 } from '../modules/nf-core/md5sum'
-include { MULTIQC                } from '../modules/nf-core/multiqc'
-include { MULTIQCSAV             } from '../modules/nf-core/multiqcsav'
-include { SAMTOOLS_COVERAGE      } from '../modules/nf-core/samtools/coverage'
+include { BCLCONVERT                  } from '../modules/nf-core/bclconvert'
+include { FALCO                       } from '../modules/nf-core/falco'
+include { FASTP                       } from '../modules/nf-core/fastp'
+include { MD5SUM                      } from '../modules/nf-core/md5sum'
+include { MULTIQC                     } from '../modules/nf-core/multiqc'
+include { MULTIQCSAV                  } from '../modules/nf-core/multiqcsav'
+include { SAMTOOLS_COVERAGE           } from '../modules/nf-core/samtools/coverage'
 
 // Subworkflows
-include { BAM_QC                 } from '../subworkflows/local/bam_qc'
-include { COVERAGE               } from '../subworkflows/local/coverage'
-include { FASTQ_TO_CRAM          } from '../subworkflows/local/fastq_to_aligned_cram'
+include { BAM_QC                      } from '../subworkflows/local/bam_qc'
+include { COVERAGE                    } from '../subworkflows/local/coverage'
+include { FASTQ_TO_CRAM               } from '../subworkflows/local/fastq_to_aligned_cram'
 
 // Functions
-include { getReadgroupsFromBclconvert   } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
-include { getReadgroupFromFastq         } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
-include { paramsSummaryMap              } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
-include { getGenomeAttribute            } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getReadgroupsFromBclconvert } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
+include { getReadgroupFromFastq       } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
+include { paramsSummaryMap            } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML      } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText      } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { getGenomeAttribute          } from '../subworkflows/local/utils_nfcore_preprocessing_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,17 +82,9 @@ workflow PREPROCESSING {
             return [meta, file(reports).resolve("fastq_list.csv")]
         },
         BCLCONVERT.out.fastq,
-    )
-    .dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true)
-    .map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }
-    .set { ch_demultiplexed_fastq }
+    ).dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true).map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
 
     // Run QC
-    ch_flowcell_interop = ch_illumina_flowcell.flowcell
-        .map { meta, _samplesheet, flowcell ->
-            return [meta, files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)]
-        }
-
     ch_mqcsav_input = ch_illumina_flowcell.flowcell
         .map { meta, _samplesheet, flowcell ->
             def interop = files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)
@@ -400,7 +392,8 @@ workflow PREPROCESSING {
         .mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         .mix(ch_collated_versions)
         .mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
-        .toList().map { files -> [files] }
+        .toList()
+        .map { files -> [files] }
         .dump(tag: "Summary files for MultiQC", pretty: true)
 
     ch_multiqc_input = ch_multiqc_files
@@ -420,9 +413,15 @@ workflow PREPROCESSING {
     MULTIQC(ch_multiqc_input)
 
     emit:
-    demultiplex_reports        = BCLCONVERT.out.reports
-    demultiplex_logs           = BCLCONVERT.out.logs
-    demultiplex_interop        = ch_flowcell_interop
+    demultiplex_reports        = BCLCONVERT.out.reports.map { meta, reports ->
+        return [meta, files(reports.resolve("*"))]
+    }
+    demultiplex_logs           = BCLCONVERT.out.logs.map { meta, logs ->
+        return [meta, files(logs.resolve("*"))]
+    }
+    demultiplex_interop        = ch_illumina_flowcell.flowcell.map { meta, _samplesheet, flowcell ->
+        return [meta, files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)]
+    }
     demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
     falco_html                 = FALCO.out.html
     falco_txt                  = FALCO.out.txt
