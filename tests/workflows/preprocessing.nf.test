@@ -304,7 +304,13 @@ nextflow_workflow {
                     "samtools_flagstat",
                     "samtools_coverage",
                     "samtools_stats"
-                ])
+                ]).collectEntries { key, val ->
+                    if (key == "demultiplex_logs" || key == "demultiplex_reports") {
+                        [key, val.collect { meta, dir -> file(dir).name }.sort()]
+                    } else {
+                        [key, val]
+                    }
+                }
             ).match()
         }
     }

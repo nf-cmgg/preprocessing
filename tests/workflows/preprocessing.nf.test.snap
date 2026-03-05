@@ -3,7 +3,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "crams": [
                     [
@@ -36,22 +36,22 @@
                     ]
                 ],
                 "demultiplex_fastq": [
-                    
+
                 ],
                 "demultiplex_interop": [
-                    
+
                 ],
                 "demultiplex_logs": [
-                    
+
                 ],
                 "demultiplex_reports": [
-                    
+
                 ],
                 "falco_html": [
-                    
+
                 ],
                 "falco_txt": [
-                    
+
                 ],
                 "fastp_html": [
                     [
@@ -240,7 +240,7 @@
                     ]
                 ],
                 "mosdepth_per_base_d4": [
-                    
+
                 ],
                 "mosdepth_quantized_bed": [
                     [
@@ -417,10 +417,10 @@
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
-                    
+
                 ],
                 "mosdepth_thresholds_csi": [
-                    
+
                 ],
                 "multiqc_data": [
                     [
@@ -431,7 +431,7 @@
                     ]
                 ],
                 "multiqc_plots": [
-                    
+
                 ],
                 "multiqc_report": [
                     [
@@ -443,21 +443,21 @@
                 ],
                 "multiqcsav_data": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_plots": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_report": [
                     [
-                        
+
                     ]
                 ],
                 "panelcoverage": [
-                    
+
                 ],
                 "picard_hsmetrics": [
                     [
@@ -557,13 +557,13 @@
                     ]
                 ],
                 "picard_wgsmetrics": [
-                    
+
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "samtools_coverage": [
                     [
@@ -722,7 +722,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "crams": [
                     [
@@ -756,22 +756,22 @@
                     ]
                 ],
                 "demultiplex_fastq": [
-                    
+
                 ],
                 "demultiplex_interop": [
-                    
+
                 ],
                 "demultiplex_logs": [
-                    
+
                 ],
                 "demultiplex_reports": [
-                    
+
                 ],
                 "falco_html": [
-                    
+
                 ],
                 "falco_txt": [
-                    
+
                 ],
                 "fastp_html": [
                     [
@@ -876,40 +876,40 @@
                     ]
                 ],
                 "mosdepth_global": [
-                    
+
                 ],
                 "mosdepth_per_base_bed": [
-                    
+
                 ],
                 "mosdepth_per_base_csi": [
-                    
+
                 ],
                 "mosdepth_per_base_d4": [
-                    
+
                 ],
                 "mosdepth_quantized_bed": [
-                    
+
                 ],
                 "mosdepth_quantized_csi": [
-                    
+
                 ],
                 "mosdepth_regions": [
-                    
+
                 ],
                 "mosdepth_regions_bed": [
-                    
+
                 ],
                 "mosdepth_regions_csi": [
-                    
+
                 ],
                 "mosdepth_summary": [
-                    
+
                 ],
                 "mosdepth_thresholds_bed": [
-                    
+
                 ],
                 "mosdepth_thresholds_csi": [
-                    
+
                 ],
                 "multiqc_data": [
                     [
@@ -920,7 +920,7 @@
                     ]
                 ],
                 "multiqc_plots": [
-                    
+
                 ],
                 "multiqc_report": [
                     [
@@ -932,42 +932,42 @@
                 ],
                 "multiqcsav_data": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_plots": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_report": [
                     [
-                        
+
                     ]
                 ],
                 "panelcoverage": [
-                    
+
                 ],
                 "picard_hsmetrics": [
-                    
+
                 ],
                 "picard_multiplemetrics": [
-                    
+
                 ],
                 "picard_multiplemetrics_pdf": [
-                    
+
                 ],
                 "picard_wgsmetrics": [
-                    
+
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "samtools_coverage": [
-                    
+
                 ],
                 "samtools_flagstat": [
                     [
@@ -1101,7 +1101,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "crams": [
                     [
@@ -1133,22 +1133,22 @@
                     ]
                 ],
                 "demultiplex_fastq": [
-                    
+
                 ],
                 "demultiplex_interop": [
-                    
+
                 ],
                 "demultiplex_logs": [
-                    
+
                 ],
                 "demultiplex_reports": [
-                    
+
                 ],
                 "falco_html": [
-                    
+
                 ],
                 "falco_txt": [
-                    
+
                 ],
                 "fastp_html": [
                     [
@@ -1331,7 +1331,7 @@
                     ]
                 ],
                 "mosdepth_per_base_d4": [
-                    
+
                 ],
                 "mosdepth_quantized_bed": [
                     [
@@ -1390,13 +1390,13 @@
                     ]
                 ],
                 "mosdepth_regions": [
-                    
+
                 ],
                 "mosdepth_regions_bed": [
-                    
+
                 ],
                 "mosdepth_regions_csi": [
-                    
+
                 ],
                 "mosdepth_summary": [
                     [
@@ -1427,10 +1427,10 @@
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
-                    
+
                 ],
                 "mosdepth_thresholds_csi": [
-                    
+
                 ],
                 "multiqc_data": [
                     [
@@ -1441,7 +1441,7 @@
                     ]
                 ],
                 "multiqc_plots": [
-                    
+
                 ],
                 "multiqc_report": [
                     [
@@ -1453,24 +1453,24 @@
                 ],
                 "multiqcsav_data": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_plots": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_report": [
                     [
-                        
+
                     ]
                 ],
                 "panelcoverage": [
-                    
+
                 ],
                 "picard_hsmetrics": [
-                    
+
                 ],
                 "picard_multiplemetrics": [
                     [
@@ -1567,10 +1567,10 @@
                     ]
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "samtools_coverage": [
                     [
@@ -1724,7 +1724,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "crams": [
                     [
@@ -1735,7 +1735,7 @@
                                 "adapter_R2": null,
                                 "aligner": "bwamem",
                                 "binsize": [
-                                    
+
                                 ],
                                 "disable_picard_metrics": true,
                                 "genome": "GRCh38",
@@ -1751,10 +1751,10 @@
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
                                 "panels": [
-                                    
+
                                 ],
                                 "purpose": [
-                                    
+
                                 ],
                                 "roi": null,
                                 "run_coverage": true,
@@ -1767,7 +1767,7 @@
                                 "trim_tail": 0,
                                 "umi_aware": false,
                                 "vivar_project": [
-                                    
+
                                 ]
                             }
                         },
@@ -1793,18 +1793,18 @@
                             "library": "test",
                             "tag": "WES",
                             "purpose": [
-                                
+
                             ],
                             "organism": "SarsCov",
                             "genome": null,
                             "vivar_project": [
-                                
+
                             ],
                             "binsize": [
-                                
+
                             ],
                             "panels": [
-                                
+
                             ],
                             "aligner": false,
                             "markdup": "bamsormadup",
@@ -1856,10 +1856,10 @@
                             "lane": 1
                         },
                         [
-                            "Warnings.log",
-                            "Info.log",
                             "Errors.log",
-                            "FastqComplete.txt"
+                            "FastqComplete.txt",
+                            "Info.log",
+                            "Warnings.log"
                         ]
                     ]
                 ],
@@ -1870,27 +1870,27 @@
                             "lane": 1
                         },
                         [
-                            "Top_Unknown_Barcodes.csv",
-                            "fastq_list.csv",
-                            "RunInfo.xml",
-                            "Quality_Tile_Metrics.csv",
-                            "Quality_Metrics.csv",
-                            "Index_Hopping_Counts.csv",
-                            "Demultiplex_Stats.csv",
-                            "IndexMetricsOut.bin",
                             "Adapter_Cycle_Metrics.csv",
                             "Adapter_Metrics.csv",
+                            "Demultiplex_Detailed_Stats.csv",
+                            "Demultiplex_Stats.csv",
                             "Demultiplex_Tile_Stats.csv",
+                            "IndexMetricsOut.bin",
+                            "Index_Hopping_Counts.csv",
+                            "Quality_Metrics.csv",
+                            "Quality_Tile_Metrics.csv",
+                            "RunInfo.xml",
                             "SampleSheet.csv",
-                            "Demultiplex_Detailed_Stats.csv"
+                            "Top_Unknown_Barcodes.csv",
+                            "fastq_list.csv"
                         ]
                     ]
                 ],
                 "falco_html": [
-                    
+
                 ],
                 "falco_txt": [
-                    
+
                 ],
                 "fastp_html": [
                     [
@@ -1899,7 +1899,7 @@
                             "adapter_R2": null,
                             "aligner": "bwamem",
                             "binsize": [
-                                
+
                             ],
                             "count": 1,
                             "disable_picard_metrics": true,
@@ -1916,10 +1916,10 @@
                             "markdup": "bamsormadup",
                             "organism": "Homo sapiens",
                             "panels": [
-                                
+
                             ],
                             "purpose": [
-                                
+
                             ],
                             "readgroup": {
                                 "ID": "GAACTGAGCG.TCGTGGAGCG.1",
@@ -1939,7 +1939,7 @@
                             "trim_tail": 0,
                             "umi_aware": false,
                             "vivar_project": [
-                                
+
                             ]
                         },
                         "Sample1_S1_L001.fastp.html"
@@ -1962,18 +1962,18 @@
                             "library": "test",
                             "tag": "WES",
                             "purpose": [
-                                
+
                             ],
                             "organism": "Homo sapiens",
                             "genome": "GRCh38",
                             "vivar_project": [
-                                
+
                             ],
                             "binsize": [
-                                
+
                             ],
                             "panels": [
-                                
+
                             ],
                             "aligner": "bwamem",
                             "markdup": "bamsormadup",
@@ -2007,7 +2007,7 @@
                                 "adapter_R2": null,
                                 "aligner": "bwamem",
                                 "binsize": [
-                                    
+
                                 ],
                                 "disable_picard_metrics": true,
                                 "genome": "GRCh38",
@@ -2023,10 +2023,10 @@
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
                                 "panels": [
-                                    
+
                                 ],
                                 "purpose": [
-                                    
+
                                 ],
                                 "roi": null,
                                 "run_coverage": true,
@@ -2039,7 +2039,7 @@
                                 "trim_tail": 0,
                                 "umi_aware": false,
                                 "vivar_project": [
-                                    
+
                                 ]
                             }
                         },
@@ -2057,18 +2057,18 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
@@ -2105,18 +2105,18 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
@@ -2153,18 +2153,18 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
@@ -2191,7 +2191,7 @@
                     ]
                 ],
                 "mosdepth_per_base_d4": [
-                    
+
                 ],
                 "mosdepth_quantized_bed": [
                     [
@@ -2204,18 +2204,18 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
@@ -2252,18 +2252,18 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
@@ -2290,13 +2290,13 @@
                     ]
                 ],
                 "mosdepth_regions": [
-                    
+
                 ],
                 "mosdepth_regions_bed": [
-                    
+
                 ],
                 "mosdepth_regions_csi": [
-                    
+
                 ],
                 "mosdepth_summary": [
                     [
@@ -2309,18 +2309,18 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
@@ -2347,10 +2347,10 @@
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
-                    
+
                 ],
                 "mosdepth_thresholds_csi": [
-                    
+
                 ],
                 "multiqc_data": [
                     [
@@ -2361,7 +2361,7 @@
                     ]
                 ],
                 "multiqc_plots": [
-                    
+
                 ],
                 "multiqc_report": [
                     [
@@ -2383,7 +2383,7 @@
                 ],
                 "multiqcsav_plots": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_report": [
@@ -2397,25 +2397,25 @@
                     ]
                 ],
                 "panelcoverage": [
-                    
+
                 ],
                 "picard_hsmetrics": [
-                    
+
                 ],
                 "picard_multiplemetrics": [
-                    
+
                 ],
                 "picard_multiplemetrics_pdf": [
-                    
+
                 ],
                 "picard_wgsmetrics": [
-                    
+
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "samtools_coverage": [
                     [
@@ -2426,7 +2426,7 @@
                                 "adapter_R2": null,
                                 "aligner": "bwamem",
                                 "binsize": [
-                                    
+
                                 ],
                                 "disable_picard_metrics": true,
                                 "genome": "GRCh38",
@@ -2442,10 +2442,10 @@
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
                                 "panels": [
-                                    
+
                                 ],
                                 "purpose": [
-                                    
+
                                 ],
                                 "roi": null,
                                 "run_coverage": true,
@@ -2458,7 +2458,7 @@
                                 "trim_tail": 0,
                                 "umi_aware": false,
                                 "vivar_project": [
-                                    
+
                                 ]
                             }
                         },
@@ -2474,7 +2474,7 @@
                                 "adapter_R2": null,
                                 "aligner": "bwamem",
                                 "binsize": [
-                                    
+
                                 ],
                                 "disable_picard_metrics": true,
                                 "genome": "GRCh38",
@@ -2490,10 +2490,10 @@
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
                                 "panels": [
-                                    
+
                                 ],
                                 "purpose": [
-                                    
+
                                 ],
                                 "roi": null,
                                 "run_coverage": true,
@@ -2506,7 +2506,7 @@
                                 "trim_tail": 0,
                                 "umi_aware": false,
                                 "vivar_project": [
-                                    
+
                                 ]
                             }
                         },
@@ -2524,18 +2524,18 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
@@ -2570,7 +2570,7 @@
                                 "adapter_R2": null,
                                 "aligner": "bwamem",
                                 "binsize": [
-                                    
+
                                 ],
                                 "disable_picard_metrics": true,
                                 "genome": "GRCh38",
@@ -2586,10 +2586,10 @@
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
                                 "panels": [
-                                    
+
                                 ],
                                 "purpose": [
-                                    
+
                                 ],
                                 "roi": null,
                                 "run_coverage": true,
@@ -2602,7 +2602,7 @@
                                 "trim_tail": 0,
                                 "umi_aware": false,
                                 "vivar_project": [
-                                    
+
                                 ]
                             }
                         },
@@ -2620,18 +2620,18 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
