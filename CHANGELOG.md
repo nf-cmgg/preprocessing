@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.0.0
 
+- Add `MultiQC-SAV` module for Illumina Run QC reports
+- Migrate readgroup parsing from `preprocessing.nf` to a local subworkflow
 - Update pipeline to use topic channels only, deprecation `versions` channels
 - Drop `bcl_demultiplex` subworkflow in favour of `bcl-convert` module
 - Update the output handling to use the new workflow output definitions.

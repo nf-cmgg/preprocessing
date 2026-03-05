@@ -7,43 +7,11 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline/main"
 
-    test("main - fastq input") {
+    test("main") {
 
         when {
             params {
-                input = "${projectDir}/tests/inputs/fastq.yml"
-                igenomes_base = "s3://reference-data/genomes"
-                outdir = "$outputDir"
-            }
-        }
-
-        then {
-            assert workflow.success
-        }
-
-    }
-
-    test("main - flowcell input") {
-
-        when {
-            params {
-                input = "${projectDir}/tests/inputs/flowcell.yml"
-                igenomes_base = "s3://reference-data/genomes"
-                outdir = "$outputDir"
-            }
-        }
-
-        then {
-            assert workflow.success
-        }
-
-    }
-
-    test("main - fastq RNA input") {
-
-        when {
-            params {
-                input = "${projectDir}/tests/inputs/fastq_rna.yml"
+                input = "${projectDir}/tests/inputs/test.yml"
                 igenomes_base = "s3://reference-data/genomes"
                 outdir = "$outputDir"
             }
