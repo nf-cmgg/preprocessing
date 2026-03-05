@@ -88,6 +88,11 @@ workflow PREPROCESSING {
     .set { ch_demultiplexed_fastq }
 
     // Run QC
+    ch_flowcell_interop = ch_illumina_flowcell.flowcell
+        .map { meta, _samplesheet, flowcell ->
+            return [meta, files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)]
+        }
+
     ch_mqcsav_input = ch_illumina_flowcell.flowcell
         .map { meta, _samplesheet, flowcell ->
             def interop = files(flowcell.resolve("InterOp/*.bin"), checkIfExists: true)
@@ -389,7 +394,7 @@ workflow PREPROCESSING {
     // summary files without meta, e.g. versions, params
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-    ch_methods_description = channel.value(methodsDescriptionText(multiqc_methods_description))
+    ch_methods_description = channel.value(multiqc_methods_description ? methodsDescriptionText(multiqc_methods_description) : "")
 
     ch_summary_files = channel.empty()
         .mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
@@ -406,7 +411,7 @@ workflow PREPROCESSING {
         .groupTuple(by: 0)
         .combine(ch_summary_files)
         .map { meta, multiqc_files, summary_files ->
-            return [meta, (multiqc_files + summary_files).flatten(), multiqc_config, multiqc_logo, [], []]
+            return [meta, (multiqc_files + summary_files).flatten(), multiqc_config.flatten(), multiqc_logo, [], []]
         }
         .dump(tag: "MULTIQC files", pretty: true)
 
@@ -417,6 +422,7 @@ workflow PREPROCESSING {
     emit:
     demultiplex_reports        = BCLCONVERT.out.reports
     demultiplex_logs           = BCLCONVERT.out.logs
+    demultiplex_interop        = ch_flowcell_interop
     demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
     falco_html                 = FALCO.out.html
     falco_txt                  = FALCO.out.txt

@@ -70,6 +70,7 @@ workflow {
     demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.map { meta, report -> [meta, file(report).resolve()] }.transpose()
     demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.map { meta, log -> [meta, file(log).resolve()] }.transpose()
     demultiplex_fastq          = PREPROCESSING.out.demultiplex_fastq.transpose()
+    demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose()
     falco_html                 = PREPROCESSING.out.falco_html
     falco_txt                  = PREPROCESSING.out.falco_txt
     fastp_json                 = PREPROCESSING.out.fastp_json
@@ -119,6 +120,9 @@ output {
         path { meta, log ->
             log >> (meta.lane ? "Logs/L00${meta.lane}/${log.name}" : "Logs/${log.name}")
         }
+    }
+    demultiplex_interop {
+        path "InterOp/"
     }
     demultiplex_fastq {
         path { meta, fastq ->
