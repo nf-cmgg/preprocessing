@@ -29,7 +29,6 @@ Steps include:
 - Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`picard CollectHsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectHsMetrics), [`picard CollectWgsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics), [`picard CollectMultipleMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics)
 - QC aggregation using [`multiqc`](https://multiqc.info/)
 
-![metro map](docs/images/metro_map.png)
 <picture>
 
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/metro_map_dark.svg">
