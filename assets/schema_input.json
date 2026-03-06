@@ -160,10 +160,10 @@
         },
         "anyOf": [
             {
-                "required": ["id", "samplename", "organism", "aligner", "tag", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "organism", "aligner", "fastq_1", "fastq_2"]
             },
             {
-                "required": ["id", "samplename", "genome", "aligner", "tag", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "genome", "aligner", "fastq_1", "fastq_2"]
             },
             {
                 "required": ["id", "samplesheet", "sample_info", "flowcell"]
