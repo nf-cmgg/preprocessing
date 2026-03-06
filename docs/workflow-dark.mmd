@@ -1,143 +1,58 @@
 %%metro title: nf-cmgg/preprocessing
-%%metro logo: images/nf-cmgg-preprocessing_logo_dark.png
-%%metro style: dark
+%%metro style: nf-core
+%%metro line: demux | Demultiplexing | #0000ff
+%%metro line: alignment | Alignment and Postprocessing | #00ff00
+%%metro line: qc | Quality control | #ff0000
+%%metro file: BCL_IN | BCL
+%%metro file: FASTQ_IN | FASTQ
+%%metro line_order: span
+%%metro compact_offsets: true
 
-%%metro line: main | Main | #4CAF50
-%%metro line: align_rna | RNA Alignment | #FF9800
-%%metro line: align_dna | DNA Alignment | #ff1e00ff
-%%metro line: align_postprocessing | Alignment Postprocessing | #9C27B0
-%%metro line: qc | Quality Control | #2196F3
+graph TD
+    BCL_IN[]
+    FASTQ_IN[]
+    MULTIQC_LIBRARY
+    MULTIQC_SAV
 
-%%metro file: fastq_in | FASTQ
-%%metro file: bcl_in | BCL
-%%metro file: cram_out | CRAM
-%%metro file: fastq_out | FASTQ
-%%metro file: reports_out | HTML
-
-graph LR
-    %% define nodes
-    bcl_in[]
-    fastq_in[]
-    fastq_out[]
-    cram_out[]
-    reports_out[]
-
-    subgraph demultiplexing
-        %%metro exit: right | main
-        %%metro exit: bottom | qc
-        bcl_in[BCL]
-        bclconvert[bcl-convert]
-        bcl_in -->|main| bclconvert
+    subgraph Demultiplexing
+        BCL_IN -->|demux| BCLCONVERT
+        BCL_IN -->|qc| MULTIQC_SAV
+        BCLCONVERT -->|qc| MULTIQC_SAV
     end
 
-    subgraph fastq_qc
-        fastp[fastp]
-        falco[falco]
-        bclconvert -->|main| fastp
-        bclconvert -->|main| fastq_out
-        bclconvert -->|qc| falco
-        fastq_in -->|main| fastp
+    subgraph FASTQ_QC
+        FASTQ_IN -->|qc| FALCO
+        FASTQ_IN -->|qc| FASTP
+        BCLCONVERT -->|qc| FALCO
+        BCLCONVERT -->|qc| FASTP
+        FALCO -->|qc| MULTIQC_LIBRARY
+        FASTP -->|qc| MULTIQC_LIBRARY
     end
 
-    subgraph alignment_dna
-        bwamem[BWA-MEM]
-        bwamem2[BWA-MEM2]
-        dragmap[Dragmap]
-        snapaligner[SNAP]
-        strobealign[StrobeAlign]
-        _dna_bam_out[]
+    _CRAM
 
-        fastp -->|align_dna| bwamem
-        fastp -->|align_dna| bwamem2
-        fastp -->|align_dna| dragmap
-        fastp -->|align_dna| snapaligner
-        fastp -->|align_dna| strobealign
+    subgraph Alignment_and_Postprocessing
+        FASTQ_IN -->|alignment| ALIGN
+        BCLCONVERT -->|alignment| ALIGN
+
+        ALIGN -->|alignment| MARKDUP
+        MARKDUP -->|alignment| _CRAM
     end
 
-    subgraph alignment_rna
-        star[STAR]
-        _rna_bam_out[]
+    _QC_COLLECT
 
-        fastp -->|align_rna| star
+    subgraph COVERAGE_QC
+        _CRAM -->|qc| MOSDEPTH
+        _CRAM -->|qc| SAMTOOLS_COV
+        MOSDEPTH -->|qc| _QC_COLLECT
+        SAMTOOLS_COV -->|qc| _QC_COLLECT
     end
 
-    subgraph alignment_postprocessing
-        _postprocess_bam_in[]
-        bamsormadup[bamsormadup]
-        samtools_sort[samtools sort]
-        samtools_sormadup[samtools sormadup]
-        samtools_convert[samtools convert]
-
-        bwamem -->|align_postprocessing| _postprocess_bam_in
-        bwamem2 -->|align_postprocessing| _postprocess_bam_in
-        dragmap -->|align_postprocessing| _postprocess_bam_in
-        snapaligner -->|align_postprocessing| _postprocess_bam_in
-        strobealign -->|align_postprocessing| _postprocess_bam_in
-        star -->|align_postprocessing| _postprocess_bam_in
-
-        _postprocess_bam_in -->|align_postprocessing| bamsormadup
-        _postprocess_bam_in -->|align_postprocessing| samtools_sort
-        _postprocess_bam_in -->|align_postprocessing| samtools_sormadup
-        _postprocess_bam_in -->|align_postprocessing| samtools_convert
-
-        bamsormadup -->|align_postprocessing| samtools_convert
-
-        samtools_convert -->|align_postprocessing| cram_out
-        samtools_sort -->|align_postprocessing| cram_out
-        samtools_sormadup -->|align_postprocessing| cram_out
+    subgraph BAM_QC
+        _CRAM -->|qc| SAMTOOLS_QC
+        _CRAM -->|qc| PICARD
+        SAMTOOLS_QC -->|qc| _QC_COLLECT
+        PICARD -->|qc| _QC_COLLECT
     end
 
-   subgraph alignment_qc
-        %%metro direction: TB
-        samtools_flagstat[samtools flagstat]
-        samtools_stats[samtools stats]
-        samtools_idxstats[samtools idxstats]
-        picard_collectmultiplemetrics[picard collectmultiplemetrics]
-
-        cram_out -->|qc| samtools_flagstat
-        cram_out -->|qc| samtools_stats
-        cram_out -->|qc| samtools_idxstats
-        cram_out -->|qc| picard_collectmultiplemetrics
-   end
-
-   subgraph alignment_qc_wgs
-        picard_collectwgsmetrics[picard collectwgsmetrics]
-        cram_out -->|qc| picard_collectwgsmetrics
-   end
-
-   subgraph alignment_qc_targetted
-        picard_collecthsmetrics[picard collecthsmetrics]
-        cram_out -->|qc| picard_collecthsmetrics
-   end
-
-   subgraph coverage_qc
-        mosdepth[mosdepth]
-        samtools_coverage[samtools coverage]
-        panelcoverage[panelcoverage]
-
-        cram_out -->|qc| mosdepth
-        cram_out -->|qc| samtools_coverage
-        cram_out -->|qc| panelcoverage
-   end
-
-    subgraph reporting
-    mqc_sav[MultiQC-SAV]
-    mqc_library[Library MultiQC]
-    reports_out[QC Reports]
-
-    bclconvert -->|qc| mqc_sav
-    fastp -->|qc| mqc_library
-    falco -->|qc| mqc_library
-    samtools_flagstat -->|qc| mqc_library
-    samtools_stats -->|qc| mqc_library
-    samtools_idxstats -->|qc| mqc_library
-    picard_collectmultiplemetrics -->|qc| mqc_library
-    picard_collectwgsmetrics -->|qc| mqc_library
-    picard_collecthsmetrics -->|qc| mqc_library
-    mosdepth -->|qc| mqc_library
-    samtools_coverage -->|qc| mqc_library
-    panelcoverage -->|qc| mqc_library
-
-    mqc_sav -->|qc| reports_out
-    mqc_library -->|qc| reports_out
-    end
+    _QC_COLLECT -->|qc| MULTIQC_LIBRARY
