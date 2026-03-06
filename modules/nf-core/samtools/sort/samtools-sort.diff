@@ -1,39 +1,37 @@
-Changes in module 'nf-core/samtools/sort'
+Changes in component 'nf-core/samtools/sort'
 'modules/nf-core/samtools/sort/environment.yml' is unchanged
 'modules/nf-core/samtools/sort/meta.yml' is unchanged
 Changes in 'samtools/sort/main.nf':
 --- modules/nf-core/samtools/sort/main.nf
 +++ modules/nf-core/samtools/sort/main.nf
 @@ -8,8 +8,7 @@
-         'biocontainers/samtools:1.21--h50ea8bc_0' }"
+         'biocontainers/samtools:1.22.1--h96c455f_0' }"
  
      input:
 -    tuple val(meta) , path(bam)
 -    tuple val(meta2), path(fasta)
 +    tuple val(meta) , path(bam), path(fasta)
+     val index_format
  
      output:
-     tuple val(meta), path("*.bam"),  emit: bam,  optional: true
-
-@@ -28,6 +27,7 @@
-                     args.contains("--output-fmt cram") ? "cram" :
-                     "bam"
+@@ -31,6 +30,7 @@
+                 args.contains("--output-fmt cram") ? "cram" :
+                 "bam"
      def reference = fasta ? "--reference ${fasta}" : ""
 +    def sort_memory = (task.memory.mega/task.cpus*0.75).intValue()
-     if ("$bam" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
- 
-     """
-@@ -39,6 +39,7 @@
+     output_file = index_format ? "${prefix}.${extension}##idx##${prefix}.${extension}.${index_format} --write-index" : "${prefix}.${extension}"
+     if (index_format) {
+         if (!index_format.matches('bai|csi|crai')) {
+@@ -50,6 +50,7 @@
          -T ${prefix} \\
          --threads $task.cpus \\
          ${reference} \\
 +        -m ${sort_memory}M \\
-         -o ${prefix}.${extension} \\
+         -o ${output_file} \\
          -
  
 
 'modules/nf-core/samtools/sort/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/samtools/sort/tests/tags.yml' is unchanged
 'modules/nf-core/samtools/sort/tests/nextflow_cram.config' is unchanged
 'modules/nf-core/samtools/sort/tests/nextflow.config' is unchanged
 'modules/nf-core/samtools/sort/tests/main.nf.test' is unchanged

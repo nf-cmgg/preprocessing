@@ -1,11 +1,15 @@
-# ![nf-cmgg/preprocessing](docs/images/nf-cmgg-preprocessing_logo_light.png#gh-light-mode-only) ![nf-cmgg/preprocessing](docs/images/nf-cmgg-preprocessing_logo_dark.png#gh-dark-mode-only)
+# nf-cmgg/preprocessing
 
-[![GitHub Actions CI Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A525.04.0-23aa62.svg)](https://www.nextflow.io/)
-[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/nf-cmgg/preprocessing)
+[![GitHub Actions CI Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/nf-test.yml)
+[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
+
+[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-cmgg/preprocessing)
 
 ## Introduction
 
@@ -14,17 +18,23 @@ It also performs basic QC and coverage analysis.
 
 The pipeline is built using Nextflow, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
-Steps inlcude:
+Steps include:
 
-1. Demultiplexing using [`BCLconvert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
-2. Read QC and trimming using [`fastp`](https://github.com/OpenGene/fastp)
-3. Alignment using either [`bwa`](https://github.com/lh3/bwa), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bowtie2`](https://github.com/BenLangmead/bowtie2), [`dragmap`](https://github.com/Illumina/DRAGMAP) or [`snap`](https://github.com/amplab/snap) for DNA-seq and [`STAR`](https://github.com/alexdobin/STAR) for RNA-seq
-4. Duplicate marking using [`bamsormadup`](https://gitlab.com/german.tischler/biobambam2) or [`samtools markdup`](http://www.htslib.org/doc/samtools-markdup.html)
-5. Coverage analysis using [`mosdepth`](https://github.com/brentp/mosdepth) and [`samtools coverage`](http://www.htslib.org/doc/samtools-coverage.html)
-6. Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`picard CollecHsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectHsMetrics), [`picard CollectWgsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics), [`picard CollectMultipleMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics)
-7. QC aggregation using [`multiqc`](https://multiqc.info/)
+- Demultiplexing using [`BCLconvert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
+- Run QC using [`MultiQC SAV`](https://github.com/MultiQC/MultiQC_SAV)
+- Read QC and trimming using [`fastp`](https://github.com/OpenGene/fastp) or [`falco`](https://github.com/smithlabcode/falco)
+- Alignment using either [`bwa`](https://github.com/lh3/bwa), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bowtie2`](https://github.com/BenLangmead/bowtie2), [`dragmap`](https://github.com/Illumina/DRAGMAP), [`snap`](https://github.com/amplab/snap) or [`strobe`](https://github.com/ksahlin/strobealign) for DNA-seq and [`STAR`](https://github.com/alexdobin/STAR) for RNA-seq
+- Duplicate marking using [`bamsormadup`](https://gitlab.com/german.tischler/biobambam2) or [`samtools markdup`](http://www.htslib.org/doc/samtools-markdup.html)
+- Coverage analysis using [`mosdepth`](https://github.com/brentp/mosdepth) and [`samtools coverage`](http://www.htslib.org/doc/samtools-coverage.html)
+- Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`picard CollectHsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectHsMetrics), [`picard CollectWgsMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics), [`picard CollectMultipleMetrics`](https://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics)
+- QC aggregation using [`multiqc`](https://multiqc.info/)
 
-![metro map](docs/images/metro_map.png)
+<picture>
+
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/metro_map_dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/metro_map_light.svg">
+  <img alt="Fallback image description" src="docs/images/metro_map_light.svg">
+</picture>
 
 ## Usage
 
@@ -33,36 +43,15 @@ Steps inlcude:
 
 The full documentation can be found [here](docs/README.md)
 
-First, prepare a samplesheet with your input data that looks as follows:
-
-`samplesheet.csv` for fastq inputs:
-
-```csv
-id,samplename,organism,library,fastq_1,fastq_2
-sample1,sample1,Homo sapiens,Library_Name,reads1.fq.gz,reads2.fq.gz
-```
-
-`samplesheet.csv` for flowcell inputs:
-
-```csv
-id,samplesheet,lane,flowcell,sample_info
-flowcell_id,/path/to/illumina_samplesheet.csv,1,/path/to/sequencer_uploaddir,/path/to/sampleinfo.csv
-```
-
-`sampleinfo.csv` for use with flowcell inputs:
-
-```csv
-samplename,library,organism,tag
-fc_sample1,test,Homo sapiens,WES
-```
+First, prepare a samplesheet with your input data. Check the [usage docs](docs/usage.md) for details on the required format and example files.
 
 Now, you can run the pipeline using:
 
 ```bash
 nextflow run nf-cmgg/preprocessing \
-   -profile <docker/singularity/.../institute> \
+   -profile <docker/singularity/...> \
    --igenomes_base /path/to/genomes \
-   --input samplesheet.csv \
+   --input samplesheet.<csv|yaml|json> \
    --outdir <OUTDIR>
 ```
 

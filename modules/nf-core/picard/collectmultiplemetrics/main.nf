@@ -1,19 +1,19 @@
 process PICARD_COLLECTMULTIPLEMETRICS {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/picard:3.3.0--hdfd78af_0' :
-        'biocontainers/picard:3.3.0--hdfd78af_0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/08/0861295baa7c01fc593a9da94e82b44a729dcaf8da92be8e565da109aa549b25/data'
+        : 'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6'}"
 
     input:
-    tuple val(meta) , path(bam), path(bai) ,path(fasta) ,path(fai)
+    tuple val(meta) , path(bam), path(bai), path(intervals), path(fasta) ,path(fai), path(dict)
 
     output:
     tuple val(meta), path("*_metrics"), emit: metrics
-    tuple val(meta), path("*.pdf")    , emit: pdf, optional: true
-    path  "versions.yml"              , emit: versions
+    tuple val(meta), path("*.pdf"), emit: pdf, optional: true
+    tuple val("${task.process}"), val('picard'), eval("picard CollectMultipleMetrics --version 2>&1 | sed -n 's/.*Version://p'"), topic: versions, emit: versions_picard
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,26 +21,26 @@ process PICARD_COLLECTMULTIPLEMETRICS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
+    def intervals_cmd = intervals ? "--INTERVALS ${intervals.join(',')}" : ""
+    def reference_cmd = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
     def avail_mem = 3072
     if (!task.memory) {
-        log.info '[Picard CollectMultipleMetrics] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
-    } else {
-        avail_mem = (task.memory.mega*0.8).intValue()
+        log.info('[Picard CollectMultipleMetrics] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.')
+    }
+    else {
+        avail_mem = (task.memory.mega * 0.8).intValue()
     }
     """
+    export TMP=\$PWD
     picard \\
         -Xmx${avail_mem}M \\
         CollectMultipleMetrics \\
-        $args \\
-        --INPUT $bam \\
+        ${args} \\
+        --INPUT ${bam} \\
         --OUTPUT ${prefix}.CollectMultipleMetrics \\
-        $reference
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        picard: \$(picard CollectMultipleMetrics --version 2>&1 | grep -o 'Version.*' | cut -f2- -d:)
-    END_VERSIONS
+        --TMP_DIR . \\
+        ${reference_cmd} \\
+        ${intervals_cmd}
     """
 
     stub:
@@ -56,10 +56,5 @@ process PICARD_COLLECTMULTIPLEMETRICS {
     touch ${prefix}.CollectMultipleMetrics.quality_by_cycle.pdf
     touch ${prefix}.CollectMultipleMetrics.insert_size_histogram.pdf
     touch ${prefix}.CollectMultipleMetrics.quality_distribution_metrics
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        picard: \$(echo \$(picard CollectMultipleMetrics --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d:)
-    END_VERSIONS
     """
 }

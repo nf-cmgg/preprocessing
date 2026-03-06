@@ -4,11 +4,11 @@ process SAMTOOLS_SORMADUP {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
-        'biocontainers/samtools:1.21--h50ea8bc_0' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.22.1--h96c455f_0' :
+        'biocontainers/samtools:1.22.1--h96c455f_0' }"
 
     input:
-    tuple val(meta), path(input), path(fasta)
+    tuple val(meta), path(input), path(fasta), path(fai)
 
     output:
     tuple val(meta), path("*.bam")      , emit: bam,  optional: true
@@ -16,7 +16,7 @@ process SAMTOOLS_SORMADUP {
     tuple val(meta), path("*.csi")      , emit: csi,  optional: true
     tuple val(meta), path("*.crai")     , emit: crai, optional: true
     tuple val(meta), path("*.metrics")  , emit: metrics
-    path "versions.yml"                 , emit: versions
+    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions, emit: versions_samtools
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,9 +32,6 @@ process SAMTOOLS_SORMADUP {
                     args5.contains("--output-fmt cram") ? "cram" :
                     "bam"
     def reference = fasta ? "--reference ${fasta}" : ""
-    // memory per thread for samtools sort
-    // set to 50% of the memory per thread, but at least 768M (samtools default)
-    def sort_memory = Math.max(768,(task.memory.mega/task.cpus*0.50).intValue())
 
     """
     samtools cat \\
@@ -63,7 +60,6 @@ process SAMTOOLS_SORMADUP {
         -u \\
         -T ${prefix}.sort \\
         --threads $task.cpus \\
-        -m ${sort_memory}M \\
         - \\
     | \\
     samtools markdup \\
@@ -75,10 +71,6 @@ process SAMTOOLS_SORMADUP {
         - \\
         ${prefix}.${extension}
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -91,10 +83,5 @@ process SAMTOOLS_SORMADUP {
     """
     touch ${prefix}.${extension}
     touch ${prefix}.metrics
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 }

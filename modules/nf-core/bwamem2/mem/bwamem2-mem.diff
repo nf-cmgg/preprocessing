@@ -1,22 +1,23 @@
-Changes in module 'nf-core/bwamem2/mem'
+Changes in component 'nf-core/bwamem2/mem'
 'modules/nf-core/bwamem2/mem/environment.yml' is unchanged
 'modules/nf-core/bwamem2/mem/meta.yml' is unchanged
 Changes in 'bwamem2/mem/main.nf':
 --- modules/nf-core/bwamem2/mem/main.nf
 +++ modules/nf-core/bwamem2/mem/main.nf
-@@ -8,9 +8,7 @@
-         'biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:2d15960ccea84e249a150b7f5d4db3a42fc2d6c3-0' }"
+@@ -8,10 +8,8 @@
+         : 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:db98f81f55b64113'}"
  
      input:
 -    tuple val(meta), path(reads)
 -    tuple val(meta2), path(index)
 -    tuple val(meta3), path(fasta)
+-    val sort_bam
 +    tuple val(meta), path(reads), path(index), path(fasta)
-     val   sort_bam
++    val   sort_bam
  
      output:
+     tuple val(meta), path("*.sam"), emit: sam, optional: true
 
 'modules/nf-core/bwamem2/mem/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/bwamem2/mem/tests/tags.yml' is unchanged
 'modules/nf-core/bwamem2/mem/tests/main.nf.test' is unchanged
 ************************************************************

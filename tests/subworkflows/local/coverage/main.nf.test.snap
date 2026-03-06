@@ -1,113 +1,506 @@
 {
-    "Coverage": {
+    "Coverage - WES": {
         "content": [
             {
                 "0": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
-                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
+                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
                     ]
                 ],
                 "1": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
-                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
+                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
+                    ]
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        [
+                            "test_Treatable_ID_per_exon.mosdepth.region.dist.txt:md5,6c2b5237d98e0a2f118a3553c2ba478e",
+                            "test_bladder_cancer_per_exon.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "2": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
                         "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
                     ]
                 ],
                 "3": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
-                    ]
+                    
                 ],
                 "4": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
-                        "test_genelist_chr21_per_exon.mosdepth.region.dist.txt:md5,e5c7b4f381721888249c57aa55be2d34"
+                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
                     ]
                 ],
                 "5": [
-                    "versions.yml:md5,2d22ebfca674911d28ac60f352a98b1b",
-                    "versions.yml:md5,731a006ffa265ac74ad677b4e5a68640",
-                    "versions.yml:md5,d7c2bc4717e6518d6ce017a70a3f1df0"
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.per-base.bed.gz.csi:md5,6593f9115e934350c326206088e8bc7c"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.regions.bed.gz.csi:md5,68d13d373b9fd8b92535f566e77ed036"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.quantized.bed.gz.csi:md5,22e9d1096b7afd3d628526c831b26397"
+                    ]
                 ],
                 "mosdepth_global": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
                         "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
+                    ]
+                ],
+                "mosdepth_per_base_bed": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
+                    ]
+                ],
+                "mosdepth_per_base_csi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.per-base.bed.gz.csi:md5,6593f9115e934350c326206088e8bc7c"
+                    ]
+                ],
+                "mosdepth_per_base_d4": [
+                    
+                ],
+                "mosdepth_quantized_bed": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
+                    ]
+                ],
+                "mosdepth_quantized_csi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.quantized.bed.gz.csi:md5,22e9d1096b7afd3d628526c831b26397"
                     ]
                 ],
                 "mosdepth_regions": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
                         "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
+                    ]
+                ],
+                "mosdepth_regions_bed": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
+                    ]
+                ],
+                "mosdepth_regions_csi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
+                        "test.regions.bed.gz.csi:md5,68d13d373b9fd8b92535f566e77ed036"
                     ]
                 ],
                 "mosdepth_summary": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
                         "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
                     ]
+                ],
+                "mosdepth_thresholds_bed": [
+                    
+                ],
+                "mosdepth_thresholds_csi": [
+                    
                 ],
                 "panelcoverage": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
-                        "test_genelist_chr21_per_exon.mosdepth.region.dist.txt:md5,e5c7b4f381721888249c57aa55be2d34"
+                        [
+                            "test_Treatable_ID_per_exon.mosdepth.region.dist.txt:md5,6c2b5237d98e0a2f118a3553c2ba478e",
+                            "test_bladder_cancer_per_exon.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "samtools_coverage": [
                     [
                         {
                             "id": "test",
-                            "single_end": false
+                            "single_end": false,
+                            "tag": "WES"
                         },
-                        "test.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,2d22ebfca674911d28ac60f352a98b1b",
-                    "versions.yml:md5,731a006ffa265ac74ad677b4e5a68640",
-                    "versions.yml:md5,d7c2bc4717e6518d6ce017a70a3f1df0"
                 ]
             }
         ],
+        "timestamp": "2026-02-11T22:37:17.825377",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
-        },
-        "timestamp": "2024-11-19T15:25:37.147132"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        }
+    },
+    "Coverage - seqcap": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
+                    ]
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test_seqcap_Connective_tissue_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
+                    ]
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.per-base.bed.gz.csi:md5,6593f9115e934350c326206088e8bc7c"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.regions.bed.gz.csi:md5,68d13d373b9fd8b92535f566e77ed036"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.quantized.bed.gz.csi:md5,22e9d1096b7afd3d628526c831b26397"
+                    ]
+                ],
+                "mosdepth_global": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
+                    ]
+                ],
+                "mosdepth_per_base_bed": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
+                    ]
+                ],
+                "mosdepth_per_base_csi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.per-base.bed.gz.csi:md5,6593f9115e934350c326206088e8bc7c"
+                    ]
+                ],
+                "mosdepth_per_base_d4": [
+                    
+                ],
+                "mosdepth_quantized_bed": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
+                    ]
+                ],
+                "mosdepth_quantized_csi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.quantized.bed.gz.csi:md5,22e9d1096b7afd3d628526c831b26397"
+                    ]
+                ],
+                "mosdepth_regions": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
+                    ]
+                ],
+                "mosdepth_regions_bed": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
+                    ]
+                ],
+                "mosdepth_regions_csi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.regions.bed.gz.csi:md5,68d13d373b9fd8b92535f566e77ed036"
+                    ]
+                ],
+                "mosdepth_summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
+                    ]
+                ],
+                "mosdepth_thresholds_bed": [
+                    
+                ],
+                "mosdepth_thresholds_csi": [
+                    
+                ],
+                "panelcoverage": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test_seqcap_Connective_tissue_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
+                    ]
+                ],
+                "samtools_coverage": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
+                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-02-11T22:36:21.526017",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        }
     }
 }

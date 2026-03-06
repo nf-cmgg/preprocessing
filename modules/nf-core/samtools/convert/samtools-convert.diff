@@ -1,22 +1,20 @@
-Changes in module 'nf-core/samtools/convert'
+Changes in component 'nf-core/samtools/convert'
 'modules/nf-core/samtools/convert/environment.yml' is unchanged
 'modules/nf-core/samtools/convert/meta.yml' is unchanged
 Changes in 'samtools/convert/main.nf':
 --- modules/nf-core/samtools/convert/main.nf
 +++ modules/nf-core/samtools/convert/main.nf
-@@ -8,9 +8,7 @@
-         'biocontainers/samtools:1.21--h50ea8bc_0' }"
+@@ -8,8 +8,7 @@
+         'biocontainers/samtools:1.22.1--h96c455f_0' }"
  
      input:
 -    tuple val(meta), path(input), path(index)
--    tuple val(meta2), path(fasta)
--    tuple val(meta3), path(fai)
+-    tuple val(meta2), path(fasta), path(fai)
 +    tuple val(meta), path(input), path(index), path(fasta), path(fai)
  
      output:
      tuple val(meta), path("*.bam")  , emit: bam ,   optional: true
 
 'modules/nf-core/samtools/convert/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/samtools/convert/tests/tags.yml' is unchanged
 'modules/nf-core/samtools/convert/tests/main.nf.test' is unchanged
 ************************************************************

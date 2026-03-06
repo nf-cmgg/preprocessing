@@ -21,7 +21,11 @@ nextflow_workflow {
                             library: "test",
                             organism: "Homo sapiens",
                             tag: "WES",
-                            sample_type: "DNA"
+                            sample_type: "DNA",
+                            aligner: "bwamem",
+                            markdup: "bamsormadup",
+                            run_coverage: true,
+                            roi: file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true)
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -43,12 +47,13 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
-                // aligner
-                input[2] = "bwamem"
-                // markdup
-                input[3] = "bamsormadup"
-                // roi
-                input[4] = "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
+                // genelists
+                input[2] = null
+                // mqc_config
+                input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
+                // mqc_logo
+                input[4] = []
+                // mqc methods description
                 input[5] = null
                 """
             }
@@ -57,8 +62,24 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                file(workflow.out.multiqc_report[0][0]).name,
-                workflow.out.versions
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "multiqc_report",
+                    "multiqc_data",
+                    "multiqc_plots",
+                    "multiqcsav_report",
+                    "multiqcsav_data",
+                    "multiqcsav_plots",
+                    "md5sums",
+                    "fastp_html",
+                    "crams",
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics",
+                    "samtools_flagstat",
+                    "samtools_coverage",
+                    "samtools_stats"
+                ])
             ).match()
         }
     }
@@ -77,7 +98,10 @@ nextflow_workflow {
                             library: "test",
                             organism: "Homo sapiens",
                             tag: "WGS",
-                            sample_type: "DNA"
+                            sample_type: "DNA",
+                            aligner: "bwamem",
+                            markdup: "bamsormadup",
+                            run_coverage: true
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -99,12 +123,13 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
-                // aligner
-                input[2] = "bwamem"
-                // markdup
-                input[3] = "bamsormadup"
-                // roi
-                input[4] = ""
+                // genelists
+                input[2] = null
+                // mqc_config
+                input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
+                // mqc_logo
+                input[4] = []
+                // mqc methods description
                 input[5] = null
                 """
             }
@@ -113,8 +138,24 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                file(workflow.out.multiqc_report[0][0]).name,
-                workflow.out.versions
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "multiqc_report",
+                    "multiqc_data",
+                    "multiqc_plots",
+                    "multiqcsav_report",
+                    "multiqcsav_data",
+                    "multiqcsav_plots",
+                    "md5sums",
+                    "fastp_html",
+                    "crams",
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics",
+                    "samtools_flagstat",
+                    "samtools_coverage",
+                    "samtools_stats"
+                ])
             ).match()
         }
     }
@@ -136,7 +177,12 @@ nextflow_workflow {
                             library: "test",
                             organism: "Homo sapiens",
                             tag: "WES",
-                            sample_type: "DNA"
+                            sample_type: "DNA",
+                            aligner: "bwamem",
+                            markdup: "bamsormadup",
+                            run_coverage: false,
+                            disable_picard_metrics: true,
+                            roi: file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true)
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -158,12 +204,13 @@ nextflow_workflow {
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
-                // aligner
-                input[2] = "bwamem"
-                // markdup
-                input[3] = "bamsormadup"
-                // roi
-                input[4] = "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
+                // genelists
+                input[2] = null
+                // mqc_config
+                input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
+                // mqc_logo
+                input[4] = []
+                // mqc methods description
                 input[5] = null
                 """
             }
@@ -172,9 +219,100 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                file(workflow.out.multiqc_report[0][0]).name,
-                workflow.out.versions
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "multiqc_report",
+                    "multiqc_data",
+                    "multiqc_plots",
+                    "multiqcsav_report",
+                    "multiqcsav_data",
+                    "multiqcsav_plots",
+                    "md5sums",
+                    "fastp_html",
+                    "crams",
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics",
+                    "samtools_flagstat",
+                    "samtools_coverage",
+                    "samtools_stats"
+                ])
             ).match()
         }
     }
+
+    test("preprocessing - flowcell - bwa - bamsormadup - roi") {
+        when {
+            workflow {
+                """
+                // ch_samplesheet
+                input[0] = Channel.of(
+                    [
+                        [                           // meta
+                            id: "200624_A00834_0183_BHMTFYDRXX",
+                            lane: 1,
+                        ],
+                        [],  // fastq_1
+                        [],  // fastq_2
+                        file("https://github.com/nf-cmgg/test-datasets/raw/refs/heads/preprocessing/data/genomics/homo_sapiens/illumina/flowcell/SampleSheet_2.csv", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/refs/heads/preprocessing/data/genomics/homo_sapiens/illumina/flowcell/SampleInfo_2.json", checkIfExists: true),
+                        file("s3://test-data/genomics/homo_sapiens/illumina/bcl", checkIfExists: true)
+
+                    ]
+                )
+                // genomes
+                input[1] = [
+                    GRCh38: [
+                        fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                        fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                        dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                        gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
+                    ]
+                ]
+                // genelists
+                input[2] = null
+                // mqc_config
+                input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
+                // mqc_logo
+                input[4] = []
+                // mqc methods description
+                input[5] = null
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "demultiplex_logs",
+                    "demultiplex_reports",
+                    "multiqc_report",
+                    "multiqc_data",
+                    "multiqc_plots",
+                    "multiqcsav_report",
+                    "multiqcsav_data",
+                    "multiqcsav_plots",
+                    "md5sums",
+                    "fastp_html",
+                    "crams",
+                    "picard_wgsmetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_multiplemetrics",
+                    "picard_hsmetrics",
+                    "samtools_flagstat",
+                    "samtools_coverage",
+                    "samtools_stats"
+                ]).collectEntries { key, value ->
+                    if (key in ["demultiplex_logs", "demultiplex_reports"]) {
+                        [ key: value.sort() ]
+                    } else {
+                        [ key: value ]
+                    }
+                }
+            ).match()
+        }
+    }
+
 }

@@ -1,0 +1,26 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf"
+    script "main.nf"
+    config "tests/config/igenomes_test.config"
+
+    tag "pipeline"
+    tag "pipeline/main"
+
+    test("main") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/inputs/test.yml"
+                igenomes_base = "s3://reference-data/genomes"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+}

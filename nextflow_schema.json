@@ -38,6 +38,10 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                },
+                "genomes": {
+                    "type": "object",
+                    "hidden": true
                 }
             }
         },
@@ -47,62 +51,20 @@
             "description": "",
             "default": "",
             "properties": {
-                "aligner": {
-                    "type": "string",
-                    "default": "bowtie2",
-                    "description": "Which aligner to use",
-                    "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "star"]
-                },
-                "markdup": {
-                    "type": "string",
-                    "default": "bamsormadup",
-                    "description": "Which alignment postprocessor to use",
-                    "enum": ["bamsormadup", "samtools", "false"]
-                },
-                "umi_aware": {
-                    "type": "boolean",
-                    "default": "false",
-                    "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name."
-                },
-                "run_coverage": {
-                    "type": "boolean",
-                    "description": "Run coverage analysis steps",
-                    "default": true
-                },
-                "skip_trimming": {
-                    "type": "boolean",
-                    "description": "Skip adapter trimming",
-                    "default": false
-                },
-                "trim_front": {
+                "split_fastq": {
                     "type": "integer",
-                    "default": 0,
-                    "description": "Number of bases to trim from the front of the read"
-                },
-                "trim_tail": {
-                    "type": "integer",
-                    "default": 0,
-                    "description": "Number of bases to trim from the tail of the read"
-                },
-                "adapter_R1": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Adapter sequence to be trimmed"
-                },
-                "adapter_R2": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Adapter sequence to be trimmed"
-                },
-                "disable_picard_metrics": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Disable the calculation of (slow) Picard metrics"
-                },
-                "roi": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Region of interest for coverage analysis to be applied to all samples"
+                    "oneOf": [
+                        {
+                            "minimum": 250
+                        },
+                        {
+                            "const": 0
+                        }
+                    ],
+                    "default": 100000000,
+                    "fa_icon": "fas fa-clock",
+                    "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.",
+                    "help_text": "Use the the tool FastP to split FASTQ file by number of reads. This parallelizes across fastq file shards speeding up mapping. Note although the minimum value is 250 reads, if you have fewer than 250 reads a single FASTQ shard will still be created."
                 },
                 "genelists": {
                     "type": "string",
@@ -111,8 +73,7 @@
                     "format": "directory-path",
                     "description": "Directory containing gene list bed files for granular coverage analysis"
                 }
-            },
-            "required": ["aligner"]
+            }
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -124,16 +85,16 @@
                 "custom_config_version": {
                     "type": "string",
                     "description": "Git commit id for Institutional configs.",
-                    "default": "master",
+                    "default": "main",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
                 "custom_config_base": {
                     "type": "string",
-                    "description": "Base directory for Institutional configs.",
-                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
+                    "description": "Base directory for custom configs.",
+                    "default": "https://raw.githubusercontent.com/nf-cmgg/configs/main",
                     "hidden": true,
-                    "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
+                    "help_text": "If you're running offline, Nextflow will not be able to fetch the custom config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "config_profile_name": {
@@ -169,12 +130,6 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
-                "help": {
-                    "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
@@ -249,6 +204,52 @@
                     "default": true,
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
+                },
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
+                    "hidden": true
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
+                },
+                "igenomes_base": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Directory / URL base for iGenomes references.",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "default": "/references/",
+                    "hidden": true
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "Do not load the iGenomes reference config.",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                },
+                "genome": {
+                    "type": "string",
+                    "description": "Name of iGenomes reference.",
+                    "fa_icon": "fas fa-book",
+                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 }
             }
         }

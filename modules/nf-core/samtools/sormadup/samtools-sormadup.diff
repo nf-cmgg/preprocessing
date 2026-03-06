@@ -1,11 +1,11 @@
-Changes in module 'nf-core/samtools/sormadup'
+Changes in component 'nf-core/samtools/sormadup'
 'modules/nf-core/samtools/sormadup/environment.yml' is unchanged
 'modules/nf-core/samtools/sormadup/meta.yml' is unchanged
 Changes in 'samtools/sormadup/main.nf':
 --- modules/nf-core/samtools/sormadup/main.nf
 +++ modules/nf-core/samtools/sormadup/main.nf
 @@ -8,8 +8,7 @@
-         'biocontainers/samtools:1.21--h50ea8bc_0' }"
+         'biocontainers/samtools:1.22.1--h96c455f_0' }"
  
      input:
 -    tuple val(meta), path(input)
@@ -14,10 +14,27 @@ Changes in 'samtools/sormadup/main.nf':
  
      output:
      tuple val(meta), path("*.bam")      , emit: bam,  optional: true
+@@ -33,9 +32,6 @@
+                     args5.contains("--output-fmt cram") ? "cram" :
+                     "bam"
+     def reference = fasta ? "--reference ${fasta}" : ""
+-    // memory per thread for samtools sort
+-    // set to 50% of the memory per thread, but at least 768M (samtools default)
+-    def sort_memory = Math.max(768,(task.memory.mega/task.cpus*0.50).intValue())
+ 
+     """
+     samtools cat \\
+@@ -64,7 +60,6 @@
+         -u \\
+         -T ${prefix}.sort \\
+         --threads $task.cpus \\
+-        -m ${sort_memory}M \\
+         - \\
+     | \\
+     samtools markdup \\
 
 'modules/nf-core/samtools/sormadup/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/samtools/sormadup/tests/bam.config' is unchanged
-'modules/nf-core/samtools/sormadup/tests/tags.yml' is unchanged
 'modules/nf-core/samtools/sormadup/tests/cram.config' is unchanged
 'modules/nf-core/samtools/sormadup/tests/main.nf.test' is unchanged
 ************************************************************

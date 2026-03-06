@@ -1,11 +1,11 @@
-Changes in module 'nf-core/samtools/stats'
+Changes in component 'nf-core/samtools/stats'
 'modules/nf-core/samtools/stats/environment.yml' is unchanged
 'modules/nf-core/samtools/stats/meta.yml' is unchanged
 Changes in 'samtools/stats/main.nf':
 --- modules/nf-core/samtools/stats/main.nf
 +++ modules/nf-core/samtools/stats/main.nf
 @@ -8,8 +8,7 @@
-         'biocontainers/samtools:1.21--h50ea8bc_0' }"
+         'biocontainers/samtools:1.22.1--h96c455f_0' }"
  
      input:
 -    tuple val(meta), path(input), path(input_index)
@@ -16,6 +16,5 @@ Changes in 'samtools/stats/main.nf':
      tuple val(meta), path("*.stats"), emit: stats
 
 'modules/nf-core/samtools/stats/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/samtools/stats/tests/tags.yml' is unchanged
 'modules/nf-core/samtools/stats/tests/main.nf.test' is unchanged
 ************************************************************

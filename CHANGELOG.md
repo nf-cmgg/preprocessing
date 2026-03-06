@@ -3,7 +3,24 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## 3.0.0
+
+- Add `MultiQC-SAV` module for Illumina Run QC reports
+- Migrate readgroup parsing from `preprocessing.nf` to a local subworkflow
+- Update pipeline to use topic channels only, deprecation `versions` channels
+- Drop `bcl_demultiplex` subworkflow in favour of `bcl-convert` module
+- Update the output handling to use the new workflow output definitions.
+- Bump all modules to latest versions.
+- The workflow now outputs data in a subdirectory per `library`, including a library specific MultiQC report
+- Drop support for unaligned cram outputs in favor of untrimmed fastq outputs, which are more widely supported and can be used for a wider range of downstream analyses.
+- Add support for untrimmed fastq outputs for unsupported genomes or when aligner is set to `false`.
+- Drop support for global `aligner` parameter. The aligner must now be specified per sample in the sample sheet or sample info.
+- Drop support for global `markdup` and `umi_aware` parameters. Marking duplicates must now be specified per sample in the sample sheet or sample info.
+- Drop support for global `run_coverage` and `disable_picard_metrics` parameters. Running coverage analysis must now be specified per sample in the sample sheet or sample info.
+- Drop support for global `skip_trimming`, `trim_front`, `trim_tail`, `adapter_R1` and `adapter_R2` parameters. Trimming must now be specified per sample in the sample sheet or sample info.
+- Drop support for global `roi` parameter. Regions of interest must now be specified per sample in the sample sheet or sample info.
+- Simplify fastq sharding and make it user configurable via the `split_fastq` parameter.
+- Added splice junctions and junctions outputs for RNA-seq alignments using STAR.
 
 ## v2.0.6
 
@@ -33,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.0.2
 
-- Drop unsed params
+- Drop unused params
 - Set aligner to `star` for RNA-seq
 - Finetune resources
 - Fix some bugs for different input tags
