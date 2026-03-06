@@ -42,7 +42,6 @@ A `fastq` samplesheet file consisting of paired-end data may look something like
 
 Following table shows the fields that are used by the `fastq` samplesheet:
 
-<<<<<<< feat/nf-metro
 | Column                   | Description                                                                                                                                              | Required                                        |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
 | `id`                     | Unique sample identifier                                                                                                                                 | :heavy_check_mark:                              |
@@ -65,19 +64,6 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `sample_type`            | Sample type (e.g., `DNA`, `RNA`)                                                                                                                         | :x:                                             |
 | `fastq_1`                | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                           | :heavy_check_mark:                              |
 | `fastq_2`                | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                             | :x:                                             |
-=======
-| Column       | Description                                                                                                                                  | Required                                        |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `fastq_1`    | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                               | :heavy_check_mark:                              |
-| `fastq_2`    | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                 | :x:                                             |
-| `samplename` | The sample name corresponding to the sample in the Fastq file(s)                                                                             | :heavy_check_mark:                              |
-| `genome`     | The genome build to use for the analysis. Currently supports GRCh38, GRCm39 and GRCz11                                                       | :heavy_check_mark: (unless `organism` is given) |
-| `organism`   | Full name of the organism. Currently supports "Homo sapiens", "Mus musculus" and "Danio rerio"                                               | :heavy_check_mark: (unless `genome` is given)   |
-| `library`    | Sample library name                                                                                                                          | :x:                                             |
-| `tag`        | The tag used by the sample. Can be one of WES, WGS or coPGT-M                                                                                | :heavy_check_mark:                              |
-| `roi`        | The path to a BED file containing <b>R</b>egions <b>O</b>f <b>I</b>nterest for coverage analysis                                             | :x:                                             |
-| `aligner`    | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap, strobe and snap. set to `false` to output fastq. | :x:                                             |
->>>>>>> dev
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
@@ -108,7 +94,6 @@ An [example samplesheet](../tests/inputs/test.yml) has been provided with the pi
 
 A `flowcell` sample info JSON/YML file consisting for one sequencing run may look something like the one below.
 
-<<<<<<< feat/nf-metro
 ```yml
 - id: DNA1_L001
   samplename: DNA_paired1
@@ -127,40 +112,6 @@ A `flowcell` sample info JSON/YML file consisting for one sequencing run may loo
   roi: null
   tag: WES
   sample_type: DNA
-=======
-```json title="sample_info.json"
-{
-  "samplename": "Sample1",
-  "library": "test",
-  "organism": "Homo sapiens",
-  "tag": "WES"
-}
-```
-
-Following table shows the fields that are used by the `flowcell` samplesheet:
-
-| Column          | Description                                                                                                                                  | Required           |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| `samplename`    | The sample name                                                                                                                              | :heavy_check_mark: |
-| `library`       | The library name                                                                                                                             | :x:                |
-| `tag`           | Sample tag. Has to be one of these: WES, WGS, coPGT-M                                                                                        | :heavy_check_mark: |
-| `organism`      | The organism of the sample. Has to be one of these: "Homo sapiens", "Mus musculus" or "Danio rerio"                                          | :heavy_check_mark: |
-| `vivar_project` | The vivar project name (currently not used by the pipeline)                                                                                  | :x:                |
-| `binsize`       | The binsize for CNV analysis (currently not used by the pipeline)                                                                            | :x:                |
-| `panels`        | A list of panels for coverage analysis                                                                                                       | :x:                |
-| `roi`           | Region of interest BED file for coverage analysis                                                                                            | :x:                |
-| `aligner`       | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap, strobe and snap. Set to `false` to output fastq. | :x:                |
-
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
->>>>>>> dev
 ```
 
 ## Running the pipeline
@@ -222,7 +173,7 @@ First, go to the [nf-cmgg/preprocessing releases page](https://github.com/nf-cmg
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
-To further assist in reproducbility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
+To further assist in reproducibility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
 :::tip
 If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
@@ -245,7 +196,7 @@ The pipeline also dynamically loads configurations from [https://github.com/nf-c
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
-If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer enviroment.
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer environment.
 
 - `debug`
   - A generic profile with settings to help with debugging the pipeline. It will use more verbose logging.
@@ -289,7 +240,7 @@ To change the resource requests, please see the [max resources](https://nf-co.re
 
 ### Custom Containers
 
-In some cases you may wish to change which container a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version maybe out of date.
+In some cases you may wish to change which container a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version may be out of date.
 
 To use a different container from the default container specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
@@ -314,7 +265,7 @@ Nextflow handles job submissions and supervises the running jobs. The Nextflow p
 The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
 
 Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
-Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
+Some HPC setups also allow you to run nextflow within a cluster job submitted to your job scheduler (from where it submits more jobs).
 
 ## Nextflow memory requirements
 
