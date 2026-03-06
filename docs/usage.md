@@ -14,42 +14,56 @@ You will need to create a samplesheet with information about the samples you wou
 
 The pipeline supports two types of samplesheets to be used as input: [`fastq`](#fastq-samplesheet) and [`flowcell`](#flowcell-samplesheet) samplesheets. The type will be automatically detected and applied by the pipeline. The pipeline will also auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire.
 
-### Common samplesheet fields
-
-This table shows all samplesheet fields that can be used by both the [`fastq`](#fastq-samplesheet) and the [`flowcell`](#flowcell-samplesheet) samplesheet types.
-
-| Column | Description                                                                        | Required for Fastq | Required for Flowcell |
-| ------ | ---------------------------------------------------------------------------------- | ------------------ | --------------------- |
-| `id`   | Unique samplesheet/flowcell ID. Can only contain letters, numbers and underscores. | :heavy_check_mark: | :heavy_check_mark:    |
-
 ### Fastq samplesheet
 
-A `fastq` samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
+A `fastq` samplesheet file consisting of paired-end data may look something like the one below.
 
-```csv title="samplesheet.csv"
-id,samplename,fastq_1,fastq_2,genome,tag
-CONTROL_REP1,CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,GRCh38,WES
-CONTROL_REP2,CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,GRCh38,WES
-CONTROL_REP3,CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,GRCh38,WES
-TREATMENT_REP1,TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,,GRCh38,WES
-TREATMENT_REP2,TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,,GRCh38,WES
-TREATMENT_REP3,TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,,GRCh38,WES
-TREATMENT_REP3,TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,GRCh38,WES
+```yml
+- id: DNA1_L001
+  samplename: DNA_paired1
+  library: test_library
+  genome: GRCh38
+  aligner: bwamem
+  markdup: bamsormadup
+  umi_aware: false
+  skip_trimming: false
+  trim_front: 0
+  trim_tail: 0
+  adapter_R1: AGATCGGAAGAGCACACGTCTGAACTCCTTA
+  adapter_R2: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+  run_coverage: true
+  disable_picard_metrics: false
+  roi: null
+  tag: WES
+  sample_type: DNA
+  fastq_1: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz
+  fastq_2: https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz
 ```
 
 Following table shows the fields that are used by the `fastq` samplesheet:
 
-| Column       | Description                                                                                                                                  | Required                                        |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `fastq_1`    | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                               | :heavy_check_mark:                              |
-| `fastq_2`    | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                 | :x:                                             |
-| `samplename` | The sample name corresponding to the sample in the Fastq file(s)                                                                             | :heavy_check_mark:                              |
-| `genome`     | The genome build to use for the analysis. Currently supports GRCh38, GRCm39 and GRCz11                                                       | :heavy_check_mark: (unless `organism` is given) |
-| `organism`   | Full name of the organism. Currently supports "Homo sapiens", "Mus musculus" and "Danio rerio"                                               | :heavy_check_mark: (unless `genome` is given)   |
-| `library`    | Sample library name                                                                                                                          | :x:                                             |
-| `tag`        | The tag used by the sample. Can be one of WES, WGS or coPGT-M                                                                                | :heavy_check_mark:                              |
-| `roi`        | The path to a BED file containing <b>R</b>egions <b>O</b>f <b>I</b>nterest for coverage analysis                                             | :x:                                             |
-| `aligner`    | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap, strobe and snap. set to `false` to output fastq. | :x:                                             |
+| Column                   | Description                                                                                                                                              | Required                                        |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `id`                     | Unique sample identifier                                                                                                                                 | :heavy_check_mark:                              |
+| `samplename`             | The sample name corresponding to the sample in the Fastq file(s)                                                                                         | :heavy_check_mark:                              |
+| `genome`                 | The genome build to use for the analysis. Currently supports `GRCh38`, `GRCm39` and `GRCz11`                                                             | :heavy_check_mark: (unless `organism` is given) |
+| `organism`               | Full name of the organism. Currently supports `Homo sapiens`, `Mus musculus` and `Danio rerio`                                                           | :heavy_check_mark: (unless `genome` is given)   |
+| `library`                | Sample library name                                                                                                                                      | :x:                                             |
+| `tag`                    | The tag used by the sample. Can be one of `WES`, `WGS`, `SeqCap` and `coPGT-M`                                                                           | :x:                                             |
+| `aligner`                | The aligner to use for this sample. Can be one of these: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` and `snap`. Set to `false` to output fastq. | :heavy_check_mark:                              |
+| `markdup`                | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                       | :x:                                             |
+| `umi_aware`              | Whether UMI-aware processing should be used. Only applies when `markdup` is set to `samtools`                                                            | :x:                                             |
+| `skip_trimming`          | Skip adapter trimming step                                                                                                                               | :x:                                             |
+| `trim_front`             | Number of bases to trim from the front of reads                                                                                                          | :x:                                             |
+| `trim_tail`              | Number of bases to trim from the tail of reads                                                                                                           | :x:                                             |
+| `adapter_R1`             | Adapter sequence for read 1                                                                                                                              | :x:                                             |
+| `adapter_R2`             | Adapter sequence for read 2                                                                                                                              | :x:                                             |
+| `run_coverage`           | Run coverage analysis                                                                                                                                    | :x:                                             |
+| `disable_picard_metrics` | Disable Picard metrics collection                                                                                                                        | :x:                                             |
+| `roi`                    | The path to a BED file containing Regions Of Interest for coverage analysis                                                                              | :x:                                             |
+| `sample_type`            | Sample type (e.g., `DNA`, `RNA`)                                                                                                                         | :x:                                             |
+| `fastq_1`                | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                           | :heavy_check_mark:                              |
+| `fastq_2`                | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                             | :x:                                             |
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
@@ -57,9 +71,12 @@ An [example samplesheet](../tests/inputs/test.yml) has been provided with the pi
 
 A `flowcell` samplesheet file consisting of one sequencing run may look something like the one below.
 
-```csv title="samplesheet.csv"
-id,samplesheet,sample_info,flowcell
-RUN_NAME,RUN_NAME_samplesheet.csv,RUN_NAME_sampleinfo.csv,RUN_NAME_flowcell/
+```yml
+- id: 200624_A00834_0183_BHMTFYDRXX
+  samplesheet: https://github.com/nf-cmgg/test-datasets/raw/refs/heads/preprocessing/data/genomics/homo_sapiens/illumina/flowcell/SampleSheet_2.csv
+  lane: 1
+  flowcell: s3://test-data/genomics/homo_sapiens/illumina/bcl/
+  sample_info: https://github.com/nf-cmgg/test-datasets/raw/refs/heads/preprocessing/data/genomics/homo_sapiens/illumina/flowcell/SampleInfo_2.json
 ```
 
 Following table shows the fields that are used by the `flowcell` samplesheet:
@@ -77,38 +94,24 @@ An [example samplesheet](../tests/inputs/test.yml) has been provided with the pi
 
 A `flowcell` sample info JSON/YML file consisting for one sequencing run may look something like the one below.
 
-```json title="sample_info.json"
-{
-  "samplename": "Sample1",
-  "library": "test",
-  "organism": "Homo sapiens",
-  "tag": "WES"
-}
-```
-
-Following table shows the fields that are used by the `flowcell` samplesheet:
-
-| Column          | Description                                                                                                                                  | Required           |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| `samplename`    | The sample name                                                                                                                              | :heavy_check_mark: |
-| `library`       | The library name                                                                                                                             | :x:                |
-| `tag`           | Sample tag. Has to be one of these: WES, WGS, coPGT-M                                                                                        | :heavy_check_mark: |
-| `organism`      | The organism of the sample. Has to be one of these: "Homo sapiens", "Mus musculus" or "Danio rerio"                                          | :heavy_check_mark: |
-| `vivar_project` | The vivar project name (currently not used by the pipeline)                                                                                  | :x:                |
-| `binsize`       | The binsize for CNV analysis (currently not used by the pipeline)                                                                            | :x:                |
-| `panels`        | A list of panels for coverage analysis                                                                                                       | :x:                |
-| `roi`           | Region of interest BED file for coverage analysis                                                                                            | :x:                |
-| `aligner`       | The aligner to use for this sample. Can be one of these: bowtie2, bwamem, bwamem2, dragmap, strobe and snap. Set to `false` to output fastq. | :x:                |
-
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+```yml
+- id: DNA1_L001
+  samplename: DNA_paired1
+  library: test_library
+  genome: GRCh38
+  aligner: bwamem
+  markdup: bamsormadup
+  umi_aware: false
+  skip_trimming: false
+  trim_front: 0
+  trim_tail: 0
+  adapter_R1: AGATCGGAAGAGCACACGTCTGAACTCCTTA
+  adapter_R2: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+  run_coverage: true
+  disable_picard_metrics: false
+  roi: null
+  tag: WES
+  sample_type: DNA
 ```
 
 ## Running the pipeline
