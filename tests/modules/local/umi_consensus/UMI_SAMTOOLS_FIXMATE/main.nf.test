@@ -1,0 +1,24 @@
+nextflow_process {
+    name "Test Process UMI_SAMTOOLS_FIXMATE"
+    script "modules/local/umi_consensus/main.nf"
+    process "UMI_SAMTOOLS_FIXMATE"
+
+    tag "modules"
+    tag "modules/local"
+    tag "modules/local/umi_consensus"
+
+    test("stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [[id: "test", samplename: "test"], file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists:true)]
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert process.out.bam
+        }
+    }
+}

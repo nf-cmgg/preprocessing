@@ -1,0 +1,19 @@
+---
+# Minimal FASTQ input example for nf-cmgg/preprocessing
+# Replace fastq_1 / fastq_2 with your own files or URLs.
+# Keep id unique per lane/chunk and keep samplename stable across lanes for the same sample.
+
+- id: SAMPLE01_L001
+  samplename: SAMPLE01
+  organism: Homo sapiens
+  tag: WES
+  sample_type: DNA
+  aligner: bwamem
+  markdup: bamsormadup
+  # Optional UMI consensus mode (expects UMI already embedded in read names)
+  umi_consensus: false
+  umi_strategy: kapa
+  umi_min_reads: 2
+  run_coverage: true
+  fastq_1: /absolute/path/to/SAMPLE01_L001_R1.fastq.gz
+  fastq_2: /absolute/path/to/SAMPLE01_L001_R2.fastq.gz

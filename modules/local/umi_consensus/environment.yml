@@ -1,0 +1,9 @@
+name: umi_consensus
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bwa=0.7.18
+  - samtools=1.22.1
+  - fgbio=2.1.0
+  - openjdk=17

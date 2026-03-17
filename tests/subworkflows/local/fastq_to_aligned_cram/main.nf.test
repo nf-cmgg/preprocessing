@@ -219,4 +219,49 @@ nextflow_workflow {
             )
         }
     }
+
+    test("fastq to cram - umi consensus - stub") {
+        options: "-stub"
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: "test_umi",
+                        samplename: "test_umi",
+                        single_end: false,
+                        sample_type: "DNA",
+                        markdup: "false",
+                        umi_consensus: true,
+                        umi_strategy: "kapa",
+                        umi_min_reads: 2,
+                        genome_data: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                            bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/"
+                        ]
+                    ],
+                    [
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "bwamem",
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert workflow.out.cram_crai
+                    assert workflow.out.sormadup_metrics
+                }
+            )
+        }
+    }
 }

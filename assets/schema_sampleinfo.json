@@ -93,6 +93,26 @@
                 "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name.",
                 "default": false
             },
+            "umi_consensus": {
+                "meta": ["umi_consensus"],
+                "type": "boolean",
+                "description": "Enable UMI consensus workflow based on KAPA/fgbio processing for this sample.",
+                "default": false
+            },
+            "umi_strategy": {
+                "meta": ["umi_strategy"],
+                "type": "string",
+                "description": "UMI consensus strategy to apply when umi_consensus is enabled.",
+                "enum": ["kapa"],
+                "default": "kapa"
+            },
+            "umi_min_reads": {
+                "meta": ["umi_min_reads"],
+                "type": "integer",
+                "description": "Minimum reads per family for consensus calling when UMI consensus is enabled.",
+                "minimum": 1,
+                "default": 2
+            },
             "skip_trimming": {
                 "meta": ["skip_trimming"],
                 "type": "boolean",

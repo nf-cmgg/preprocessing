@@ -67,6 +67,25 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
+Optional UMI-specific fields for fastq/sample_info entries:
+
+- `umi_consensus`: enables KAPA/fgbio consensus workflow for the sample (expects UMI sequence already present in read names)
+- `umi_strategy`: UMI strategy (currently `kapa`)
+- `umi_min_reads`: minimum read family size used during consensus calling (default `2`)
+
+When `umi_consensus` is enabled, the `UMI_CONSENSUS_KAPA` workflow runs multiple `samtools`/`fgbio` processes plus remapping through `FASTQ_ALIGN_DNA`.
+With container-based execution (`docker`, `singularity`, etc.), default per-process containers are already configured.
+
+Example custom config snippet:
+
+```groovy
+process {
+  withName: '.*FASTQ_TO_CRAM:UMI_FGBIO_FILTER_CONSENSUS' {
+    ext.container = 'your-org/umi-tools:tag'
+  }
+}
+```
+
 ### Flowcell samplesheet
 
 A `flowcell` samplesheet file consisting of one sequencing run may look something like the one below.

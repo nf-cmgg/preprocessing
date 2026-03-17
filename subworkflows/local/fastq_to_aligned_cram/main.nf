@@ -7,8 +7,10 @@
 // MODULES
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
+include { SAMTOOLS_CONVERT as SAMTOOLS_CONVERT_UMI } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
+include { UMI_CONSENSUS_KAPA    } from "../../../modules/local/umi_consensus/main.nf"
 
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA       } from '../../nf-core/fastq_align_dna/main'
@@ -33,6 +35,8 @@ workflow FASTQ_TO_CRAM {
     ch_meta_reads_aligner_index_fasta_gtf.dump(tag: "FASTQ_TO_CRAM: reads to align", pretty: true)
     ch_meta_reads_aligner_index_fasta_gtf
         .branch { meta, reads, aligner, index, fasta, gtf ->
+            umi: meta.umi_consensus && meta.sample_type != "RNA"
+            return [meta, reads, aligner, index, fasta]
             rna: meta.sample_type == "RNA"
             return [meta, reads, "star", getGenomeAttribute(meta.genome_data, 'star'), gtf]
             dna: true
@@ -41,6 +45,19 @@ workflow FASTQ_TO_CRAM {
             return [meta, reads, aligner, index, fasta]
         }
         .set { ch_meta_reads_aligner_index_fasta_datatype }
+
+    UMI_CONSENSUS_KAPA(
+        ch_meta_reads_aligner_index_fasta_datatype.umi
+    )
+
+    UMI_CONSENSUS_KAPA.out.bam_bai
+        .map { meta, bam, bai ->
+            [meta, bam, bai, getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai')]
+        }
+        .set { ch_umi_bam_bai_fasta_fai }
+
+    SAMTOOLS_CONVERT_UMI(ch_umi_bam_bai_fasta_fai)
+    ch_umi_cram_crai = SAMTOOLS_CONVERT_UMI.out.cram.join(SAMTOOLS_CONVERT_UMI.out.crai, failOnMismatch: true, failOnDuplicate: true)
 
     // align fastq files per sample
     // ALIGNMENT([meta,fastq], index, sort)
@@ -144,8 +161,11 @@ workflow FASTQ_TO_CRAM {
         .mix(
             SAMTOOLS_CONVERT.out.cram.join(SAMTOOLS_CONVERT.out.crai, failOnMismatch: true, failOnDuplicate: true)
         )
+        .mix(ch_umi_cram_crai)
         .set { ch_cram_crai }
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
+
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_KAPA.out.family_sizes)
 
     emit:
     cram_crai            = ch_cram_crai
