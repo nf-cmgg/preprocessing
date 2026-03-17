@@ -1,7 +1,7 @@
 nextflow_process {
-    name "Test Process UMI_FGBIO_CALL_CONSENSUS"
+    name "Test Process UMI_FGBIO_CALLMOLECULARCONSENSUSREADS"
     script "modules/local/umi_consensus/main.nf"
-    process "UMI_FGBIO_CALL_CONSENSUS"
+    process "UMI_FGBIO_CALLMOLECULARCONSENSUSREADS"
 
     tag "modules"
     tag "modules/local"
@@ -13,12 +13,14 @@ nextflow_process {
             process {
                 """
                 input[0] = [[id: "test", samplename: "test", umi_min_reads: 2], file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists:true)]
+                input[1] = 2
+                input[2] = 20
                 """
             }
         }
         then {
             assert process.success
-            assert process.out.raw_unmapped
+            assert process.out.bam
         }
     }
 }

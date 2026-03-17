@@ -10,7 +10,7 @@ include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/conver
 include { SAMTOOLS_CONVERT as SAMTOOLS_CONVERT_UMI } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
-include { UMI_CONSENSUS_KAPA    } from "../../../modules/local/umi_consensus/main.nf"
+include { UMI_CONSENSUS_KAPA    } from '../../local/umi_consensus/main'
 
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA       } from '../../nf-core/fastq_align_dna/main'

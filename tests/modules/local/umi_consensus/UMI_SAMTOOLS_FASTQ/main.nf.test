@@ -13,12 +13,13 @@ nextflow_process {
             process {
                 """
                 input[0] = [[id: "test", samplename: "test"], file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists:true)]
+                input[1] = true
                 """
             }
         }
         then {
             assert process.success
-            assert process.out.fastq_unmapped
+            assert process.out.interleaved
         }
     }
 }

@@ -73,6 +73,10 @@ Optional UMI-specific fields for fastq/sample_info entries:
 - `umi_strategy`: UMI strategy (currently `kapa`)
 - `umi_min_reads`: minimum read family size used during consensus calling (default `2`)
 
+Detailed UMI implementation documentation is available in [UMI consensus implementation](umi_consensus.md).
+
+Pipeline architecture and helper function documentation is available in [Technical map](technical_map.md).
+
 When `umi_consensus` is enabled, the `UMI_CONSENSUS_KAPA` workflow runs multiple `samtools`/`fgbio` processes plus remapping through `FASTQ_ALIGN_DNA`.
 With container-based execution (`docker`, `singularity`, etc.), default per-process containers are already configured.
 
@@ -80,7 +84,7 @@ Example custom config snippet:
 
 ```groovy
 process {
-  withName: '.*FASTQ_TO_CRAM:UMI_FGBIO_FILTER_CONSENSUS' {
+  withName: '.*FASTQ_TO_CRAM:UMI_FGBIO_FILTERCONSENSUSREADS' {
     ext.container = 'your-org/umi-tools:tag'
   }
 }

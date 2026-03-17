@@ -1,7 +1,7 @@
 nextflow_process {
-    name "Test Process UMI_FGBIO_COPY_UMI"
+    name "Test Process UMI_FGBIO_COPYUMIFROMREADNAME"
     script "modules/local/umi_consensus/main.nf"
-    process "UMI_FGBIO_COPY_UMI"
+    process "UMI_FGBIO_COPYUMIFROMREADNAME"
 
     tag "modules"
     tag "modules/local"
@@ -12,13 +12,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [[id: "test", samplename: "test"], file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists:true)]
+                input[0] = [[id: "test", samplename: "test"], file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists:true), file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists:true)]
                 """
             }
         }
         then {
             assert process.success
             assert process.out.bam
+            assert process.out.bai
         }
     }
 }

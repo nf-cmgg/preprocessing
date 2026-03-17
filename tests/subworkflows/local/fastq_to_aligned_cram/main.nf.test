@@ -178,7 +178,7 @@ nextflow_workflow {
     }
 
     test("fastq to cram - stub") {
-        options: "-stub"
+        options "-stub"
         when {
             workflow {
                 """
@@ -221,7 +221,7 @@ nextflow_workflow {
     }
 
     test("fastq to cram - umi consensus - stub") {
-        options: "-stub"
+        options "-stub"
         when {
             workflow {
                 """

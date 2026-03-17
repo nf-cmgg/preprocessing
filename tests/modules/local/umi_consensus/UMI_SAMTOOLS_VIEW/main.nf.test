@@ -1,8 +1,8 @@
 nextflow_process {
 
-    name "Test Process UMI_SAMTOOLS_VIEW"
+    name "Test Process UMI_LOCAL_SAMTOOLS_VIEW"
     script "modules/local/umi_consensus/main.nf"
-    process "UMI_SAMTOOLS_VIEW"
+    process "UMI_LOCAL_SAMTOOLS_VIEW"
 
     tag "modules"
     tag "modules/local"

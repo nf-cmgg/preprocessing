@@ -50,6 +50,11 @@
                         "git_sha": "a331ecfd1aa48b2b2298aab23bb4516c800e410b",
                         "installed_by": ["modules"]
                     },
+                    "fgbio/copyumifromreadname": {
+                        "branch": "master",
+                        "git_sha": "3d72a9580bd3c4fa00f5811f958117521ce7f99f",
+                        "installed_by": ["modules"]
+                    },
                     "gnu/sort": {
                         "branch": "master",
                         "git_sha": "5e748ff2b0f990949081c9e49792622eb3fe9ee9",
@@ -95,6 +100,11 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collectwgsmetrics/picard-collectwgsmetrics.diff"
                     },
+                    "samtools/collate": {
+                        "branch": "master",
+                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
+                        "installed_by": ["modules"]
+                    },
                     "samtools/convert": {
                         "branch": "master",
                         "git_sha": "51fa714751883254ede046c50acf20076b46ca81",
@@ -106,6 +116,16 @@
                         "git_sha": "440edf75d8782913115a7b72a88392a227f72cc1",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/coverage/samtools-coverage.diff"
+                    },
+                    "samtools/fastq": {
+                        "branch": "master",
+                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
+                        "installed_by": ["modules"]
+                    },
+                    "samtools/fixmate": {
+                        "branch": "master",
+                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
+                        "installed_by": ["modules"]
                     },
                     "samtools/flagstat": {
                         "branch": "master",
@@ -134,6 +154,11 @@
                         "git_sha": "fe93fde0845f907fc91ad7cc7d797930408824df",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/samtools/stats/samtools-stats.diff"
+                    },
+                    "samtools/view": {
+                        "branch": "master",
+                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
+                        "installed_by": ["modules"]
                     },
                     "snapaligner/align": {
                         "branch": "master",
