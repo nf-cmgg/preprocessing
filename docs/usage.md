@@ -75,8 +75,6 @@ Optional UMI-specific fields for fastq/sample_info entries:
 
 Detailed UMI implementation documentation is available in [UMI consensus implementation](umi_consensus.md).
 
-Pipeline architecture and helper function documentation is available in [Technical map](technical_map.md).
-
 When `umi_consensus` is enabled, the `UMI_CONSENSUS_KAPA` workflow runs multiple `samtools`/`fgbio` processes plus remapping through `FASTQ_ALIGN_DNA`.
 With container-based execution (`docker`, `singularity`, etc.), default per-process containers are already configured.
 

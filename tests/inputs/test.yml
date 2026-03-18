@@ -49,3 +49,23 @@
   run_coverage: true
   fastq_1: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz
   fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz
+
+# -----------------------------------------------------------------------------
+# Minimal FASTQ input example (template)
+# Replace fastq_1 / fastq_2 with your own files or URLs.
+# Keep id unique per lane/chunk and keep samplename stable across lanes.
+# This block is commented out to keep CI test inputs unchanged.
+#
+# - id: SAMPLE01_L001
+#   samplename: SAMPLE01
+#   organism: Homo sapiens
+#   tag: WES
+#   sample_type: DNA
+#   aligner: bwamem
+#   markdup: bamsormadup
+#   umi_consensus: false
+#   umi_strategy: kapa
+#   umi_min_reads: 2
+#   run_coverage: true
+#   fastq_1: /absolute/path/to/SAMPLE01_L001_R1.fastq.gz
+#   fastq_2: /absolute/path/to/SAMPLE01_L001_R2.fastq.gz
