@@ -3,6 +3,7 @@ include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_CONSENSUS } from '../../nf-core/fas
 
 include { SAMTOOLS_COLLATE as UMI_SAMTOOLS_COLLATE } from '../../../modules/nf-core/samtools/collate/main.nf'
 include { SAMTOOLS_FIXMATE as UMI_SAMTOOLS_FIXMATE } from '../../../modules/nf-core/samtools/fixmate/main.nf'
+include { SAMTOOLS_VIEW as UMI_SAMTOOLS_VIEW } from '../../../modules/nf-core/samtools/view/main.nf'
 include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_TEMPLATE } from '../../../modules/nf-core/samtools/sort/main.nf'
 include { SAMTOOLS_FASTQ as UMI_SAMTOOLS_FASTQ } from '../../../modules/nf-core/samtools/fastq/main.nf'
 include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_FINAL } from '../../../modules/nf-core/samtools/sort/main.nf'
@@ -12,8 +13,6 @@ include { FGBIO_GROUPREADSBYUMI as UMI_FGBIO_GROUPREADSBYUMI } from '../../../mo
 include { FGBIO_CALLMOLECULARCONSENSUSREADS as UMI_FGBIO_CALLMOLECULARCONSENSUSREADS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
 include { FGBIO_FILTERCONSENSUSREADS as UMI_FGBIO_FILTERCONSENSUSREADS } from '../../../modules/nf-core/fgbio/filterconsensusreads/main.nf'
 include { FGBIO_ZIPPERBAMS as UMI_FGBIO_ZIPPERBAMS } from '../../../modules/nf-core/fgbio/zipperbams/main.nf'
-
-include { UMI_LOCAL_SAMTOOLS_VIEW } from '../../../modules/local/umi_consensus/main.nf'
 
 // UMI consensus workflow for DNA samples.
 // Input channel shape:
@@ -32,7 +31,7 @@ workflow UMI_CONSENSUS_KAPA {
     // 2) Build reference helper channels reused by downstream modules.
     ch_meta_fasta_fai = ch_meta_reads_aligner_index_fasta
         .map { meta, _reads, _aligner, _index, fasta ->
-            def fai = meta.genome_data?.fai ?: '/dev/null'
+            def fai = meta.genome_data?.fai ?: '/etc/passwd'
             [meta, fasta, file(fai, checkIfExists: true)]
         }
 
@@ -46,10 +45,16 @@ workflow UMI_CONSENSUS_KAPA {
         }
 
     // 3) Prepare read-pair metadata and UMI tags before consensus calling.
-    UMI_LOCAL_SAMTOOLS_VIEW(FASTQ_ALIGN_DNA.out.bam)
+    UMI_SAMTOOLS_VIEW(
+        FASTQ_ALIGN_DNA.out.bam
+            .map { meta, bam -> [meta, bam, file('/etc/hosts')] },
+        ch_meta_fasta_fai,
+        channel.value(file('/dev/null')),
+        channel.value([])
+    )
 
     UMI_SAMTOOLS_COLLATE(
-        UMI_LOCAL_SAMTOOLS_VIEW.out.bam,
+        UMI_SAMTOOLS_VIEW.out.bam,
         ch_meta_fasta_fai
     )
 

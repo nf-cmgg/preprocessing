@@ -5,7 +5,7 @@ This document describes the UMI consensus implementation used by the local `UMI_
 ## Location
 
 - Workflow: `subworkflows/local/umi_consensus/main.nf`
-- Local process definitions: `modules/local/umi_consensus/main.nf`
+- Module alias definitions: `modules/local/umi_consensus/main.nf`
 - Integration point: `subworkflows/local/fastq_to_aligned_cram/main.nf`
 - Process configuration: `conf/modules.config`
 
@@ -30,8 +30,8 @@ When `umi_consensus: true` is set on a non-RNA sample, the pipeline runs a UMI-a
 
 1. `FASTQ_ALIGN_DNA`
    - Initial mapping of original reads with sample-selected aligner/index.
-2. `UMI_LOCAL_SAMTOOLS_VIEW`
-   - Local pre-filter step (`samtools view -F 260 -bh`) to keep primary mapped reads.
+2. `UMI_SAMTOOLS_VIEW` (nf-core `samtools/view` module alias)
+   - Pre-filter step (`samtools view -F 260 -bh`) to keep primary mapped reads.
 3. `UMI_SAMTOOLS_COLLATE` (nf-core module)
 4. `UMI_SAMTOOLS_FIXMATE` (nf-core module)
 5. `UMI_SAMTOOLS_SORT_TEMPLATE` (nf-core module)
@@ -74,9 +74,9 @@ UMI process defaults are defined in `conf/modules.config` under selectors matchi
 - `UMI_FGBIO_ZIPPERBAMS`
 - `UMI_SAMTOOLS_SORT_FINAL`
 
-## Why one local process remains
+## Samtools view alias
 
-`UMI_LOCAL_SAMTOOLS_VIEW` is intentionally local. The upstream `samtools/view` module requires additional index/reference/qname inputs that do not fit this lightweight pre-filter use case without extra channel plumbing and collision risk.
+The workflow aliases the upstream nf-core `samtools/view` module (`UMI_SAMTOOLS_VIEW`) and configures it in `conf/modules.config` for this pre-filter use case.
 
 ## Testing
 
