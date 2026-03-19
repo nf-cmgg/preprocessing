@@ -29,7 +29,9 @@ graph TD
     FALCO -->|qc| MULTIQC_LIBRARY
     FASTP -->|qc| MULTIQC_LIBRARY
 
+    FASTP -->|main| UMI_CONSENSUS
     FASTP -->|main| ALIGN
+    UMI_CONSENSUS -->|main| ALIGN
     ALIGN -->|main| MARKDUP
     MARKDUP -->|main| CRAM_OUT
 

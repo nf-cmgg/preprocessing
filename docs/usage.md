@@ -73,10 +73,47 @@ Optional UMI-specific fields for fastq/sample_info entries:
 - `umi_strategy`: UMI strategy (currently `kapa`)
 - `umi_min_reads`: minimum read family size used during consensus calling (default `2`)
 
-Detailed UMI implementation documentation is available in [UMI consensus implementation](umi_consensus.md).
-
 When `umi_consensus` is enabled, the `UMI_CONSENSUS_KAPA` workflow runs multiple `samtools`/`fgbio` processes plus remapping through `FASTQ_ALIGN_DNA`.
 With container-based execution (`docker`, `singularity`, etc.), default per-process containers are already configured.
+
+#### UMI consensus workflow details
+
+The UMI implementation is integrated in the main pipeline path via:
+
+- `subworkflows/local/umi_consensus/main.nf` (`UMI_CONSENSUS_KAPA`)
+- Integration point: `subworkflows/local/fastq_to_aligned_cram/main.nf`
+- Process/runtime tuning: `conf/modules.config`
+
+Workflow contract:
+
+- Input tuple: `[meta, reads, aligner, index, fasta]`
+- Outputs:
+  - `bam_bai`: `[meta, bam, bai]`
+  - `family_sizes`: `[meta, histogram]`
+
+High-level UMI flow:
+
+1. `FASTQ_ALIGN_DNA` (initial mapping)
+2. `UMI_SAMTOOLS_VIEW` (prefilter mapped primary reads)
+3. `UMI_SAMTOOLS_COLLATE`
+4. `UMI_SAMTOOLS_FIXMATE`
+5. `UMI_SAMTOOLS_SORT_TEMPLATE`
+6. `UMI_FGBIO_COPYUMIFROMREADNAME`
+7. `UMI_FGBIO_GROUPREADSBYUMI`
+8. `UMI_FGBIO_CALLMOLECULARCONSENSUSREADS`
+9. `UMI_FGBIO_FILTERCONSENSUSREADS`
+10. `UMI_SAMTOOLS_FASTQ`
+11. `FASTQ_ALIGN_DNA_CONSENSUS` (re-map consensus reads)
+12. `UMI_FGBIO_ZIPPERBAMS`
+13. `UMI_SAMTOOLS_SORT_FINAL`
+
+Reference helper channels are derived from `meta` as `[meta, fasta, fai]`, `[meta, fasta]`, and `[meta, dict]`.
+For sparse metadata in tests/stubs, placeholder files are used to keep channel shapes valid.
+
+UMI coverage is validated by:
+
+- `tests/subworkflows/local/umi_consensus/`
+- `tests/subworkflows/local/fastq_to_aligned_cram/`
 
 Example custom config snippet:
 
