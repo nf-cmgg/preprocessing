@@ -115,15 +115,6 @@ UMI coverage is validated by:
 - `tests/subworkflows/local/umi_consensus/`
 - `tests/subworkflows/local/fastq_to_aligned_cram/`
 
-Example custom config snippet:
-
-```groovy
-process {
-  withName: '.*FASTQ_TO_CRAM:UMI_FGBIO_FILTERCONSENSUSREADS' {
-    ext.container = 'your-org/umi-tools:tag'
-  }
-}
-```
 
 ### Flowcell samplesheet
 
