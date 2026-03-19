@@ -7,7 +7,6 @@
 // MODULES
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
-include { SAMTOOLS_CONVERT as SAMTOOLS_CONVERT_UMI } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
 include { UMI_CONSENSUS_KAPA    } from '../../local/umi_consensus/main'
@@ -55,9 +54,6 @@ workflow FASTQ_TO_CRAM {
             [meta, bam, bai, getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai')]
         }
         .set { ch_umi_bam_bai_fasta_fai }
-
-    SAMTOOLS_CONVERT_UMI(ch_umi_bam_bai_fasta_fai)
-    ch_umi_cram_crai = SAMTOOLS_CONVERT_UMI.out.cram.join(SAMTOOLS_CONVERT_UMI.out.crai, failOnMismatch: true, failOnDuplicate: true)
 
     // align fastq files per sample
     // ALIGNMENT([meta,fastq], index, sort)
@@ -153,6 +149,7 @@ workflow FASTQ_TO_CRAM {
         .map { meta, bam, bai ->
             bam_bai: [meta, bam, bai, getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai')]
         }
+        .mix(ch_umi_bam_bai_fasta_fai)
         .set { ch_bam_bai_fasta_fai }
 
     SAMTOOLS_CONVERT(ch_bam_bai_fasta_fai)
@@ -161,7 +158,6 @@ workflow FASTQ_TO_CRAM {
         .mix(
             SAMTOOLS_CONVERT.out.cram.join(SAMTOOLS_CONVERT.out.crai, failOnMismatch: true, failOnDuplicate: true)
         )
-        .mix(ch_umi_cram_crai)
         .set { ch_cram_crai }
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
