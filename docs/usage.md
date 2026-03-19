@@ -91,6 +91,8 @@ Workflow contract:
   - `bam_bai`: `[meta, bam, bai]`
   - `family_sizes`: `[meta, histogram]`
 
+In `FASTQ_TO_CRAM`, `family_sizes` is emitted as `umi_family_sizes`; published output files use the histogram filename pattern `SAMPLE_umi-grouped_histogram.txt`.
+
 High-level UMI flow:
 
 1. `FASTQ_ALIGN_DNA` (initial mapping)

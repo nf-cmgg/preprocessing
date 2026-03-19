@@ -79,6 +79,7 @@ workflow {
     rna_junctions              = PREPROCESSING.out.rna_junctions
     align_reports              = PREPROCESSING.out.align_reports
     sormadup_metrics           = PREPROCESSING.out.sormadup_metrics
+    umi_family_sizes           = PREPROCESSING.out.umi_family_sizes
     mosdepth_global            = PREPROCESSING.out.mosdepth_global
     mosdepth_summary           = PREPROCESSING.out.mosdepth_summary
     mosdepth_regions           = PREPROCESSING.out.mosdepth_regions
@@ -174,6 +175,11 @@ output {
     sormadup_metrics {
         path { meta, metrics ->
             metrics >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.duplicate_metrics.txt" : "${meta.samplename}/${meta.samplename}.duplicate_metrics.txt")
+        }
+    }
+    umi_family_sizes {
+        path { meta, histogram ->
+            histogram >> (meta.library ? "${meta.library}/${meta.samplename}/${histogram.name}" : "${meta.samplename}/${histogram.name}")
         }
     }
     mosdepth_global {

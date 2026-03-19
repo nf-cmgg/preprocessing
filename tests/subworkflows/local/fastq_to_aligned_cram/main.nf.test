@@ -259,7 +259,8 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert workflow.out.cram_crai
-                    assert workflow.out.sormadup_metrics
+                    assert !workflow.out.sormadup_metrics
+                    assert workflow.out.umi_family_sizes
                 }
             )
         }

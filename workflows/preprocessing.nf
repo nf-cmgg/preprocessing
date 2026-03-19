@@ -269,7 +269,10 @@ workflow PREPROCESSING {
     FASTQ_TO_CRAM(
         ch_meta_reads_aligner_index_fasta_gtf
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        FASTQ_TO_CRAM.out.sormadup_metrics,
+        FASTQ_TO_CRAM.out.umi_family_sizes,
+    )
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -430,6 +433,7 @@ workflow PREPROCESSING {
     rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
     align_reports              = FASTQ_TO_CRAM.out.align_reports
     sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
+    umi_family_sizes           = FASTQ_TO_CRAM.out.umi_family_sizes
     mosdepth_global            = COVERAGE.out.mosdepth_global
     mosdepth_summary           = COVERAGE.out.mosdepth_summary
     mosdepth_regions           = COVERAGE.out.mosdepth_regions
