@@ -1,10 +1,6 @@
 include { FASTQ_ALIGN_DNA } from '../../nf-core/fastq_align_dna/main'
 include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_CONSENSUS } from '../../nf-core/fastq_align_dna/main'
 
-include { SAMTOOLS_COLLATE as UMI_SAMTOOLS_COLLATE } from '../../../modules/nf-core/samtools/collate/main.nf'
-include { SAMTOOLS_FIXMATE as UMI_SAMTOOLS_FIXMATE } from '../../../modules/nf-core/samtools/fixmate/main.nf'
-include { SAMTOOLS_VIEW as UMI_SAMTOOLS_VIEW } from '../../../modules/nf-core/samtools/view/main.nf'
-include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_TEMPLATE } from '../../../modules/nf-core/samtools/sort/main.nf'
 include { SAMTOOLS_FASTQ as UMI_SAMTOOLS_FASTQ } from '../../../modules/nf-core/samtools/fastq/main.nf'
 include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_FINAL } from '../../../modules/nf-core/samtools/sort/main.nf'
 
@@ -13,6 +9,65 @@ include { FGBIO_GROUPREADSBYUMI as UMI_FGBIO_GROUPREADSBYUMI } from '../../../mo
 include { FGBIO_CALLMOLECULARCONSENSUSREADS as UMI_FGBIO_CALLMOLECULARCONSENSUSREADS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
 include { FGBIO_FILTERCONSENSUSREADS as UMI_FGBIO_FILTERCONSENSUSREADS } from '../../../modules/nf-core/fgbio/filterconsensusreads/main.nf'
 include { FGBIO_ZIPPERBAMS as UMI_FGBIO_ZIPPERBAMS } from '../../../modules/nf-core/fgbio/zipperbams/main.nf'
+
+process UMI_SAMTOOLS_PREP_TEMPLATE {
+    tag "$meta.id"
+    label 'process_medium'
+
+    conda "${projectDir}/modules/nf-core/samtools/view/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/samtools:1.22.1--h96c455f_0' :
+        'biocontainers/samtools:1.22.1--h96c455f_0' }"
+
+    input:
+    tuple val(meta), path(bam), path(bam_index)
+    tuple val(meta2), path(fasta), path(fai)
+
+    output:
+    tuple val(meta), path("${prefix}.bam"), path("${prefix}.bam.bai"), emit: bam_bai
+    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions, emit: versions_samtools
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def view_args = task.ext.args ?: '-F 260 -bh --output-fmt bam'
+    def collate_args = task.ext.args2 ?: '-O -u --output-fmt bam'
+    def fixmate_args = task.ext.args3 ?: '-m --output-fmt bam'
+    def sort_args = task.ext.args4 ?: '--template-coordinate --output-fmt bam'
+    prefix = task.ext.prefix ?: "${meta.id}.template"
+    def sort_memory = (task.memory.mega / task.cpus * 0.75).intValue()
+    """
+    test -f ${bam_index}
+
+    samtools view \
+        ${view_args} \
+        --threads ${task.cpus} \
+        ${bam} \
+    | samtools collate \
+        ${collate_args} \
+        --threads ${task.cpus} \
+        - \
+    | samtools fixmate \
+        ${fixmate_args} \
+        --threads ${task.cpus} \
+        - - \
+    | samtools sort \
+        ${sort_args} \
+        --threads ${task.cpus} \
+        --reference ${fasta} \
+        -m ${sort_memory}M \
+        -o ${prefix}.bam##idx##${prefix}.bam.bai --write-index \
+        -
+    """
+
+    stub:
+    prefix = task.ext.prefix ?: "${meta.id}.template"
+    """
+    touch ${prefix}.bam
+    touch ${prefix}.bam.bai
+    """
+}
 
 // UMI consensus workflow for DNA samples.
 // Input channel shape:
@@ -45,32 +100,14 @@ workflow UMI_CONSENSUS_KAPA {
         }
 
     // 3) Prepare read-pair metadata and UMI tags before consensus calling.
-    UMI_SAMTOOLS_VIEW(
+    UMI_SAMTOOLS_PREP_TEMPLATE(
         FASTQ_ALIGN_DNA.out.bam
             .join(FASTQ_ALIGN_DNA.out.bam_index, by: 0)
             .map { meta, bam, bam_index -> [meta, bam, bam_index] },
-        ch_meta_fasta_fai,
-        channel.value(file('/dev/null')),
-        channel.value([])
-    )
-
-    UMI_SAMTOOLS_COLLATE(
-        UMI_SAMTOOLS_VIEW.out.bam,
         ch_meta_fasta_fai
     )
 
-    UMI_SAMTOOLS_FIXMATE(UMI_SAMTOOLS_COLLATE.out.bam)
-
-    UMI_SAMTOOLS_SORT_TEMPLATE(
-        UMI_SAMTOOLS_FIXMATE.out.bam
-            .join(ch_meta_fasta, by: 0)
-            .map { meta, bam, fasta -> [meta, bam, fasta] },
-        'bai'
-    )
-
-    ch_template_bam_bai = UMI_SAMTOOLS_SORT_TEMPLATE.out.bam
-        .join(UMI_SAMTOOLS_SORT_TEMPLATE.out.bai, by: 0)
-        .map { meta, bam, bai -> [meta, bam, bai] }
+    ch_template_bam_bai = UMI_SAMTOOLS_PREP_TEMPLATE.out.bam_bai
 
     // 4) Copy UMI from read names to RX tag, then group by UMI families.
     UMI_FGBIO_COPYUMIFROMREADNAME(ch_template_bam_bai)
