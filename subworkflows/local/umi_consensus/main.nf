@@ -146,23 +146,18 @@ workflow UMI_CONSENSUS_KAPA {
 
     FASTQ_ALIGN_DNA_CONSENSUS.out.bam
         .join(UMI_FGBIO_FILTERCONSENSUSREADS.out.bam, by: 0)
-        .join(ch_meta_fasta, by: 0)
+        .map { meta, mapped_bam, unmapped_bam -> [meta, mapped_bam, unmapped_bam] }
+        .set { ch_zipper_bams }
+
+    ch_meta_fasta_fai
         .join(ch_meta_dict, by: 0)
-        .map { meta, remap_bam, unmapped_bam, fasta, dict -> [meta, unmapped_bam, remap_bam, fasta, dict] }
-        .multiMap { meta, unmapped_bam, remap_bam, fasta, dict ->
-            unmapped: [meta, unmapped_bam]
-            mapped: [meta, remap_bam]
-            fasta: [meta, fasta]
-            dict: [meta, dict]
-        }
-        .set { ch_zipper_inputs }
+        .map { meta, fasta, fai, dict -> [meta, fasta, fai, dict] }
+        .set { ch_zipper_ref }
 
     // 7) Transfer unmapped metadata back to mapped consensus alignments.
     UMI_FGBIO_ZIPPERBAMS(
-        ch_zipper_inputs.unmapped,
-        ch_zipper_inputs.mapped,
-        ch_zipper_inputs.fasta,
-        ch_zipper_inputs.dict
+        ch_zipper_bams,
+        ch_zipper_ref
     )
 
     // 8) Final coordinate sort + index for downstream CRAM conversion.
