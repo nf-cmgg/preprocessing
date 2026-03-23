@@ -21,10 +21,8 @@ nextflow_workflow {
                         umi_min_reads: 2,
                         aligner: "bwamem"
                     ],
-                    [
-                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists:true),
-                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists:true)
-                    ],
+                    file('/etc/hosts', checkIfExists:true),
+                    file('/etc/group', checkIfExists:true),
                     "bwamem",
                     file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists:true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists:true)

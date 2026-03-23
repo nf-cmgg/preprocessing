@@ -6,17 +6,43 @@
 
 // MODULES
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
+include { BWA_MEM as FASTQ_ALIGN_DNA_BWAMEM } from '../../../modules/nf-core/bwa/mem/main.nf'
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
 include { UMI_CONSENSUS_KAPA    } from '../../local/umi_consensus/main'
 
 // SUBWORKFLOWS
-include { FASTQ_ALIGN_DNA       } from '../../nf-core/fastq_align_dna/main'
 include { FASTQ_ALIGN_RNA       } from '../../local/fastq_align_rna/main'
 
 // FUNCTIONS
 include { getGenomeAttribute    } from '../../local/utils_nfcore_preprocessing_pipeline'
+
+workflow FASTQ_ALIGN_DNA {
+    take:
+    ch_reads // [meta, reads]
+    ch_aligner_index // [meta, index]
+    ch_fasta // [meta, fasta]
+    aligner
+    sort
+
+    main:
+    if (aligner != 'bwamem') {
+        error("FASTQ_ALIGN_DNA currently supports aligner 'bwamem' in this subworkflow, got: ${aligner}")
+    }
+
+    ch_bwamem = ch_reads
+        .join(ch_aligner_index, by: 0)
+        .join(ch_fasta, by: 0)
+        .map { meta, reads, index, fasta -> [meta, reads, index, fasta] }
+
+    FASTQ_ALIGN_DNA_BWAMEM(ch_bwamem, sort)
+
+    emit:
+    bam = FASTQ_ALIGN_DNA_BWAMEM.out.bam
+    bam_index = FASTQ_ALIGN_DNA_BWAMEM.out.csi
+    reports = channel.empty()
+}
 
 workflow FASTQ_TO_CRAM {
     take:
@@ -46,8 +72,27 @@ workflow FASTQ_TO_CRAM {
         }
         .set { ch_meta_reads_aligner_index_fasta_datatype }
 
+    // align fastq files per sample
+    // ALIGNMENT([meta,fastq], index, sort)
+    ch_dna_umi = ch_meta_reads_aligner_index_fasta_datatype.dna.mix(ch_meta_reads_aligner_index_fasta_datatype.umi)
+
+    FASTQ_ALIGN_DNA(
+        ch_dna_umi.map { meta, reads, _aligner, _index, _fasta -> [meta, reads] },
+        ch_dna_umi.map { meta, _reads, _aligner, index, _fasta -> [meta, index] },
+        ch_dna_umi.map { meta, _reads, _aligner, _index, fasta -> [meta, fasta] },
+        'bwamem',
+        false,
+    )
+    FASTQ_ALIGN_RNA(
+        ch_meta_reads_aligner_index_fasta_datatype.rna
+    )
+
     UMI_CONSENSUS_KAPA(
-        ch_meta_reads_aligner_index_fasta_datatype.umi
+        FASTQ_ALIGN_DNA.out.bam
+            .join(FASTQ_ALIGN_DNA.out.bam_index, by: 0)
+            .filter { meta, _bam, _bai -> meta.umi_consensus && meta.sample_type != "RNA" }
+            .join(ch_meta_reads_aligner_index_fasta_datatype.umi.map { meta, _reads, aligner, index, fasta -> [meta, aligner, index, fasta] }, by: 0)
+            .map { meta, bam, bai, aligner, index, fasta -> [meta, bam, bai, aligner, index, fasta] }
     )
 
     UMI_CONSENSUS_KAPA.out.bam_bai
@@ -56,16 +101,6 @@ workflow FASTQ_TO_CRAM {
         }
         .set { ch_umi_bam_bai_fasta_fai }
 
-    // align fastq files per sample
-    // ALIGNMENT([meta,fastq], index, sort)
-    FASTQ_ALIGN_DNA(
-        ch_meta_reads_aligner_index_fasta_datatype.dna,
-        false,
-    )
-    FASTQ_ALIGN_RNA(
-        ch_meta_reads_aligner_index_fasta_datatype.rna
-    )
-
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // STEP: MARK DUPLICATES
@@ -73,6 +108,7 @@ workflow FASTQ_TO_CRAM {
     */
 
     FASTQ_ALIGN_DNA.out.bam
+        .filter { meta, _files -> !(meta.umi_consensus && meta.sample_type != "RNA") }
         .mix(FASTQ_ALIGN_RNA.out.bam)
         .map { meta, files ->
             def gk = (meta.chunks as Integer ?: 1)

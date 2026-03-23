@@ -1,5 +1,4 @@
-include { FASTQ_ALIGN_DNA } from '../../nf-core/fastq_align_dna/main'
-include { FASTQ_ALIGN_DNA as FASTQ_ALIGN_DNA_CONSENSUS } from '../../nf-core/fastq_align_dna/main'
+include { BWA_MEM as FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM } from '../../../modules/nf-core/bwa/mem/main.nf'
 
 include { SAMTOOLS_FASTQ as UMI_SAMTOOLS_FASTQ } from '../../../modules/nf-core/samtools/fastq/main.nf'
 include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_FINAL } from '../../../modules/nf-core/samtools/sort/main.nf'
@@ -69,47 +68,69 @@ process UMI_SAMTOOLS_PREP_TEMPLATE {
     """
 }
 
+workflow FASTQ_ALIGN_DNA_CONSENSUS {
+    take:
+    ch_reads // [meta, reads]
+    ch_aligner_index // [meta, index]
+    ch_fasta // [meta, fasta]
+    aligner
+    sort
+
+    main:
+    if (aligner != 'bwamem') {
+        error("FASTQ_ALIGN_DNA_CONSENSUS currently supports aligner 'bwamem' in this subworkflow, got: ${aligner}")
+    }
+
+    ch_bwamem = ch_reads
+        .join(ch_aligner_index, by: 0)
+        .join(ch_fasta, by: 0)
+        .map { meta, reads, index, fasta -> [meta, reads, index, fasta] }
+
+    FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM(ch_bwamem, sort)
+
+    emit:
+    bam = FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM.out.bam
+    bam_index = FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM.out.csi
+    reports = channel.empty()
+}
+
 // UMI consensus workflow for DNA samples.
 // Input channel shape:
-//   [meta, reads, aligner, index, fasta]
+//   [meta, bam, bai, aligner, index, fasta]
 // Output channels:
 //   bam_bai      -> [meta, bam, bai]
 //   family_sizes -> [meta, histogram]
 workflow UMI_CONSENSUS_KAPA {
     take:
-    ch_meta_reads_aligner_index_fasta // [meta, reads, aligner, index, fasta]
+    ch_meta_bam_bai_aligner_index_fasta // [meta, bam, bai, aligner, index, fasta]
 
     main:
-    // 1) Initial mapping of raw reads with the configured aligner/index.
-    FASTQ_ALIGN_DNA(ch_meta_reads_aligner_index_fasta, false)
-
-    // 2) Build reference helper channels reused by downstream modules.
-    ch_meta_fasta_fai = ch_meta_reads_aligner_index_fasta
-        .map { meta, _reads, _aligner, _index, fasta ->
+    // 1) Build reference helper channels reused by downstream modules.
+    ch_meta_fasta_fai = ch_meta_bam_bai_aligner_index_fasta
+        .map { meta, _bam, _bai, _aligner, _index, fasta ->
             def fai = meta.genome_data?.fai ?: '/etc/passwd'
             [meta, fasta, file(fai, checkIfExists: true)]
         }
 
-    ch_meta_fasta = ch_meta_reads_aligner_index_fasta
-        .map { meta, _reads, _aligner, _index, fasta -> [meta, fasta] }
+    ch_meta_fasta = ch_meta_bam_bai_aligner_index_fasta
+        .map { meta, _bam, _bai, _aligner, _index, fasta -> [meta, fasta] }
 
-    ch_meta_dict = ch_meta_reads_aligner_index_fasta
-        .map { meta, _reads, _aligner, _index, _fasta ->
+    ch_meta_dict = ch_meta_bam_bai_aligner_index_fasta
+        .map { meta, _bam, _bai, _aligner, _index, _fasta ->
             def dict = meta.genome_data?.dict ?: '/dev/null'
             [meta, file(dict, checkIfExists: true)]
         }
 
-    // 3) Prepare read-pair metadata and UMI tags before consensus calling.
+    // 2) Prepare read-pair metadata and UMI tags before consensus calling.
     UMI_SAMTOOLS_PREP_TEMPLATE(
-        FASTQ_ALIGN_DNA.out.bam
-            .join(FASTQ_ALIGN_DNA.out.bam_index, by: 0)
-            .map { meta, bam, bam_index -> [meta, bam, bam_index] },
+        ch_meta_bam_bai_aligner_index_fasta
+            .map { meta, bam, bai, _aligner, _index, _fasta -> [meta, bam, bai] },
         ch_meta_fasta_fai
     )
 
     ch_template_bam_bai = UMI_SAMTOOLS_PREP_TEMPLATE.out.bam_bai
 
-    // 4) Copy UMI from read names to RX tag, then group by UMI families.
+    // 3) Copy UMI from read names to RX tag, then group by UMI families.
     UMI_FGBIO_COPYUMIFROMREADNAME(ch_template_bam_bai)
 
     UMI_FGBIO_GROUPREADSBYUMI(
@@ -117,16 +138,20 @@ workflow UMI_CONSENSUS_KAPA {
         channel.value('Adjacency')
     )
 
-    // 5) Call and filter molecular consensus reads.
+    // 4) Call and filter molecular consensus reads.
     UMI_FGBIO_CALLMOLECULARCONSENSUSREADS(
         UMI_FGBIO_GROUPREADSBYUMI.out.bam,
         UMI_FGBIO_GROUPREADSBYUMI.out.bam.map { meta, _bam -> meta.umi_min_reads ?: 2 },
         channel.value(20)
     )
 
+    ch_meta_fasta_fai_dict = ch_meta_fasta_fai
+        .join(ch_meta_dict, by: 0)
+        .map { meta, fasta, fai, dict -> [meta, fasta, fai, dict] }
+
     UMI_FGBIO_FILTERCONSENSUSREADS(
         UMI_FGBIO_CALLMOLECULARCONSENSUSREADS.out.bam,
-        ch_meta_fasta,
+        ch_meta_fasta_fai_dict,
         UMI_FGBIO_CALLMOLECULARCONSENSUSREADS.out.bam.map { meta, _bam -> meta.umi_min_reads ?: 2 },
         channel.value(45),
         channel.value(0.2)
@@ -137,30 +162,34 @@ workflow UMI_CONSENSUS_KAPA {
         true
     )
 
-    // 6) Re-map consensus reads with the same aligner/index used upstream.
+    // 5) Re-map consensus reads with the same aligner/index used upstream.
+    ch_consensus_align = UMI_SAMTOOLS_FASTQ.out.interleaved
+        .join(ch_meta_bam_bai_aligner_index_fasta.map { meta, _bam, _bai, _aligner, index, fasta -> [meta, index, fasta] }, by: 0)
+        .map { meta, interleaved_fastq, index, fasta -> [meta, [interleaved_fastq], index, fasta] }
+
     FASTQ_ALIGN_DNA_CONSENSUS(
-        UMI_SAMTOOLS_FASTQ.out.interleaved
-            .join(ch_meta_reads_aligner_index_fasta.map { meta, _reads, aligner, index, fasta -> [meta, aligner, index, fasta] }, by: 0)
-            .map { meta, interleaved_fastq, aligner, index, fasta -> [meta, [interleaved_fastq], aligner, index, fasta] }
-    , false)
+        ch_consensus_align.map { meta, reads, _index, _fasta -> [meta, reads] },
+        ch_consensus_align.map { meta, _reads, index, _fasta -> [meta, index] },
+        ch_consensus_align.map { meta, _reads, _index, fasta -> [meta, fasta] },
+        'bwamem',
+        false
+    )
 
     FASTQ_ALIGN_DNA_CONSENSUS.out.bam
         .join(UMI_FGBIO_FILTERCONSENSUSREADS.out.bam, by: 0)
         .map { meta, mapped_bam, unmapped_bam -> [meta, mapped_bam, unmapped_bam] }
         .set { ch_zipper_bams }
 
-    ch_meta_fasta_fai
-        .join(ch_meta_dict, by: 0)
-        .map { meta, fasta, fai, dict -> [meta, fasta, fai, dict] }
+    ch_meta_fasta_fai_dict
         .set { ch_zipper_ref }
 
-    // 7) Transfer unmapped metadata back to mapped consensus alignments.
+    // 6) Transfer unmapped metadata back to mapped consensus alignments.
     UMI_FGBIO_ZIPPERBAMS(
         ch_zipper_bams,
         ch_zipper_ref
     )
 
-    // 8) Final coordinate sort + index for downstream CRAM conversion.
+    // 7) Final coordinate sort + index for downstream CRAM conversion.
     UMI_SAMTOOLS_SORT_FINAL(
         UMI_FGBIO_ZIPPERBAMS.out.bam
             .join(ch_meta_fasta, by: 0)
