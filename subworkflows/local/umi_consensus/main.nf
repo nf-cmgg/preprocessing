@@ -47,7 +47,8 @@ workflow UMI_CONSENSUS_KAPA {
     // 3) Prepare read-pair metadata and UMI tags before consensus calling.
     UMI_SAMTOOLS_VIEW(
         FASTQ_ALIGN_DNA.out.bam
-            .map { meta, bam -> [meta, bam, file('/etc/hosts')] },
+            .join(FASTQ_ALIGN_DNA.out.bam_index, by: 0)
+            .map { meta, bam, bam_index -> [meta, bam, bam_index] },
         ch_meta_fasta_fai,
         channel.value(file('/dev/null')),
         channel.value([])
