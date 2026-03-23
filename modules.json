@@ -18,7 +18,7 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "92b8df948fd8cdb223e051f5f5e414818a073ee0",
+                        "git_sha": "2221f422f008714c13816bc5c3346d7346a56ed0",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/bowtie2/align/bowtie2-align.diff"
                     },
@@ -47,12 +47,32 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "a331ecfd1aa48b2b2298aab23bb4516c800e410b",
+                        "git_sha": "1fb5a73bce8e4ac7079b0a9461b23d11e877ad14",
+                        "installed_by": ["modules"]
+                    },
+                    "fgbio/callmolecularconsensusreads": {
+                        "branch": "master",
+                        "git_sha": "59bc05e50a67e2f15e722819b99734d93944c893",
                         "installed_by": ["modules"]
                     },
                     "fgbio/copyumifromreadname": {
                         "branch": "master",
-                        "git_sha": "3d72a9580bd3c4fa00f5811f958117521ce7f99f",
+                        "git_sha": "59bc05e50a67e2f15e722819b99734d93944c893",
+                        "installed_by": ["modules"]
+                    },
+                    "fgbio/filterconsensusreads": {
+                        "branch": "master",
+                        "git_sha": "59bc05e50a67e2f15e722819b99734d93944c893",
+                        "installed_by": ["modules"]
+                    },
+                    "fgbio/groupreadsbyumi": {
+                        "branch": "master",
+                        "git_sha": "59bc05e50a67e2f15e722819b99734d93944c893",
+                        "installed_by": ["modules"]
+                    },
+                    "fgbio/zipperbams": {
+                        "branch": "master",
+                        "git_sha": "59bc05e50a67e2f15e722819b99734d93944c893",
                         "installed_by": ["modules"]
                     },
                     "gnu/sort": {
@@ -184,7 +204,7 @@
                 "nf-core": {
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "9afa0584136287aa20fc18296f45f103c0c4e69a",
+                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
                         "installed_by": ["subworkflows"],
                         "patch": "subworkflows/nf-core/fastq_align_dna/fastq_align_dna.diff"
                     },

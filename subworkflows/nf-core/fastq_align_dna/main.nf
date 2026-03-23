@@ -5,18 +5,21 @@
 //
 
 
-include { BOWTIE2_ALIGN                     } from "../../../modules/nf-core/bowtie2/align/main"
-include { BWA_MEM as BWAMEM1_MEM            } from '../../../modules/nf-core/bwa/mem/main'
-include { BWAMEM2_MEM as BWAMEM2_MEM        } from '../../../modules/nf-core/bwamem2/mem/main'
-include { DRAGMAP_ALIGN                     } from "../../../modules/nf-core/dragmap/align/main"
-include { SNAPALIGNER_ALIGN as SNAP_ALIGN   } from '../../../modules/nf-core/snapaligner/align/main'
-include { STROBEALIGN                       } from "../../../modules/nf-core/strobealign/main"
+include { BOWTIE2_ALIGN                   } from "../../../modules/nf-core/bowtie2/align/main"
+include { BWA_MEM as BWAMEM1_MEM          } from '../../../modules/nf-core/bwa/mem/main'
+include { BWAMEM2_MEM as BWAMEM2_MEM      } from '../../../modules/nf-core/bwamem2/mem/main'
+include { DRAGMAP_ALIGN                   } from "../../../modules/nf-core/dragmap/align/main"
+include { SNAPALIGNER_ALIGN as SNAP_ALIGN } from '../../../modules/nf-core/snapaligner/align/main'
+include { STROBEALIGN                     } from "../../../modules/nf-core/strobealign/main"
 
 
 
 workflow FASTQ_ALIGN_DNA {
     take:
-    ch_reads_aligner_index_fasta // channel: [mandatory] reads, aligner, index, fasta
+    ch_reads // channel: [mandatory] meta, reads
+    ch_aligner_index // channel: [mandatory] aligner index
+    ch_fasta // channel: [mandatory] fasta file
+    aligner // string:  [mandatory] aligner [bowtie2, bwamem, bwamem2, dragmap, snap]
     sort // boolean: [mandatory] true -> sort, false -> don't sort
 
     main:
@@ -25,52 +28,44 @@ workflow FASTQ_ALIGN_DNA {
     ch_bam = channel.empty()
     ch_reports = channel.empty()
 
-    ch_reads_aligner_index_fasta
-        .branch { meta, reads, aligner, index, fasta ->
-            bowtie2: aligner == 'bowtie2'
-            return [meta, reads, index, fasta]
-            bwamem: aligner == 'bwamem'
-            return [meta, reads, index, fasta]
-            bwamem2: aligner == 'bwamem2'
-            return [meta, reads, index, fasta]
-            dragmap: aligner == 'dragmap'
-            return [meta, reads, index, fasta]
-            snap: aligner == 'snap'
-            return [meta, reads, index]
-            strobe: aligner == 'strobe'
-            return [meta, reads, fasta, index]
-            other: true
-        }
-        .set { ch_to_align }
-
-    // Throw error for all samples with unsupported aligners
-    ch_to_align.other.map { meta, _reads, aligner, _index, _fasta ->
-        error("Unsupported aligner ${aligner} for sample ${meta.id}")
-    }
-
     // Align fastq files to reference genome and (optionally) sort
-    BOWTIE2_ALIGN(ch_to_align.bowtie2, false, sort)
-    // if aligner is bowtie2
-    ch_bam = ch_bam.mix(BOWTIE2_ALIGN.out.bam)
-    BWAMEM1_MEM(ch_to_align.bwamem, sort)
-    // If aligner is bwa-mem
-    ch_bam = ch_bam.mix(BWAMEM1_MEM.out.bam)
-    ch_bam_index = ch_bam_index.mix(BWAMEM1_MEM.out.csi)
-    BWAMEM2_MEM(ch_to_align.bwamem2, sort)
-    // If aligner is bwa-mem2
-    ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
-    DRAGMAP_ALIGN(ch_to_align.dragmap, sort)
-    // If aligner is dragmap
-    ch_bam = ch_bam.mix(DRAGMAP_ALIGN.out.bam)
-    ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
-    SNAP_ALIGN(ch_to_align.snap)
-    // If aligner is snap
-    ch_bam = ch_bam.mix(SNAP_ALIGN.out.bam)
-    ch_bam_index.mix(SNAP_ALIGN.out.bai)
-    STROBEALIGN(ch_to_align.strobe, sort)
-    // If aligner is strobealign
-    ch_bam = ch_bam.mix(STROBEALIGN.out.bam)
-    ch_bam_index = ch_bam_index.mix(STROBEALIGN.out.csi)
+    if (aligner == 'bowtie2') {
+        BOWTIE2_ALIGN(ch_reads, ch_aligner_index, ch_fasta, false, sort)
+        // if aligner is bowtie2
+        ch_bam = ch_bam.mix(BOWTIE2_ALIGN.out.bam)
+    }
+    else if (aligner == 'bwamem') {
+        BWAMEM1_MEM(ch_reads, ch_aligner_index, ch_fasta, sort)
+        // If aligner is bwa-mem
+        ch_bam = ch_bam.mix(BWAMEM1_MEM.out.bam)
+        ch_bam_index = ch_bam_index.mix(BWAMEM1_MEM.out.csi)
+    }
+    else if (aligner == 'bwamem2') {
+        BWAMEM2_MEM(ch_reads, ch_aligner_index, ch_fasta, sort)
+        // If aligner is bwa-mem2
+        ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
+    }
+    else if (aligner == 'dragmap') {
+        DRAGMAP_ALIGN(ch_reads, ch_aligner_index, ch_fasta, sort)
+        // If aligner is dragmap
+        ch_bam = ch_bam.mix(DRAGMAP_ALIGN.out.bam)
+        ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
+    }
+    else if (aligner == 'snap') {
+        SNAP_ALIGN(ch_reads, ch_aligner_index)
+        // If aligner is snap
+        ch_bam = ch_bam.mix(SNAP_ALIGN.out.bam)
+        ch_bam_index.mix(SNAP_ALIGN.out.bai)
+    }
+    else if (aligner == 'strobealign') {
+        STROBEALIGN(ch_reads, ch_fasta, ch_aligner_index, sort)
+        // If aligner is strobealign
+        ch_bam = ch_bam.mix(STROBEALIGN.out.bam)
+        ch_bam_index = ch_bam_index.mix(STROBEALIGN.out.csi)
+    }
+    else {
+        error("Unknown aligner: ${aligner}")
+    }
 
     emit:
     bam       = ch_bam // channel: [ [meta], bam       ]
