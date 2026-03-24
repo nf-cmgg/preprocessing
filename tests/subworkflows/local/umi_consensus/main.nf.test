@@ -35,6 +35,62 @@ nextflow_workflow {
             assert workflow.success
             assert workflow.out.bam_bai
             assert workflow.out.family_sizes
+            assert workflow.out.bam_bai.size() == 1
+            assert workflow.out.family_sizes.size() == 1
+            assert workflow.out.bam_bai[0][0].id == "test_umi"
+            assert workflow.out.family_sizes[0][0].id == "test_umi"
+            assert file(workflow.out.bam_bai[0][1]).name.endsWith('.bam')
+            assert file(workflow.out.bam_bai[0][2]).name.endsWith('.bai')
+        }
+    }
+
+    test("umi consensus workflow - two samples - stub") {
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [
+                            id: "test_umi_a",
+                            samplename: "test_umi_a",
+                            umi_min_reads: 2,
+                            aligner: "bwamem"
+                        ],
+                        file('/etc/hosts', checkIfExists:true),
+                        file('/etc/group', checkIfExists:true),
+                        "bwamem",
+                        file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists:true),
+                        file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists:true)
+                    ],
+                    [
+                        [
+                            id: "test_umi_b",
+                            samplename: "test_umi_b",
+                            umi_min_reads: 2,
+                            aligner: "bwamem"
+                        ],
+                        file('/etc/hosts', checkIfExists:true),
+                        file('/etc/group', checkIfExists:true),
+                        "bwamem",
+                        file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists:true),
+                        file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists:true)
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.bam_bai.size() == 2
+            assert workflow.out.family_sizes.size() == 2
+
+            def bamIds = workflow.out.bam_bai.collect { row -> row[0].id }.toSet()
+            def familyIds = workflow.out.family_sizes.collect { row -> row[0].id }.toSet()
+            assert bamIds == ["test_umi_a", "test_umi_b"] as Set
+            assert familyIds == ["test_umi_a", "test_umi_b"] as Set
         }
     }
 }
