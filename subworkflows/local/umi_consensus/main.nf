@@ -1,4 +1,5 @@
 include { BWA_MEM as FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM } from '../../../modules/nf-core/bwa/mem/main.nf'
+include { SNAPALIGNER_ALIGN as FASTQ_ALIGN_DNA_CONSENSUS_SNAP } from '../../../modules/nf-core/snapaligner/align/main.nf'
 include { UMI_SAMTOOLS_PREP_TEMPLATE } from '../../../modules/local/umi_samtools_prep_template/main.nf'
 
 include { SAMTOOLS_FASTQ as UMI_SAMTOOLS_FASTQ } from '../../../modules/nf-core/samtools/fastq/main.nf'
@@ -12,27 +13,31 @@ include { FGBIO_ZIPPERBAMS as UMI_FGBIO_ZIPPERBAMS } from '../../../modules/nf-c
 
 workflow FASTQ_ALIGN_DNA_CONSENSUS {
     take:
-    ch_reads // [meta, reads]
-    ch_aligner_index // [meta, index]
-    ch_fasta // [meta, fasta]
-    aligner
+    ch_meta_reads_aligner_index_fasta // [meta, reads, aligner, index, fasta]
     sort
 
     main:
-    if (aligner != 'bwamem') {
-        error("FASTQ_ALIGN_DNA_CONSENSUS currently supports aligner 'bwamem' in this subworkflow, got: ${aligner}")
-    }
+    ch_meta_reads_aligner_index_fasta
+        .map { meta, reads, aligner, index, fasta ->
+            if (!(aligner in ['bwamem', 'snap'])) {
+                error("FASTQ_ALIGN_DNA_CONSENSUS currently supports aligners 'bwamem' and 'snap', got: ${aligner}")
+            }
+            [meta, reads, aligner, index, fasta]
+        }
+        .branch { meta, reads, aligner, index, fasta ->
+            bwamem: aligner == 'bwamem'
+            return [meta, reads, index, fasta]
+            snap: aligner == 'snap'
+            return [meta + [single_end: false], reads, index]
+        }
+        .set { ch_consensus_remap }
 
-    ch_bwamem = ch_reads
-        .join(ch_aligner_index, by: 0)
-        .join(ch_fasta, by: 0)
-        .map { meta, reads, index, fasta -> [meta, reads, index, fasta] }
-
-    FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM(ch_bwamem, sort)
+    FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM(ch_consensus_remap.bwamem, sort)
+    FASTQ_ALIGN_DNA_CONSENSUS_SNAP(ch_consensus_remap.snap)
 
     emit:
-    bam = FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM.out.bam
-    bam_index = FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM.out.csi
+    bam = FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM.out.bam.mix(FASTQ_ALIGN_DNA_CONSENSUS_SNAP.out.bam)
+    bam_index = FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM.out.csi.mix(FASTQ_ALIGN_DNA_CONSENSUS_SNAP.out.bai)
     reports = channel.empty()
 }
 
@@ -106,14 +111,11 @@ workflow UMI_CONSENSUS_KAPA {
 
     // 5) Re-map consensus reads with the same aligner/index used upstream.
     ch_consensus_align = UMI_SAMTOOLS_FASTQ.out.interleaved
-        .join(ch_meta_bam_bai_aligner_index_fasta.map { meta, _bam, _bai, _aligner, index, fasta -> [meta, index, fasta] }, by: 0)
-        .map { meta, interleaved_fastq, index, fasta -> [meta, [interleaved_fastq], index, fasta] }
+        .join(ch_meta_bam_bai_aligner_index_fasta.map { meta, _bam, _bai, aligner, index, fasta -> [meta, aligner, index, fasta] }, by: 0)
+        .map { meta, interleaved_fastq, aligner, index, fasta -> [meta, [interleaved_fastq], aligner, index, fasta] }
 
     FASTQ_ALIGN_DNA_CONSENSUS(
-        ch_consensus_align.map { meta, reads, _index, _fasta -> [meta, reads] },
-        ch_consensus_align.map { meta, _reads, index, _fasta -> [meta, index] },
-        ch_consensus_align.map { meta, _reads, _index, fasta -> [meta, fasta] },
-        'bwamem',
+        ch_consensus_align,
         false
     )
 

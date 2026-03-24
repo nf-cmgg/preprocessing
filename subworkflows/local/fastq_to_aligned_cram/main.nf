@@ -7,6 +7,7 @@
 // MODULES
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 include { BWA_MEM as FASTQ_ALIGN_DNA_BWAMEM } from '../../../modules/nf-core/bwa/mem/main.nf'
+include { SNAPALIGNER_ALIGN as SNAP_ALIGN } from '../../../modules/nf-core/snapaligner/align/main.nf'
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
@@ -20,27 +21,31 @@ include { getGenomeAttribute    } from '../../local/utils_nfcore_preprocessing_p
 
 workflow FASTQ_ALIGN_DNA {
     take:
-    ch_reads // [meta, reads]
-    ch_aligner_index // [meta, index]
-    ch_fasta // [meta, fasta]
-    aligner
+    ch_meta_reads_aligner_index_fasta // [meta, reads, aligner, index, fasta]
     sort
 
     main:
-    if (aligner != 'bwamem') {
-        error("FASTQ_ALIGN_DNA currently supports aligner 'bwamem' in this subworkflow, got: ${aligner}")
-    }
+    ch_meta_reads_aligner_index_fasta
+        .map { meta, reads, aligner, index, fasta ->
+            if (!(aligner in ['bwamem', 'snap'])) {
+                error("FASTQ_ALIGN_DNA currently supports aligners 'bwamem' and 'snap', got: ${aligner}")
+            }
+            [meta, reads, aligner, index, fasta]
+        }
+        .branch { meta, reads, aligner, index, fasta ->
+            bwamem: aligner == 'bwamem'
+            return [meta, reads, index, fasta]
+            snap: aligner == 'snap'
+            return [meta, reads, index]
+        }
+        .set { ch_align }
 
-    ch_bwamem = ch_reads
-        .join(ch_aligner_index, by: 0)
-        .join(ch_fasta, by: 0)
-        .map { meta, reads, index, fasta -> [meta, reads, index, fasta] }
-
-    FASTQ_ALIGN_DNA_BWAMEM(ch_bwamem, sort)
+    FASTQ_ALIGN_DNA_BWAMEM(ch_align.bwamem, sort)
+    SNAP_ALIGN(ch_align.snap)
 
     emit:
-    bam = FASTQ_ALIGN_DNA_BWAMEM.out.bam
-    bam_index = FASTQ_ALIGN_DNA_BWAMEM.out.csi
+    bam = FASTQ_ALIGN_DNA_BWAMEM.out.bam.mix(SNAP_ALIGN.out.bam)
+    bam_index = FASTQ_ALIGN_DNA_BWAMEM.out.csi.mix(SNAP_ALIGN.out.bai)
     reports = channel.empty()
 }
 
@@ -77,10 +82,7 @@ workflow FASTQ_TO_CRAM {
     ch_dna_umi = ch_meta_reads_aligner_index_fasta_datatype.dna.mix(ch_meta_reads_aligner_index_fasta_datatype.umi)
 
     FASTQ_ALIGN_DNA(
-        ch_dna_umi.map { meta, reads, _aligner, _index, _fasta -> [meta, reads] },
-        ch_dna_umi.map { meta, _reads, _aligner, index, _fasta -> [meta, index] },
-        ch_dna_umi.map { meta, _reads, _aligner, _index, fasta -> [meta, fasta] },
-        'bwamem',
+        ch_dna_umi,
         false,
     )
     FASTQ_ALIGN_RNA(

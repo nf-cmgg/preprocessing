@@ -93,4 +93,64 @@ nextflow_workflow {
             assert familyIds == ["test_umi_a", "test_umi_b"] as Set
         }
     }
+
+    test("umi consensus workflow - snap - stub") {
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: "test_umi_snap",
+                        samplename: "test_umi_snap",
+                        single_end: false,
+                        umi_min_reads: 2,
+                        aligner: "snap"
+                    ],
+                    file('/etc/hosts', checkIfExists:true),
+                    file('/etc/group', checkIfExists:true),
+                    "snap",
+                    file('/etc', checkIfExists:true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists:true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.bam_bai
+            assert workflow.out.family_sizes
+        }
+    }
+
+    test("umi consensus workflow - unsupported aligner - stub") {
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: "test_umi_bad_aligner",
+                        samplename: "test_umi_bad_aligner",
+                        single_end: false,
+                        umi_min_reads: 2,
+                        aligner: "notarealigner"
+                    ],
+                    file('/etc/hosts', checkIfExists:true),
+                    file('/etc/group', checkIfExists:true),
+                    "notarealigner",
+                    file('/etc', checkIfExists:true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists:true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert !workflow.success
+        }
+    }
 }

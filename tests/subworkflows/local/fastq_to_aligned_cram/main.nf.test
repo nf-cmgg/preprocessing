@@ -309,4 +309,50 @@ nextflow_workflow {
             )
         }
     }
+
+    test("fastq to cram - umi consensus - snap - stub") {
+        options "-stub"
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: "test_umi_snap",
+                        samplename: "test_umi_snap",
+                        single_end: false,
+                        sample_type: "DNA",
+                        markdup: "false",
+                        umi_consensus: true,
+                        umi_strategy: "kapa",
+                        umi_min_reads: 2,
+                        genome_data: [
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                            snap: "/etc"
+                        ]
+                    ],
+                    [
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "snap",
+                    file("/etc", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert workflow.out.cram_crai
+                    assert !workflow.out.sormadup_metrics
+                    assert workflow.out.umi_family_sizes
+                }
+            )
+        }
+    }
 }
