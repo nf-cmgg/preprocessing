@@ -21,6 +21,8 @@ workflow FASTQ_ALIGN_DNA_CONSENSUS {
     sort
 
     main:
+    // Validate aligner values early so unsupported values fail with a clear message
+    // before any heavy processes start.
     ch_meta_reads_aligner_index_fasta
         .map { meta, reads, aligner, index, fasta ->
             if (!(aligner in ['bwamem', 'snap'])) {
@@ -28,6 +30,9 @@ workflow FASTQ_ALIGN_DNA_CONSENSUS {
             }
             [meta, reads, aligner, index, fasta]
         }
+        // Prepare per-aligner tuple shapes expected by each module.
+        // - BWA needs [meta, reads, index, fasta]
+        // - SNAP needs [meta(single_end=false), reads, index]
         .branch { meta, reads, aligner, index, fasta ->
             bwamem: aligner == 'bwamem'
             return [meta, reads, index, fasta]
@@ -36,6 +41,7 @@ workflow FASTQ_ALIGN_DNA_CONSENSUS {
         }
         .set { ch_consensus_remap }
 
+    // Dispatch to aligner-specific modules and merge back to one unified output contract.
     FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM(ch_consensus_remap.bwamem, sort)
     FASTQ_ALIGN_DNA_CONSENSUS_SNAP(ch_consensus_remap.snap)
 
@@ -56,7 +62,14 @@ workflow UMI_CONSENSUS_KAPA {
     ch_meta_bam_bai_aligner_index_fasta // [meta, bam, bai, aligner, index, fasta]
 
     main:
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // STEP: PREPARE REFERENCE CHANNELS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // 1) Build reference helper channels reused by downstream modules.
+    //    We keep these split by required shape to avoid repeated map/join logic later.
     ch_meta_fasta_fai = ch_meta_bam_bai_aligner_index_fasta
         .map { meta, _bam, _bai, _aligner, _index, fasta ->
             def fai = meta.genome_data?.fai ?: '/etc/passwd'
@@ -71,6 +84,12 @@ workflow UMI_CONSENSUS_KAPA {
             def dict = meta.genome_data?.dict ?: '/dev/null'
             [meta, file(dict, checkIfExists: true)]
         }
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // STEP: BUILD CONSENSUS READS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
     // 2) Prepare read-pair metadata and UMI tags before consensus calling.
     UMI_SAMTOOLS_PREP_TEMPLATE(
@@ -113,7 +132,15 @@ workflow UMI_CONSENSUS_KAPA {
         true
     )
 
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // STEP: RE-ALIGN CONSENSUS READS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     // 5) Re-map consensus reads with the same aligner/index used upstream.
+    //    SAMTOOLS_FASTQ emits interleaved FASTQ; wrap as single-item list to match
+    //    FASTQ_ALIGN_DNA_CONSENSUS input contract.
     ch_consensus_align = UMI_SAMTOOLS_FASTQ.out.interleaved
         .join(ch_meta_bam_bai_aligner_index_fasta.map { meta, _bam, _bai, aligner, index, fasta -> [meta, aligner, index, fasta] }, by: 0)
         .map { meta, interleaved_fastq, aligner, index, fasta -> [meta, [interleaved_fastq], aligner, index, fasta] }
@@ -146,6 +173,13 @@ workflow UMI_CONSENSUS_KAPA {
         }
         .set { ch_consensus_unmapped_by_aligner }
 
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // STEP: ZIP MAPPED + UNMAPPED CONSENSUS BAMs
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
+    // SNAP path needs strict qname ordering for mapped/unmapped inputs before zippering.
     UMI_SAMTOOLS_SORT_ZIP_MAPPED(
         ch_consensus_mapped_by_aligner.snap
             .join(ch_meta_fasta, by: 0)
@@ -153,6 +187,7 @@ workflow UMI_CONSENSUS_KAPA {
         ''
     )
 
+    // Same qname sort for the unmapped-side BAM to preserve read-pair synchrony.
     UMI_SAMTOOLS_SORT_ZIP_UNMAPPED(
         ch_consensus_unmapped_by_aligner.snap
             .join(ch_meta_fasta, by: 0)
@@ -160,6 +195,7 @@ workflow UMI_CONSENSUS_KAPA {
         ''
     )
 
+    // Remove @PG headers from SNAP qname-sorted BAMs to avoid zipper/header conflicts.
     UMI_SAMTOOLS_STRIP_PG(
         UMI_SAMTOOLS_SORT_ZIP_MAPPED.out.bam
     )
@@ -168,6 +204,9 @@ workflow UMI_CONSENSUS_KAPA {
         UMI_SAMTOOLS_SORT_ZIP_UNMAPPED.out.bam
     )
 
+    // Build zipper input as [meta, mapped_bam, unmapped_bam] for both aligner branches:
+    // - SNAP uses qname-sorted + PG-stripped BAMs
+    // - BWA uses direct mapped/unmapped outputs
     ch_zipper_bams = channel.empty()
     ch_zipper_bams = ch_zipper_bams.mix(
         UMI_SAMTOOLS_STRIP_PG.out.bam
@@ -184,10 +223,17 @@ workflow UMI_CONSENSUS_KAPA {
         .set { ch_zipper_ref }
 
     // 6) Transfer unmapped metadata back to mapped consensus alignments.
+    //    This restores tags/flags that must originate from the unmapped side.
     UMI_FGBIO_ZIPPERBAMS(
         ch_zipper_bams,
         ch_zipper_ref
     )
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // STEP: FINAL SORT + INDEX
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
     // 7) Final coordinate sort + index for downstream CRAM conversion.
     UMI_SAMTOOLS_SORT_FINAL(

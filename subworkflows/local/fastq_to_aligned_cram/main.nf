@@ -27,6 +27,7 @@ workflow FASTQ_ALIGN_DNA {
     sort
 
     main:
+    // Validate aligner values and normalize into per-aligner tuple shapes.
     ch_meta_reads_aligner_index_fasta
         .map { meta, reads, aligner, index, fasta ->
             if (!(aligner in ['bwamem', 'snap'])) {
@@ -42,6 +43,7 @@ workflow FASTQ_ALIGN_DNA {
         }
         .set { ch_align }
 
+    // Run aligners independently and merge back into one output contract.
     FASTQ_ALIGN_DNA_BWAMEM(ch_align.bwamem, sort)
     SNAP_ALIGN(ch_align.snap)
 
@@ -65,6 +67,10 @@ workflow FASTQ_TO_CRAM {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
+    // Split by analysis path:
+    // - umi: DNA samples with UMI consensus enabled
+    // - rna: RNA samples (forced to STAR)
+    // - dna: all remaining non-RNA samples
     ch_meta_reads_aligner_index_fasta_gtf.dump(tag: "FASTQ_TO_CRAM: reads to align", pretty: true)
     ch_meta_reads_aligner_index_fasta_gtf
         .branch { meta, reads, aligner, index, fasta, gtf ->
@@ -79,8 +85,7 @@ workflow FASTQ_TO_CRAM {
         }
         .set { ch_meta_reads_aligner_index_fasta_datatype }
 
-    // align fastq files per sample
-    // ALIGNMENT([meta,fastq], index, sort)
+    // Align non-RNA samples with DNA aligners and RNA samples with STAR.
     ch_dna_umi = ch_meta_reads_aligner_index_fasta_datatype.dna.mix(ch_meta_reads_aligner_index_fasta_datatype.umi)
 
     FASTQ_ALIGN_DNA(
@@ -97,11 +102,13 @@ workflow FASTQ_TO_CRAM {
         .map { meta, bam, fasta -> [meta, bam, fasta] }
         .set { ch_umi_bam_fasta }
 
+    // UMI path pre-sort: consensus input BAM must be coordinate-sorted/indexed.
     UMI_SAMTOOLS_SORT_PREP(
         ch_umi_bam_fasta,
         'bai'
     )
 
+    // Build UMI consensus per chunk (preserving aligner + index used upstream).
     UMI_CONSENSUS_KAPA(
         UMI_SAMTOOLS_SORT_PREP.out.bam
             .join(UMI_SAMTOOLS_SORT_PREP.out.bai, by: 0)
@@ -109,12 +116,15 @@ workflow FASTQ_TO_CRAM {
             .map { meta, bam, bai, aligner, index, fasta -> [meta, bam, bai, aligner, index, fasta] }
     )
 
+    // Chunk-level UMI BAM outputs are converted to CRAM later via SAMTOOLS_CONVERT.
     UMI_CONSENSUS_KAPA.out.bam_bai
         .map { meta, bam, bai ->
             [meta, bam, bai, getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai')]
         }
         .set { ch_umi_bam_bai_fasta_fai }
 
+    // Merge chunk BAMs into one per-sample CRAM for UMI samples.
+    // Group key is sample-level id (`samplename` fallback `id`).
     UMI_CONSENSUS_KAPA.out.bam_bai
         .map { meta, bam, _bai ->
             [meta.samplename ?: meta.id, meta, bam, getGenomeAttribute(meta.genome_data, 'fasta')]
@@ -142,6 +152,7 @@ workflow FASTQ_TO_CRAM {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
+    // Non-UMI path for duplicate marking / direct merge-sort handling.
     FASTQ_ALIGN_DNA.out.bam
         .filter { meta, _files -> !(meta.umi_consensus && meta.sample_type != "RNA") }
         .mix(FASTQ_ALIGN_RNA.out.bam)
@@ -185,18 +196,17 @@ workflow FASTQ_TO_CRAM {
 
     ch_markdup_index = channel.empty()
 
-    // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta, fai)
+    // markdup=bamsormadup
     BIOBAMBAM_BAMSORMADUP(ch_bam_fasta.bamsormadup)
     ch_markdup_index = ch_markdup_index.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index, failOnMismatch: true, failOnDuplicate: true))
     ch_sormadup_metrics = ch_sormadup_metrics.mix(BIOBAMBAM_BAMSORMADUP.out.metrics)
 
-    // SAMTOOLS_SORMADUP([meta, [bam, bam]], fasta, fai)
+    // markdup=samtools
     SAMTOOLS_SORMADUP(ch_bam_fasta.samtools)
     ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORMADUP.out.cram.join(SAMTOOLS_SORMADUP.out.crai, failOnMismatch: true, failOnDuplicate: true))
     ch_sormadup_metrics = ch_sormadup_metrics.mix(SAMTOOLS_SORMADUP.out.metrics)
 
-    // Merge bam files and compress
-    // SAMTOOLS_SORT([meta, [bam, bam], fasta],index_format)
+    // markdup=false: merge/sort only (no duplicate marking)
     SAMTOOLS_SORT(ch_bam_fasta.sort, "crai")
     ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch: true, failOnDuplicate: true))
 
@@ -208,6 +218,7 @@ workflow FASTQ_TO_CRAM {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
+    // Normalize outputs into bam/cram branches before final CRAM aggregation.
     ch_markdup_index
         .branch { meta, reads, index ->
             bam: reads.getExtension() == "bam"
@@ -217,6 +228,7 @@ workflow FASTQ_TO_CRAM {
         }
         .set { ch_markdup_index }
 
+    // Convert remaining BAM outputs to CRAM (including UMI chunk BAMs).
     ch_markdup_index.bam
         .map { meta, bam, bai ->
             bam_bai: [meta, bam, bai, getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai')]
@@ -229,12 +241,18 @@ workflow FASTQ_TO_CRAM {
     ch_converted_cram_crai = SAMTOOLS_CONVERT.out.cram
         .join(SAMTOOLS_CONVERT.out.crai, failOnMismatch: true, failOnDuplicate: true)
 
+    // Keep UMI chunk CRAMs separate for explicit publication.
     ch_umi_cram_crai_chunks = ch_converted_cram_crai
         .filter { meta, _cram, _crai -> meta.umi_consensus && meta.sample_type != "RNA" }
 
+    // Non-UMI CRAMs from converted BAM path.
     ch_non_umi_cram_crai = ch_converted_cram_crai
         .filter { meta, _cram, _crai -> !(meta.umi_consensus && meta.sample_type != "RNA") }
 
+    // Final main CRAM channel contains:
+    // - CRAMs emitted directly by markdup/sort paths
+    // - non-UMI CRAMs converted from BAM
+    // - merged per-sample UMI CRAMs
     ch_markdup_index.cram
         .mix(ch_non_umi_cram_crai)
         .mix(ch_umi_cram_crai_merged)
