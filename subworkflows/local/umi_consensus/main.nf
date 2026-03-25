@@ -1,9 +1,13 @@
 include { BWA_MEM as FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM } from '../../../modules/nf-core/bwa/mem/main.nf'
 include { SNAPALIGNER_ALIGN as FASTQ_ALIGN_DNA_CONSENSUS_SNAP } from '../../../modules/nf-core/snapaligner/align/main.nf'
 include { UMI_SAMTOOLS_PREP_TEMPLATE } from '../../../modules/local/umi_samtools_prep_template/main.nf'
+include { UMI_SAMTOOLS_STRIP_PG } from '../../../modules/local/umi_samtools_strip_pg/main.nf'
+include { UMI_SAMTOOLS_STRIP_PG as UMI_SAMTOOLS_STRIP_PG_UNMAPPED } from '../../../modules/local/umi_samtools_strip_pg/main.nf'
 
 include { SAMTOOLS_FASTQ as UMI_SAMTOOLS_FASTQ } from '../../../modules/nf-core/samtools/fastq/main.nf'
 include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_FINAL } from '../../../modules/nf-core/samtools/sort/main.nf'
+include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_ZIP_MAPPED } from '../../../modules/nf-core/samtools/sort/main.nf'
+include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_ZIP_UNMAPPED } from '../../../modules/nf-core/samtools/sort/main.nf'
 
 include { FGBIO_COPYUMIFROMREADNAME as UMI_FGBIO_COPYUMIFROMREADNAME } from '../../../modules/nf-core/fgbio/copyumifromreadname/main.nf'
 include { FGBIO_GROUPREADSBYUMI as UMI_FGBIO_GROUPREADSBYUMI } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main.nf'
@@ -119,10 +123,62 @@ workflow UMI_CONSENSUS_KAPA {
         false
     )
 
+    ch_meta_aligner = ch_meta_bam_bai_aligner_index_fasta
+        .map { meta, _bam, _bai, aligner, _index, _fasta -> [meta, aligner] }
+
     FASTQ_ALIGN_DNA_CONSENSUS.out.bam
-        .join(UMI_FGBIO_FILTERCONSENSUSREADS.out.bam, by: 0)
-        .map { meta, mapped_bam, unmapped_bam -> [meta, mapped_bam, unmapped_bam] }
-        .set { ch_zipper_bams }
+        .join(ch_meta_aligner, by: 0)
+        .branch { meta, bam, aligner ->
+            snap: aligner == 'snap'
+            return [meta, bam]
+            bwa: true
+            return [meta, bam]
+        }
+        .set { ch_consensus_mapped_by_aligner }
+
+    UMI_FGBIO_FILTERCONSENSUSREADS.out.bam
+        .join(ch_meta_aligner, by: 0)
+        .branch { meta, bam, aligner ->
+            snap: aligner == 'snap'
+            return [meta, bam]
+            bwa: true
+            return [meta, bam]
+        }
+        .set { ch_consensus_unmapped_by_aligner }
+
+    UMI_SAMTOOLS_SORT_ZIP_MAPPED(
+        ch_consensus_mapped_by_aligner.snap
+            .join(ch_meta_fasta, by: 0)
+            .map { meta, bam, fasta -> [meta, bam, fasta] },
+        ''
+    )
+
+    UMI_SAMTOOLS_SORT_ZIP_UNMAPPED(
+        ch_consensus_unmapped_by_aligner.snap
+            .join(ch_meta_fasta, by: 0)
+            .map { meta, bam, fasta -> [meta, bam, fasta] },
+        ''
+    )
+
+    UMI_SAMTOOLS_STRIP_PG(
+        UMI_SAMTOOLS_SORT_ZIP_MAPPED.out.bam
+    )
+
+    UMI_SAMTOOLS_STRIP_PG_UNMAPPED(
+        UMI_SAMTOOLS_SORT_ZIP_UNMAPPED.out.bam
+    )
+
+    ch_zipper_bams = channel.empty()
+    ch_zipper_bams = ch_zipper_bams.mix(
+        UMI_SAMTOOLS_STRIP_PG.out.bam
+            .join(UMI_SAMTOOLS_STRIP_PG_UNMAPPED.out.bam, by: 0)
+            .map { meta, mapped_bam, unmapped_bam -> [meta, mapped_bam, unmapped_bam] }
+    )
+    ch_zipper_bams = ch_zipper_bams.mix(
+        ch_consensus_mapped_by_aligner.bwa
+            .join(ch_consensus_unmapped_by_aligner.bwa, by: 0)
+            .map { meta, mapped_bam, unmapped_bam -> [meta, mapped_bam, unmapped_bam] }
+    )
 
     ch_meta_fasta_fai_dict
         .set { ch_zipper_ref }

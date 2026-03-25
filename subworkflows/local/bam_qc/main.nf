@@ -19,9 +19,15 @@ workflow BAM_QC {
         }
         .set { ch_bam_bai_fasta_fai }
 
+    ch_bam_bai_roi_fasta_fai_dict
+        .map { meta, bam, bai, _roi, _fasta, _fai, _dict ->
+            return [meta, bam, bai]
+        }
+        .set { ch_bam_bai }
+
     SAMTOOLS_STATS(ch_bam_bai_fasta_fai)
-    SAMTOOLS_FLAGSTAT(ch_bam_bai_fasta_fai)
-    SAMTOOLS_IDXSTATS(ch_bam_bai_fasta_fai)
+    SAMTOOLS_FLAGSTAT(ch_bam_bai)
+    SAMTOOLS_IDXSTATS(ch_bam_bai)
 
     ch_picard_hsmetrics = channel.empty()
     ch_picard_multiplemetrics = channel.empty()

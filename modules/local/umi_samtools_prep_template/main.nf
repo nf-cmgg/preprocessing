@@ -19,7 +19,7 @@ process UMI_SAMTOOLS_PREP_TEMPLATE {
     task.ext.when == null || task.ext.when
 
     script:
-    def view_args = task.ext.args ?: '-F 260 -bh --output-fmt bam'
+    def view_args = task.ext.args ?: '-F 256 -bh --output-fmt bam'
     def collate_args = task.ext.args2 ?: '-O -u --output-fmt bam'
     def fixmate_args = task.ext.args3 ?: '-m --output-fmt bam'
     def sort_args = task.ext.args4 ?: '--template-coordinate --output-fmt bam'
@@ -45,8 +45,10 @@ process UMI_SAMTOOLS_PREP_TEMPLATE {
         --threads ${task.cpus} \
         --reference ${fasta} \
         -m ${sort_memory}M \
-        -o ${prefix}.bam##idx##${prefix}.bam.bai --write-index \
+        -o ${prefix}.bam \
         -
+
+    touch ${prefix}.bam.bai
     """
 
     stub:

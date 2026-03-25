@@ -12,7 +12,6 @@ process FGBIO_COPYUMIFROMREADNAME {
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
-    tuple val(meta), path("*.bai"), emit: bai
     tuple val("${task.process}"), val('fgbio'), eval('fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\\[.*$//"'), topic: versions, emit: versions_fgbio
 
     when:
@@ -48,6 +47,5 @@ process FGBIO_COPYUMIFROMREADNAME {
     def prefix = task.ext.prefix ?: "${meta.id}_umi_extracted"
     """
     touch ${prefix}.bam
-    touch ${prefix}.bai
     """
 }

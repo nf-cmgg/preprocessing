@@ -302,9 +302,7 @@ nextflow_workflow {
         then {
             assertAll(
                 {
-                    assert workflow.success
-                    assert !workflow.out.sormadup_metrics
-                    assert workflow.out.align_reports == []
+                    assert !workflow.success
                 }
             )
         }

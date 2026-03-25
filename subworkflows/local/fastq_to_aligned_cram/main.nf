@@ -11,6 +11,8 @@ include { SNAPALIGNER_ALIGN as SNAP_ALIGN } from '../../../modules/nf-core/snapa
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
+include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_PREP } from "../../../modules/nf-core/samtools/sort/main"
+include { SAMTOOLS_SORT as UMI_SAMTOOLS_MERGE_CRAM } from "../../../modules/nf-core/samtools/sort/main"
 include { UMI_CONSENSUS_KAPA    } from '../../local/umi_consensus/main'
 
 // SUBWORKFLOWS
@@ -89,10 +91,20 @@ workflow FASTQ_TO_CRAM {
         ch_meta_reads_aligner_index_fasta_datatype.rna
     )
 
+    FASTQ_ALIGN_DNA.out.bam
+        .filter { meta, _bam -> meta.umi_consensus && meta.sample_type != "RNA" }
+        .join(ch_meta_reads_aligner_index_fasta_datatype.umi.map { meta, _reads, _aligner, _index, fasta -> [meta, fasta] }, by: 0)
+        .map { meta, bam, fasta -> [meta, bam, fasta] }
+        .set { ch_umi_bam_fasta }
+
+    UMI_SAMTOOLS_SORT_PREP(
+        ch_umi_bam_fasta,
+        'bai'
+    )
+
     UMI_CONSENSUS_KAPA(
-        FASTQ_ALIGN_DNA.out.bam
-            .join(FASTQ_ALIGN_DNA.out.bam_index, by: 0)
-            .filter { meta, _bam, _bai -> meta.umi_consensus && meta.sample_type != "RNA" }
+        UMI_SAMTOOLS_SORT_PREP.out.bam
+            .join(UMI_SAMTOOLS_SORT_PREP.out.bai, by: 0)
             .join(ch_meta_reads_aligner_index_fasta_datatype.umi.map { meta, _reads, aligner, index, fasta -> [meta, aligner, index, fasta] }, by: 0)
             .map { meta, bam, bai, aligner, index, fasta -> [meta, bam, bai, aligner, index, fasta] }
     )
@@ -102,6 +114,27 @@ workflow FASTQ_TO_CRAM {
             [meta, bam, bai, getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai')]
         }
         .set { ch_umi_bam_bai_fasta_fai }
+
+    UMI_CONSENSUS_KAPA.out.bam_bai
+        .map { meta, bam, _bai ->
+            [meta.samplename ?: meta.id, meta, bam, getGenomeAttribute(meta.genome_data, 'fasta')]
+        }
+        .groupTuple(by: 0)
+        .map { _sample_id, metas, bams, fastas ->
+            def base_meta = metas[0]
+            def merged_meta = base_meta - base_meta.subMap('readgroup', 'chunks') + [id: base_meta.samplename ?: base_meta.id]
+            [merged_meta, bams.flatten(), fastas[0]]
+        }
+        .set { ch_umi_merge_input }
+
+    UMI_SAMTOOLS_MERGE_CRAM(
+        ch_umi_merge_input,
+        'crai'
+    )
+
+    UMI_SAMTOOLS_MERGE_CRAM.out.cram
+        .join(UMI_SAMTOOLS_MERGE_CRAM.out.crai, by: 0)
+        .set { ch_umi_cram_crai_merged }
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -193,10 +226,18 @@ workflow FASTQ_TO_CRAM {
 
     SAMTOOLS_CONVERT(ch_bam_bai_fasta_fai)
 
+    ch_converted_cram_crai = SAMTOOLS_CONVERT.out.cram
+        .join(SAMTOOLS_CONVERT.out.crai, failOnMismatch: true, failOnDuplicate: true)
+
+    ch_umi_cram_crai_chunks = ch_converted_cram_crai
+        .filter { meta, _cram, _crai -> meta.umi_consensus && meta.sample_type != "RNA" }
+
+    ch_non_umi_cram_crai = ch_converted_cram_crai
+        .filter { meta, _cram, _crai -> !(meta.umi_consensus && meta.sample_type != "RNA") }
+
     ch_markdup_index.cram
-        .mix(
-            SAMTOOLS_CONVERT.out.cram.join(SAMTOOLS_CONVERT.out.crai, failOnMismatch: true, failOnDuplicate: true)
-        )
+        .mix(ch_non_umi_cram_crai)
+        .mix(ch_umi_cram_crai_merged)
         .set { ch_cram_crai }
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
@@ -204,6 +245,8 @@ workflow FASTQ_TO_CRAM {
 
     emit:
     cram_crai            = ch_cram_crai
+    umi_cram_crai_chunks = ch_umi_cram_crai_chunks
+    umi_cram_crai_merged = ch_umi_cram_crai_merged
     rna_splice_junctions = FASTQ_ALIGN_RNA.out.splice_junctions
     rna_junctions        = FASTQ_ALIGN_RNA.out.junctions
     sormadup_metrics     = ch_sormadup_metrics

@@ -429,6 +429,8 @@ workflow PREPROCESSING {
     fastp_json                 = FASTP.out.json
     fastp_html                 = FASTP.out.html
     crams                      = FASTQ_TO_CRAM.out.cram_crai
+    umi_consensus_cram_chunks  = FASTQ_TO_CRAM.out.umi_cram_crai_chunks
+    umi_consensus_cram_merged  = FASTQ_TO_CRAM.out.umi_cram_crai_merged
     rna_splice_junctions       = FASTQ_TO_CRAM.out.rna_splice_junctions
     rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
     align_reports              = FASTQ_TO_CRAM.out.align_reports

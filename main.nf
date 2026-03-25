@@ -75,6 +75,8 @@ workflow {
     fastp_json                 = PREPROCESSING.out.fastp_json
     fastp_html                 = PREPROCESSING.out.fastp_html
     crams                      = PREPROCESSING.out.crams
+    umi_consensus_cram_chunks  = PREPROCESSING.out.umi_consensus_cram_chunks
+    umi_consensus_cram_merged  = PREPROCESSING.out.umi_consensus_cram_merged
     rna_splice_junctions       = PREPROCESSING.out.rna_splice_junctions
     rna_junctions              = PREPROCESSING.out.rna_junctions
     align_reports              = PREPROCESSING.out.align_reports
@@ -155,6 +157,16 @@ output {
         path { meta, cram, crai ->
             cram >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" : "${meta.samplename}/${meta.samplename}.cram")
             crai >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram.crai" : "${meta.samplename}/${meta.samplename}.cram.crai")
+        }
+    }
+    umi_consensus_cram_chunks {
+        path { meta, _cram, _crai ->
+            return (meta.library ? "${meta.library}/${meta.samplename}/umi_consensus/chunks/" : "${meta.samplename}/umi_consensus/chunks/")
+        }
+    }
+    umi_consensus_cram_merged {
+        path { meta, _cram, _crai ->
+            return (meta.library ? "${meta.library}/${meta.samplename}/umi_consensus/merged/" : "${meta.samplename}/umi_consensus/merged/")
         }
     }
     rna_splice_junctions {

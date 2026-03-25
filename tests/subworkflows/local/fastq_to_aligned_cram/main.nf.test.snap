@@ -34,6 +34,12 @@
                 "sormadup_metrics": [
                     
                 ],
+                "umi_cram_crai_chunks": [
+                    
+                ],
+                "umi_cram_crai_merged": [
+                    
+                ],
                 "umi_family_sizes": [
                     
                 ]
@@ -41,9 +47,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-19T17:13:14.28736586"
+        "timestamp": "2026-03-25T11:29:23.920464431"
     },
     "fastq to cram - bwa - bamsormadup": {
         "content": [
@@ -93,8 +99,14 @@
                                 }
                             }
                         },
-                        "test.merged.metrics.txt:md5,b921d16889c9c5fd2b33a70939e14fbd"
+                        "test.merged.metrics.txt:md5,389dc2da2dd448c54dadd8c3fa110dc5"
                     ]
+                ],
+                "umi_cram_crai_chunks": [
+                    
+                ],
+                "umi_cram_crai_merged": [
+                    
                 ],
                 "umi_family_sizes": [
                     
@@ -103,9 +115,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-23T14:28:10.446845979"
+        "timestamp": "2026-03-25T11:23:41.995239476"
     },
     "fastq to cram - bwa - samtools sormadup": {
         "content": [
@@ -155,8 +167,14 @@
                                 }
                             }
                         },
-                        "test.merged.metrics:md5,832236fdd7404489c11bfd5780ce9ca5"
+                        "test.merged.metrics:md5,c4de8e394bb7110b952b2f42af335484"
                     ]
+                ],
+                "umi_cram_crai_chunks": [
+                    
+                ],
+                "umi_cram_crai_merged": [
+                    
                 ],
                 "umi_family_sizes": [
                     
@@ -165,9 +183,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-23T14:31:27.875534803"
+        "timestamp": "2026-03-25T11:27:34.508311204"
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
@@ -256,6 +274,12 @@
                         "test.merged.metrics.txt:md5,641527401576375d7c0b0b54fbaf63ab"
                     ]
                 ],
+                "umi_cram_crai_chunks": [
+                    
+                ],
+                "umi_cram_crai_merged": [
+                    
+                ],
                 "umi_family_sizes": [
                     
                 ]
@@ -263,9 +287,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-19T17:10:54.034718942"
+        "timestamp": "2026-03-25T11:26:30.933031019"
     },
     "fastq to cram - bwa - samtools sort": {
         "content": [
@@ -302,6 +326,12 @@
                 "sormadup_metrics": [
                     
                 ],
+                "umi_cram_crai_chunks": [
+                    
+                ],
+                "umi_cram_crai_merged": [
+                    
+                ],
                 "umi_family_sizes": [
                     
                 ]
@@ -309,8 +339,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-19T17:12:35.664103283"
+        "timestamp": "2026-03-25T11:28:43.024746504"
     }
 }
