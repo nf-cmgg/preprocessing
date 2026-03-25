@@ -74,16 +74,16 @@
                             "single_end": false,
                             "disable_picard_metrics": false
                         },
-                        "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
+                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:41:14.126057",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-03-25T18:43:20.761133"
     },
     "Bam QC - Samtools": {
         "content": [
@@ -127,16 +127,16 @@
                             "single_end": false,
                             "disable_picard_metrics": true
                         },
-                        "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
+                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:27:00.941719",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-03-25T18:44:55.125939"
     },
     "Bam QC - WGSmetrics": {
         "content": [
@@ -213,15 +213,15 @@
                             "single_end": false,
                             "disable_picard_metrics": false
                         },
-                        "test.stats:md5,3535d8d302e61ca0d77ac718db8309f1"
+                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:26:15.482881",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-03-25T18:44:25.625109"
     }
 }

@@ -120,7 +120,7 @@
                             },
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
+                        "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
                 ],
                 "md5sums": [
@@ -716,7 +716,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-05T14:04:31.848677"
+        "timestamp": "2026-03-25T15:55:54.928407"
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -842,7 +842,7 @@
                             },
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
+                        "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
                 ],
                 "md5sums": [
@@ -1095,7 +1095,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-05T14:08:24.880945"
+        "timestamp": "2026-03-25T16:02:01.778855"
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1215,7 +1215,7 @@
                             },
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
+                        "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
                 ],
                 "md5sums": [
@@ -1718,7 +1718,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-05T14:07:05.010944"
+        "timestamp": "2026-03-25T15:59:52.862851"
     },
     "preprocessing - flowcell - bwa - bamsormadup - roi": {
         "content": [
