@@ -22,6 +22,9 @@ process SNAPALIGNER_ALIGN {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def subcmd = meta.single_end ? "single" : "paired"
+    def has_interleaved_flag = args.contains('-pairedInterleavedFastq')
+    def args_before_reads = has_interleaved_flag ? '-pairedInterleavedFastq' : ''
+    def args_after_reads = has_interleaved_flag ? args.replace('-pairedInterleavedFastq', '').trim() : args
 
     """
     INDEX=`dirname \$(find -L ./ -name "OverflowTable*")`
@@ -29,10 +32,11 @@ process SNAPALIGNER_ALIGN {
 
     snap-aligner ${subcmd} \
         \$INDEX \
+        ${args_before_reads} \
         ${reads} \
         -o ${prefix}.bam \
         -t ${task.cpus} \
-        $args
+        ${args_after_reads}
     """
 
     stub:

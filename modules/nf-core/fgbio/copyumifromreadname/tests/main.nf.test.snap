@@ -12,9 +12,25 @@
                 ],
                 "1": [
                     [
+                        {
+                            "id": "test"
+                        },
+                        "test_umi_extracted.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
                         "FGBIO_COPYUMIFROMREADNAME",
                         "fgbio",
                         "3.1.2"
+                    ]
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_umi_extracted.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -53,9 +69,25 @@
                 ],
                 "1": [
                     [
+                        {
+                            "id": "test"
+                        },
+                        "test_umi_extracted.bai:md5,d99827a46b6de71e2338f59eb69b13fc"
+                    ]
+                ],
+                "2": [
+                    [
                         "FGBIO_COPYUMIFROMREADNAME",
                         "fgbio",
                         "3.1.2"
+                    ]
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_umi_extracted.bai:md5,d99827a46b6de71e2338f59eb69b13fc"
                     ]
                 ],
                 "bam": [

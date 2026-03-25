@@ -7,7 +7,7 @@
 // MODULES
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
 include { BWA_MEM as FASTQ_ALIGN_DNA_BWAMEM } from '../../../modules/nf-core/bwa/mem/main.nf'
-include { SNAPALIGNER_ALIGN as SNAP_ALIGN } from '../../../modules/nf-core/snapaligner/align/main.nf'
+include { SNAPALIGNER_ALIGN as SNAP_ALIGN } from '../../../modules/local/snapaligner/align/main.nf'
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"

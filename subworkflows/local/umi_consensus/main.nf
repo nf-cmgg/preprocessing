@@ -1,5 +1,5 @@
 include { BWA_MEM as FASTQ_ALIGN_DNA_CONSENSUS_BWAMEM } from '../../../modules/nf-core/bwa/mem/main.nf'
-include { SNAPALIGNER_ALIGN as FASTQ_ALIGN_DNA_CONSENSUS_SNAP } from '../../../modules/nf-core/snapaligner/align/main.nf'
+include { SNAPALIGNER_ALIGN as FASTQ_ALIGN_DNA_CONSENSUS_SNAP } from '../../../modules/local/snapaligner/align/main.nf'
 include { UMI_SAMTOOLS_PREP_TEMPLATE } from '../../../modules/local/umi_samtools_prep_template/main.nf'
 include { UMI_SAMTOOLS_STRIP_PG } from '../../../modules/local/umi_samtools_strip_pg/main.nf'
 include { UMI_SAMTOOLS_STRIP_PG as UMI_SAMTOOLS_STRIP_PG_UNMAPPED } from '../../../modules/local/umi_samtools_strip_pg/main.nf'
@@ -9,7 +9,7 @@ include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_FINAL } from '../../../modules/nf-c
 include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_ZIP_MAPPED } from '../../../modules/nf-core/samtools/sort/main.nf'
 include { SAMTOOLS_SORT as UMI_SAMTOOLS_SORT_ZIP_UNMAPPED } from '../../../modules/nf-core/samtools/sort/main.nf'
 
-include { FGBIO_COPYUMIFROMREADNAME as UMI_FGBIO_COPYUMIFROMREADNAME } from '../../../modules/nf-core/fgbio/copyumifromreadname/main.nf'
+include { FGBIO_COPYUMIFROMREADNAME as UMI_FGBIO_COPYUMIFROMREADNAME } from '../../../modules/local/fgbio/copyumifromreadname/main.nf'
 include { FGBIO_GROUPREADSBYUMI as UMI_FGBIO_GROUPREADSBYUMI } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main.nf'
 include { FGBIO_CALLMOLECULARCONSENSUSREADS as UMI_FGBIO_CALLMOLECULARCONSENSUSREADS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
 include { FGBIO_FILTERCONSENSUSREADS as UMI_FGBIO_FILTERCONSENSUSREADS } from '../../../modules/nf-core/fgbio/filterconsensusreads/main.nf'
