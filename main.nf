@@ -79,6 +79,11 @@ workflow {
     rna_junctions              = PREPROCESSING.out.rna_junctions
     align_reports              = PREPROCESSING.out.align_reports
     sormadup_metrics           = PREPROCESSING.out.sormadup_metrics
+    // Additional UMI consensus outputs.
+    family_size_histogram      = PREPROCESSING.out.family_size_histogram
+    umi_filtered_consensus_bam = PREPROCESSING.out.umi_filtered_consensus_bam
+    umi_duplex_metrics         = PREPROCESSING.out.umi_duplex_metrics
+    umi_crams                  = PREPROCESSING.out.umi_crams
     mosdepth_global            = PREPROCESSING.out.mosdepth_global
     mosdepth_summary           = PREPROCESSING.out.mosdepth_summary
     mosdepth_regions           = PREPROCESSING.out.mosdepth_regions
@@ -174,6 +179,28 @@ output {
     sormadup_metrics {
         path { meta, metrics ->
             metrics >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.duplicate_metrics.txt" : "${meta.samplename}/${meta.samplename}.duplicate_metrics.txt")
+        }
+    }
+    // UMI consensus artefacts are published per sample next to CRAM outputs.
+    family_size_histogram {
+        path { meta, histogram ->
+            histogram >> (meta.library ? "${meta.library}/${meta.samplename}/${histogram.name}" : "${meta.samplename}/${histogram.name}")
+        }
+    }
+    umi_filtered_consensus_bam {
+        path { meta, bam ->
+            bam >> (meta.library ? "${meta.library}/${meta.samplename}/${bam.name}" : "${meta.samplename}/${bam.name}")
+        }
+    }
+    umi_duplex_metrics {
+        path { meta, _file ->
+            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+        }
+    }
+    umi_crams {
+        path { meta, cram, crai ->
+            cram >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.umi.cram" : "${meta.samplename}/${meta.samplename}.umi.cram")
+            crai >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.umi.cram.crai" : "${meta.samplename}/${meta.samplename}.umi.cram.crai")
         }
     }
     mosdepth_global {

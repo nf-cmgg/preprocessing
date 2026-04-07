@@ -1,0 +1,205 @@
+{
+    "fastq to cram - fgumi umi-aware - stub": {
+        "content": [
+            {
+                "align_reports": [
+                    
+                ],
+                "cram_crai": [
+                    [
+                        {
+                            "genome_data": {
+                                "dict": "ref.dict",
+                                "fai": "ref.fa.fai",
+                                "fasta": "ref.fa",
+                                "snap": "snap_index"
+                            },
+                            "id": "UMI_consensus1",
+                            "markdup": "bamsormadup",
+                            "sample_type": "DNA",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "umi_aware": true
+                        },
+                        "UMI_consensus1.cram",
+                        "UMI_consensus1.cram.crai"
+                    ]
+                ],
+                "duplex_metrics": [
+                    [
+                        {
+                            "id": "UMI_consensus1",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "bamsormadup",
+                            "umi_aware": true,
+                            "genome_data": {
+                                "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
+                                "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
+                                "dict": "ref.dict:md5,759dea0d5194dec0cd4f3e02fadf6e83",
+                                "snap": [
+                                    "OverflowTable.txt:md5,178164f81917b8e87073295a635588de"
+                                ]
+                            }
+                        },
+                        "UMI_consensus1.fgumi.duplex_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "family_size_histogram": [
+                    [
+                        {
+                            "id": "UMI_consensus1",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "bamsormadup",
+                            "umi_aware": true,
+                            "genome_data": {
+                                "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
+                                "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
+                                "dict": "ref.dict:md5,759dea0d5194dec0cd4f3e02fadf6e83",
+                                "snap": [
+                                    "OverflowTable.txt:md5,178164f81917b8e87073295a635588de"
+                                ]
+                            }
+                        },
+                        "UMI_consensus1.fgumi.group.family_size_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "filtered_consensus_bam": [
+                    [
+                        {
+                            "id": "UMI_consensus1",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "bamsormadup",
+                            "umi_aware": true,
+                            "genome_data": {
+                                "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
+                                "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
+                                "dict": "ref.dict:md5,759dea0d5194dec0cd4f3e02fadf6e83",
+                                "snap": [
+                                    "OverflowTable.txt:md5,178164f81917b8e87073295a635588de"
+                                ]
+                            }
+                        },
+                        "UMI_consensus1.fgumi.filter.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "rna_junctions": [
+                    
+                ],
+                "rna_splice_junctions": [
+                    
+                ],
+                "sormadup_metrics": [
+                    [
+                        {
+                            "id": "UMI_consensus1",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "bamsormadup",
+                            "umi_aware": true,
+                            "genome_data": {
+                                "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
+                                "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
+                                "dict": "ref.dict:md5,759dea0d5194dec0cd4f3e02fadf6e83",
+                                "snap": [
+                                    "OverflowTable.txt:md5,178164f81917b8e87073295a635588de"
+                                ]
+                            }
+                        },
+                        "UMI_consensus1.fgumi.filter.filtering_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "UMI_consensus1",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "bamsormadup",
+                            "umi_aware": true,
+                            "genome_data": {
+                                "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
+                                "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
+                                "dict": "ref.dict:md5,759dea0d5194dec0cd4f3e02fadf6e83",
+                                "snap": [
+                                    "OverflowTable.txt:md5,178164f81917b8e87073295a635588de"
+                                ]
+                            }
+                        },
+                        "UMI_consensus1.fgumi.group.family_size_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "UMI_consensus1",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "bamsormadup",
+                            "umi_aware": true,
+                            "genome_data": {
+                                "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
+                                "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
+                                "dict": "ref.dict:md5,759dea0d5194dec0cd4f3e02fadf6e83",
+                                "snap": [
+                                    "OverflowTable.txt:md5,178164f81917b8e87073295a635588de"
+                                ]
+                            }
+                        },
+                        "UMI_consensus1.fgumi.group.grouping_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "UMI_consensus1",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "bamsormadup",
+                            "umi_aware": true,
+                            "genome_data": {
+                                "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
+                                "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
+                                "dict": "ref.dict:md5,759dea0d5194dec0cd4f3e02fadf6e83",
+                                "snap": [
+                                    "OverflowTable.txt:md5,178164f81917b8e87073295a635588de"
+                                ]
+                            }
+                        },
+                        "UMI_consensus1.fgumi.simplex.consensus_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "umi_cram_crai": [
+                    [
+                        {
+                            "id": "UMI_consensus1",
+                            "samplename": "HT1080_chr20",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "bamsormadup",
+                            "umi_aware": true,
+                            "genome_data": {
+                                "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
+                                "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
+                                "dict": "ref.dict:md5,759dea0d5194dec0cd4f3e02fadf6e83",
+                                "snap": [
+                                    "OverflowTable.txt:md5,178164f81917b8e87073295a635588de"
+                                ]
+                            }
+                        },
+                        "UMI_consensus1.cram:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "UMI_consensus1.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-07T14:33:07.208059007"
+    }
+}

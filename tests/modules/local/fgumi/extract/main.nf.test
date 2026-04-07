@@ -1,0 +1,35 @@
+nextflow_process {
+
+    name "Test Process FGUMI_EXTRACT"
+    script "modules/local/fgumi/extract/main.nf"
+    process "FGUMI_EXTRACT"
+
+    tag "modules"
+    tag "modules/local"
+    tag "modules/local/fgumi"
+    tag "modules/local/fgumi/extract"
+
+    test("test - stub") {
+        // Stub-mode contract test: verifies extract output channel and versions tuple.
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: "test", samplename: "test", library: "lib1"],
+                    [
+                        file("${projectDir}/tests/inputs/fgumi/R1.fastq.gz", checkIfExists: true),
+                        file("${projectDir}/tests/inputs/fgumi/R2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}
