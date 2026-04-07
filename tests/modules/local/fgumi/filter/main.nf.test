@@ -1,0 +1,33 @@
+nextflow_process {
+
+    name "Test Process FGUMI_FILTER"
+    script "modules/local/fgumi/filter/main.nf"
+    process "FGUMI_FILTER"
+
+    tag "modules"
+    tag "modules/local"
+    tag "modules/local/fgumi"
+    tag "modules/local/fgumi/filter"
+
+    test("test - stub") {
+        // Stub-mode contract test: verifies filtered BAM/index and metrics outputs.
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: "test"],
+                    file("${projectDir}/tests/inputs/fgumi/consensus.bam", checkIfExists: true),
+                    file("${projectDir}/tests/inputs/fgumi/ref.fa", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

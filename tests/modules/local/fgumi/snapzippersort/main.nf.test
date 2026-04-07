@@ -1,0 +1,35 @@
+nextflow_process {
+
+    name "Test Process FGUMI_SNAP_ZIPPER_SORT"
+    script "modules/local/fgumi/snapzippersort/main.nf"
+    process "FGUMI_SNAP_ZIPPER_SORT"
+
+    tag "modules"
+    tag "modules/local"
+    tag "modules/local/fgumi"
+    tag "modules/local/fgumi/snapzippersort"
+
+    test("test - stub") {
+        // Stub-mode contract test: verifies template BAM output wiring.
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: "test", samplename: "test"],
+                    file("${projectDir}/tests/inputs/fgumi/unmapped.bam", checkIfExists: true),
+                    file("${projectDir}/tests/inputs/fgumi/snap_index", checkIfExists: true),
+                    file("${projectDir}/tests/inputs/fgumi/ref.fa", checkIfExists: true),
+                    file("${projectDir}/tests/inputs/fgumi/ref.dict", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

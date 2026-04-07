@@ -1,0 +1,33 @@
+nextflow_process {
+
+    name "Test Process FGUMI_DUPLEX_METRICS"
+    script "modules/local/fgumi/duplexmetrics/main.nf"
+    process "FGUMI_DUPLEX_METRICS"
+
+    tag "modules"
+    tag "modules/local"
+    tag "modules/local/fgumi"
+    tag "modules/local/fgumi/duplexmetrics"
+
+    test("test - stub") {
+        // Stub-mode contract test: verifies duplex-metrics output wiring.
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: "test"],
+                    file("${projectDir}/tests/inputs/fgumi/grouped.bam", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            // Keep assertions minimal and snapshot-driven, consistent with other module tests.
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

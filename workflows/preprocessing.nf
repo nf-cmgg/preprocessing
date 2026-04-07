@@ -271,7 +271,10 @@ workflow PREPROCESSING {
     FASTQ_TO_CRAM(
         ch_meta_reads_aligner_index_fasta_gtf
     )
+    // Collect both standard and UMI-specific metrics for MultiQC.
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.duplex_metrics)
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.family_size_histogram)
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -432,6 +435,11 @@ workflow PREPROCESSING {
     rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
     align_reports              = FASTQ_TO_CRAM.out.align_reports
     sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
+    // UMI-specific outputs exposed at workflow level.
+    family_size_histogram      = FASTQ_TO_CRAM.out.family_size_histogram
+    umi_filtered_consensus_bam = FASTQ_TO_CRAM.out.filtered_consensus_bam
+    umi_duplex_metrics         = FASTQ_TO_CRAM.out.duplex_metrics
+    umi_crams                  = FASTQ_TO_CRAM.out.umi_cram_crai
     mosdepth_global            = COVERAGE.out.mosdepth_global
     mosdepth_summary           = COVERAGE.out.mosdepth_summary
     mosdepth_regions           = COVERAGE.out.mosdepth_regions

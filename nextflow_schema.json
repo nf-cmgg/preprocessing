@@ -73,6 +73,83 @@
                     "exists": true,
                     "format": "directory-path",
                     "description": "Directory containing gene list bed files for granular coverage analysis"
+                },
+                "fgumi_read_structures": {
+                    "type": "string",
+                    "default": "+T +T",
+                    "description": "Read structures passed to fgumi extract for UMI extraction from FASTQ."
+                },
+                "fgumi_extract_umis_from_read_names": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable fgumi extract --extract-umis-from-read-names for read name encoded UMIs."
+                },
+                "fgumi_group_strategy": {
+                    "type": "string",
+                    "default": "adjacency",
+                    "description": "UMI grouping strategy for fgumi group.",
+                    "enum": ["identity", "edit", "adjacency", "paired"]
+                },
+                "fgumi_group_edits": {
+                    "type": "integer",
+                    "default": 1,
+                    "minimum": 0,
+                    "description": "Maximum UMI edit distance used by fgumi group."
+                },
+                "fgumi_simplex_min_reads": {
+                    "type": "integer",
+                    "default": 1,
+                    "minimum": 1,
+                    "description": "Minimum number of reads required per UMI family for fgumi simplex consensus generation."
+                },
+                "fgumi_filter_min_reads": {
+                    "type": "string",
+                    "default": "1,1,1",
+                    "description": "Minimum reads triplet passed to fgumi filter --min-reads."
+                },
+                "fgumi_queue_memory": {
+                    "type": "integer",
+                    "default": 768,
+                    "minimum": 64,
+                    "description": "fgumi queue-memory budget in MB."
+                },
+                "fgumi_queue_memory_per_thread": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Scale fgumi queue-memory by allocated thread count."
+                },
+                "fgumi_compression_level": {
+                    "type": "integer",
+                    "default": 1,
+                    "minimum": 0,
+                    "maximum": 12,
+                    "description": "Compression level for fgumi BAM outputs."
+                },
+                "fgumi_sort_max_memory": {
+                    "type": "string",
+                    "default": "2G",
+                    "pattern": "^\\d+(\\.\\d+)?[KMG]$",
+                    "description": "Memory budget for fgumi sort, for example 2G or 768M."
+                },
+                "fgumi_sort_memory_per_thread": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Scale fgumi sort memory by allocated thread count."
+                },
+                "fgumi_snap_ignore_mismatched_pairs": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Pass -I to SNAP to ignore mismatched read IDs in paired-end input."
+                },
+                "fgumi_snap_extra_args": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Additional SNAP options for the fgumi fastq|snap|zipper pipeline."
+                },
+                "fgumi_duplex_metrics_extra_args": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Additional fgumi duplex-metrics options."
                 }
             }
         },

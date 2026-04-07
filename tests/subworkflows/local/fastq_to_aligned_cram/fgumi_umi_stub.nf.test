@@ -1,0 +1,58 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_TO_CRAM UMI fgumi stub"
+    script "subworkflows/local/fastq_to_aligned_cram/main.nf"
+    workflow "FASTQ_TO_CRAM"
+
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/fastq_to_aligned_cram"
+    tag "fgumi"
+
+    test("fastq to cram - fgumi umi-aware - stub") {
+        // End-to-end UMI branch contract test in stub mode.
+        options "-stub"
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: "UMI_consensus1",
+                        samplename: "HT1080_chr20",
+                        single_end: false,
+                        sample_type: "DNA",
+                        markdup: "bamsormadup",
+                        umi_aware: true,
+                        genome_data: [
+                            fasta: "${projectDir}/tests/inputs/fgumi/ref.fa",
+                            fai: "${projectDir}/tests/inputs/fgumi/ref.fa.fai",
+                            dict: "${projectDir}/tests/inputs/fgumi/ref.dict",
+                            snap: "${projectDir}/tests/inputs/fgumi/snap_index"
+                        ]
+                    ],
+                    [
+                        file("${projectDir}/tests/inputs/fgumi/R1.fastq.gz", checkIfExists: true),
+                        file("${projectDir}/tests/inputs/fgumi/R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "snap",
+                    file("${projectDir}/tests/inputs/fgumi/snap_index", checkIfExists: true),
+                    file("${projectDir}/tests/inputs/fgumi/ref.fa", checkIfExists: true),
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            // Explicitly assert newly exposed UMI channels.
+            assert workflow.out.duplex_metrics.size() == 1
+            assert workflow.out.family_size_histogram.size() == 1
+            assert workflow.out.filtered_consensus_bam.size() == 1
+            assert workflow.out.umi_cram_crai.size() == 1
+            assert snapshot(
+                sanitizeOutput(workflow.out, unstableKeys:["cram_crai"])
+            ).match()
+        }
+    }
+}

@@ -1,0 +1,32 @@
+nextflow_process {
+
+    name "Test Process FGUMI_GROUP"
+    script "modules/local/fgumi/group/main.nf"
+    process "FGUMI_GROUP"
+
+    tag "modules"
+    tag "modules/local"
+    tag "modules/local/fgumi"
+    tag "modules/local/fgumi/group"
+
+    test("test - stub") {
+        // Stub-mode contract test: verifies grouping and family-size outputs.
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: "test"],
+                    file("${projectDir}/tests/inputs/fgumi/template.bam", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}
