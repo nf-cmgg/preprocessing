@@ -45,6 +45,7 @@ workflow FASTQ_TO_CRAM {
 
     ch_meta_reads_aligner_index_fasta_datatype.dna
         .branch { meta, reads, aligner, index, fasta ->
+            // fgumi consensus is opt-in via fgumi_aware to avoid changing samtools umi_aware semantics.
             umi: meta.fgumi_aware == true
             return [meta, reads, aligner, index, fasta]
             non_umi: true
