@@ -99,6 +99,18 @@
                 "description": "Enable UMI-aware consensus processing through the fgumi branch.",
                 "default": false
             },
+            "fgumi_read_structures": {
+                "meta": ["fgumi_read_structures"],
+                "type": "string",
+                "description": "Read structures passed to fgumi extract for this sample.",
+                "default": null
+            },
+            "fgumi_extract_umis_from_read_names": {
+                "meta": ["fgumi_extract_umis_from_read_names"],
+                "type": "boolean",
+                "description": "Override fgumi extraction from read names for this sample.",
+                "default": null
+            },
             "skip_trimming": {
                 "meta": ["skip_trimming"],
                 "type": "boolean",
