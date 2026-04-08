@@ -22,7 +22,7 @@ nextflow_workflow {
                         single_end: false,
                         sample_type: "DNA",
                         markdup: "bamsormadup",
-                        umi_aware: true,
+                        fgumi_aware: true,
                         genome_data: [
                             fasta: "${projectDir}/tests/inputs/fgumi/ref.fa",
                             fai: "${projectDir}/tests/inputs/fgumi/ref.fa.fai",

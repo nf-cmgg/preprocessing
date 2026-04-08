@@ -8,6 +8,7 @@
                 "cram_crai": [
                     [
                         {
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "dict": "ref.dict",
                                 "fai": "ref.fa.fai",
@@ -18,8 +19,7 @@
                             "markdup": "bamsormadup",
                             "sample_type": "DNA",
                             "samplename": "HT1080_chr20",
-                            "single_end": false,
-                            "umi_aware": true
+                            "single_end": false
                         },
                         "UMI_consensus1.cram",
                         "UMI_consensus1.cram.crai"
@@ -33,7 +33,7 @@
                             "single_end": false,
                             "sample_type": "DNA",
                             "markdup": "bamsormadup",
-                            "umi_aware": true,
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
                                 "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
@@ -54,7 +54,7 @@
                             "single_end": false,
                             "sample_type": "DNA",
                             "markdup": "bamsormadup",
-                            "umi_aware": true,
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
                                 "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
@@ -75,7 +75,7 @@
                             "single_end": false,
                             "sample_type": "DNA",
                             "markdup": "bamsormadup",
-                            "umi_aware": true,
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
                                 "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
@@ -102,7 +102,7 @@
                             "single_end": false,
                             "sample_type": "DNA",
                             "markdup": "bamsormadup",
-                            "umi_aware": true,
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
                                 "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
@@ -121,7 +121,7 @@
                             "single_end": false,
                             "sample_type": "DNA",
                             "markdup": "bamsormadup",
-                            "umi_aware": true,
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
                                 "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
@@ -140,7 +140,7 @@
                             "single_end": false,
                             "sample_type": "DNA",
                             "markdup": "bamsormadup",
-                            "umi_aware": true,
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
                                 "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
@@ -159,7 +159,7 @@
                             "single_end": false,
                             "sample_type": "DNA",
                             "markdup": "bamsormadup",
-                            "umi_aware": true,
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
                                 "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
@@ -180,7 +180,7 @@
                             "single_end": false,
                             "sample_type": "DNA",
                             "markdup": "bamsormadup",
-                            "umi_aware": true,
+                            "fgumi_aware": true,
                             "genome_data": {
                                 "fasta": "ref.fa:md5,78724096432e1b2702881f0126c656f2",
                                 "fai": "ref.fa.fai:md5,fdd09c27f9ecf4cc7e824fd8407b72b7",
@@ -200,6 +200,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-04-07T14:33:07.208059007"
+        "timestamp": "2026-04-08T10:11:21.73767029"
     }
 }

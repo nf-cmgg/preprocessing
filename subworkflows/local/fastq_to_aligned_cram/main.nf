@@ -51,7 +51,7 @@ workflow FASTQ_TO_CRAM {
 
     ch_meta_reads_aligner_index_fasta_datatype.dna
         .branch { meta, reads, aligner, index, fasta ->
-            umi: (meta.fgumi_aware == true) || (meta.umi_aware == true)
+            umi: meta.fgumi_aware == true
             return [meta, reads, aligner, index, fasta]
             non_umi: true
             return [meta, reads, aligner, index, fasta]
@@ -218,7 +218,7 @@ workflow FASTQ_TO_CRAM {
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
     // Keep a dedicated channel for UMI-aware sample CRAM outputs.
-    ch_umi_cram_crai = ch_cram_crai.filter { meta, _cram, _crai -> (meta.fgumi_aware == true) || (meta.umi_aware == true) }
+    ch_umi_cram_crai = ch_cram_crai.filter { meta, _cram, _crai -> meta.fgumi_aware == true }
 
     emit:
     cram_crai            = ch_cram_crai
