@@ -19,8 +19,8 @@ process FGUMI_EXTRACT {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}.fgumi.unmapped"
-    def sample_name = meta.samplename ?: meta.id
-    def library_name = meta.library ?: meta.id
+    def sample_name = task.ext.sample_name ?: meta.id
+    def library_name = task.ext.library_name ?: meta.id
     def input_files = (reads instanceof List ? reads : [reads]).collect { read -> "${read}" }.join(' ')
 
     """
