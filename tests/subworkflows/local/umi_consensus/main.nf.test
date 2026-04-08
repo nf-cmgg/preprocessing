@@ -1,0 +1,56 @@
+nextflow_workflow {
+
+    name "Test Workflow UMI_CONSENSUS_FGUMI"
+    script "subworkflows/local/umi_consensus/main.nf"
+    workflow "UMI_CONSENSUS_FGUMI"
+
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/umi_consensus"
+    tag "fgumi"
+
+    test("umi consensus fgumi - stub") {
+        options "-stub"
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: "UMI_consensus1",
+                        samplename: "HT1080_chr20",
+                        single_end: false,
+                        sample_type: "DNA",
+                        markdup: "bamsormadup",
+                        fgumi_aware: true,
+                        genome_data: [
+                            fasta: "${projectDir}/tests/inputs/fgumi/ref.fa",
+                            fai: "${projectDir}/tests/inputs/fgumi/ref.fa.fai",
+                            dict: "${projectDir}/tests/inputs/fgumi/ref.dict",
+                            snap: "${projectDir}/tests/inputs/fgumi/snap_index"
+                        ]
+                    ],
+                    [
+                        file("${projectDir}/tests/inputs/fgumi/R1.fastq.gz", checkIfExists: true),
+                        file("${projectDir}/tests/inputs/fgumi/R2.fastq.gz", checkIfExists: true)
+                    ],
+                    "snap",
+                    file("${projectDir}/tests/inputs/fgumi/snap_index", checkIfExists: true),
+                    file("${projectDir}/tests/inputs/fgumi/ref.fa", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.bam_bai.size() == 1
+            assert workflow.out.grouping_metrics.size() == 1
+            assert workflow.out.family_size_histogram.size() == 1
+            assert workflow.out.consensus_metrics.size() == 1
+            assert workflow.out.filtering_metrics.size() == 1
+            assert workflow.out.duplex_metrics.size() == 1
+            assert workflow.out.filtered_consensus_bam.size() == 1
+            assert snapshot(workflow.out).match()
+        }
+    }
+}

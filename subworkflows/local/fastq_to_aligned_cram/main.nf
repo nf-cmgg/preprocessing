@@ -6,13 +6,6 @@
 
 // MODULES
 include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
-include { FGUMI_DUPLEX_METRICS  } from "../../../modules/local/fgumi/duplexmetrics/main.nf"
-include { FGUMI_EXTRACT         } from "../../../modules/local/fgumi/extract/main.nf"
-include { FGUMI_FILTER          } from "../../../modules/local/fgumi/filter/main.nf"
-include { FGUMI_GROUP           } from "../../../modules/local/fgumi/group/main.nf"
-include { FGUMI_SIMPLEX         } from "../../../modules/local/fgumi/simplex/main.nf"
-include { FGUMI_SNAP_ZIPPER_SORT } from "../../../modules/local/fgumi/snapzippersort/main.nf"
-include { FGUMI_SORT            } from "../../../modules/local/fgumi/sort/main.nf"
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
@@ -20,6 +13,7 @@ include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/m
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA       } from '../../nf-core/fastq_align_dna/main'
 include { FASTQ_ALIGN_RNA       } from '../../local/fastq_align_rna/main'
+include { UMI_CONSENSUS_FGUMI   } from '../../local/umi_consensus/main.nf'
 
 // FUNCTIONS
 include { getGenomeAttribute    } from '../../local/utils_nfcore_preprocessing_pipeline'
@@ -65,45 +59,8 @@ workflow FASTQ_TO_CRAM {
     )
 
     // UMI-aware fgumi branch (steps 1, 3, 4, 5, 6, 7 in fgumi Basic Workflow)
-    FGUMI_EXTRACT(
+    UMI_CONSENSUS_FGUMI(
         ch_dna_to_align.umi
-            .map { meta, reads, _aligner, _index, _fasta -> [meta, reads] }
-    )
-
-    FGUMI_SNAP_ZIPPER_SORT(
-        FGUMI_EXTRACT.out.bam
-            .join(
-                ch_dna_to_align.umi.map { meta, _reads, _aligner, _index, fasta ->
-                    [meta, getGenomeAttribute(meta.genome_data, 'snap'), fasta, getGenomeAttribute(meta.genome_data, 'dict')]
-                },
-                by: 0,
-            )
-            .map { meta, unmapped_bam, snap_index, fasta, dict -> [meta, unmapped_bam, snap_index, fasta, dict] }
-    )
-
-    FGUMI_GROUP(
-        FGUMI_SNAP_ZIPPER_SORT.out.bam
-    )
-
-    FGUMI_SIMPLEX(
-        FGUMI_GROUP.out.bam
-    )
-
-    FGUMI_DUPLEX_METRICS(
-        FGUMI_GROUP.out.bam
-    )
-
-    FGUMI_FILTER(
-        FGUMI_SIMPLEX.out.bam
-            .join(
-                ch_dna_to_align.umi.map { meta, _reads, _aligner, _index, fasta -> [meta, fasta] },
-                by: 0,
-            )
-            .map { meta, bam, fasta -> [meta, bam, fasta] }
-    )
-
-    FGUMI_SORT(
-        FGUMI_FILTER.out.bam
     )
 
     FASTQ_ALIGN_RNA(
@@ -160,15 +117,15 @@ workflow FASTQ_TO_CRAM {
 
     // UMI branch outputs are mixed into the common markdup/metrics streams.
     ch_markdup_index = ch_markdup_index.mix(
-        FGUMI_SORT.out.bam.join(FGUMI_SORT.out.bai, failOnMismatch: true, failOnDuplicate: true)
+        UMI_CONSENSUS_FGUMI.out.bam_bai
     )
-    ch_sormadup_metrics = ch_sormadup_metrics.mix(FGUMI_GROUP.out.grouping_metrics)
-    ch_sormadup_metrics = ch_sormadup_metrics.mix(FGUMI_GROUP.out.family_size_histogram)
-    ch_sormadup_metrics = ch_sormadup_metrics.mix(FGUMI_SIMPLEX.out.consensus_metrics)
-    ch_sormadup_metrics = ch_sormadup_metrics.mix(FGUMI_FILTER.out.filtering_metrics)
-    ch_duplex_metrics = FGUMI_DUPLEX_METRICS.out.duplex_metrics
-    ch_family_size_histogram = FGUMI_GROUP.out.family_size_histogram
-    ch_filtered_consensus_bam = FGUMI_SORT.out.bam
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.grouping_metrics)
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.family_size_histogram)
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.consensus_metrics)
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.filtering_metrics)
+    ch_duplex_metrics = UMI_CONSENSUS_FGUMI.out.duplex_metrics
+    ch_family_size_histogram = UMI_CONSENSUS_FGUMI.out.family_size_histogram
+    ch_filtered_consensus_bam = UMI_CONSENSUS_FGUMI.out.filtered_consensus_bam
 
     // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta, fai)
     BIOBAMBAM_BAMSORMADUP(ch_bam_fasta.bamsormadup)
