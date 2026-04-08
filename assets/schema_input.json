@@ -50,7 +50,13 @@
             "umi_aware": {
                 "meta": ["umi_aware"],
                 "type": "boolean",
-                "description": "Enable UMI-aware processing through the fgumi consensus branch.",
+                "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name.",
+                "default": false
+            },
+            "fgumi_aware": {
+                "meta": ["fgumi_aware"],
+                "type": "boolean",
+                "description": "Enable UMI-aware consensus processing through the fgumi branch.",
                 "default": false
             },
             "skip_trimming": {
