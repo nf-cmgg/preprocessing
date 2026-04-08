@@ -1,16 +1,16 @@
 nextflow_process {
 
-    name "Test Process FGUMI_FILTER"
-    script "modules/local/fgumi/filter/main.nf"
-    process "FGUMI_FILTER"
+    name "Test Process FGUMI_SORT"
+    script "modules/local/fgumi/sort/main.nf"
+    process "FGUMI_SORT"
 
     tag "modules"
     tag "modules/local"
     tag "modules/local/fgumi"
-    tag "modules/local/fgumi/filter"
+    tag "modules/local/fgumi/sort"
 
     test("test - stub") {
-        // Stub-mode contract test: verifies filtered BAM and metrics outputs.
+        // Stub-mode contract test: verifies coordinate-sorted BAM/index outputs.
         options "-stub"
 
         when {
@@ -18,8 +18,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [id: "test"],
-                    file("${projectDir}/tests/inputs/fgumi/consensus.bam", checkIfExists: true),
-                    file("${projectDir}/tests/inputs/fgumi/ref.fa", checkIfExists: true)
+                    file("${projectDir}/tests/inputs/fgumi/consensus.bam", checkIfExists: true)
                 ]
                 """
             }

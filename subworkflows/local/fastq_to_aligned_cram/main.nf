@@ -12,6 +12,7 @@ include { FGUMI_FILTER          } from "../../../modules/local/fgumi/filter/main
 include { FGUMI_GROUP           } from "../../../modules/local/fgumi/group/main.nf"
 include { FGUMI_SIMPLEX         } from "../../../modules/local/fgumi/simplex/main.nf"
 include { FGUMI_SNAP_ZIPPER_SORT } from "../../../modules/local/fgumi/snapzippersort/main.nf"
+include { FGUMI_SORT            } from "../../../modules/local/fgumi/sort/main.nf"
 include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
@@ -101,6 +102,10 @@ workflow FASTQ_TO_CRAM {
             .map { meta, bam, fasta -> [meta, bam, fasta] }
     )
 
+    FGUMI_SORT(
+        FGUMI_FILTER.out.bam
+    )
+
     FASTQ_ALIGN_RNA(
         ch_meta_reads_aligner_index_fasta_datatype.rna
     )
@@ -155,7 +160,7 @@ workflow FASTQ_TO_CRAM {
 
     // UMI branch outputs are mixed into the common markdup/metrics streams.
     ch_markdup_index = ch_markdup_index.mix(
-        FGUMI_FILTER.out.bam.join(FGUMI_FILTER.out.bai, failOnMismatch: true, failOnDuplicate: true)
+        FGUMI_SORT.out.bam.join(FGUMI_SORT.out.bai, failOnMismatch: true, failOnDuplicate: true)
     )
     ch_sormadup_metrics = ch_sormadup_metrics.mix(FGUMI_GROUP.out.grouping_metrics)
     ch_sormadup_metrics = ch_sormadup_metrics.mix(FGUMI_GROUP.out.family_size_histogram)
@@ -163,7 +168,7 @@ workflow FASTQ_TO_CRAM {
     ch_sormadup_metrics = ch_sormadup_metrics.mix(FGUMI_FILTER.out.filtering_metrics)
     ch_duplex_metrics = FGUMI_DUPLEX_METRICS.out.duplex_metrics
     ch_family_size_histogram = FGUMI_GROUP.out.family_size_histogram
-    ch_filtered_consensus_bam = FGUMI_FILTER.out.bam
+    ch_filtered_consensus_bam = FGUMI_SORT.out.bam
 
     // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta, fai)
     BIOBAMBAM_BAMSORMADUP(ch_bam_fasta_fai.bamsormadup)
