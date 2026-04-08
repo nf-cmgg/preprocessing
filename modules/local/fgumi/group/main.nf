@@ -23,6 +23,7 @@ process FGUMI_GROUP {
     def strategy = task.ext.strategy ?: 'adjacency'
     def edits = task.ext.edits != null ? task.ext.edits : 1
     def compression_level = task.ext.compression_level != null ? task.ext.compression_level : 1
+    // Derive per-thread queue memory from requested process resources.
     def queue_memory_mb = (task.memory.mega / task.cpus * 0.75).intValue()
     prefix = task.ext.prefix ?: "${meta.id}.fgumi.group"
 

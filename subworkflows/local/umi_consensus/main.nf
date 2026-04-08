@@ -17,11 +17,13 @@ workflow UMI_CONSENSUS_FGUMI {
     ch_meta_reads_aligner_index_fasta // channel: [mandatory] [meta, reads, aligner, index, fasta]
 
     main:
+    // Step 1: build an unmapped BAM with UMI tags from input FASTQ.
     FGUMI_EXTRACT(
         ch_meta_reads_aligner_index_fasta
             .map { meta, reads, _aligner, _index, _fasta -> [meta, reads] }
     )
 
+    // Step 3: align with SNAP, zipper tags back, then template-coordinate sort.
     FGUMI_SNAP_ZIPPER_SORT(
         FGUMI_EXTRACT.out.bam
             .join(
@@ -45,6 +47,7 @@ workflow UMI_CONSENSUS_FGUMI {
         FGUMI_GROUP.out.bam
     )
 
+    // Step 7: filter consensus reads, then coordinate-sort/index for downstream CRAM conversion.
     FGUMI_FILTER(
         FGUMI_SIMPLEX.out.bam
             .join(
