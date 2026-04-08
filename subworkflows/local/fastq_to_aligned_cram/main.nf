@@ -174,13 +174,9 @@ workflow FASTQ_TO_CRAM {
         .set { ch_cram_crai }
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
-    // Keep a dedicated channel for UMI-aware sample CRAM outputs.
-    ch_umi_cram_crai = ch_cram_crai.filter { meta, _cram, _crai -> meta.fgumi_aware == true }
-
     emit:
     cram_crai            = ch_cram_crai
     // UMI-specific output channels for downstream reporting and publishing.
-    umi_cram_crai        = ch_umi_cram_crai
     filtered_consensus_bam = ch_filtered_consensus_bam
     rna_splice_junctions = FASTQ_ALIGN_RNA.out.splice_junctions
     rna_junctions        = FASTQ_ALIGN_RNA.out.junctions
