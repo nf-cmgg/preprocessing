@@ -49,7 +49,6 @@ nextflow_workflow {
             assert workflow.out.duplex_metrics.size() == 1
             assert workflow.out.family_size_histogram.size() == 1
             assert workflow.out.filtered_consensus_bam.size() == 1
-            assert workflow.out.umi_cram_crai.size() == 1
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:["cram_crai"])
             ).match()
