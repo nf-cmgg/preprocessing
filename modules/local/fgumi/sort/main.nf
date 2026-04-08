@@ -1,4 +1,4 @@
-process FGUMI_FILTER {
+process FGUMI_SORT {
     tag "$meta.id"
     label 'process_medium'
 
@@ -7,11 +7,11 @@ process FGUMI_FILTER {
         : 'community.wave.seqera.io/library/fgumi_r-base_r-ggplot2_r-scales:09c99070b82c1c28'}"
 
     input:
-    tuple val(meta), path(bam), path(fasta)
+    tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path("${prefix}.filtered.bam"), emit: bam
-    tuple val(meta), path("${prefix}.filtering_metrics.txt"), optional: true, emit: filtering_metrics
+    tuple val(meta), path("${prefix}.bam"), emit: bam
+    tuple val(meta), path("${prefix}.bam.bai"), emit: bai
     tuple val("${task.process}"), val('fgumi'), eval("fgumi --version | sed 's/^fgumi //;q'"), topic: versions, emit: versions_fgumi
 
     when:
@@ -22,17 +22,18 @@ process FGUMI_FILTER {
     prefix = task.ext.prefix ?: "${meta.id}.fgumi.filter"
 
     """
-    fgumi filter \
+    fgumi sort \
         --input ${bam} \
-        --output ${prefix}.filtered.bam \
-        --ref ${fasta} \
+        --output ${prefix}.bam \
+        --order coordinate \
+        --write-index \
         ${args}
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}.fgumi.filter"
     """
-    touch ${prefix}.filtered.bam
-    touch ${prefix}.filtering_metrics.txt
+    touch ${prefix}.bam
+    touch ${prefix}.bam.bai
     """
 }
