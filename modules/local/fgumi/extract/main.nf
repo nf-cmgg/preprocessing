@@ -21,11 +21,10 @@ process FGUMI_EXTRACT {
     prefix = task.ext.prefix ?: "${meta.id}.fgumi.unmapped"
     def sample_name = task.ext.sample_name ?: meta.id
     def library_name = task.ext.library_name ?: meta.id
-    def input_files = (reads instanceof List ? reads : [reads]).collect { read -> "${read}" }.join(' ')
 
     """
     fgumi extract \
-        --inputs ${input_files} \
+        --inputs ${reads} \
         --output ${prefix}.bam \
         --sample "${sample_name}" \
         --library "${library_name}" \
