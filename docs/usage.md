@@ -26,6 +26,7 @@ A `fastq` samplesheet file consisting of paired-end data may look something like
   aligner: bwamem
   markdup: bamsormadup
   umi_aware: false
+  fgumi_aware: false
   skip_trimming: false
   trim_front: 0
   trim_tail: 0
@@ -67,6 +68,10 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
+> [!NOTE]
+> `umi_aware` and `fgumi_aware` are independent options.
+> Use `umi_aware` for samtools markdup UMI mode, and `fgumi_aware` to run the fgumi consensus branch.
+
 ### Flowcell samplesheet
 
 A `flowcell` samplesheet file consisting of one sequencing run may look something like the one below.
@@ -102,6 +107,7 @@ A `flowcell` sample info JSON/YML file consisting for one sequencing run may loo
   aligner: bwamem
   markdup: bamsormadup
   umi_aware: false
+  fgumi_aware: false
   skip_trimming: false
   trim_front: 0
   trim_tail: 0
