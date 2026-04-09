@@ -19,16 +19,11 @@ process FGUMI_EXTRACT {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}.fgumi.unmapped"
-    // Keep module portable: only meta.id is assumed, with optional task.ext overrides.
-    def sample_name = task.ext.sample_name ?: meta.id
-    def library_name = task.ext.library_name ?: meta.id
 
     """
     fgumi extract \
         --inputs ${reads} \
         --output ${prefix}.bam \
-        --sample "${sample_name}" \
-        --library "${library_name}" \
         ${args}
     """
 
