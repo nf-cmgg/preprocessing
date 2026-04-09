@@ -124,7 +124,6 @@ workflow FASTQ_TO_CRAM {
     ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.family_size_histogram)
     ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.consensus_metrics)
     ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.filtering_metrics)
-    ch_duplex_metrics = UMI_CONSENSUS_FGUMI.out.duplex_metrics
     ch_family_size_histogram = UMI_CONSENSUS_FGUMI.out.family_size_histogram
     ch_filtered_consensus_bam = UMI_CONSENSUS_FGUMI.out.filtered_consensus_bam
 
@@ -183,6 +182,5 @@ workflow FASTQ_TO_CRAM {
     rna_junctions        = FASTQ_ALIGN_RNA.out.junctions
     sormadup_metrics     = ch_sormadup_metrics
     family_size_histogram = ch_family_size_histogram
-    duplex_metrics       = ch_duplex_metrics
     align_reports        = FASTQ_ALIGN_DNA.out.reports
 }

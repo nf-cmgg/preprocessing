@@ -124,11 +124,6 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Pass -I to SNAP to ignore mismatched read IDs in paired-end input."
-                },
-                "fgumi_duplex_metrics_extra_args": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Additional fgumi duplex-metrics options."
                 }
             }
         },

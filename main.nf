@@ -82,7 +82,6 @@ workflow {
     // Additional UMI consensus outputs.
     family_size_histogram      = PREPROCESSING.out.family_size_histogram
     umi_filtered_consensus_bam = PREPROCESSING.out.umi_filtered_consensus_bam
-    umi_duplex_metrics         = PREPROCESSING.out.umi_duplex_metrics
     umi_crams                  = PREPROCESSING.out.umi_crams
     mosdepth_global            = PREPROCESSING.out.mosdepth_global
     mosdepth_summary           = PREPROCESSING.out.mosdepth_summary
@@ -190,11 +189,6 @@ output {
     umi_filtered_consensus_bam {
         path { meta, bam ->
             bam >> (meta.library ? "${meta.library}/${meta.samplename}/${bam.name}" : "${meta.samplename}/${bam.name}")
-        }
-    }
-    umi_duplex_metrics {
-        path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
     umi_crams {
