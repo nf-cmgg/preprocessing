@@ -18,7 +18,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [id: "test"],
-                    file("${projectDir}/tests/inputs/fgumi/template.bam", checkIfExists: true)
+                    file("https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/bam/grouped.bam", checkIfExists: true)
                 ]
                 """
             }
