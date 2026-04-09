@@ -435,7 +435,6 @@ workflow PREPROCESSING {
     // UMI-specific outputs exposed at workflow level.
     family_size_histogram      = FASTQ_TO_CRAM.out.family_size_histogram
     umi_filtered_consensus_bam = FASTQ_TO_CRAM.out.filtered_consensus_bam
-    umi_crams                  = FASTQ_TO_CRAM.out.cram_crai.filter { meta, _cram, _crai -> meta.fgumi_aware == true }
     mosdepth_global            = COVERAGE.out.mosdepth_global
     mosdepth_summary           = COVERAGE.out.mosdepth_summary
     mosdepth_regions           = COVERAGE.out.mosdepth_regions
