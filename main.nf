@@ -181,7 +181,6 @@ workflow {
     // Additional UMI consensus outputs.
     family_size_histogram      = PREPROCESSING.out.family_size_histogram
     umi_filtered_consensus_bam = PREPROCESSING.out.umi_filtered_consensus_bam
-    umi_crams                  = PREPROCESSING.out.umi_crams
     mosdepth_global            = PREPROCESSING.out.mosdepth_global
     mosdepth_summary           = PREPROCESSING.out.mosdepth_summary
     mosdepth_regions           = PREPROCESSING.out.mosdepth_regions
@@ -288,12 +287,6 @@ output {
     umi_filtered_consensus_bam {
         path { meta, bam ->
             bam >> (meta.library ? "${meta.library}/${meta.samplename}/${bam.name}" : "${meta.samplename}/${bam.name}")
-        }
-    }
-    umi_crams {
-        path { meta, cram, crai ->
-            cram >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.umi.cram" : "${meta.samplename}/${meta.samplename}.umi.cram")
-            crai >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.umi.cram.crai" : "${meta.samplename}/${meta.samplename}.umi.cram.crai")
         }
     }
     mosdepth_global {
