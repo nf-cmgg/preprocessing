@@ -73,16 +73,6 @@
                     "format": "directory-path",
                     "description": "Directory containing gene list bed files for granular coverage analysis"
                 },
-                "fgumi_read_structures": {
-                    "type": "string",
-                    "default": "+T +T",
-                    "description": "Read structures passed to fgumi extract for UMI extraction from FASTQ."
-                },
-                "fgumi_extract_umis_from_read_names": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Enable fgumi extract --extract-umis-from-read-names for read name encoded UMIs."
-                },
                 "fgumi_group_strategy": {
                     "type": "string",
                     "default": "adjacency",
@@ -100,11 +90,6 @@
                     "default": 1,
                     "minimum": 1,
                     "description": "Minimum number of reads required per UMI family for fgumi simplex consensus generation."
-                },
-                "fgumi_filter_min_reads": {
-                    "type": "string",
-                    "default": "1,1,1",
-                    "description": "Minimum reads triplet passed to fgumi filter --min-reads."
                 },
                 "fgumi_queue_memory": {
                     "type": "integer",
@@ -139,11 +124,6 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Pass -I to SNAP to ignore mismatched read IDs in paired-end input."
-                },
-                "fgumi_snap_extra_args": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Additional SNAP options for the fgumi fastq|snap|zipper pipeline."
                 },
                 "fgumi_duplex_metrics_extra_args": {
                     "type": "string",
