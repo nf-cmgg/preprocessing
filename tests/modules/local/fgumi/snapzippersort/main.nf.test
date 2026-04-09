@@ -18,7 +18,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [id: "test", samplename: "test"],
-                    file("${projectDir}/tests/inputs/fgumi/unmapped.bam", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/bam/unmapped.bam", checkIfExists: true),
                     file("${projectDir}/tests/inputs/fgumi/snap_index", checkIfExists: true),
                     file("${projectDir}/tests/inputs/fgumi/ref.fa", checkIfExists: true),
                     file("${projectDir}/tests/inputs/fgumi/ref.dict", checkIfExists: true)
