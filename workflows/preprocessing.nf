@@ -273,7 +273,6 @@ workflow PREPROCESSING {
     )
     // Collect both standard and UMI-specific metrics for MultiQC.
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.duplex_metrics)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.family_size_histogram)
 
     /*
@@ -438,7 +437,6 @@ workflow PREPROCESSING {
     // UMI-specific outputs exposed at workflow level.
     family_size_histogram      = FASTQ_TO_CRAM.out.family_size_histogram
     umi_filtered_consensus_bam = FASTQ_TO_CRAM.out.filtered_consensus_bam
-    umi_duplex_metrics         = FASTQ_TO_CRAM.out.duplex_metrics
     umi_crams                  = FASTQ_TO_CRAM.out.cram_crai.filter { meta, _cram, _crai -> meta.fgumi_aware == true }
     mosdepth_global            = COVERAGE.out.mosdepth_global
     mosdepth_summary           = COVERAGE.out.mosdepth_summary

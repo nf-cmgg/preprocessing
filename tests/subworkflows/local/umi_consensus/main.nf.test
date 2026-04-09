@@ -48,7 +48,6 @@ nextflow_workflow {
             assert workflow.out.family_size_histogram.size() == 1
             assert workflow.out.consensus_metrics.size() == 1
             assert workflow.out.filtering_metrics.size() == 1
-            assert workflow.out.duplex_metrics.size() == 1
             assert workflow.out.filtered_consensus_bam.size() == 1
             assert snapshot(workflow.out).match()
         }

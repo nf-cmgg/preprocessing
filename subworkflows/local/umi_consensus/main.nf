@@ -1,7 +1,6 @@
 #!/usr/bin/env nextflow
 
 // MODULES
-include { FGUMI_DUPLEX_METRICS   } from "../../../modules/local/fgumi/duplexmetrics/main.nf"
 include { FGUMI_EXTRACT          } from "../../../modules/local/fgumi/extract/main.nf"
 include { FGUMI_FILTER           } from "../../../modules/local/fgumi/filter/main.nf"
 include { FGUMI_GROUP            } from "../../../modules/local/fgumi/group/main.nf"
@@ -43,10 +42,6 @@ workflow UMI_CONSENSUS_FGUMI {
         FGUMI_GROUP.out.bam
     )
 
-    FGUMI_DUPLEX_METRICS(
-        FGUMI_GROUP.out.bam
-    )
-
     // Step 7: filter consensus reads, then coordinate-sort/index for downstream CRAM conversion.
     FGUMI_FILTER(
         FGUMI_SIMPLEX.out.bam
@@ -67,6 +62,5 @@ workflow UMI_CONSENSUS_FGUMI {
     family_size_histogram = FGUMI_GROUP.out.family_size_histogram
     consensus_metrics     = FGUMI_SIMPLEX.out.consensus_metrics
     filtering_metrics     = FGUMI_FILTER.out.filtering_metrics
-    duplex_metrics        = FGUMI_DUPLEX_METRICS.out.duplex_metrics
     filtered_consensus_bam = FGUMI_SORT.out.bam
 }

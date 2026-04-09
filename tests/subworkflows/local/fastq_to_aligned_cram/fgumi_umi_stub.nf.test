@@ -46,7 +46,6 @@ nextflow_workflow {
         then {
             assert workflow.success
             // Explicitly assert newly exposed UMI channels.
-            assert workflow.out.duplex_metrics.size() == 1
             assert workflow.out.family_size_histogram.size() == 1
             assert workflow.out.filtered_consensus_bam.size() == 1
             assert snapshot(
