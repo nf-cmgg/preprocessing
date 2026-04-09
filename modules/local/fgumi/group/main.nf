@@ -31,8 +31,6 @@ process FGUMI_GROUP {
         --threads ${task.cpus} \
         --queue-memory ${queue_memory_mb} \
         --queue-memory-per-thread \
-        --grouping-metrics ${prefix}.grouping_metrics.txt \
-        --family-size-histogram ${prefix}.family_size_histogram.txt \
         ${args}
     """
 

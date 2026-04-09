@@ -25,8 +25,6 @@ process FGUMI_SORT {
     fgumi sort \
         --input ${bam} \
         --output ${prefix}.bam \
-        --order coordinate \
-        --write-index \
         ${args}
     """
 
