@@ -18,12 +18,17 @@ process FGUMI_EXTRACT {
 
     script:
     def args = task.ext.args ?: ''
+    // Derive per-thread queue memory from requested process resources.
+    def queue_memory_mb = (task.memory.mega / task.cpus * 0.75).intValue()
     prefix = task.ext.prefix ?: "${meta.id}.fgumi.unmapped"
 
     """
     fgumi extract \
         --inputs ${reads} \
         --output ${prefix}.bam \
+        --threads ${task.cpus} \
+        --queue-memory ${queue_memory_mb} \
+        --queue-memory-per-thread \
         ${args}
     """
 
