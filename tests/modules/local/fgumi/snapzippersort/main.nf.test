@@ -20,8 +20,8 @@ nextflow_process {
                     [id: "test", samplename: "test"],
                     file("https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/bam/unmapped.bam", checkIfExists: true),
                     file("${projectDir}/tests/inputs/fgumi/snap_index", checkIfExists: true),
-                    file("${projectDir}/tests/inputs/fgumi/ref.fa", checkIfExists: true),
-                    file("${projectDir}/tests/inputs/fgumi/ref.dict", checkIfExists: true)
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict", checkIfExists: true)
                 ]
                 """
             }

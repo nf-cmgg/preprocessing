@@ -51,8 +51,8 @@
   fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz
 # UMI consensus (fgumi) inputs
 # Example DNA sample with fgumi_aware enabled for fgumi processing.
-- id: UMI_consensus1
-  samplename: HT1080-chr20
+- id: sample1
+  samplename: sample1-chr21
   library: test_library
   organism: Homo sapiens
   tag: WES
@@ -61,6 +61,6 @@
   markdup: bamsormadup
   fgumi_aware: true
   run_coverage: true
-  fastq_1: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/HT1080-chr20_S16_R1_001.fastq.gz
-  fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/HT1080-chr20_S16_R2_001.fastq.gz
+  fastq_1: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/sample1_S31_R1_001.fastq.gz
+  fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/sample1_S31_R2_001.fastq.gz
 
