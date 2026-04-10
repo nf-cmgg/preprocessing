@@ -24,19 +24,19 @@ nextflow_workflow {
                         markdup: "bamsormadup",
                         fgumi_aware: true,
                         genome_data: [
-                            fasta: "${projectDir}/tests/inputs/fgumi/ref.fa",
-                            fai: "${projectDir}/tests/inputs/fgumi/ref.fa.fai",
-                            dict: "${projectDir}/tests/inputs/fgumi/ref.dict",
-                            snap: "${projectDir}/tests/inputs/fgumi/snap_index"
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                            dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                            snap: "s3://reference-data/genomes/Hsapiens/GRCh38/snapaligner/"
                         ]
                     ],
                     [
-                        file("${projectDir}/tests/inputs/fgumi/R1.fastq.gz", checkIfExists: true),
-                        file("${projectDir}/tests/inputs/fgumi/R2.fastq.gz", checkIfExists: true)
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
                     "snap",
-                    file("${projectDir}/tests/inputs/fgumi/snap_index", checkIfExists: true),
-                    file("${projectDir}/tests/inputs/fgumi/ref.fa", checkIfExists: true),
+                    file("s3://reference-data/genomes/Hsapiens/GRCh38/snapaligner/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
                     []
                 ])
                 """
