@@ -3,8 +3,8 @@ process FGUMI_SNAP_ZIPPER_SORT {
     label 'process_high'
 
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/24/2466270633749543330f352e34588f142de4988585ce63e7f22ee5ed1ff57450/data'
-        : 'community.wave.seqera.io/library/fgumi_samtools_snap-aligner:c9ba911435350668'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/260799863489814407983695270f20538a7c28a25c1a14f4477c44e9955743b1/data'
+        : 'community.wave.seqera.io/library/fgumi_samtools_snap-aligner:fe040922c66ac98d'}"
 
     input:
     tuple val(meta), path(unmapped_bam), path(index, stageAs: "index/*"), path(fasta), path(dict)
