@@ -1,6 +1,8 @@
 # nf-cmgg/preprocessing: Usage
 
-Parameter documentation can be found [here](parameters.md)
+Parameter documentation can be found in the [pipeline parameters reference](parameters.md).
+
+The current fgumi-aware branch and overall integration into the FASTQ to CRAM flow are documented in the [analysis flow diagram](analysis_flow.md).
 
 ## Introduction
 

@@ -3,8 +3,8 @@ process FGUMI_SIMPLEX {
     label 'process_medium'
 
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/95/954170443a820787c9e02ef2135ebb8ec29c6b03633b0d61b5fafa98c59a1cce/data'
-        : 'community.wave.seqera.io/library/fgumi_r-base_r-ggplot2_r-scales:09c99070b82c1c28'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f7267104b209869695781a5f4585c490a61250269f8c6f14068535a3962b865a/data'
+        : 'community.wave.seqera.io/library/fgumi:0.2.0--fe028e7a64e5da27'}"
 
     input:
     tuple val(meta), path(bam)
