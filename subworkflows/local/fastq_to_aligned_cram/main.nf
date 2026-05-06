@@ -92,7 +92,7 @@ workflow FASTQ_TO_CRAM {
             samtools: meta.markdup == "samtools"
             return [meta, files, fasta, fai]
             sort: meta.markdup == "false" || meta.markdup == false
-            return [meta, files, fasta, fai]
+            return [meta, files, fasta]
             unknown: true
             error("markdup option ${meta.markdup} not supported")
         }
