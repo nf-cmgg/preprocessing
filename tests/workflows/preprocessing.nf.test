@@ -34,7 +34,6 @@ nextflow_workflow {
                         [],                         // samplesheet
                         [],                         // sampleinfo
                         [],                         // flowcell
-
                     ]
                 )
                 // genomes
@@ -55,6 +54,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -131,6 +132,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -212,6 +215,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -278,6 +283,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
