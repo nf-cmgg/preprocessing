@@ -63,21 +63,24 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
                     "multiqc_data",
                     "multiqc_plots",
-                    "multiqcsav_report",
+                    "multiqc_report",
                     "multiqcsav_data",
                     "multiqcsav_plots",
-                    "md5sums",
-                    "fastp_html",
-                    "crams",
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
+                    "multiqcsav_report",
                     "picard_hsmetrics",
-                    "samtools_flagstat",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
                     "samtools_coverage",
+                    "samtools_flagstat",
                     "samtools_stats"
                 ])
             ).match()
@@ -139,21 +142,24 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
                     "multiqc_data",
                     "multiqc_plots",
-                    "multiqcsav_report",
+                    "multiqc_report",
                     "multiqcsav_data",
                     "multiqcsav_plots",
-                    "md5sums",
-                    "fastp_html",
-                    "crams",
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
+                    "multiqcsav_report",
                     "picard_hsmetrics",
-                    "samtools_flagstat",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
                     "samtools_coverage",
+                    "samtools_flagstat",
                     "samtools_stats"
                 ])
             ).match()
@@ -220,21 +226,24 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
                     "multiqc_data",
                     "multiqc_plots",
-                    "multiqcsav_report",
+                    "multiqc_report",
                     "multiqcsav_data",
                     "multiqcsav_plots",
-                    "md5sums",
-                    "fastp_html",
-                    "crams",
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
+                    "multiqcsav_report",
                     "picard_hsmetrics",
-                    "samtools_flagstat",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
                     "samtools_coverage",
+                    "samtools_flagstat",
                     "samtools_stats"
                 ])
             ).match()
@@ -286,23 +295,26 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
+                    "crams",
                     "demultiplex_logs",
                     "demultiplex_reports",
-                    "multiqc_report",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
                     "multiqc_data",
                     "multiqc_plots",
-                    "multiqcsav_report",
+                    "multiqc_report",
                     "multiqcsav_data",
                     "multiqcsav_plots",
-                    "md5sums",
-                    "fastp_html",
-                    "crams",
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
+                    "multiqcsav_report",
                     "picard_hsmetrics",
-                    "samtools_flagstat",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
                     "samtools_coverage",
+                    "samtools_flagstat",
                     "samtools_stats"
                 ]).collectEntries { key, value ->
                     if (key in ["demultiplex_logs", "demultiplex_reports"]) {
