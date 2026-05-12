@@ -43,12 +43,12 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert workflow.out.bam_bai.size() == 1
+            assert workflow.out.cram_crai.size() == 1
             assert workflow.out.grouping_metrics.size() == 1
             assert workflow.out.family_size_histogram.size() == 1
             assert workflow.out.consensus_metrics.size() == 1
             assert workflow.out.filtering_metrics.size() == 1
-            assert workflow.out.filtered_consensus_bam.size() == 1
+            assert workflow.out.filtered_consensus_cram.size() == 1
             assert snapshot(workflow.out).match()
         }
     }

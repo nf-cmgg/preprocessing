@@ -6,7 +6,7 @@ include { FGUMI_FILTER           } from "../../../modules/local/fgumi/filter/mai
 include { FGUMI_GROUP            } from "../../../modules/local/fgumi/group/main.nf"
 include { FGUMI_SIMPLEX          } from "../../../modules/local/fgumi/simplex/main.nf"
 include { FGUMI_SNAP_ZIPPER_SORT } from "../../../modules/local/fgumi/snapzippersort/main.nf"
-include { FGUMI_SORT             } from "../../../modules/local/fgumi/sort/main.nf"
+include { SAMTOOLS_SORT          } from "../../../modules/nf-core/samtools/sort/main.nf"
 
 // FUNCTIONS
 include { getGenomeAttribute      } from '../../local/utils_nfcore_preprocessing_pipeline'
@@ -52,15 +52,21 @@ workflow UMI_CONSENSUS_FGUMI {
             .map { meta, bam, fasta -> [meta, bam, fasta] }
     )
 
-    FGUMI_SORT(
+    SAMTOOLS_SORT(
         FGUMI_FILTER.out.bam
+            .join(
+                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta -> [meta, fasta] },
+                by: 0,
+            )
+            .map { meta, bam, fasta -> [meta, bam, fasta] },
+        "crai"
     )
 
     emit:
-    bam_bai               = FGUMI_SORT.out.bam.join(FGUMI_SORT.out.bai, failOnMismatch: true, failOnDuplicate: true)
+    cram_crai             = SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch: true, failOnDuplicate: true)
     grouping_metrics      = FGUMI_GROUP.out.grouping_metrics
     family_size_histogram = FGUMI_GROUP.out.family_size_histogram
     consensus_metrics     = FGUMI_SIMPLEX.out.consensus_metrics
     filtering_metrics     = FGUMI_FILTER.out.filtering_metrics
-    filtered_consensus_bam = FGUMI_SORT.out.bam
+    filtered_consensus_cram = SAMTOOLS_SORT.out.cram
 }

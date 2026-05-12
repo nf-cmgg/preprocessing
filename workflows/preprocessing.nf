@@ -436,7 +436,7 @@ workflow PREPROCESSING {
     sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
     // UMI-specific outputs exposed at workflow level.
     family_size_histogram      = FASTQ_TO_CRAM.out.family_size_histogram
-    umi_filtered_consensus_bam = FASTQ_TO_CRAM.out.filtered_consensus_bam
+    umi_filtered_consensus_cram = FASTQ_TO_CRAM.out.filtered_consensus_cram
     mosdepth_global            = COVERAGE.out.mosdepth_global
     mosdepth_summary           = COVERAGE.out.mosdepth_summary
     mosdepth_regions           = COVERAGE.out.mosdepth_regions

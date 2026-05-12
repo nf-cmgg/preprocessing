@@ -129,7 +129,7 @@
                         "UMI_consensus1.fgumi.filter.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "bam_bai": [
+                "cram_crai": [
                     [
                         {
                             "id": "UMI_consensus1",
@@ -147,8 +147,8 @@
                                 ]
                             }
                         },
-                        "UMI_consensus1.fgumi.filter.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "UMI_consensus1.fgumi.filter.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "UMI_consensus1.fgumi.filter.cram:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "UMI_consensus1.fgumi.filter.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "consensus_metrics": [
@@ -193,7 +193,7 @@
                         "UMI_consensus1.fgumi.group.family_size_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "filtered_consensus_bam": [
+                "filtered_consensus_cram": [
                     [
                         {
                             "id": "UMI_consensus1",
@@ -211,7 +211,7 @@
                                 ]
                             }
                         },
-                        "UMI_consensus1.fgumi.filter.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "UMI_consensus1.fgumi.filter.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "filtering_metrics": [

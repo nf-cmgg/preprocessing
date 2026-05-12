@@ -28,7 +28,7 @@ flowchart TD
       U4[Step 5: FGUMI_SIMPLEX]
       U5J[Join simplex BAM with fasta]
       U5[Step 7a: FGUMI_FILTER]
-      U6[Step 7b: FGUMI_SORT\ncoordinate sort + index]
+      U6[Step 7b: SAMTOOLS_SORT\ncoordinate sort + CRAM index]
 
       U1 --> U1J --> U2
       U2 --> U2a --> U2b --> U2c --> U2d --> U2e --> U2f
@@ -38,12 +38,12 @@ flowchart TD
     D1 --> M1[Markdup branch selector\nbamsormadup | samtools | sort]
     R1 --> M1
 
-    U6 --> MIX1[Mix UMI BAM/BAI into common postprocess stream]
+    U6 --> MIX1[Mix UMI CRAM/CRAI into common postprocess stream]
     U3 --> MET1[grouping_metrics]
     U3 --> MET2[family_size_histogram]
     U4 --> MET3[consensus_metrics]
     U5 --> MET4[filtering_metrics]
-    U6 --> MET5[filtered_consensus_bam]
+    U6 --> MET5[filtered_consensus_cram]
 
     M1 --> P1[BIOBAMBAM_BAMSORMADUP or SAMTOOLS_SORMADUP or SAMTOOLS_SORT]
     P1 --> COMP{bam or cram}
@@ -56,7 +56,7 @@ flowchart TD
     OUT1 --> E1[emit: cram_crai]
     MET1 --> E2[emit: sormadup_metrics]
     MET2 --> E3[emit: family_size_histogram]
-    MET5 --> E4[emit: filtered_consensus_bam]
+    MET5 --> E4[emit: filtered_consensus_cram]
 ```
 
 ## Notes

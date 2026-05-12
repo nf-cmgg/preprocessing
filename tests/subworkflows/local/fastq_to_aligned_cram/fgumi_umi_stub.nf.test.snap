@@ -46,7 +46,7 @@
                         "UMI_consensus1.fgumi.group.family_size_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "filtered_consensus_bam": [
+                "filtered_consensus_cram": [
                     [
                         {
                             "id": "UMI_consensus1",
@@ -64,7 +64,7 @@
                                 ]
                             }
                         },
-                        "UMI_consensus1.fgumi.filter.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "UMI_consensus1.fgumi.filter.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "rna_junctions": [

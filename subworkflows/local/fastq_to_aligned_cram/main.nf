@@ -118,14 +118,14 @@ workflow FASTQ_TO_CRAM {
 
     // UMI branch outputs are mixed into the common markdup/metrics streams.
     ch_markdup_index = ch_markdup_index.mix(
-        UMI_CONSENSUS_FGUMI.out.bam_bai
+        UMI_CONSENSUS_FGUMI.out.cram_crai
     )
     ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.grouping_metrics)
     ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.family_size_histogram)
     ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.consensus_metrics)
     ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.filtering_metrics)
     ch_family_size_histogram = UMI_CONSENSUS_FGUMI.out.family_size_histogram
-    ch_filtered_consensus_bam = UMI_CONSENSUS_FGUMI.out.filtered_consensus_bam
+    ch_filtered_consensus_cram = UMI_CONSENSUS_FGUMI.out.filtered_consensus_cram
 
     // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta, fai)
     BIOBAMBAM_BAMSORMADUP(ch_bam_fasta_fai.bamsormadup)
@@ -177,7 +177,7 @@ workflow FASTQ_TO_CRAM {
     emit:
     cram_crai            = ch_cram_crai
     // UMI-specific output channels for downstream reporting and publishing.
-    filtered_consensus_bam = ch_filtered_consensus_bam
+    filtered_consensus_cram = ch_filtered_consensus_cram
     rna_splice_junctions = FASTQ_ALIGN_RNA.out.splice_junctions
     rna_junctions        = FASTQ_ALIGN_RNA.out.junctions
     sormadup_metrics     = ch_sormadup_metrics

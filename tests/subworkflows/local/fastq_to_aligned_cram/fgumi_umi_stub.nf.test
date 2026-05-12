@@ -47,7 +47,7 @@ nextflow_workflow {
             assert workflow.success
             // Explicitly assert newly exposed UMI channels.
             assert workflow.out.family_size_histogram.size() == 1
-            assert workflow.out.filtered_consensus_bam.size() == 1
+            assert workflow.out.filtered_consensus_cram.size() == 1
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:["cram_crai"])
             ).match()
