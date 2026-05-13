@@ -43,6 +43,7 @@ workflow PREPROCESSING {
     multiqc_config // file(s): MultiQC config file(s)
     multiqc_logo // file: MultiQC logo file
     multiqc_methods_description // file: custom methods description for MultiQC report
+    outdir // directory: output directory for the workflow results
 
     main:
     ch_multiqc_files = channel.empty()
@@ -373,7 +374,7 @@ workflow PREPROCESSING {
     softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
+            storeDir: "${outdir.toUriString()}/pipeline_info",
             name: 'nf_cmgg_preprocessing_software_mqc_versions.yml',
             sort: true,
             newLine: true,

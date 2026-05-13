@@ -25,7 +25,7 @@ nextflow_workflow {
                             aligner: "bwamem",
                             markdup: "bamsormadup",
                             run_coverage: true,
-                            roi: file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true)
+                            roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -34,7 +34,6 @@ nextflow_workflow {
                         [],                         // samplesheet
                         [],                         // sampleinfo
                         [],                         // flowcell
-
                     ]
                 )
                 // genomes
@@ -55,6 +54,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -134,6 +135,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -188,7 +191,7 @@ nextflow_workflow {
                             markdup: "bamsormadup",
                             run_coverage: false,
                             disable_picard_metrics: true,
-                            roi: file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true)
+                            roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -218,6 +221,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -287,6 +292,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }

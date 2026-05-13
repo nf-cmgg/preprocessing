@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.0.1dev
 
+- Add parameter typing to make strict syntax runs work more properly
+- Bumped minimal Nextflow version to 26.04.0 to allow for strict syntax and other improvements
 - Fix an issue with `mosdepth` environment variables not being correctly set on GCP
 - Bump `mosdepth` module to 0.3.14
 

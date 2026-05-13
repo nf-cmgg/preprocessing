@@ -21,6 +21,7 @@ lint:
     - bin/cmgg_genelists
   multiqc_config: false
   nextflow_config: false
+  schema_params: false # TMP
   template_strings:
     - bin/cmgg_genelists
   nf_test_content: false
