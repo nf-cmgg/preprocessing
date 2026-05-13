@@ -8,8 +8,7 @@ process BIOBAMBAM_BAMSORMADUP {
         : 'quay.io/biocontainers/biobambam:2.0.185--h85de650_1'}"
 
     input:
-    tuple val(meta), path(bams, stageAs: "?/*")
-    tuple val(meta2), path(fasta), path(fai)
+    tuple val(meta), path(bams, stageAs: "?/*"), path(fasta), path(fai)
 
     output:
     tuple val(meta), path("*.bam"), optional: true, emit: bam
