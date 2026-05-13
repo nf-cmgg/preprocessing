@@ -5,33 +5,18 @@ Changes in 'samtools/sort/main.nf':
 --- modules/nf-core/samtools/sort/main.nf
 +++ modules/nf-core/samtools/sort/main.nf
 @@ -8,8 +8,7 @@
-         'biocontainers/samtools:1.22.1--h96c455f_0' }"
+         : 'community.wave.seqera.io/library/htslib_samtools:1.23.1--5b6bb4ede7e612e5'}"
  
      input:
--    tuple val(meta) , path(bam)
--    tuple val(meta2), path(fasta)
-+    tuple val(meta) , path(bam), path(fasta)
+-    tuple val(meta), path(bam)
+-    tuple val(meta2), path(fasta), path(fai)
++    tuple val(meta), path(bam), path(fasta), path(fai)
      val index_format
  
      output:
-@@ -31,6 +30,7 @@
-                 args.contains("--output-fmt cram") ? "cram" :
-                 "bam"
-     def reference = fasta ? "--reference ${fasta}" : ""
-+    def sort_memory = (task.memory.mega/task.cpus*0.75).intValue()
-     output_file = index_format ? "${prefix}.${extension}##idx##${prefix}.${extension}.${index_format} --write-index" : "${prefix}.${extension}"
-     if (index_format) {
-         if (!index_format.matches('bai|csi|crai')) {
-@@ -50,6 +50,7 @@
-         -T ${prefix} \\
-         --threads $task.cpus \\
-         ${reference} \\
-+        -m ${sort_memory}M \\
-         -o ${output_file} \\
-         -
- 
 
 'modules/nf-core/samtools/sort/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/samtools/sort/tests/nextflow_sam.config' is unchanged
 'modules/nf-core/samtools/sort/tests/nextflow_cram.config' is unchanged
 'modules/nf-core/samtools/sort/tests/nextflow.config' is unchanged
 'modules/nf-core/samtools/sort/tests/main.nf.test' is unchanged

@@ -19,6 +19,7 @@ lint:
     - LICENSE
   merge_markers:
     - bin/cmgg_genelists
+    - .pixi/envs
   multiqc_config: false
   nextflow_config: false
   schema_params: false # TMP
