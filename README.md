@@ -59,6 +59,16 @@ nextflow run nf-cmgg/preprocessing \
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
+## Development environment
+
+A [pixi](https://pixi.prefix.dev/latest/) development environment is available for this pipeline. Run the following command to install the environment:
+
+```
+pixi install
+```
+
+Then run `pixi shell` to enter the environment and start developing.
+
 ## Credits
 
 nf-cmgg/preprocessing was originally written by the CMGG ICT team.
