@@ -9,6 +9,7 @@ testing*
 null/
 .nf-test*
 test_fc
+.lineage/
 # pixi environments
 .pixi/*
 !.pixi/config.toml
