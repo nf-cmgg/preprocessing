@@ -10,3 +10,4 @@ version = "0.1.0"
 [dependencies]
 nextflow = ">=26.4.1,<27"
 nf-test = ">=0.9.5,<0.10"
+pre-commit = ">=4.6.0,<5"
