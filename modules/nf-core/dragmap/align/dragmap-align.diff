@@ -5,7 +5,7 @@ Changes in 'dragmap/align/main.nf':
 --- modules/nf-core/dragmap/align/main.nf
 +++ modules/nf-core/dragmap/align/main.nf
 @@ -9,10 +9,8 @@
-         : 'biocontainers/mulled-v2-580d344d9d4a496cd403932da8765f9e0187774d:df80ed8d23d0a2c43181a2b3dd1b39f2d00fab5c-0'}"
+         : 'quay.io/biocontainers/mulled-v2-580d344d9d4a496cd403932da8765f9e0187774d:df80ed8d23d0a2c43181a2b3dd1b39f2d00fab5c-0'}"
  
      input:
 -    tuple val(meta), path(reads)

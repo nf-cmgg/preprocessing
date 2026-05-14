@@ -5,7 +5,7 @@ Changes in 'snapaligner/align/main.nf':
 --- modules/nf-core/snapaligner/align/main.nf
 +++ modules/nf-core/snapaligner/align/main.nf
 @@ -8,8 +8,7 @@
-         'community.wave.seqera.io/library/snap-aligner:2.0.5--23601d3a3a2ae452' }"
+         'quay.io/biocontainers/snap-aligner:2.0.5--h077b44d_2' }"
  
      input:
 -    tuple val(meta) , path(reads, stageAs: "?/*")

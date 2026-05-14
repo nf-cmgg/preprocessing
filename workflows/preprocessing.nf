@@ -262,6 +262,7 @@ workflow PREPROCESSING {
                 meta.aligner,
                 getGenomeAttribute(meta.genome_data, meta.aligner),
                 getGenomeAttribute(meta.genome_data, "fasta"),
+                getGenomeAttribute(meta.genome_data, "fai"),
                 getGenomeAttribute(meta.genome_data, "gtf"),
             ]
         }

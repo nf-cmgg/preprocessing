@@ -96,10 +96,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T22:49:27.454517",
+        "timestamp": "2026-05-14T08:11:34.101241",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     },
     "fastq align rna - unknown aligner": {
