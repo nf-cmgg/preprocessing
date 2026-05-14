@@ -26,19 +26,19 @@ workflow FASTQ_ALIGN_DNA {
     ch_reports = channel.empty()
 
     ch_reads_aligner_index_fasta_fai
-        .branch { meta, reads, aligner, index, fasta, fai ->
+        .branch { meta, reads, aligner, index, fasta, _fai ->
             bowtie2: aligner == 'bowtie2'
-            return [meta, reads, index, fasta, fai]
+            return [meta, reads, index, fasta]
             bwamem: aligner == 'bwamem'
-            return [meta, reads, index, fasta, fai  ]
+            return [meta, reads, index, fasta]
             bwamem2: aligner == 'bwamem2'
-            return [meta, reads, index, fasta, fai]
+            return [meta, reads, index, fasta]
             dragmap: aligner == 'dragmap'
-            return [meta, reads, index, fasta, fai]
+            return [meta, reads, index, fasta]
             snap: aligner == 'snap'
             return [meta, reads, index]
             strobe: aligner == 'strobe'
-            return [meta, reads, fasta, index, fai]
+            return [meta, reads, fasta, index]
             other: true
         }
         .set { ch_to_align }

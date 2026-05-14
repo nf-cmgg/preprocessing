@@ -19,7 +19,7 @@ include { getGenomeAttribute    } from '../../local/utils_nfcore_preprocessing_p
 
 workflow FASTQ_TO_CRAM {
     take:
-    ch_meta_reads_aligner_index_fasta_gtf // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta, gtf]
+    ch_meta_reads_aligner_index_fasta_fai_gtf // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta, fai, gtf]
 
     main:
     ch_sormadup_metrics = channel.empty()
@@ -30,15 +30,15 @@ workflow FASTQ_TO_CRAM {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    ch_meta_reads_aligner_index_fasta_gtf.dump(tag: "FASTQ_TO_CRAM: reads to align", pretty: true)
-    ch_meta_reads_aligner_index_fasta_gtf
-        .branch { meta, reads, aligner, index, fasta, gtf ->
+    ch_meta_reads_aligner_index_fasta_fai_gtf.dump(tag: "FASTQ_TO_CRAM: reads to align", pretty: true)
+    ch_meta_reads_aligner_index_fasta_fai_gtf
+        .branch { meta, reads, aligner, index, fasta, fai, gtf ->
             rna: meta.sample_type == "RNA"
             return [meta, reads, "star", getGenomeAttribute(meta.genome_data, 'star'), gtf]
             dna: true
             // catch all non-RNA samples as DNA, as some may be missing sample_type or have other sample types (e.g. tissue, cell line, etc.) that should be aligned with the DNA aligner
             //dna: meta.sample_type == "DNA" || meta.sample_type == "Tissue"
-            return [meta, reads, aligner, index, fasta]
+            return [meta, reads, aligner, index, fasta, fai]
         }
         .set { ch_meta_reads_aligner_index_fasta_datatype }
 
@@ -92,27 +92,27 @@ workflow FASTQ_TO_CRAM {
             samtools: meta.markdup == "samtools"
             return [meta, files, fasta, fai]
             sort: meta.markdup == "false" || meta.markdup == false
-            return [meta, files, fasta]
+            return [meta, files, fasta, fai]
             unknown: true
             error("markdup option ${meta.markdup} not supported")
         }
-        .set { ch_bam_fasta }
+        .set { ch_bam_fasta_fai }
 
     ch_markdup_index = channel.empty()
 
     // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta, fai)
-    BIOBAMBAM_BAMSORMADUP(ch_bam_fasta.bamsormadup)
+    BIOBAMBAM_BAMSORMADUP(ch_bam_fasta_fai.bamsormadup)
     ch_markdup_index = ch_markdup_index.mix(BIOBAMBAM_BAMSORMADUP.out.bam.join(BIOBAMBAM_BAMSORMADUP.out.bam_index, failOnMismatch: true, failOnDuplicate: true))
     ch_sormadup_metrics = ch_sormadup_metrics.mix(BIOBAMBAM_BAMSORMADUP.out.metrics)
 
     // SAMTOOLS_SORMADUP([meta, [bam, bam]], fasta, fai)
-    SAMTOOLS_SORMADUP(ch_bam_fasta.samtools)
+    SAMTOOLS_SORMADUP(ch_bam_fasta_fai.samtools)
     ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORMADUP.out.cram.join(SAMTOOLS_SORMADUP.out.crai, failOnMismatch: true, failOnDuplicate: true))
     ch_sormadup_metrics = ch_sormadup_metrics.mix(SAMTOOLS_SORMADUP.out.metrics)
 
     // Merge bam files and compress
     // SAMTOOLS_SORT([meta, [bam, bam], fasta],index_format)
-    SAMTOOLS_SORT(ch_bam_fasta.sort, "crai")
+    SAMTOOLS_SORT(ch_bam_fasta_fai.sort, "crai")
     ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.index, failOnMismatch: true, failOnDuplicate: true))
 
     ch_markdup_index.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", pretty: true)

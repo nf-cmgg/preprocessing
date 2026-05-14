@@ -14,14 +14,14 @@ workflow BAM_QC {
 
     main:
     ch_bam_bai_roi_fasta_fai_dict
-        .map { meta, bam, bai, _roi, fasta, _fai, _dict ->
-            return [meta, bam, bai, fasta]
+        .map { meta, bam, bai, _roi, fasta, fai, _dict ->
+            return [meta, bam, bai, fasta, fai]
         }
-        .set { ch_bam_bai_fasta }
+        .set { ch_bam_bai_fasta_fai }
 
-    SAMTOOLS_STATS(ch_bam_bai_fasta)
-    SAMTOOLS_FLAGSTAT(ch_bam_bai_fasta.map { meta, bam, bai, _fasta -> return [meta, bam, bai] })
-    SAMTOOLS_IDXSTATS(ch_bam_bai_fasta.map { meta, bam, bai, _fasta -> return [meta, bam, bai] })
+    SAMTOOLS_STATS(ch_bam_bai_fasta_fai)
+    SAMTOOLS_FLAGSTAT(ch_bam_bai_fasta_fai.map { meta, bam, bai, _fasta, _fai -> return [meta, bam, bai] })
+    SAMTOOLS_IDXSTATS(ch_bam_bai_fasta_fai.map { meta, bam, bai, _fasta, _fai -> return [meta, bam, bai] })
 
     ch_picard_hsmetrics = channel.empty()
     ch_picard_multiplemetrics = channel.empty()
