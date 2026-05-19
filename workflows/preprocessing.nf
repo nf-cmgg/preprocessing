@@ -124,6 +124,10 @@ workflow PREPROCESSING {
             else {
                 new_rg = meta.readgroup
             }
+            // if the sample name starts with "snp_", remove it in the RG so the sampletracking works later on.
+            if (sampleinfo.samplename.startsWith("snp_")) {
+                new_rg = new_rg + ['SM': sampleinfo.samplename.substring(4)]
+            }
             def new_meta = meta + sampleinfo + ['readgroup': new_rg]
             return [new_meta, fastq]
         }
