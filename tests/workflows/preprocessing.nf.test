@@ -7,253 +7,253 @@ nextflow_workflow {
     tag "workflows"
     tag "workflows/preprocessing"
 
-    // test("preprocessing - fastq - bwa - bamsormadup - roi") {
+    test("preprocessing - fastq - bwa - bamsormadup - roi") {
 
-    //     when {
-    //         workflow {
-    //             """
-    //             // ch_samplesheet
-    //             input[0] = Channel.of(
-    //                 [
-    //                     [                           // meta
-    //                         id: "sample1",
-    //                         samplename: "sample1",
-    //                         library: "test",
-    //                         organism: "Homo sapiens",
-    //                         tag: "WES",
-    //                         sample_type: "DNA",
-    //                         aligner: "bwamem",
-    //                         markdup: "bamsormadup",
-    //                         run_coverage: true,
-    //                         roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
-    //                     ],
-    //                     //fastq_1
-    //                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
-    //                     // fastq_2
-    //                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
-    //                     [],                         // samplesheet
-    //                     [],                         // sampleinfo
-    //                     [],                         // flowcell
-    //                 ]
-    //             )
-    //             // genomes
-    //             input[1] = [
-    //                 GRCh38: [
-    //                     fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-    //                     fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-    //                     dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
-    //                     bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
-    //                     gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
-    //                 ]
-    //             ]
-    //             // genelists
-    //             input[2] = null
-    //             // mqc_config
-    //             input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
-    //             // mqc_logo
-    //             input[4] = []
-    //             // mqc methods description
-    //             input[5] = null
-    //             // outdir
-    //             input[6] = file("${outputDir}")
-    //             """
-    //         }
-    //     }
+        when {
+            workflow {
+                """
+                // ch_samplesheet
+                input[0] = Channel.of(
+                    [
+                        [                           // meta
+                            id: "sample1",
+                            samplename: "sample1",
+                            library: "test",
+                            organism: "Homo sapiens",
+                            tag: "WES",
+                            sample_type: "DNA",
+                            aligner: "bwamem",
+                            markdup: "bamsormadup",
+                            run_coverage: true,
+                            roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
+                        ],
+                        //fastq_1
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        // fastq_2
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
+                        [],                         // samplesheet
+                        [],                         // sampleinfo
+                        [],                         // flowcell
+                    ]
+                )
+                // genomes
+                input[1] = [
+                    GRCh38: [
+                        fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                        fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                        dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                        gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
+                    ]
+                ]
+                // genelists
+                input[2] = null
+                // mqc_config
+                input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
+                // mqc_logo
+                input[4] = []
+                // mqc methods description
+                input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
+                """
+            }
+        }
 
-    //     then {
-    //         assert workflow.success
-    //         assert snapshot(
-    //             sanitizeOutput(workflow.out, unstableKeys:[
-    //                 "crams",
-    //                 "fastp_html",
-    //                 "md5sums",
-    //                 "mosdepth_per_base_csi",
-    //                 "mosdepth_quantized_csi",
-    //                 "mosdepth_regions_csi",
-    //                 "multiqc_data",
-    //                 "multiqc_plots",
-    //                 "multiqc_report",
-    //                 "multiqcsav_data",
-    //                 "multiqcsav_plots",
-    //                 "multiqcsav_report",
-    //                 "picard_hsmetrics",
-    //                 "picard_multiplemetrics",
-    //                 "picard_multiplemetrics_pdf",
-    //                 "picard_wgsmetrics",
-    //                 "samtools_coverage",
-    //                 "samtools_flagstat",
-    //                 "samtools_stats"
-    //             ])
-    //         ).match()
-    //     }
-    // }
+        then {
+            assert workflow.success
+            assert snapshot(
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
+                    "multiqc_data",
+                    "multiqc_plots",
+                    "multiqc_report",
+                    "multiqcsav_data",
+                    "multiqcsav_plots",
+                    "multiqcsav_report",
+                    "picard_hsmetrics",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
+                    "samtools_coverage",
+                    "samtools_flagstat",
+                    "samtools_stats"
+                ])
+            ).match()
+        }
+    }
 
-    // test("preprocessing - fastq - bwa - bamsormadup - no roi") {
+    test("preprocessing - fastq - bwa - bamsormadup - no roi") {
 
-    //     when {
-    //         workflow {
-    //             """
-    //             // ch_samplesheet
-    //             input[0] = Channel.of(
-    //                 [
-    //                     [                           // meta
-    //                         id: "sample1",
-    //                         samplename: "sample1",
-    //                         library: "test",
-    //                         organism: "Homo sapiens",
-    //                         tag: "WGS",
-    //                         sample_type: "DNA",
-    //                         aligner: "bwamem",
-    //                         markdup: "bamsormadup",
-    //                         run_coverage: true
-    //                     ],
-    //                     //fastq_1
-    //                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
-    //                     // fastq_2
-    //                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
-    //                     [],                         // samplesheet
-    //                     [],                         // sampleinfo
-    //                     [],                         // flowcell
+        when {
+            workflow {
+                """
+                // ch_samplesheet
+                input[0] = Channel.of(
+                    [
+                        [                           // meta
+                            id: "sample1",
+                            samplename: "sample1",
+                            library: "test",
+                            organism: "Homo sapiens",
+                            tag: "WGS",
+                            sample_type: "DNA",
+                            aligner: "bwamem",
+                            markdup: "bamsormadup",
+                            run_coverage: true
+                        ],
+                        //fastq_1
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        // fastq_2
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
+                        [],                         // samplesheet
+                        [],                         // sampleinfo
+                        [],                         // flowcell
 
-    //                 ]
-    //             )
-    //             // genomes
-    //             input[1] = [
-    //                 GRCh38: [
-    //                     fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-    //                     fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-    //                     dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
-    //                     bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
-    //                     gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
-    //                 ]
-    //             ]
-    //             // genelists
-    //             input[2] = null
-    //             // mqc_config
-    //             input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
-    //             // mqc_logo
-    //             input[4] = []
-    //             // mqc methods description
-    //             input[5] = null
-    //             // outdir
-    //             input[6] = file("${outputDir}")
-    //             """
-    //         }
-    //     }
+                    ]
+                )
+                // genomes
+                input[1] = [
+                    GRCh38: [
+                        fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                        fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                        dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                        gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
+                    ]
+                ]
+                // genelists
+                input[2] = null
+                // mqc_config
+                input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
+                // mqc_logo
+                input[4] = []
+                // mqc methods description
+                input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
+                """
+            }
+        }
 
-    //     then {
-    //         assert workflow.success
-    //         assert snapshot(
-    //             sanitizeOutput(workflow.out, unstableKeys:[
-    //                 "crams",
-    //                 "fastp_html",
-    //                 "md5sums",
-    //                 "mosdepth_per_base_csi",
-    //                 "mosdepth_quantized_csi",
-    //                 "mosdepth_regions_csi",
-    //                 "multiqc_data",
-    //                 "multiqc_plots",
-    //                 "multiqc_report",
-    //                 "multiqcsav_data",
-    //                 "multiqcsav_plots",
-    //                 "multiqcsav_report",
-    //                 "picard_hsmetrics",
-    //                 "picard_multiplemetrics",
-    //                 "picard_multiplemetrics_pdf",
-    //                 "picard_wgsmetrics",
-    //                 "samtools_coverage",
-    //                 "samtools_flagstat",
-    //                 "samtools_stats"
-    //             ])
-    //         ).match()
-    //     }
-    // }
+        then {
+            assert workflow.success
+            assert snapshot(
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
+                    "multiqc_data",
+                    "multiqc_plots",
+                    "multiqc_report",
+                    "multiqcsav_data",
+                    "multiqcsav_plots",
+                    "multiqcsav_report",
+                    "picard_hsmetrics",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
+                    "samtools_coverage",
+                    "samtools_flagstat",
+                    "samtools_stats"
+                ])
+            ).match()
+        }
+    }
 
-    // test("preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard") {
-    //     when {
-    //         params {
-    //             run_coverage = false
-    //             disable_picard_metrics = true
-    //         }
-    //         workflow {
-    //             """
-    //             // ch_samplesheet
-    //             input[0] = Channel.of(
-    //                 [
-    //                     [                           // meta
-    //                         id: "sample1",
-    //                         samplename: "sample1",
-    //                         library: "test",
-    //                         organism: "Homo sapiens",
-    //                         tag: "WES",
-    //                         sample_type: "DNA",
-    //                         aligner: "bwamem",
-    //                         markdup: "bamsormadup",
-    //                         run_coverage: false,
-    //                         disable_picard_metrics: true,
-    //                         roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
-    //                     ],
-    //                     //fastq_1
-    //                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
-    //                     // fastq_2
-    //                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
-    //                     [],                         // samplesheet
-    //                     [],                         // sampleinfo
-    //                     [],                         // flowcell
+    test("preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard") {
+        when {
+            params {
+                run_coverage = false
+                disable_picard_metrics = true
+            }
+            workflow {
+                """
+                // ch_samplesheet
+                input[0] = Channel.of(
+                    [
+                        [                           // meta
+                            id: "sample1",
+                            samplename: "sample1",
+                            library: "test",
+                            organism: "Homo sapiens",
+                            tag: "WES",
+                            sample_type: "DNA",
+                            aligner: "bwamem",
+                            markdup: "bamsormadup",
+                            run_coverage: false,
+                            disable_picard_metrics: true,
+                            roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
+                        ],
+                        //fastq_1
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
+                        // fastq_2
+                        file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true),
+                        [],                         // samplesheet
+                        [],                         // sampleinfo
+                        [],                         // flowcell
 
-    //                 ]
-    //             )
-    //             // genomes
-    //             input[1] = [
-    //                 GRCh38: [
-    //                     fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-    //                     fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-    //                     dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
-    //                     bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
-    //                     gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
-    //                 ]
-    //             ]
-    //             // genelists
-    //             input[2] = null
-    //             // mqc_config
-    //             input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
-    //             // mqc_logo
-    //             input[4] = []
-    //             // mqc methods description
-    //             input[5] = null
-    //             // outdir
-    //             input[6] = file("${outputDir}")
-    //             """
-    //         }
-    //     }
+                    ]
+                )
+                // genomes
+                input[1] = [
+                    GRCh38: [
+                        fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                        fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                        dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                        gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
+                    ]
+                ]
+                // genelists
+                input[2] = null
+                // mqc_config
+                input[3] = [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)]
+                // mqc_logo
+                input[4] = []
+                // mqc methods description
+                input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
+                """
+            }
+        }
 
-    //     then {
-    //         assert workflow.success
-    //         assert snapshot(
-    //             sanitizeOutput(workflow.out, unstableKeys:[
-    //                 "crams",
-    //                 "fastp_html",
-    //                 "md5sums",
-    //                 "mosdepth_per_base_csi",
-    //                 "mosdepth_quantized_csi",
-    //                 "mosdepth_regions_csi",
-    //                 "multiqc_data",
-    //                 "multiqc_plots",
-    //                 "multiqc_report",
-    //                 "multiqcsav_data",
-    //                 "multiqcsav_plots",
-    //                 "multiqcsav_report",
-    //                 "picard_hsmetrics",
-    //                 "picard_multiplemetrics",
-    //                 "picard_multiplemetrics_pdf",
-    //                 "picard_wgsmetrics",
-    //                 "samtools_coverage",
-    //                 "samtools_flagstat",
-    //                 "samtools_stats"
-    //             ])
-    //         ).match()
-    //     }
-    // }
+        then {
+            assert workflow.success
+            assert snapshot(
+                sanitizeOutput(workflow.out, unstableKeys:[
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
+                    "multiqc_data",
+                    "multiqc_plots",
+                    "multiqc_report",
+                    "multiqcsav_data",
+                    "multiqcsav_plots",
+                    "multiqcsav_report",
+                    "picard_hsmetrics",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
+                    "samtools_coverage",
+                    "samtools_flagstat",
+                    "samtools_stats"
+                ])
+            ).match()
+        }
+    }
 
     test("preprocessing - flowcell - bwa - bamsormadup - roi") {
         when {
