@@ -123,16 +123,16 @@ workflow PREPROCESSING {
             else {
                 new_rg = meta.readgroup
             }
+            // if the sample name starts with "snp_", remove it in the RG so the sampletracking works later on.
+            if (sampleinfo.samplename.startsWith("snp_")) {
+                new_rg = new_rg + ['SM': sampleinfo.samplename.substring(4)]
+            }
             def new_meta = meta + sampleinfo + ['readgroup': new_rg]
             return [new_meta, fastq]
         }
         .groupTuple(by: [0])
         .map { meta, fq ->
             return [meta, fq.flatten().unique()]
-        }
-        .branch { meta, _fastq ->
-            to_align: meta.aligner && meta.aligner != "false"
-            other: true
         }
         .set { ch_demultiplexed_fastq_with_sampleinfo }
 
@@ -161,7 +161,7 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
     ch_input_fastq
-        .mix(ch_demultiplexed_fastq_with_sampleinfo.to_align)
+        .mix(ch_demultiplexed_fastq_with_sampleinfo)
         .map { meta, reads ->
             if (meta.organism && !meta.genome) {
                 if (meta.organism ==~ /(?i)Homo[\s_]sapiens/) {
@@ -194,7 +194,7 @@ workflow PREPROCESSING {
             return [meta - meta.subMap('fcid', 'lane'), fastq]
         }
         .branch { meta, _reads ->
-            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && meta.aligner
+            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && (meta.aligner && meta.aligner != "false")
             other: true
         }
         .set { ch_fastq_per_sample }
@@ -422,7 +422,7 @@ workflow PREPROCESSING {
         return [meta, files(logs.resolve("*"))]
     }
     demultiplex_interop        = BCLCONVERT.out.interop
-    demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
+    fastq                      = ch_fastq_per_sample.other
     falco_html                 = FALCO.out.html
     falco_txt                  = FALCO.out.txt
     fastp_json                 = FASTP.out.json

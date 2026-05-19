@@ -167,8 +167,8 @@ workflow {
     publish:
     demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.transpose()
     demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.transpose()
-    demultiplex_fastq          = PREPROCESSING.out.demultiplex_fastq.transpose()
     demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose(by: 1)
+    fastq                      = PREPROCESSING.out.fastq.transpose()
     falco_html                 = PREPROCESSING.out.falco_html.transpose()
     falco_txt                  = PREPROCESSING.out.falco_txt.transpose()
     fastp_json                 = PREPROCESSING.out.fastp_json
@@ -224,7 +224,7 @@ output {
             bin >> "Interop/${bin.name}"
         }
     }
-    demultiplex_fastq {
+    fastq {
         path { meta, fastq ->
             fastq >> (meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" : "${meta.samplename}/${fastq.name}")
         }

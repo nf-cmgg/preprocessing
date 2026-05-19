@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix an issue with `mosdepth` environment variables not being correctly set on GCP
 - Bump `mosdepth` module to 0.3.14
 - Bump nf-core template to v4.0.2
+- Fix fastq outputs when aligner is set to `false` or unsupported genome, which were not being correctly emitted in the previous version
+- Fix `FALCO` module not being correctly run on fastq samples, which was caused by an issue with the branching logic in the previous version
 
 ## 3.0.0
 

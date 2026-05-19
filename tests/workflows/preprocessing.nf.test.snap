@@ -35,9 +35,6 @@
                         "sample1.cram.crai"
                     ]
                 ],
-                "demultiplex_fastq": [
-                    
-                ],
                 "demultiplex_interop": [
                     
                 ],
@@ -122,6 +119,9 @@
                         },
                         "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
+                ],
+                "fastq": [
+                    
                 ],
                 "md5sums": [
                     [
@@ -712,7 +712,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-13T14:02:20.859241978",
+        "timestamp": "2026-05-19T14:56:03.18527",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
@@ -754,9 +754,6 @@
                         "sample1.cram",
                         "sample1.cram.crai"
                     ]
-                ],
-                "demultiplex_fastq": [
-                    
                 ],
                 "demultiplex_interop": [
                     
@@ -844,6 +841,9 @@
                         },
                         "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
+                ],
+                "fastq": [
+                    
                 ],
                 "md5sums": [
                     [
@@ -1091,7 +1091,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-13T14:07:06.830950059",
+        "timestamp": "2026-05-19T15:00:50.283164",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
@@ -1131,9 +1131,6 @@
                         "sample1.cram",
                         "sample1.cram.crai"
                     ]
-                ],
-                "demultiplex_fastq": [
-                    
                 ],
                 "demultiplex_interop": [
                     
@@ -1217,6 +1214,9 @@
                         },
                         "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
+                ],
+                "fastq": [
+                    
                 ],
                 "md5sums": [
                     [
@@ -1714,10 +1714,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-12T11:01:13.130728",
+        "timestamp": "2026-05-19T14:59:02.416267",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.5"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     },
     "preprocessing - flowcell - bwa - bamsormadup - roi": {
@@ -1773,10 +1773,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-03-05T14:02:04.847019",
+        "timestamp": "2026-05-19T12:26:24.789934",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     }
 }
