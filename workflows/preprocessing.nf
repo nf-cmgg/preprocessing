@@ -110,7 +110,8 @@ workflow PREPROCESSING {
     ch_illumina_flowcell.info
         .flatten()
         .transpose()
-        .map { sampleinfo -> [sampleinfo.samplename, sampleinfo] }
+        .map { sampleinfo -> [sampleinfo.library ?
+            [sampleinfo.samplename, sampleinfo.library] : [sampleinfo.samplename], sampleinfo] }
         .set { ch_sampleinfo }
 
     ch_demultiplexed_fastq
