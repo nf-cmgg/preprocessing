@@ -36,11 +36,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-11T20:19:51.825749",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-11T20:19:51.825749"
+        }
     },
     "fastq to cram - bwa - bamsormadup": {
         "content": [
@@ -95,11 +95,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-11T20:10:31.616836",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-11T20:10:31.616836"
+        }
     },
     "fastq to cram - bwa - samtools sormadup": {
         "content": [
@@ -154,11 +154,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-11T20:15:15.495706",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-11T20:15:15.495706"
+        }
     },
     "fastq to cram - star - bamsormadup": {
         "content": [
@@ -249,11 +249,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-05-14T08:18:36.857986",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-19T11:32:22.214357"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
     },
     "fastq to cram - bwa - samtools sort": {
         "content": [
@@ -292,10 +292,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-11T20:16:26.285299",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-11T20:16:26.285299"
+        }
     }
 }

@@ -25,7 +25,7 @@ nextflow_workflow {
                             aligner: "bwamem",
                             markdup: "bamsormadup",
                             run_coverage: true,
-                            roi: file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true)
+                            roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -34,7 +34,6 @@ nextflow_workflow {
                         [],                         // samplesheet
                         [],                         // sampleinfo
                         [],                         // flowcell
-
                     ]
                 )
                 // genomes
@@ -55,6 +54,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -63,21 +64,24 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
                     "multiqc_data",
                     "multiqc_plots",
-                    "multiqcsav_report",
+                    "multiqc_report",
                     "multiqcsav_data",
                     "multiqcsav_plots",
-                    "md5sums",
-                    "fastp_html",
-                    "crams",
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
+                    "multiqcsav_report",
                     "picard_hsmetrics",
-                    "samtools_flagstat",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
                     "samtools_coverage",
+                    "samtools_flagstat",
                     "samtools_stats"
                 ])
             ).match()
@@ -131,6 +135,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -139,21 +145,24 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
                     "multiqc_data",
                     "multiqc_plots",
-                    "multiqcsav_report",
+                    "multiqc_report",
                     "multiqcsav_data",
                     "multiqcsav_plots",
-                    "md5sums",
-                    "fastp_html",
-                    "crams",
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
+                    "multiqcsav_report",
                     "picard_hsmetrics",
-                    "samtools_flagstat",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
                     "samtools_coverage",
+                    "samtools_flagstat",
                     "samtools_stats"
                 ])
             ).match()
@@ -182,7 +191,7 @@ nextflow_workflow {
                             markdup: "bamsormadup",
                             run_coverage: false,
                             disable_picard_metrics: true,
-                            roi: file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true)
+                            roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -212,6 +221,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -220,21 +231,24 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
-                    "multiqc_report",
+                    "crams",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
                     "multiqc_data",
                     "multiqc_plots",
-                    "multiqcsav_report",
+                    "multiqc_report",
                     "multiqcsav_data",
                     "multiqcsav_plots",
-                    "md5sums",
-                    "fastp_html",
-                    "crams",
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
+                    "multiqcsav_report",
                     "picard_hsmetrics",
-                    "samtools_flagstat",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
                     "samtools_coverage",
+                    "samtools_flagstat",
                     "samtools_stats"
                 ])
             ).match()
@@ -278,6 +292,8 @@ nextflow_workflow {
                 input[4] = []
                 // mqc methods description
                 input[5] = null
+                // outdir
+                input[6] = file("${outputDir}")
                 """
             }
         }
@@ -286,23 +302,26 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(workflow.out, unstableKeys:[
+                    "crams",
                     "demultiplex_logs",
                     "demultiplex_reports",
-                    "multiqc_report",
+                    "fastp_html",
+                    "md5sums",
+                    "mosdepth_per_base_csi",
+                    "mosdepth_quantized_csi",
+                    "mosdepth_regions_csi",
                     "multiqc_data",
                     "multiqc_plots",
-                    "multiqcsav_report",
+                    "multiqc_report",
                     "multiqcsav_data",
                     "multiqcsav_plots",
-                    "md5sums",
-                    "fastp_html",
-                    "crams",
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
+                    "multiqcsav_report",
                     "picard_hsmetrics",
-                    "samtools_flagstat",
+                    "picard_multiplemetrics",
+                    "picard_multiplemetrics_pdf",
+                    "picard_wgsmetrics",
                     "samtools_coverage",
+                    "samtools_flagstat",
                     "samtools_stats"
                 ]).collectEntries { key, value ->
                     if (key in ["demultiplex_logs", "demultiplex_reports"]) {

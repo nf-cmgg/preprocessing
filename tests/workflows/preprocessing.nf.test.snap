@@ -23,7 +23,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": true,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -34,9 +34,6 @@
                         "sample1.cram",
                         "sample1.cram.crai"
                     ]
-                ],
-                "demultiplex_fastq": [
-                    
                 ],
                 "demultiplex_interop": [
                     
@@ -78,7 +75,7 @@
                                 "PU": "H5T2YDSX3.1",
                                 "SM": "sample1"
                             },
-                            "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                            "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "run_coverage": true,
                             "sample_type": "DNA",
                             "samplename": "sample1",
@@ -100,7 +97,7 @@
                             "aligner": "bwamem",
                             "markdup": "bamsormadup",
                             "run_coverage": true,
-                            "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                            "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "single_end": false,
                             "readgroup": {
                                 "LB": "test",
@@ -120,8 +117,11 @@
                             },
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
+                        "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
+                ],
+                "fastq": [
+                    
                 ],
                 "md5sums": [
                     [
@@ -141,7 +141,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": true,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -165,7 +165,7 @@
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -194,7 +194,7 @@
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -215,28 +215,28 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "samplename": "sample1",
-                                "library": "test",
-                                "organism": "Homo sapiens",
-                                "tag": "WES",
-                                "sample_type": "DNA",
                                 "aligner": "bwamem",
-                                "markdup": "bamsormadup",
-                                "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
-                                "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "id": "sample1"
+                                "id": "sample1",
+                                "library": "test",
+                                "markdup": "bamsormadup",
+                                "organism": "Homo sapiens",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "run_coverage": true,
+                                "sample_type": "DNA",
+                                "samplename": "sample1",
+                                "single_end": false,
+                                "tag": "WES"
                             }
                         },
-                        "sample1.per-base.bed.gz.csi:md5,b9223463b0f024768ebbbb3e42ace8da"
+                        "sample1.per-base.bed.gz.csi"
                     ]
                 ],
                 "mosdepth_per_base_d4": [
@@ -255,7 +255,7 @@
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -276,28 +276,28 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "samplename": "sample1",
-                                "library": "test",
-                                "organism": "Homo sapiens",
-                                "tag": "WES",
-                                "sample_type": "DNA",
                                 "aligner": "bwamem",
-                                "markdup": "bamsormadup",
-                                "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
-                                "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "id": "sample1"
+                                "id": "sample1",
+                                "library": "test",
+                                "markdup": "bamsormadup",
+                                "organism": "Homo sapiens",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "run_coverage": true,
+                                "sample_type": "DNA",
+                                "samplename": "sample1",
+                                "single_end": false,
+                                "tag": "WES"
                             }
                         },
-                        "sample1.quantized.bed.gz.csi:md5,efa0455ec39b49b96fd44c1efcbef8ab"
+                        "sample1.quantized.bed.gz.csi"
                     ]
                 ],
                 "mosdepth_regions": [
@@ -313,7 +313,7 @@
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -342,7 +342,7 @@
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -363,28 +363,28 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "samplename": "sample1",
-                                "library": "test",
-                                "organism": "Homo sapiens",
-                                "tag": "WES",
-                                "sample_type": "DNA",
                                 "aligner": "bwamem",
-                                "markdup": "bamsormadup",
-                                "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
-                                "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "id": "sample1"
+                                "id": "sample1",
+                                "library": "test",
+                                "markdup": "bamsormadup",
+                                "organism": "Homo sapiens",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "run_coverage": true,
+                                "sample_type": "DNA",
+                                "samplename": "sample1",
+                                "single_end": false,
+                                "tag": "WES"
                             }
                         },
-                        "sample1.regions.bed.gz.csi:md5,45cbd8c0f3d231c114a2d79d7dd21a80"
+                        "sample1.regions.bed.gz.csi"
                     ]
                 ],
                 "mosdepth_summary": [
@@ -400,7 +400,7 @@
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -477,7 +477,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": true,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -506,7 +506,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": true,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -540,7 +540,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": true,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -583,7 +583,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": true,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -612,7 +612,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": true,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -636,7 +636,7 @@
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -670,7 +670,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": true,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -694,7 +694,7 @@
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "run_coverage": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -712,11 +712,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-05-19T14:56:03.18527",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-05T14:04:31.848677"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard": {
         "content": [
@@ -743,7 +743,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": false,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -754,9 +754,6 @@
                         "sample1.cram",
                         "sample1.cram.crai"
                     ]
-                ],
-                "demultiplex_fastq": [
-                    
                 ],
                 "demultiplex_interop": [
                     
@@ -799,7 +796,7 @@
                                 "PU": "H5T2YDSX3.1",
                                 "SM": "sample1"
                             },
-                            "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                            "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "run_coverage": false,
                             "sample_type": "DNA",
                             "samplename": "sample1",
@@ -822,7 +819,7 @@
                             "markdup": "bamsormadup",
                             "run_coverage": false,
                             "disable_picard_metrics": true,
-                            "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                            "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                             "single_end": false,
                             "readgroup": {
                                 "LB": "test",
@@ -842,8 +839,11 @@
                             },
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
+                        "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
+                ],
+                "fastq": [
+                    
                 ],
                 "md5sums": [
                     [
@@ -864,7 +864,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": false,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -988,7 +988,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": false,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -1013,7 +1013,7 @@
                                 "markdup": "bamsormadup",
                                 "run_coverage": false,
                                 "disable_picard_metrics": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1048,7 +1048,7 @@
                                 "library": "test",
                                 "markdup": "bamsormadup",
                                 "organism": "Homo sapiens",
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "run_coverage": false,
                                 "sample_type": "DNA",
                                 "samplename": "sample1",
@@ -1073,7 +1073,7 @@
                                 "markdup": "bamsormadup",
                                 "run_coverage": false,
                                 "disable_picard_metrics": true,
-                                "roi": "/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
+                                "roi": "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed",
                                 "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
@@ -1091,11 +1091,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-05-19T15:00:50.283164",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-05T14:08:24.880945"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
         "content": [
@@ -1131,9 +1131,6 @@
                         "sample1.cram",
                         "sample1.cram.crai"
                     ]
-                ],
-                "demultiplex_fastq": [
-                    
                 ],
                 "demultiplex_interop": [
                     
@@ -1215,8 +1212,11 @@
                             },
                             "count": 1
                         },
-                        "sample1.fastp.json:md5,5a65f5141251ac26b8f0a0d0a618b524"
+                        "sample1.fastp.json:md5,759cb3337e9a02f54a9dcb7582288a60"
                     ]
+                ],
+                "fastq": [
+                    
                 ],
                 "md5sums": [
                     [
@@ -1307,27 +1307,27 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "samplename": "sample1",
-                                "library": "test",
-                                "organism": "Homo sapiens",
-                                "tag": "WGS",
-                                "sample_type": "DNA",
                                 "aligner": "bwamem",
-                                "markdup": "bamsormadup",
-                                "run_coverage": true,
-                                "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "id": "sample1"
+                                "id": "sample1",
+                                "library": "test",
+                                "markdup": "bamsormadup",
+                                "organism": "Homo sapiens",
+                                "run_coverage": true,
+                                "sample_type": "DNA",
+                                "samplename": "sample1",
+                                "single_end": false,
+                                "tag": "WGS"
                             }
                         },
-                        "sample1.per-base.bed.gz.csi:md5,b9223463b0f024768ebbbb3e42ace8da"
+                        "sample1.per-base.bed.gz.csi"
                     ]
                 ],
                 "mosdepth_per_base_d4": [
@@ -1366,27 +1366,27 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "samplename": "sample1",
-                                "library": "test",
-                                "organism": "Homo sapiens",
-                                "tag": "WGS",
-                                "sample_type": "DNA",
                                 "aligner": "bwamem",
-                                "markdup": "bamsormadup",
-                                "run_coverage": true,
-                                "single_end": false,
                                 "genome": "GRCh38",
                                 "genome_data": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
                                     "bwamem": "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                                     "gtf": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                                 },
-                                "id": "sample1"
+                                "id": "sample1",
+                                "library": "test",
+                                "markdup": "bamsormadup",
+                                "organism": "Homo sapiens",
+                                "run_coverage": true,
+                                "sample_type": "DNA",
+                                "samplename": "sample1",
+                                "single_end": false,
+                                "tag": "WGS"
                             }
                         },
-                        "sample1.quantized.bed.gz.csi:md5,efa0455ec39b49b96fd44c1efcbef8ab"
+                        "sample1.quantized.bed.gz.csi"
                     ]
                 ],
                 "mosdepth_regions": [
@@ -1714,11 +1714,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-05-19T14:59:02.416267",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-05T14:07:05.010944"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
     },
     "preprocessing - flowcell - bwa - bamsormadup - roi": {
         "content": [
@@ -1773,10 +1773,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-05-19T12:26:24.789934",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-05T14:02:04.847019"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
     }
 }

@@ -5,12 +5,12 @@ Changes in 'samtools/stats/main.nf':
 --- modules/nf-core/samtools/stats/main.nf
 +++ modules/nf-core/samtools/stats/main.nf
 @@ -8,8 +8,7 @@
-         'biocontainers/samtools:1.22.1--h96c455f_0' }"
+         : 'community.wave.seqera.io/library/htslib_samtools:1.23.1--5b6bb4ede7e612e5'}"
  
      input:
 -    tuple val(meta), path(input), path(input_index)
--    tuple val(meta2), path(fasta)
-+    tuple val(meta), path(input), path(input_index), path(fasta)
+-    tuple val(meta2), path(fasta), path(fai)
++    tuple val(meta), path(input), path(input_index), path(fasta), path(fai)
  
      output:
      tuple val(meta), path("*.stats"), emit: stats

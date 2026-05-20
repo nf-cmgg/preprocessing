@@ -17,5 +17,6 @@ Changes in 'bwa/mem/main.nf':
      output:
 
 'modules/nf-core/bwa/mem/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/bwa/mem/tests/nextflow_sam.config' is unchanged
 'modules/nf-core/bwa/mem/tests/main.nf.test' is unchanged
 ************************************************************

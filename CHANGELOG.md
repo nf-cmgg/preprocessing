@@ -3,6 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.0.1dev
+
+- Add parameter typing to make strict syntax runs work more properly
+- Bumped minimal Nextflow version to 26.04.0 to allow for strict syntax and other improvements
+- Fix an issue with `mosdepth` environment variables not being correctly set on GCP
+- Bump `mosdepth` module to 0.3.14
+- Bump nf-core template to v4.0.2
+- Fix fastq outputs when aligner is set to `false` or unsupported genome, which were not being correctly emitted in the previous version
+- Fix `FALCO` module not being correctly run on fastq samples, which was caused by an issue with the branching logic in the previous version
+
 ## 3.0.0
 
 - Add `MultiQC-SAV` module for Illumina Run QC reports

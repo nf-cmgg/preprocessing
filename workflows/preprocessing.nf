@@ -43,6 +43,7 @@ workflow PREPROCESSING {
     multiqc_config // file(s): MultiQC config file(s)
     multiqc_logo // file: MultiQC logo file
     multiqc_methods_description // file: custom methods description for MultiQC report
+    outdir // directory: output directory for the workflow results
 
     main:
     ch_multiqc_files = channel.empty()
@@ -122,16 +123,16 @@ workflow PREPROCESSING {
             else {
                 new_rg = meta.readgroup
             }
+            // if the sample name starts with "snp_", remove it in the RG so the sampletracking works later on.
+            if (sampleinfo.samplename.startsWith("snp_")) {
+                new_rg = new_rg + ['SM': sampleinfo.samplename.substring(4)]
+            }
             def new_meta = meta + sampleinfo + ['readgroup': new_rg]
             return [new_meta, fastq]
         }
         .groupTuple(by: [0])
         .map { meta, fq ->
             return [meta, fq.flatten().unique()]
-        }
-        .branch { meta, _fastq ->
-            to_align: meta.aligner && meta.aligner != "false"
-            other: true
         }
         .set { ch_demultiplexed_fastq_with_sampleinfo }
 
@@ -160,7 +161,7 @@ workflow PREPROCESSING {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
     ch_input_fastq
-        .mix(ch_demultiplexed_fastq_with_sampleinfo.to_align)
+        .mix(ch_demultiplexed_fastq_with_sampleinfo)
         .map { meta, reads ->
             if (meta.organism && !meta.genome) {
                 if (meta.organism ==~ /(?i)Homo[\s_]sapiens/) {
@@ -193,7 +194,7 @@ workflow PREPROCESSING {
             return [meta - meta.subMap('fcid', 'lane'), fastq]
         }
         .branch { meta, _reads ->
-            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && meta.aligner
+            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && (meta.aligner && meta.aligner != "false")
             other: true
         }
         .set { ch_fastq_per_sample }
@@ -261,6 +262,7 @@ workflow PREPROCESSING {
                 meta.aligner,
                 getGenomeAttribute(meta.genome_data, meta.aligner),
                 getGenomeAttribute(meta.genome_data, "fasta"),
+                getGenomeAttribute(meta.genome_data, "fai"),
                 getGenomeAttribute(meta.genome_data, "gtf"),
             ]
         }
@@ -373,7 +375,7 @@ workflow PREPROCESSING {
     softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
+            storeDir: "${outdir.toUriString()}/pipeline_info",
             name: 'nf_cmgg_preprocessing_software_mqc_versions.yml',
             sort: true,
             newLine: true,
@@ -420,7 +422,7 @@ workflow PREPROCESSING {
         return [meta, files(logs.resolve("*"))]
     }
     demultiplex_interop        = BCLCONVERT.out.interop
-    demultiplex_fastq          = ch_demultiplexed_fastq_with_sampleinfo.other
+    fastq                      = ch_fastq_per_sample.other
     falco_html                 = FALCO.out.html
     falco_txt                  = FALCO.out.txt
     fastp_json                 = FASTP.out.json

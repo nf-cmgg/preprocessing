@@ -22,6 +22,104 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_prep
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+params {
+
+    // Path to comma-separated or yaml file containing information about the samples in the experiment.
+    input: Path
+
+    // The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.
+    outdir: Path
+
+    // Email address for completion summary.
+    email: String?
+
+    // MultiQC report title. Printed as page header, used for filename if not otherwise specified.
+    multiqc_title: String?
+
+    genomes: Map = [:]
+
+    // Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.
+    split_fastq: Integer = 100000000
+
+    // Directory containing gene list bed files for granular coverage analysis
+    genelists: Path?
+
+    // Git commit id for Institutional configs.
+    custom_config_version: String = 'main'
+
+    // Base directory for custom configs.
+    custom_config_base: String = 'https://raw.githubusercontent.com/nf-cmgg/configs/main'
+
+    // Institutional config name.
+    config_profile_name: String?
+
+    // Institutional config description.
+    config_profile_description: String?
+
+    // Institutional config contact information.
+    config_profile_contact: String?
+
+    // Institutional config URL link.
+    config_profile_url: String?
+
+    // Display version and exit.
+    version: Boolean = false
+
+    // Method used to save pipeline results to output directory.
+    publish_dir_mode: String = 'copy'
+
+    // Email address for completion summary, only when pipeline fails.
+    email_on_fail: String?
+
+    // Send plain-text email instead of HTML.
+    plaintext_email: Boolean = false
+
+    // File size limit when attaching MultiQC reports to summary emails.
+    max_multiqc_email_size: String = '25.MB'
+
+    // Do not use coloured log outputs.
+    monochrome_logs: Boolean = false
+
+    // Incoming hook URL for messaging service
+    hook_url: String = System.getenv('HOOK_URL')
+
+    // Custom config file to supply to MultiQC.
+    multiqc_config: Path?
+
+    // Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file
+    multiqc_logo: Path?
+
+    // Custom MultiQC yaml file containing HTML including a methods description.
+    multiqc_methods_description: Path?
+
+    // Boolean whether to validate parameters against the schema at runtime
+    validate_params: Boolean = true
+
+    // Base URL or local path to location of pipeline test dataset files
+    pipelines_testdata_base_path: String = 'https://raw.githubusercontent.com/nf-core/test-datasets/'
+
+    // Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.
+    trace_report_suffix: String
+
+    // Display the help message.
+    help = false
+
+    // Display the full detailed help message.
+    help_full: Boolean = false
+
+    // Display hidden parameters in the help message (only works when --help or --help_full are provided).
+    show_hidden: Boolean = false
+
+    // Directory / URL base for iGenomes references.
+    igenomes_base: String = '/references/'
+
+    // Do not load the iGenomes reference config.
+    igenomes_ignore: Boolean = false
+
+    // Name of iGenomes reference.
+    genome: String?
+}
+
 workflow {
 
     main:
@@ -47,10 +145,11 @@ workflow {
         params.genomes,
         params.genelists,
         params.multiqc_config
-            ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(params.multiqc_config, checkIfExists: true)]
+            ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), params.multiqc_config]
             : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
-        params.multiqc_logo ? file(params.multiqc_logo, checkIfExists: true) : [],
-        params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
+        params.multiqc_logo ? params.multiqc_logo : [],
+        params.multiqc_methods_description ? params.multiqc_methods_description : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
+        params.outdir
     )
 
     //
@@ -68,10 +167,10 @@ workflow {
     publish:
     demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.transpose()
     demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.transpose()
-    demultiplex_fastq          = PREPROCESSING.out.demultiplex_fastq.transpose()
     demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose(by: 1)
-    falco_html                 = PREPROCESSING.out.falco_html
-    falco_txt                  = PREPROCESSING.out.falco_txt
+    fastq                      = PREPROCESSING.out.fastq.transpose()
+    falco_html                 = PREPROCESSING.out.falco_html.transpose()
+    falco_txt                  = PREPROCESSING.out.falco_txt.transpose()
     fastp_json                 = PREPROCESSING.out.fastp_json
     fastp_html                 = PREPROCESSING.out.fastp_html
     crams                      = PREPROCESSING.out.crams
@@ -125,7 +224,7 @@ output {
             bin >> "Interop/${bin.name}"
         }
     }
-    demultiplex_fastq {
+    fastq {
         path { meta, fastq ->
             fastq >> (meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" : "${meta.samplename}/${fastq.name}")
         }

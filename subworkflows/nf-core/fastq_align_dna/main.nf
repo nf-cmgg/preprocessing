@@ -5,18 +5,18 @@
 //
 
 
-include { BOWTIE2_ALIGN                     } from "../../../modules/nf-core/bowtie2/align/main"
-include { BWA_MEM as BWAMEM1_MEM            } from '../../../modules/nf-core/bwa/mem/main'
-include { BWAMEM2_MEM as BWAMEM2_MEM        } from '../../../modules/nf-core/bwamem2/mem/main'
-include { DRAGMAP_ALIGN                     } from "../../../modules/nf-core/dragmap/align/main"
-include { SNAPALIGNER_ALIGN as SNAP_ALIGN   } from '../../../modules/nf-core/snapaligner/align/main'
-include { STROBEALIGN                       } from "../../../modules/nf-core/strobealign/main"
+include { BOWTIE2_ALIGN                   } from "../../../modules/nf-core/bowtie2/align/main"
+include { BWA_MEM as BWAMEM1_MEM          } from '../../../modules/nf-core/bwa/mem/main'
+include { BWAMEM2_MEM as BWAMEM2_MEM      } from '../../../modules/nf-core/bwamem2/mem/main'
+include { DRAGMAP_ALIGN                   } from "../../../modules/nf-core/dragmap/align/main"
+include { SNAPALIGNER_ALIGN as SNAP_ALIGN } from '../../../modules/nf-core/snapaligner/align/main'
+include { STROBEALIGN                     } from "../../../modules/nf-core/strobealign/main"
 
 
 
 workflow FASTQ_ALIGN_DNA {
     take:
-    ch_reads_aligner_index_fasta // channel: [mandatory] reads, aligner, index, fasta
+    ch_reads_aligner_index_fasta_fai // channel: [mandatory] reads, aligner, index, fasta, fai
     sort // boolean: [mandatory] true -> sort, false -> don't sort
 
     main:
@@ -25,8 +25,8 @@ workflow FASTQ_ALIGN_DNA {
     ch_bam = channel.empty()
     ch_reports = channel.empty()
 
-    ch_reads_aligner_index_fasta
-        .branch { meta, reads, aligner, index, fasta ->
+    ch_reads_aligner_index_fasta_fai
+        .branch { meta, reads, aligner, index, fasta, _fai ->
             bowtie2: aligner == 'bowtie2'
             return [meta, reads, index, fasta]
             bwamem: aligner == 'bwamem'

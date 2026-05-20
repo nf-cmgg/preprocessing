@@ -1,21 +1,21 @@
 Changes in component 'nf-core/mosdepth'
-'modules/nf-core/mosdepth/environment.yml' is unchanged
-'modules/nf-core/mosdepth/meta.yml' is unchanged
 Changes in 'mosdepth/main.nf':
 --- modules/nf-core/mosdepth/main.nf
 +++ modules/nf-core/mosdepth/main.nf
 @@ -8,8 +8,7 @@
-         'community.wave.seqera.io/library/mosdepth_htslib:0f58993cb6d93294'}"
+         'community.wave.seqera.io/library/mosdepth_gzip:e51d2330d6cdd31f'}"
  
      input:
 -    tuple val(meta),  path(bam), path(bai), path(bed)
 -    tuple val(meta2), path(fasta)
 +    tuple val(meta),  path(bam), path(bai), path(bed), path(fasta)
+     val(quantize_labels)
  
      output:
-     tuple val(meta), path('*.global.dist.txt')      , emit: global_txt
 
+'modules/nf-core/mosdepth/environment.yml' is unchanged
+'modules/nf-core/mosdepth/meta.yml' is unchanged
+'modules/nf-core/mosdepth/tests/main.nf.test' is unchanged
 'modules/nf-core/mosdepth/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/mosdepth/tests/nextflow.config' is unchanged
-'modules/nf-core/mosdepth/tests/main.nf.test' is unchanged
 ************************************************************
