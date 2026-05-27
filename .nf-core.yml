@@ -39,4 +39,4 @@ template:
   org: nf-cmgg
   outdir: .
   skip_features: ["fastqc"]
-  version: dev
+  version: 3.0.1
