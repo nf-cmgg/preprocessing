@@ -15,7 +15,7 @@ nextflow_workflow {
                 """
                 // [meta, bam, bai, roi, fasta, fai, dict]
                 input[0] = Channel.of([
-                    [ id:'test', single_end:false, disable_picard_metrics:false ],
+                    [ id:'test', single_end:false ],
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
@@ -30,12 +30,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
-                    "picard_hsmetrics"
-                ])
+                sanitizeOutput(workflow.out, unstableKeys:[])
             ).match()
         }
 
@@ -47,7 +42,7 @@ nextflow_workflow {
                 """
                 // [meta, bam, bai, roi, fasta, fai, dict]
                 input[0] = Channel.of([
-                    [ id:'test', single_end:false, disable_picard_metrics:false ],
+                    [ id:'test', single_end:false ],
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
                     [],
@@ -62,43 +57,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
-                    "picard_hsmetrics"
-                ])
-            ).match()
-        }
-    }
-
-    test("Bam QC - Samtools") {
-        when {
-            workflow {
-                """
-                // [meta, bam, bai, roi, fasta, fai, dict]
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false, disable_picard_metrics:true ],
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict", checkIfExists: true),
-                ])
-                """
-            }
-        }
-
-        then {
-            assert workflow.success
-            assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "picard_wgsmetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_multiplemetrics",
-                    "picard_hsmetrics"
-                ])
+                sanitizeOutput(workflow.out, unstableKeys:[])
             ).match()
         }
     }

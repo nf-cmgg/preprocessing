@@ -89,12 +89,6 @@
                 "description": "Whether to run coverage analysis for the sample",
                 "default": true
             },
-            "disable_picard_metrics": {
-                "meta": ["disable_picard_metrics"],
-                "type": "boolean",
-                "description": "Whether to disable Picard metrics calculation. This can be used to speed up processing if Picard is not needed.",
-                "default": true
-            },
             "roi": {
                 "meta": ["roi"],
                 "type": "string",

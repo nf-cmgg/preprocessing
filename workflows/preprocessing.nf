@@ -326,10 +326,7 @@ workflow PREPROCESSING {
         BAM_QC.out.samtools_stats,
         BAM_QC.out.samtools_flagstat,
         BAM_QC.out.samtools_idxstats,
-        BAM_QC.out.picard_multiplemetrics,
-        BAM_QC.out.picard_wgsmetrics,
-        BAM_QC.out.picard_wgsmetrics,
-        BAM_QC.out.picard_hsmetrics,
+        BAM_QC.out.riker_metrics,
     )
 
     /*
@@ -449,10 +446,7 @@ workflow PREPROCESSING {
     samtools_stats             = BAM_QC.out.samtools_stats
     samtools_flagstat          = BAM_QC.out.samtools_flagstat
     samtools_idxstats          = BAM_QC.out.samtools_idxstats
-    picard_multiplemetrics     = BAM_QC.out.picard_multiplemetrics
-    picard_multiplemetrics_pdf = BAM_QC.out.picard_multiplemetrics_pdf
-    picard_wgsmetrics          = BAM_QC.out.picard_wgsmetrics
-    picard_hsmetrics           = BAM_QC.out.picard_hsmetrics
+    riker_metrics              = BAM_QC.out.riker_metrics
     md5sums                    = MD5SUM.out.checksum
     multiqcsav_report          = MULTIQCSAV.out.report.toList()
     multiqcsav_data            = MULTIQCSAV.out.data.toList()

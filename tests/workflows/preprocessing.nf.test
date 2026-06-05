@@ -76,10 +76,6 @@ nextflow_workflow {
                     "multiqcsav_data",
                     "multiqcsav_plots",
                     "multiqcsav_report",
-                    "picard_hsmetrics",
-                    "picard_multiplemetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_wgsmetrics",
                     "samtools_coverage",
                     "samtools_flagstat",
                     "samtools_stats"
@@ -157,10 +153,6 @@ nextflow_workflow {
                     "multiqcsav_data",
                     "multiqcsav_plots",
                     "multiqcsav_report",
-                    "picard_hsmetrics",
-                    "picard_multiplemetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_wgsmetrics",
                     "samtools_coverage",
                     "samtools_flagstat",
                     "samtools_stats"
@@ -169,11 +161,9 @@ nextflow_workflow {
         }
     }
 
-    test("preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard") {
+    test("preprocessing - fastq - bwa - bamsormadup - roi - no coverage") {
         when {
             params {
-                run_coverage = false
-                disable_picard_metrics = true
             }
             workflow {
                 """
@@ -190,7 +180,6 @@ nextflow_workflow {
                             aligner: "bwamem",
                             markdup: "bamsormadup",
                             run_coverage: false,
-                            disable_picard_metrics: true,
                             roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
@@ -243,10 +232,6 @@ nextflow_workflow {
                     "multiqcsav_data",
                     "multiqcsav_plots",
                     "multiqcsav_report",
-                    "picard_hsmetrics",
-                    "picard_multiplemetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_wgsmetrics",
                     "samtools_coverage",
                     "samtools_flagstat",
                     "samtools_stats"
@@ -316,10 +301,6 @@ nextflow_workflow {
                     "multiqcsav_data",
                     "multiqcsav_plots",
                     "multiqcsav_report",
-                    "picard_hsmetrics",
-                    "picard_multiplemetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_wgsmetrics",
                     "samtools_coverage",
                     "samtools_flagstat",
                     "samtools_stats"
