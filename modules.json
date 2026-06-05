@@ -93,12 +93,12 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "008f9d3e61209bf995edac3ba531f54e269e1215",
+                        "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
                         "installed_by": ["modules"]
                     },
                     "multiqcsav": {
                         "branch": "master",
-                        "git_sha": "008f9d3e61209bf995edac3ba531f54e269e1215",
+                        "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
                         "installed_by": ["modules"]
                     },
                     "picard/collecthsmetrics": {
@@ -118,6 +118,11 @@
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/collectwgsmetrics/picard-collectwgsmetrics.diff"
+                    },
+                    "riker/multi": {
+                        "branch": "master",
+                        "git_sha": "b2523041e2b941afdfbd5b3b6bc099437495f70d",
+                        "installed_by": ["modules"]
                     },
                     "samtools/convert": {
                         "branch": "master",
