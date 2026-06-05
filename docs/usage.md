@@ -35,7 +35,6 @@ A `fastq` samplesheet file consisting of paired-end data may look something like
   adapter_R1: AGATCGGAAGAGCACACGTCTGAACTCCTTA
   adapter_R2: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
   run_coverage: true
-  disable_picard_metrics: false
   roi: null
   tag: WES
   sample_type: DNA
@@ -45,28 +44,27 @@ A `fastq` samplesheet file consisting of paired-end data may look something like
 
 Following table shows the fields that are used by the `fastq` samplesheet:
 
-| Column                   | Description                                                                                                                                              | Required                                        |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `id`                     | Unique sample identifier                                                                                                                                 | :heavy_check_mark:                              |
-| `samplename`             | The sample name corresponding to the sample in the Fastq file(s)                                                                                         | :heavy_check_mark:                              |
-| `genome`                 | The genome build to use for the analysis. Currently supports `GRCh38`, `GRCm39` and `GRCz11`                                                             | :heavy_check_mark: (unless `organism` is given) |
-| `organism`               | Full name of the organism. Currently supports `Homo sapiens`, `Mus musculus` and `Danio rerio`                                                           | :heavy_check_mark: (unless `genome` is given)   |
-| `library`                | Sample library name                                                                                                                                      | :x:                                             |
-| `tag`                    | The tag used by the sample. Can be one of `WES`, `WGS`, `SeqCap` and `coPGT-M`                                                                           | :x:                                             |
-| `aligner`                | The aligner to use for this sample. Can be one of these: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` and `snap`. Set to `false` to output fastq. | :heavy_check_mark:                              |
-| `markdup`                | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                       | :x:                                             |
-| `umi_aware`              | Whether UMI-aware processing should be used. Only applies when `markdup` is set to `samtools`                                                            | :x:                                             |
-| `skip_trimming`          | Skip adapter trimming step                                                                                                                               | :x:                                             |
-| `trim_front`             | Number of bases to trim from the front of reads                                                                                                          | :x:                                             |
-| `trim_tail`              | Number of bases to trim from the tail of reads                                                                                                           | :x:                                             |
-| `adapter_R1`             | Adapter sequence for read 1                                                                                                                              | :x:                                             |
-| `adapter_R2`             | Adapter sequence for read 2                                                                                                                              | :x:                                             |
-| `run_coverage`           | Run coverage analysis                                                                                                                                    | :x:                                             |
-| `disable_picard_metrics` | Disable Picard metrics collection                                                                                                                        | :x:                                             |
-| `roi`                    | The path to a BED file containing Regions Of Interest for coverage analysis                                                                              | :x:                                             |
-| `sample_type`            | Sample type (e.g., `DNA`, `RNA`)                                                                                                                         | :x:                                             |
-| `fastq_1`                | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                           | :heavy_check_mark:                              |
-| `fastq_2`                | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                             | :x:                                             |
+| Column          | Description                                                                                                                                              | Required                                        |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `id`            | Unique sample identifier                                                                                                                                 | :heavy_check_mark:                              |
+| `samplename`    | The sample name corresponding to the sample in the Fastq file(s)                                                                                         | :heavy_check_mark:                              |
+| `genome`        | The genome build to use for the analysis. Currently supports `GRCh38`, `GRCm39` and `GRCz11`                                                             | :heavy_check_mark: (unless `organism` is given) |
+| `organism`      | Full name of the organism. Currently supports `Homo sapiens`, `Mus musculus` and `Danio rerio`                                                           | :heavy_check_mark: (unless `genome` is given)   |
+| `library`       | Sample library name                                                                                                                                      | :x:                                             |
+| `tag`           | The tag used by the sample. Can be one of `WES`, `WGS`, `SeqCap` and `coPGT-M`                                                                           | :x:                                             |
+| `aligner`       | The aligner to use for this sample. Can be one of these: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` and `snap`. Set to `false` to output fastq. | :heavy_check_mark:                              |
+| `markdup`       | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                       | :x:                                             |
+| `umi_aware`     | Whether UMI-aware processing should be used. Only applies when `markdup` is set to `samtools`                                                            | :x:                                             |
+| `skip_trimming` | Skip adapter trimming step                                                                                                                               | :x:                                             |
+| `trim_front`    | Number of bases to trim from the front of reads                                                                                                          | :x:                                             |
+| `trim_tail`     | Number of bases to trim from the tail of reads                                                                                                           | :x:                                             |
+| `adapter_R1`    | Adapter sequence for read 1                                                                                                                              | :x:                                             |
+| `adapter_R2`    | Adapter sequence for read 2                                                                                                                              | :x:                                             |
+| `run_coverage`  | Run coverage analysis                                                                                                                                    | :x:                                             |
+| `roi`           | The path to a BED file containing Regions Of Interest for coverage analysis                                                                              | :x:                                             |
+| `sample_type`   | Sample type (e.g., `DNA`, `RNA`)                                                                                                                         | :x:                                             |
+| `fastq_1`       | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                           | :heavy_check_mark:                              |
+| `fastq_2`       | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                             | :x:                                             |
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
@@ -116,7 +114,6 @@ A `flowcell` sample info JSON/YML file consisting for one sequencing run may loo
   adapter_R1: AGATCGGAAGAGCACACGTCTGAACTCCTTA
   adapter_R2: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
   run_coverage: true
-  disable_picard_metrics: false
   roi: null
   tag: WES
   sample_type: DNA

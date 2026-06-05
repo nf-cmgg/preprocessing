@@ -39,7 +39,7 @@ graph TD
     SAMTOOLS_COV -->|qc| MULTIQC_LIBRARY
 
     CRAM_OUT -->|qc| SAMTOOLS_QC
-    CRAM_OUT -->|qc| PICARD
+    CRAM_OUT -->|qc| RIKER
     SAMTOOLS_QC -->|qc| MULTIQC_LIBRARY
-    PICARD -->|qc| MULTIQC_LIBRARY
+    RIKER -->|qc| MULTIQC_LIBRARY
 ```
