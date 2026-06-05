@@ -195,10 +195,6 @@ workflow {
     samtools_stats             = PREPROCESSING.out.samtools_stats
     samtools_flagstat          = PREPROCESSING.out.samtools_flagstat
     samtools_idxstats          = PREPROCESSING.out.samtools_idxstats
-    picard_multiplemetrics     = PREPROCESSING.out.picard_multiplemetrics
-    picard_multiplemetrics_pdf = PREPROCESSING.out.picard_multiplemetrics_pdf
-    picard_wgsmetrics          = PREPROCESSING.out.picard_wgsmetrics
-    picard_hsmetrics           = PREPROCESSING.out.picard_hsmetrics
     md5sums                    = PREPROCESSING.out.md5sums
     multiqc_report             = PREPROCESSING.out.multiqc_report
     multiqc_data               = PREPROCESSING.out.multiqc_data
@@ -360,22 +356,7 @@ output {
             return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
     }
-    picard_multiplemetrics {
-        path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
-        }
-    }
-    picard_multiplemetrics_pdf {
-        path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
-        }
-    }
-    picard_wgsmetrics {
-        path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
-        }
-    }
-    picard_hsmetrics {
+    riker_metrics {
         path { meta, _file ->
             return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
         }
