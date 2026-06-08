@@ -197,6 +197,7 @@ workflow {
     samtools_stats             = PREPROCESSING.out.samtools_stats
     samtools_flagstat          = PREPROCESSING.out.samtools_flagstat
     samtools_idxstats          = PREPROCESSING.out.samtools_idxstats
+    riker_metrics              = PREPROCESSING.out.riker_metrics
     md5sums                    = PREPROCESSING.out.md5sums
     multiqc_report             = PREPROCESSING.out.multiqc_report
     multiqc_data               = PREPROCESSING.out.multiqc_data

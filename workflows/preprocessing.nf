@@ -318,7 +318,6 @@ workflow PREPROCESSING {
                 meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
                 getGenomeAttribute(meta.genome_data, "fasta"),
                 getGenomeAttribute(meta.genome_data, "fai"),
-                getGenomeAttribute(meta.genome_data, "dict"),
             ]
         }
         .set { ch_bam_qc }
