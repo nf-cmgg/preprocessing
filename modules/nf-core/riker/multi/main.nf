@@ -4,8 +4,8 @@ process RIKER_MULTI {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/5b/5bf9ec40db8ba058b6ff37a94ea398f37b766858b3e584016e93643f7dde9f63/data' :
-        'community.wave.seqera.io/library/riker:0.2.0--20857cea9478b433' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9b/9b1fa220679fac2077935260a88165214d8625b813ecb39cf129aecfba982c65/data' :
+        'community.wave.seqera.io/library/riker:0.2.0--aa377939e8395424' }"
 
     input:
     tuple val(meta), path(bam), path(bai), path(roi), path(fasta), path(fai)
@@ -13,6 +13,9 @@ process RIKER_MULTI {
     output:
     tuple val(meta), path("*.{txt,pdf}"), emit: metrics
     tuple val("${task.process}"), val('riker'), eval("riker --version 2>&1 | sed 's/riker //'") , topic: versions, emit: versions_riker
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     def args        = task.ext.args ?: ''
