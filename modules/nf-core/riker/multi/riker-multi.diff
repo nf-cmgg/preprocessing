@@ -4,8 +4,8 @@ Changes in component 'nf-core/riker/multi'
 Changes in 'riker/multi/main.nf':
 --- modules/nf-core/riker/multi/main.nf
 +++ modules/nf-core/riker/multi/main.nf
-@@ -8,40 +8,17 @@
-         'community.wave.seqera.io/library/riker:0.2.0--20857cea9478b433' }"
+@@ -8,27 +8,10 @@
+         'community.wave.seqera.io/library/riker:0.2.0--aa377939e8395424' }"
  
      input:
 -    tuple val(meta),  path(bam), path(bai), path(baits), path(targets)
@@ -32,11 +32,9 @@ Changes in 'riker/multi/main.nf':
 -    tuple val(meta), path("*.pdf")                               , optional: true, emit: pdf
 +    tuple val(meta), path("*.{txt,pdf}"), emit: metrics
      tuple val("${task.process}"), val('riker'), eval("riker --version 2>&1 | sed 's/riker //'") , topic: versions, emit: versions_riker
--
--    when:
--    task.ext.when == null || task.ext.when
  
-     script:
+     when:
+@@ -38,10 +21,7 @@
      def args        = task.ext.args ?: ''
      def prefix      = task.ext.prefix ?: "${meta.id}"
      def ref         = fasta ? "-r ${fasta}" : ''
