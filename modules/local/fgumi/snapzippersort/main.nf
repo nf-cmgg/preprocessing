@@ -23,36 +23,28 @@ process FGUMI_SNAP_ZIPPER_SORT {
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
 
     """
-    INDEX=`dirname \$(find -L ./ -name "OverflowTable*" | head -n1)`
-    [ -z "\$INDEX" ] && echo "Snap index files not found" 1>&2 && exit 1
+    INDEX_FILE=\$(find -L ./ -name "OverflowTable*" -print -quit)
+    [ -z "\$INDEX_FILE" ] && echo "Snap index files not found" 1>&2 && exit 1
+    INDEX=\$(dirname "\$INDEX_FILE")
 
-    # Ensure zipper and fastq read exactly the same queryname-ordered unmapped stream.
-    samtools sort \
-        -n \
-        -@ ${task.cpus} \
-        -m 1G \
-        -o ${prefix}.unmapped.queryname.bam \
-        ${unmapped_bam}
-
-    fgumi fastq --input ${prefix}.unmapped.queryname.bam \
+    fgumi fastq --input ${unmapped_bam} \
         | snap-aligner paired \
             \$INDEX \
             -pairedInterleavedFastq - \
             -o -sam - \
             -t ${task.cpus} \
             ${snap_args} \
-        | samtools sort \
-            -n \
-            -@ ${task.cpus} \
-            -m 1G \
-            -O SAM \
-            - \
-        | fgumi zipper \
-            --unmapped ${prefix}.unmapped.queryname.bam \
+        > ${prefix}.snap.sam
+
+    fgumi zipper \
+            --unmapped ${unmapped_bam} \
             --reference ${fasta} \
             ${zipper_args} \
-        | fgumi sort \
-            --input /dev/stdin \
+            --output ${prefix}.zipper.bam \
+        < ${prefix}.snap.sam
+
+    fgumi sort \
+            --input ${prefix}.zipper.bam \
             --output ${prefix}.template.bam \
             --order template-coordinate \
             ${sort_args}
