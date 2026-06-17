@@ -70,6 +70,7 @@ workflow UMI_CONSENSUS_FGUMI {
 
     emit:
     cram_crai             = SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch: true, failOnDuplicate: true)
+    zipper_diagnostics    = Channel.empty()
     grouping_metrics      = FGUMI_GROUP.out.metrics
     family_size_histogram = FGUMI_GROUP.out.histogram
     consensus_metrics     = FGUMI_SIMPLEX.out.stats
