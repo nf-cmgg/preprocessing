@@ -4,8 +4,8 @@ process FGUMI_SORT {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a5/a510706f3481fae12ff6100d6e4ad298b8bf464a2d93a6afe35e9cf26542d080/data'
-        : 'community.wave.seqera.io/library/fgumi:0.2.0--fe028e7a64e5da27'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/394ef34259ba03c393d25ce2559530fe6df2c6f125a27be69da89ca7a1c70e30/data' :
+          'community.wave.seqera.io/library/fgumi:0.3.0--bcbb552cbefcbda1' }"
 
     input:
     tuple val(meta), path(bam)
