@@ -5,7 +5,7 @@ include { FGUMI_EXTRACT          } from "../../../modules/nf-core/fgumi/extract/
 include { FGUMI_FILTER           } from "../../../modules/nf-core/fgumi/filter/main.nf"
 include { FGUMI_GROUP            } from "../../../modules/nf-core/fgumi/group/main.nf"
 include { FGUMI_SIMPLEX          } from "../../../modules/nf-core/fgumi/simplex/main.nf"
-include { FGUMI_SNAP_ZIPPER_SORT } from "../../../modules/local/fgumi/snapzippersort/main.nf"
+include { FGUMI_SNAP_ZIPPER      } from "../../../modules/local/fgumi/snapzipper/main.nf"
 include { SAMTOOLS_SORT          } from "../../../modules/nf-core/samtools/sort/main.nf"
 
 // FUNCTIONS
@@ -23,7 +23,7 @@ workflow UMI_CONSENSUS_FGUMI {
     )
 
     // Step 3: align with SNAP, zipper tags back, then template-coordinate sort.
-    FGUMI_SNAP_ZIPPER_SORT(
+    FGUMI_SNAP_ZIPPER(
         FGUMI_EXTRACT.out.bam
             .join(
                 ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta ->
@@ -35,7 +35,7 @@ workflow UMI_CONSENSUS_FGUMI {
     )
 
     FGUMI_GROUP(
-        FGUMI_SNAP_ZIPPER_SORT.out.bam,
+        FGUMI_SNAP_ZIPPER.out.bam,
         (params.fgumi_group_strategy ?: 'adjacency')
     )
 

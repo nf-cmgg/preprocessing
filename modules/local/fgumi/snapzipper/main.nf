@@ -1,4 +1,6 @@
-process FGUMI_SNAP_ZIPPER_SORT {
+include { FGUMI_SORT as FGUMI_TEMPLATE_SORT } from "../../../nf-core/fgumi/sort/main.nf"
+
+process FGUMI_SNAP_ZIPPER_RUN {
     tag "$meta.id"
     label 'process_high'
 
@@ -10,7 +12,7 @@ process FGUMI_SNAP_ZIPPER_SORT {
     tuple val(meta), path(unmapped_bam), path(index, stageAs: "index/*"), path(fasta), path(dict)
 
     output:
-    tuple val(meta), path("${prefix}.template.bam"), emit: bam
+    tuple val(meta), path("${prefix}.zipper.bam"), emit: bam
     tuple val("${task.process}"), val('fgumi'), eval("fgumi --version | sed 's/^fgumi //;q'"), topic: versions, emit: versions_fgumi
 
     when:
@@ -19,7 +21,6 @@ process FGUMI_SNAP_ZIPPER_SORT {
     script:
     def snap_args = task.ext.args ?: ''
     def zipper_args = task.ext.args2 ?: ''
-    def sort_args = task.ext.args3 ?: ''
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
 
     """
@@ -42,17 +43,24 @@ process FGUMI_SNAP_ZIPPER_SORT {
             ${zipper_args} \
             --output ${prefix}.zipper.bam \
         < ${prefix}.snap.sam
-
-    fgumi sort \
-            --input ${prefix}.zipper.bam \
-            --output ${prefix}.template.bam \
-            --order template-coordinate \
-            ${sort_args}
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
     """
-    touch ${prefix}.template.bam
+    touch ${prefix}.zipper.bam
     """
+}
+
+workflow FGUMI_SNAP_ZIPPER {
+    take:
+    ch_meta_unmapped_index_fasta_dict
+
+    main:
+    FGUMI_SNAP_ZIPPER_RUN(ch_meta_unmapped_index_fasta_dict)
+    FGUMI_TEMPLATE_SORT(FGUMI_SNAP_ZIPPER_RUN.out.bam)
+
+    emit:
+    bam            = FGUMI_TEMPLATE_SORT.out.bam
+    versions_fgumi = FGUMI_SNAP_ZIPPER_RUN.out.versions_fgumi.mix(FGUMI_TEMPLATE_SORT.out.versions_fgumi)
 }

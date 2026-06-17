@@ -17,7 +17,7 @@ flowchart TD
     subgraph UMI_CONSENSUS_FGUMI
       U1[Step 1: FGUMI_EXTRACT\n(reads -> unmapped BAM with UMI tags)]
       U1J[Join with reference assets\nSNAP index + fasta + dict from meta.genome_data]
-      U2[Step 3: FGUMI_SNAP_ZIPPER_SORT]
+      U2[Step 3: FGUMI_SNAP_ZIPPER]
       U2a[samtools sort -n\nunmapped BAM]
       U2b[fgumi fastq]
       U2c[snap-aligner paired]

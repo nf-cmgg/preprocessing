@@ -1,16 +1,16 @@
 nextflow_process {
 
-    name "Test Process FGUMI_SNAP_ZIPPER_SORT"
-    script "modules/local/fgumi/snapzippersort/main.nf"
-    process "FGUMI_SNAP_ZIPPER_SORT"
+    name "Test Process FGUMI_SNAP_ZIPPER_RUN"
+    script "modules/local/fgumi/snapzipper/main.nf"
+    process "FGUMI_SNAP_ZIPPER_RUN"
 
     tag "modules"
     tag "modules/local"
     tag "modules/local/fgumi"
-    tag "modules/local/fgumi/snapzippersort"
+    tag "modules/local/fgumi/snapzipper"
 
     test("test - stub") {
-        // Stub-mode contract test: verifies template BAM output wiring.
+        // Stub-mode contract test: verifies zipper BAM output wiring.
         options "-stub"
 
         when {

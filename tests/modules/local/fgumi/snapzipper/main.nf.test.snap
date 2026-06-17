@@ -8,12 +8,12 @@
                             "id": "test",
                             "samplename": "test"
                         },
-                        "test.fgumi.template.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.fgumi.zipper.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
                     [
-                        "FGUMI_SNAP_ZIPPER_SORT",
+                        "FGUMI_SNAP_ZIPPER_RUN",
                         "fgumi",
                         "0.1.2"
                     ]
@@ -24,12 +24,12 @@
                             "id": "test",
                             "samplename": "test"
                         },
-                        "test.fgumi.template.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.fgumi.zipper.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "versions_fgumi": [
                     [
-                        "FGUMI_SNAP_ZIPPER_SORT",
+                        "FGUMI_SNAP_ZIPPER_RUN",
                         "fgumi",
                         "0.1.2"
                     ]
