@@ -1,4 +1,7 @@
 include { FGUMI_SORT as FGUMI_TEMPLATE_SORT } from "../../../nf-core/fgumi/sort/main.nf"
+include { FGUMI_ZIPPER                         } from "../zipper/main.nf"
+include { SAMTOOLS_SORT as SAMTOOLS_QNAME_SORT_UNMAPPED } from "../../../nf-core/samtools/sort/main.nf"
+include { SAMTOOLS_SORT as SAMTOOLS_QNAME_SORT_MAPPED   } from "../../../nf-core/samtools/sort/main.nf"
 
 process FGUMI_SNAP_ZIPPER_RUN {
     tag "$meta.id"
@@ -12,7 +15,8 @@ process FGUMI_SNAP_ZIPPER_RUN {
     tuple val(meta), path(unmapped_bam), path(index, stageAs: "index/*"), path(fasta), path(dict)
 
     output:
-    tuple val(meta), path("${prefix}.zipper.bam"), emit: bam
+    tuple val(meta), path("${prefix}.snap.bam"), emit: mapped_bam
+    tuple val(meta), path(unmapped_bam), emit: unmapped_bam
     tuple val("${task.process}"), val('fgumi'), eval("fgumi --version | sed 's/^fgumi //;q'"), topic: versions, emit: versions_fgumi
 
     when:
@@ -20,7 +24,6 @@ process FGUMI_SNAP_ZIPPER_RUN {
 
     script:
     def snap_args = task.ext.args ?: ''
-    def zipper_args = task.ext.args2 ?: ''
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
 
     """
@@ -37,18 +40,18 @@ process FGUMI_SNAP_ZIPPER_RUN {
             ${snap_args} \
         > ${prefix}.snap.sam
 
-    fgumi zipper \
-            --unmapped ${unmapped_bam} \
-            --reference ${fasta} \
-            ${zipper_args} \
-            --output ${prefix}.zipper.bam \
-        < ${prefix}.snap.sam
+    samtools view \
+        -@ ${task.cpus} \
+        -b \
+        -o ${prefix}.snap.bam \
+        ${prefix}.snap.sam
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
     """
-    touch ${prefix}.zipper.bam
+    touch ${prefix}.snap.bam
+    touch ${unmapped_bam}
     """
 }
 
@@ -58,9 +61,42 @@ workflow FGUMI_SNAP_ZIPPER {
 
     main:
     FGUMI_SNAP_ZIPPER_RUN(ch_meta_unmapped_index_fasta_dict)
-    FGUMI_TEMPLATE_SORT(FGUMI_SNAP_ZIPPER_RUN.out.bam)
+
+    // Queryname sort the unmapped BAM in parallel with mapped BAM sort.
+    SAMTOOLS_QNAME_SORT_UNMAPPED(
+        FGUMI_SNAP_ZIPPER_RUN.out.unmapped_bam
+            .join(
+                ch_meta_unmapped_index_fasta_dict.map { meta, _unmapped_bam, _index, fasta, _dict -> [meta, fasta] },
+                by: 0,
+            )
+            .map { meta, unmapped_bam, fasta -> [meta, unmapped_bam, fasta] },
+        null
+    )
+
+    // Sort mapped alignments by queryname and emit SAM for zipper stdin.
+    SAMTOOLS_QNAME_SORT_MAPPED(
+        FGUMI_SNAP_ZIPPER_RUN.out.mapped_bam
+            .join(
+                ch_meta_unmapped_index_fasta_dict.map { meta, _unmapped_bam, _index, fasta, _dict -> [meta, fasta] },
+                by: 0,
+            )
+            .map { meta, mapped_bam, fasta -> [meta, mapped_bam, fasta] },
+        null
+    )
+
+    FGUMI_ZIPPER(
+        SAMTOOLS_QNAME_SORT_MAPPED.out.sam
+            .join(SAMTOOLS_QNAME_SORT_UNMAPPED.out.bam, by: 0)
+            .join(
+                ch_meta_unmapped_index_fasta_dict.map { meta, _unmapped_bam, _index, fasta, dict -> [meta, fasta, dict] },
+                by: 0,
+            )
+            .map { meta, mapped_sam, unmapped_qname_bam, fasta, dict -> [meta, mapped_sam, unmapped_qname_bam, fasta, dict] }
+    )
+
+    FGUMI_TEMPLATE_SORT(FGUMI_ZIPPER.out.bam)
 
     emit:
     bam            = FGUMI_TEMPLATE_SORT.out.bam
-    versions_fgumi = FGUMI_SNAP_ZIPPER_RUN.out.versions_fgumi.mix(FGUMI_TEMPLATE_SORT.out.versions_fgumi)
+    versions_fgumi = FGUMI_SNAP_ZIPPER_RUN.out.versions_fgumi.mix(FGUMI_ZIPPER.out.versions_fgumi).mix(FGUMI_TEMPLATE_SORT.out.versions_fgumi)
 }

@@ -8,23 +8,41 @@
                             "id": "test",
                             "samplename": "test"
                         },
-                        "test.fgumi.zipper.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.fgumi.snap.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
+                    [
+                        {
+                            "id": "test",
+                            "samplename": "test"
+                        },
+                        "unmapped.bam:md5,329308690118ca17867c78cc61a0fab0"
+                    ]
+                ],
+                "2": [
                     [
                         "FGUMI_SNAP_ZIPPER_RUN",
                         "fgumi",
                         "0.1.2"
                     ]
                 ],
-                "bam": [
+                "mapped_bam": [
                     [
                         {
                             "id": "test",
                             "samplename": "test"
                         },
-                        "test.fgumi.zipper.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.fgumi.snap.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "unmapped_bam": [
+                    [
+                        {
+                            "id": "test",
+                            "samplename": "test"
+                        },
+                        "unmapped.bam:md5,329308690118ca17867c78cc61a0fab0"
                     ]
                 ],
                 "versions_fgumi": [
