@@ -330,7 +330,6 @@ workflow PREPROCESSING {
         BAM_QC.out.samtools_idxstats,
         BAM_QC.out.picard_multiplemetrics,
         BAM_QC.out.picard_wgsmetrics,
-        BAM_QC.out.picard_wgsmetrics,
         BAM_QC.out.picard_hsmetrics,
     )
 

@@ -52,7 +52,7 @@
 # UMI consensus (fgumi) inputs
 # Example DNA sample with fgumi_aware enabled for fgumi processing.
 - id: sample1
-  samplename: sample1-chr21
+  samplename: sample1_chr21
   library: test_library
   organism: Homo sapiens
   tag: WES

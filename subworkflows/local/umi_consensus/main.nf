@@ -5,7 +5,7 @@ include { FGUMI_EXTRACT          } from "../../../modules/nf-core/fgumi/extract/
 include { FGUMI_FILTER           } from "../../../modules/nf-core/fgumi/filter/main.nf"
 include { FGUMI_GROUP            } from "../../../modules/nf-core/fgumi/group/main.nf"
 include { FGUMI_SIMPLEX          } from "../../../modules/nf-core/fgumi/simplex/main.nf"
-include { FGUMI_SNAP_ZIPPER      } from "../../../modules/local/fgumi/snapzipper/main.nf"
+include { FGUMI_SNAP_ZIPPER      } from "../fgumi_snapzipper/main.nf"
 include { SAMTOOLS_SORT          } from "../../../modules/nf-core/samtools/sort/main.nf"
 
 // FUNCTIONS
@@ -70,7 +70,7 @@ workflow UMI_CONSENSUS_FGUMI {
 
     emit:
     cram_crai             = SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch: true, failOnDuplicate: true)
-    zipper_diagnostics    = Channel.empty()
+    zipper_diagnostics    = channel.empty()
     grouping_metrics      = FGUMI_GROUP.out.metrics
     family_size_histogram = FGUMI_GROUP.out.histogram
     consensus_metrics     = FGUMI_SIMPLEX.out.stats
