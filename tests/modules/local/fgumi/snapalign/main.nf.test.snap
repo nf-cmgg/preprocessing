@@ -120,5 +120,66 @@
             "nextflow": "25.10.4"
         },
         "timestamp": "2026-04-02T16:05:22.614091027"
+    },
+    "test - stub custom prefix": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "prefix_case",
+                            "samplename": "prefix_case"
+                        },
+                        "snapcustom.snap.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "prefix_case",
+                            "samplename": "prefix_case"
+                        },
+                        "unmapped.bam:md5,329308690118ca17867c78cc61a0fab0"
+                    ]
+                ],
+                "2": [
+                    [
+                        "FGUMI_SNAP_ALIGN",
+                        "fgumi",
+                        "0.1.2"
+                    ]
+                ],
+                "mapped_bam": [
+                    [
+                        {
+                            "id": "prefix_case",
+                            "samplename": "prefix_case"
+                        },
+                        "snapcustom.snap.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "unmapped_bam": [
+                    [
+                        {
+                            "id": "prefix_case",
+                            "samplename": "prefix_case"
+                        },
+                        "unmapped.bam:md5,329308690118ca17867c78cc61a0fab0"
+                    ]
+                ],
+                "versions_fgumi": [
+                    [
+                        "FGUMI_SNAP_ALIGN",
+                        "fgumi",
+                        "0.1.2"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-06-19T14:59:18.039374313"
     }
 }
