@@ -22,6 +22,7 @@ process FGUMI_SNAP_ALIGN {
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
 
     """
+    # SNAP index directory is resolved from staged index content.
     INDEX_FILE=\$(find -L ./ -name "OverflowTable*" -print -quit)
     [ -z "\$INDEX_FILE" ] && echo "Snap index files not found" 1>&2 && exit 1
     INDEX=\$(dirname "\$INDEX_FILE")

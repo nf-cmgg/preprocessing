@@ -21,6 +21,7 @@ process FGUMI_ZIPPER {
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
 
     """
+    # mapped_sam and unmapped_qname_bam must be queryname-sorted in the same order.
     fgumi zipper \
             --unmapped ${unmapped_qname_bam} \
             --reference ${fasta} \

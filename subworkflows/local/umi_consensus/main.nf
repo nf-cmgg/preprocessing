@@ -16,6 +16,7 @@ workflow UMI_CONSENSUS_FGUMI {
     ch_meta_reads_aligner_index_fasta // channel: [mandatory] [meta, reads, aligner, index, fasta]
 
     main:
+    // Step numbers follow the fgumi basic workflow terminology (this path executes steps 1, 3, 4, 5, and 7).
     // Step 1: build an unmapped BAM with UMI tags from input FASTQ.
     FGUMI_EXTRACT(
         ch_meta_reads_aligner_index_fasta
@@ -70,6 +71,7 @@ workflow UMI_CONSENSUS_FGUMI {
 
     emit:
     cram_crai             = SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch: true, failOnDuplicate: true)
+    // Compatibility output kept for downstream interfaces; currently not produced by this branch.
     zipper_diagnostics    = channel.empty()
     grouping_metrics      = FGUMI_GROUP.out.metrics
     family_size_histogram = FGUMI_GROUP.out.histogram
