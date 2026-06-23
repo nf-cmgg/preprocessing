@@ -5,18 +5,9 @@ keywords:
   - fastq
   - bam
   - sort
-  - bwamem
-  - bwamem2
-  - dragmap
   - snapaligner
-  - strobealign
 components:
-  - bowtie2/align
-  - bwa/mem
-  - bwamem2/mem
-  - dragmap/align
   - snapaligner/align
-  - strobealign
 input:
   - meta:
       type: map

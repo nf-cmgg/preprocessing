@@ -11,7 +11,7 @@ include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormad
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
 
 // SUBWORKFLOWS
-include { FASTQ_ALIGN_DNA       } from '../../nf-core/fastq_align_dna/main'
+include { FASTQ_ALIGN_DNA       } from '../../local/fastq_align_dna/main'
 include { FASTQ_ALIGN_RNA       } from '../../local/fastq_align_rna/main'
 
 // FUNCTIONS
