@@ -5,7 +5,7 @@ Changes in 'riker/multi/main.nf':
 --- modules/nf-core/riker/multi/main.nf
 +++ modules/nf-core/riker/multi/main.nf
 @@ -8,27 +8,10 @@
-         'community.wave.seqera.io/library/riker:0.2.0--aa377939e8395424' }"
+         'community.wave.seqera.io/library/riker:0.3.0--56fa17ae2be0828f' }"
  
      input:
 -    tuple val(meta),  path(bam), path(bai), path(baits), path(targets)
