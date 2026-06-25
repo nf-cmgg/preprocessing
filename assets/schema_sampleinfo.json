@@ -84,14 +84,15 @@
                 "meta": ["markdup"],
                 "type": ["string", "boolean"],
                 "description": "Mark duplicates tool to use",
-                "enum": ["bamsormadup", "samtools", "false", false],
+                "enum": ["bamsormadup", "samtools", "fgumi_consensus", "fgumi_dedup", "false", false],
                 "default": "bamsormadup"
             },
-            "umi_aware": {
-                "meta": ["umi_aware"],
-                "type": "boolean",
-                "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name.",
-                "default": false
+            "umi_strategy": {
+                "meta": ["umi_strategy"],
+                "type": "string",
+                "description": "UMI strategy",
+                "enum": ["dedup", "duplex", "simplex"],
+                "default": "dedup"
             },
             "skip_trimming": {
                 "meta": ["skip_trimming"],

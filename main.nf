@@ -149,7 +149,7 @@ workflow {
             : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
         params.multiqc_logo ? params.multiqc_logo : [],
         params.multiqc_methods_description ? params.multiqc_methods_description : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
-        params.outdir
+        params.outdir,
     )
 
     //

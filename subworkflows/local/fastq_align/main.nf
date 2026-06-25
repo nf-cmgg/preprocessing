@@ -17,7 +17,7 @@ include { FASTQ_ALIGN_RNA       } from '../../local/fastq_align_rna/main'
 // FUNCTIONS
 include { getGenomeAttribute    } from '../../local/utils_nfcore_preprocessing_pipeline'
 
-workflow FASTQ_TO_CRAM {
+workflow FASTQ_ALIGN {
     take:
     ch_meta_reads_aligner_index_fasta_fai_gtf // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta, fai, gtf]
 
@@ -32,25 +32,20 @@ workflow FASTQ_TO_CRAM {
 
     ch_meta_reads_aligner_index_fasta_fai_gtf.dump(tag: "FASTQ_TO_CRAM: reads to align", pretty: true)
     ch_meta_reads_aligner_index_fasta_fai_gtf
-        .branch { meta, reads, aligner, index, fasta, fai, gtf ->
+        .branch { meta, reads, index, _fasta, _fai, gtf ->
             rna: meta.sample_type == "RNA"
             return [meta, reads, "star", getGenomeAttribute(meta.genome_data, 'star'), gtf]
             dna: true
             // catch all non-RNA samples as DNA, as some may be missing sample_type or have other sample types (e.g. tissue, cell line, etc.) that should be aligned with the DNA aligner
             //dna: meta.sample_type == "DNA" || meta.sample_type == "Tissue"
-            return [meta, reads, aligner, index, fasta, fai]
+            return [meta, reads, index]
         }
-        .set { ch_meta_reads_aligner_index_fasta_datatype }
+        .set { ch_meta_reads_index_datatype }
 
     // align fastq files per sample
-    // ALIGNMENT([meta,fastq], index, sort)
-    FASTQ_ALIGN_DNA(
-        ch_meta_reads_aligner_index_fasta_datatype.dna,
-        false,
-    )
-    FASTQ_ALIGN_RNA(
-        ch_meta_reads_aligner_index_fasta_datatype.rna
-    )
+    // ALIGNMENT([meta,fastq, index])
+    FASTQ_ALIGN_DNA(ch_meta_reads_index_datatype.dna)
+    FASTQ_ALIGN_RNA(ch_meta_reads_index_datatype.rna)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

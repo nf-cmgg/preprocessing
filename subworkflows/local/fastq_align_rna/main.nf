@@ -11,23 +11,23 @@ include { GNU_SORT as SORT_MERGE_SPLICE_JUNCTIONS } from "../../../modules/nf-co
 
 workflow FASTQ_ALIGN_RNA {
     take:
-    ch_reads_aligner_index_gtf // channel: [mandatory] reads, aligner, index, gtf
+    ch_reads_index_gtf // channel: [mandatory] reads, index, gtf
 
     main:
     ch_bam = channel.empty()
     ch_reports = channel.empty()
 
-    ch_reads_aligner_index_gtf
-        .branch { meta, reads, aligner, index, gtf ->
-            star: aligner == 'star'
+    ch_reads_index_gtf
+        .branch { meta, reads, index, gtf ->
+            star: meta.aligner == 'star'
             return [meta, reads, index, gtf]
             other: true
         }
         .set { ch_to_align }
 
     // Throw error for all samples with unsupported aligners
-    ch_to_align.other.map { meta, _reads, aligner, _index, _fasta ->
-        error("Unsupported aligner ${aligner} for sample ${meta.id}")
+    ch_to_align.other.map { meta, _reads, _index, _gtf ->
+        error("Unsupported aligner ${meta.aligner} for sample ${meta.id}")
     }
 
     // Align fastq files to reference genome
@@ -41,9 +41,9 @@ workflow FASTQ_ALIGN_RNA {
     )
 
     // Concatenate splice junction files
-    SORT_MERGE_SPLICE_JUNCTIONS(group_junctions(STAR_ALIGN.out.spl_junc_tab).map { meta, files -> [meta, files, "tab"]})
+    SORT_MERGE_SPLICE_JUNCTIONS(group_junctions(STAR_ALIGN.out.spl_junc_tab).map { meta, files -> [meta, files, "tab"] })
     // Concatenate junction files
-    SORT_MERGE_JUNCTIONS(group_junctions(STAR_ALIGN.out.junction).map { meta, files -> [meta, files, "junction"]})
+    SORT_MERGE_JUNCTIONS(group_junctions(STAR_ALIGN.out.junction).map { meta, files -> [meta, files, "junction"] })
 
     emit:
     bam              = ch_bam // channel: [ [meta], bam       ]

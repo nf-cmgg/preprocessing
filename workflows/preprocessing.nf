@@ -18,7 +18,7 @@ include { SAMTOOLS_COVERAGE           } from '../modules/nf-core/samtools/covera
 // Subworkflows
 include { BAM_QC                      } from '../subworkflows/local/bam_qc'
 include { COVERAGE                    } from '../subworkflows/local/coverage'
-include { FASTQ_TO_CRAM               } from '../subworkflows/local/fastq_to_aligned_cram'
+include { FASTQ_ALIGN                 } from '../subworkflows/local/fastq_align'
 
 // Functions
 include { getReadgroupsFromBclconvert } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
@@ -268,17 +268,17 @@ workflow PREPROCESSING {
         }
         .set { ch_meta_reads_aligner_index_fasta_gtf }
 
-    FASTQ_TO_CRAM(
+    FASTQ_ALIGN(
         ch_meta_reads_aligner_index_fasta_gtf
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN.out.sormadup_metrics)
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: COVERAGE ANALYSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    FASTQ_TO_CRAM.out.cram_crai
+    FASTQ_ALIGN.out.cram_crai
         .filter { meta, _cram, _crai ->
             meta.run_coverage.toBoolean()
         }
@@ -307,7 +307,7 @@ workflow PREPROCESSING {
 // STEP: QC FOR ALIGNMENTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-    FASTQ_TO_CRAM.out.cram_crai
+    FASTQ_ALIGN.out.cram_crai
         .map { meta, cram, crai ->
             return [
                 meta,
@@ -340,7 +340,7 @@ workflow PREPROCESSING {
 
     MD5SUM(
         ch_fastq_per_sample.other.mix(
-            FASTQ_TO_CRAM.out.cram_crai.map { meta, cram, _crai ->
+            FASTQ_ALIGN.out.cram_crai.map { meta, cram, _crai ->
                 return [meta, cram]
             }
         ),
@@ -427,11 +427,11 @@ workflow PREPROCESSING {
     falco_txt                  = FALCO.out.txt
     fastp_json                 = FASTP.out.json
     fastp_html                 = FASTP.out.html
-    crams                      = FASTQ_TO_CRAM.out.cram_crai
-    rna_splice_junctions       = FASTQ_TO_CRAM.out.rna_splice_junctions
-    rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
-    align_reports              = FASTQ_TO_CRAM.out.align_reports
-    sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
+    crams                      = FASTQ_ALIGN.out.cram_crai
+    rna_splice_junctions       = FASTQ_ALIGN.out.rna_splice_junctions
+    rna_junctions              = FASTQ_ALIGN.out.rna_junctions
+    align_reports              = FASTQ_ALIGN.out.align_reports
+    sormadup_metrics           = FASTQ_ALIGN.out.sormadup_metrics
     mosdepth_global            = COVERAGE.out.mosdepth_global
     mosdepth_summary           = COVERAGE.out.mosdepth_summary
     mosdepth_regions           = COVERAGE.out.mosdepth_regions

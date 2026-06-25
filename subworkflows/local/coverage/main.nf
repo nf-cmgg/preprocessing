@@ -15,7 +15,7 @@ workflow COVERAGE {
         ch_meta_cram_crai_fasta_fai_roi.map { meta, cram, crai, fasta, _fai, roi ->
             return [meta, cram, crai, roi, fasta]
         },
-        ['NO_COVERAGE', 'LOW_COVERAGE', 'CALLABLE']
+        ['NO_COVERAGE', 'LOW_COVERAGE', 'CALLABLE'],
     )
 
     SAMTOOLS_COVERAGE(

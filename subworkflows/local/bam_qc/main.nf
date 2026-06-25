@@ -20,8 +20,16 @@ workflow BAM_QC {
         .set { ch_bam_bai_fasta_fai }
 
     SAMTOOLS_STATS(ch_bam_bai_fasta_fai)
-    SAMTOOLS_FLAGSTAT(ch_bam_bai_fasta_fai.map { meta, bam, bai, _fasta, _fai -> return [meta, bam, bai] })
-    SAMTOOLS_IDXSTATS(ch_bam_bai_fasta_fai.map { meta, bam, bai, _fasta, _fai -> return [meta, bam, bai] })
+    SAMTOOLS_FLAGSTAT(
+        ch_bam_bai_fasta_fai.map { meta, bam, bai, _fasta, _fai ->
+            return [meta, bam, bai]
+        }
+    )
+    SAMTOOLS_IDXSTATS(
+        ch_bam_bai_fasta_fai.map { meta, bam, bai, _fasta, _fai ->
+            return [meta, bam, bai]
+        }
+    )
 
     ch_picard_hsmetrics = channel.empty()
     ch_picard_multiplemetrics = channel.empty()
