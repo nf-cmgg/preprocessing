@@ -2,27 +2,16 @@
     "Bam QC - HSmetrics": {
         "content": [
             {
-                "riker_metrics": [
+                "0": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,43dcb037a557e5cbf784f340cadc02e1",
-                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
-                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
-                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
-                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,e5ab33ce654788037f4d6f2b41038001",
-                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
-                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
-                        ]
+                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
                     ]
                 ],
-                "samtools_flagstat": [
+                "1": [
                     [
                         {
                             "id": "test",
@@ -31,7 +20,7 @@
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
                     ]
                 ],
-                "samtools_idxstats": [
+                "2": [
                     [
                         {
                             "id": "test",
@@ -40,26 +29,26 @@
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
                     ]
                 ],
-                "samtools_stats": [
+                "3": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
+                        [
+                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
+                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
+                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
+                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
+                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
+                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
+                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
+                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
+                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
+                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                        ]
                     ]
-                ]
-            }
-        ],
-        "timestamp": "2026-06-15T07:38:49.8639",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
-        }
-    },
-    "Bam QC - WGSmetrics": {
-        "content": [
-            {
+                ],
                 "riker_metrics": [
                     [
                         {
@@ -109,10 +98,115 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-15T07:40:29.049547",
+        "timestamp": "2026-06-29T11:24:42.884004",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
+        }
+    },
+    "Bam QC - WGSmetrics": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
+                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
+                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
+                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
+                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
+                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
+                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
+                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
+                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
+                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                        ]
+                    ]
+                ],
+                "riker_metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
+                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
+                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
+                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
+                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
+                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
+                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
+                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
+                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
+                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                        ]
+                    ]
+                ],
+                "samtools_flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
+                    ]
+                ],
+                "samtools_idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
+                    ]
+                ],
+                "samtools_stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-06-29T11:25:01.12339",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
         }
     }
 }

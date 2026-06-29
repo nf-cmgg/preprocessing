@@ -28,15 +28,7 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[]).collectEntries { key, value ->
-                    if (value.endsWith(".pdf")) {
-                        [ key: file(value).name]
-                    } else {
-                        [ key: value ]
-                    }
-                }
-            ).match()
+            assert snapshot(workflow.out).match()
         }
 
     }
@@ -60,15 +52,7 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[]).collectEntries { key, value ->
-                    if (value.endsWith(".pdf")) {
-                        [ key: file(value).name]
-                    } else {
-                        [ key: value ]
-                    }
-                }
-            ).match()
+            assert snapshot(workflow.out).match()
         }
     }
 }
