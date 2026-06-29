@@ -307,8 +307,6 @@ nextflow_workflow {
                 ]).collectEntries { key, value ->
                     if (key in ["demultiplex_logs", "demultiplex_reports"]) {
                         [ key: value.sort() ]
-                    } else if (value.endsWith(".pdf")) {
-                        [ key: file(value).name]
                     } else {
                         [ key: value ]
                     }
