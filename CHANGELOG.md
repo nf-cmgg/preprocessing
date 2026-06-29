@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.1.0 (dev)
+
+- Drop `Picard` modules and associated parameters in favor of `riker multi`, which is much more efficient and now run by default.
+- Add `apple` profile to enable the use of Apple containers.
+
 ## 3.0.2
 
 - remove common plugins in favor of defining them in the nf-cmgg/configs, which will be used across all nf-cmgg pipelines. This allows for better version control and consistency across pipelines, as well as reducing the maintenance burden of keeping plugins up to date in multiple repositories.
