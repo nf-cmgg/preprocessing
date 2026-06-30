@@ -297,11 +297,26 @@ workflow PREPROCESSING {
         BAM_QC.out.mosdepth_global,
         BAM_QC.out.mosdepth_regions,
         BAM_QC.out.mosdepth_summary,
-        BAM_QC.out.riker_metrics,
         BAM_QC.out.samtools_coverage,
         BAM_QC.out.samtools_flagstat,
         BAM_QC.out.samtools_idxstats,
         BAM_QC.out.samtools_stats,
+        BAM_QC.out.riker_alignment_metrics,
+        BAM_QC.out.riker_base_dist,
+        BAM_QC.out.riker_mean_qual,
+        BAM_QC.out.riker_qual_dist,
+        BAM_QC.out.riker_error_mismatch,
+        BAM_QC.out.riker_error_overlap,
+        BAM_QC.out.riker_error_indel,
+        BAM_QC.out.riker_gcbias_detail,
+        BAM_QC.out.riker_gcbias_summary,
+        BAM_QC.out.riker_hybcap_metrics,
+        BAM_QC.out.riker_hybcap_per_target,
+        BAM_QC.out.riker_hybcap_per_base,
+        BAM_QC.out.riker_isize_metrics,
+        BAM_QC.out.riker_isize_histogram,
+        BAM_QC.out.riker_wgs_metrics,
+        BAM_QC.out.riker_wgs_coverage,
     )
 
     /*
@@ -424,7 +439,23 @@ workflow PREPROCESSING {
     samtools_stats             = BAM_QC.out.samtools_stats
     samtools_flagstat          = BAM_QC.out.samtools_flagstat
     samtools_idxstats          = BAM_QC.out.samtools_idxstats
-    riker_metrics              = BAM_QC.out.riker_metrics
+    riker_alignment_metrics    = BAM_QC.out.riker_alignment_metrics
+    riker_base_dist            = BAM_QC.out.riker_base_dist
+    riker_mean_qual            = BAM_QC.out.riker_mean_qual
+    riker_qual_dist            = BAM_QC.out.riker_qual_dist
+    riker_error_mismatch       = BAM_QC.out.riker_error_mismatch
+    riker_error_overlap        = BAM_QC.out.riker_error_overlap
+    riker_error_indel          = BAM_QC.out.riker_error_indel
+    riker_gcbias_detail        = BAM_QC.out.riker_gcbias_detail
+    riker_gcbias_summary       = BAM_QC.out.riker_gcbias_summary
+    riker_hybcap_metrics       = BAM_QC.out.riker_hybcap_metrics
+    riker_hybcap_per_target    = BAM_QC.out.riker_hybcap_per_target
+    riker_hybcap_per_base      = BAM_QC.out.riker_hybcap_per_base
+    riker_isize_metrics        = BAM_QC.out.riker_isize_metrics
+    riker_isize_histogram      = BAM_QC.out.riker_isize_histogram
+    riker_wgs_metrics          = BAM_QC.out.riker_wgs_metrics
+    riker_wgs_coverage         = BAM_QC.out.riker_wgs_coverage
+    riker_pdf                  = BAM_QC.out.riker_pdf
     md5sums                    = MD5SUM.out.checksum
     multiqcsav_report          = MULTIQCSAV.out.report.toList()
     multiqcsav_data            = MULTIQCSAV.out.data.toList()

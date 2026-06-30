@@ -76,6 +76,7 @@ nextflow_workflow {
                     "multiqcsav_data",
                     "multiqcsav_plots",
                     "multiqcsav_report",
+                    "riker_pdf",
                     "samtools_coverage",
                     "samtools_flagstat",
                     "samtools_stats"
@@ -153,6 +154,7 @@ nextflow_workflow {
                     "multiqcsav_data",
                     "multiqcsav_plots",
                     "multiqcsav_report",
+                    "riker_pdf",
                     "samtools_coverage",
                     "samtools_flagstat",
                     "samtools_stats"
@@ -232,6 +234,7 @@ nextflow_workflow {
                     "multiqcsav_data",
                     "multiqcsav_plots",
                     "multiqcsav_report",
+                    "riker_pdf",
                     "samtools_coverage",
                     "samtools_flagstat",
                     "samtools_stats"
@@ -301,6 +304,7 @@ nextflow_workflow {
                     "multiqcsav_data",
                     "multiqcsav_plots",
                     "multiqcsav_report",
+                    "riker_pdf",
                     "samtools_coverage",
                     "samtools_flagstat",
                     "samtools_stats"
