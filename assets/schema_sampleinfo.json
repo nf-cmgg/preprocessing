@@ -123,11 +123,12 @@
                 "description": "Adapter sequence to trim from read 2",
                 "default": null
             },
-            "run_coverage": {
-                "meta": ["run_coverage"],
-                "type": "boolean",
-                "description": "Whether to run coverage analysis for the sample",
-                "default": true
+            "qc_mode": {
+                "meta": ["qc_mode"],
+                "type": "string",
+                "enum": ["basic", "full"],
+                "description": "Whether to run full QC for the sample. Basic QC includes samtools flagstat, idxstats and mosdepth. Full QC includes samtools stats, samtools coverage, riker metrics and panel coverage in addition to basic QC.",
+                "default": "basic"
             },
             "roi": {
                 "meta": ["roi"],

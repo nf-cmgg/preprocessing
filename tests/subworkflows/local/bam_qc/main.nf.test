@@ -8,20 +8,23 @@ nextflow_workflow {
     tag "subworkflows/local"
     tag "subworkflows/local/bam_qc"
 
-    test("Bam QC - HSmetrics") {
+    test("bam QC - basic - no roi") {
 
         when {
             workflow {
                 """
                 // [meta, bam, bai, roi, fasta, fai]
                 input[0] = Channel.of([
-                    [ id:'test', single_end:false ],
+                    [ id:'test', single_end:false, qc_mode:'basic' ],
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
-                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
+                    [],
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
                 ])
+                // genelists
+                def genelists_path = "s3://test-data/genomics/homo_sapiens/genome/regions/genelists"
+                input[1] = channel.fromPath(genelists_path + "/*.bed").collect().map{ files -> [ files ] }.ifEmpty { channel.empty() }
                 """
             }
         }
@@ -33,19 +36,23 @@ nextflow_workflow {
 
     }
 
-    test("Bam QC - WGSmetrics") {
+    test("bam QC - full - no roi") {
+
         when {
             workflow {
                 """
                 // [meta, bam, bai, roi, fasta, fai]
                 input[0] = Channel.of([
-                    [ id:'test', single_end:false ],
+                    [ id:'test', single_end:false, qc_mode:'full' ],
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
                     [],
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
                     file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
                 ])
+                // genelists
+                def genelists_path = "s3://test-data/genomics/homo_sapiens/genome/regions/genelists"
+                input[1] = channel.fromPath(genelists_path + "/*.bed").collect().map{ files -> [ files ] }.ifEmpty { channel.empty() }
                 """
             }
         }
@@ -54,5 +61,91 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(workflow.out).match()
         }
+
+    }
+
+    test("bam QC - basic - roi") {
+
+        when {
+            workflow {
+                """
+                // [meta, bam, bai, roi, fasta, fai]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false, qc_mode:'basic' ],
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
+                ])
+                // genelists
+                def genelists_path = "s3://test-data/genomics/homo_sapiens/genome/regions/genelists"
+                input[1] = channel.fromPath(genelists_path + "/*.bed").collect().map{ files -> [ files ] }.ifEmpty { channel.empty() }
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+    test("bam QC - full - roi - WES") {
+
+        when {
+            workflow {
+                """
+                // [meta, bam, bai, roi, fasta, fai]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false, qc_mode:'full', tag:'WES' ],
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
+                ])
+                // genelists
+                def genelists_path = "s3://test-data/genomics/homo_sapiens/genome/regions/genelists"
+                input[1] = channel.fromPath(genelists_path + "/*.bed").collect().map{ files -> [ files ] }.ifEmpty { channel.empty() }
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+
+    test("bam QC - full - roi - seqcap") {
+
+        when {
+            workflow {
+                """
+                // [meta, bam, bai, roi, fasta, fai]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false, qc_mode:'full', tag:'seqcap' ],
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/cram/sample1.sorted.cram.crai", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna", checkIfExists: true),
+                    file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai", checkIfExists: true),
+                ])
+                // genelists
+                def genelists_path = "s3://test-data/genomics/homo_sapiens/genome/regions/genelists"
+                input[1] = channel.fromPath(genelists_path + "/*.bed").collect().map{ files -> [ files ] }.ifEmpty { channel.empty() }
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
     }
 }
