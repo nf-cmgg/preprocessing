@@ -17,7 +17,6 @@ include { SAMTOOLS_COVERAGE           } from '../modules/nf-core/samtools/covera
 
 // Subworkflows
 include { BAM_QC                      } from '../subworkflows/local/bam_qc'
-include { COVERAGE                    } from '../subworkflows/local/coverage'
 include { FASTQ_TO_CRAM               } from '../subworkflows/local/fastq_to_aligned_cram'
 
 // Functions
@@ -277,35 +276,6 @@ workflow PREPROCESSING {
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: COVERAGE ANALYSIS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-    FASTQ_TO_CRAM.out.cram_crai
-        .filter { meta, _cram, _crai ->
-            meta.run_coverage.toBoolean()
-        }
-        .map { meta, cram, crai ->
-            return [
-                meta,
-                cram,
-                crai,
-                getGenomeAttribute(meta.genome_data, "fasta"),
-                getGenomeAttribute(meta.genome_data, "fai"),
-                meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
-            ]
-        }
-        .set { ch_coverage }
-
-    COVERAGE(ch_coverage, ch_genelists)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        COVERAGE.out.mosdepth_summary,
-        COVERAGE.out.mosdepth_global,
-        COVERAGE.out.mosdepth_regions,
-        COVERAGE.out.samtools_coverage,
-    )
-
-    /*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STEP: QC FOR ALIGNMENTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -322,12 +292,16 @@ workflow PREPROCESSING {
         }
         .set { ch_bam_qc }
 
-    BAM_QC(ch_bam_qc)
+    BAM_QC(ch_bam_qc, ch_genelists)
     ch_multiqc_files = ch_multiqc_files.mix(
-        BAM_QC.out.samtools_stats,
+        BAM_QC.out.mosdepth_global,
+        BAM_QC.out.mosdepth_regions,
+        BAM_QC.out.mosdepth_summary,
+        BAM_QC.out.riker_metrics,
+        BAM_QC.out.samtools_coverage,
         BAM_QC.out.samtools_flagstat,
         BAM_QC.out.samtools_idxstats,
-        BAM_QC.out.riker_metrics,
+        BAM_QC.out.samtools_stats,
     )
 
     /*
@@ -433,20 +407,20 @@ workflow PREPROCESSING {
     // UMI-specific outputs exposed at workflow level.
     family_size_histogram      = FASTQ_TO_CRAM.out.family_size_histogram
     umi_zipper_diagnostics     = FASTQ_TO_CRAM.out.zipper_diagnostics
-    mosdepth_global            = COVERAGE.out.mosdepth_global
-    mosdepth_summary           = COVERAGE.out.mosdepth_summary
-    mosdepth_regions           = COVERAGE.out.mosdepth_regions
-    mosdepth_per_base_d4       = COVERAGE.out.mosdepth_per_base_d4
-    mosdepth_per_base_bed      = COVERAGE.out.mosdepth_per_base_bed
-    mosdepth_per_base_csi      = COVERAGE.out.mosdepth_per_base_csi
-    mosdepth_regions_bed       = COVERAGE.out.mosdepth_regions_bed
-    mosdepth_regions_csi       = COVERAGE.out.mosdepth_regions_csi
-    mosdepth_quantized_bed     = COVERAGE.out.mosdepth_quantized_bed
-    mosdepth_quantized_csi     = COVERAGE.out.mosdepth_quantized_csi
-    mosdepth_thresholds_bed    = COVERAGE.out.mosdepth_thresholds_bed
-    mosdepth_thresholds_csi    = COVERAGE.out.mosdepth_thresholds_csi
-    samtools_coverage          = COVERAGE.out.samtools_coverage
-    panelcoverage              = COVERAGE.out.panelcoverage
+    mosdepth_global            = BAM_QC.out.mosdepth_global
+    mosdepth_summary           = BAM_QC.out.mosdepth_summary
+    mosdepth_regions           = BAM_QC.out.mosdepth_regions
+    mosdepth_per_base_d4       = BAM_QC.out.mosdepth_per_base_d4
+    mosdepth_per_base_bed      = BAM_QC.out.mosdepth_per_base_bed
+    mosdepth_per_base_csi      = BAM_QC.out.mosdepth_per_base_csi
+    mosdepth_regions_bed       = BAM_QC.out.mosdepth_regions_bed
+    mosdepth_regions_csi       = BAM_QC.out.mosdepth_regions_csi
+    mosdepth_quantized_bed     = BAM_QC.out.mosdepth_quantized_bed
+    mosdepth_quantized_csi     = BAM_QC.out.mosdepth_quantized_csi
+    mosdepth_thresholds_bed    = BAM_QC.out.mosdepth_thresholds_bed
+    mosdepth_thresholds_csi    = BAM_QC.out.mosdepth_thresholds_csi
+    samtools_coverage          = BAM_QC.out.samtools_coverage
+    panelcoverage              = BAM_QC.out.panelcoverage
     samtools_stats             = BAM_QC.out.samtools_stats
     samtools_flagstat          = BAM_QC.out.samtools_flagstat
     samtools_idxstats          = BAM_QC.out.samtools_idxstats
