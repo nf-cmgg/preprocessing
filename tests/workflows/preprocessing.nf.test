@@ -7,7 +7,7 @@ nextflow_workflow {
     tag "workflows"
     tag "workflows/preprocessing"
 
-    test("preprocessing - fastq - bwa - bamsormadup - roi") {
+    test("preprocessing - fastq - bwa - bamsormadup - roi - full qc") {
 
         when {
             workflow {
@@ -24,7 +24,7 @@ nextflow_workflow {
                             sample_type: "DNA",
                             aligner: "bwamem",
                             markdup: "bamsormadup",
-                            run_coverage: true,
+                            qc_mode: "full",
                             roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
@@ -84,7 +84,7 @@ nextflow_workflow {
         }
     }
 
-    test("preprocessing - fastq - bwa - bamsormadup - no roi") {
+    test("preprocessing - fastq - bwa - bamsormadup - no roi - full qc") {
 
         when {
             workflow {
@@ -101,7 +101,7 @@ nextflow_workflow {
                             sample_type: "DNA",
                             aligner: "bwamem",
                             markdup: "bamsormadup",
-                            run_coverage: true
+                            qc_mode: "full"
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -161,7 +161,7 @@ nextflow_workflow {
         }
     }
 
-    test("preprocessing - fastq - bwa - bamsormadup - roi - no coverage") {
+    test("preprocessing - fastq - bwa - bamsormadup - roi - basic qc") {
         when {
             params {
             }
@@ -179,7 +179,7 @@ nextflow_workflow {
                             sample_type: "DNA",
                             aligner: "bwamem",
                             markdup: "bamsormadup",
-                            run_coverage: false,
+                            qc_mode: "basic",
                             roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
@@ -240,7 +240,7 @@ nextflow_workflow {
         }
     }
 
-    test("preprocessing - flowcell - bwa - bamsormadup - roi") {
+    test("preprocessing - flowcell - bwa - bamsormadup - roi - basic qc") {
         when {
             workflow {
                 """
