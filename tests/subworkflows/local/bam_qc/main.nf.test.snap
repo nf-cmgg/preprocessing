@@ -39,13 +39,19 @@
                             "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
                             "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
                             "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
+                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
+                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
+                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
                             "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
                             "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
                             "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
+                            "test.mean-quality-by-cycle.pdf:md5,e5ab33ce654788037f4d6f2b41038001",
                             "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
                             "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
+                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
+                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
+                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
                         ]
                     ]
                 ],
@@ -59,13 +65,19 @@
                             "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
                             "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
                             "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
+                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
+                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
+                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
                             "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
                             "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
                             "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
+                            "test.mean-quality-by-cycle.pdf:md5,e5ab33ce654788037f4d6f2b41038001",
                             "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
                             "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
+                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
+                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
+                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
                         ]
                     ]
                 ],
@@ -98,7 +110,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-29T11:24:42.884004",
+        "timestamp": "2026-06-30T12:31:25.374584",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -142,15 +154,21 @@
                         },
                         [
                             "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
+                            "test.base-distribution-by-cycle.pdf:md5,43dcb037a557e5cbf784f340cadc02e1",
                             "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
+                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
+                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
+                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
                             "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
                             "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
                             "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
+                            "test.mean-quality-by-cycle.pdf:md5,e5ab33ce654788037f4d6f2b41038001",
                             "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
                             "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
+                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
+                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
+                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
                         ]
                     ]
                 ],
@@ -162,15 +180,21 @@
                         },
                         [
                             "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
+                            "test.base-distribution-by-cycle.pdf:md5,43dcb037a557e5cbf784f340cadc02e1",
                             "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
+                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
+                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
+                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
                             "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
                             "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
                             "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
+                            "test.mean-quality-by-cycle.pdf:md5,e5ab33ce654788037f4d6f2b41038001",
                             "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
                             "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
+                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
+                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
+                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
                         ]
                     ]
                 ],
@@ -203,7 +227,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-29T11:25:01.12339",
+        "timestamp": "2026-06-30T12:31:35.949323",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

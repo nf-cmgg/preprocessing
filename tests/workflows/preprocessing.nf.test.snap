@@ -489,6 +489,10 @@
                             "sample1.alignment-metrics.txt:md5,0c6f36de09941f6d379bed9e772e50c1",
                             "sample1.base-distribution-by-cycle.pdf:md5,0fbd0473740dc74751af4d4503511a5f",
                             "sample1.base-distribution-by-cycle.txt:md5,832a8f50ac2102d5ffc6d796bec099a3",
+                            "sample1.gcbias-chart.pdf:md5,76b876df43ac778292fc03bcdc90398c",
+                            "sample1.gcbias-detail.txt:md5,b2533e5ee58845d5c45b6d1461db846c",
+                            "sample1.gcbias-summary.txt:md5,fd2ebca34401bfda1579b21062977b6f",
+                            "sample1.hybcap-metrics.txt:md5,0e5cf0bfd2f1142f56462ec7cf4c990c",
                             "sample1.isize-histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "sample1.isize-metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "sample1.mean-quality-by-cycle.pdf:md5,f90eae685942493bdf1df90d39650c2c",
@@ -651,10 +655,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-15T08:36:58.835655",
+        "timestamp": "2026-06-30T12:27:10.368379",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "preprocessing - fastq - bwa - bamsormadup - no roi": {
@@ -1058,12 +1062,17 @@
                             "sample1.alignment-metrics.txt:md5,0c6f36de09941f6d379bed9e772e50c1",
                             "sample1.base-distribution-by-cycle.pdf:md5,0fbd0473740dc74751af4d4503511a5f",
                             "sample1.base-distribution-by-cycle.txt:md5,832a8f50ac2102d5ffc6d796bec099a3",
+                            "sample1.gcbias-chart.pdf:md5,76b876df43ac778292fc03bcdc90398c",
+                            "sample1.gcbias-detail.txt:md5,b2533e5ee58845d5c45b6d1461db846c",
+                            "sample1.gcbias-summary.txt:md5,fd2ebca34401bfda1579b21062977b6f",
                             "sample1.isize-histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "sample1.isize-metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "sample1.mean-quality-by-cycle.pdf:md5,f90eae685942493bdf1df90d39650c2c",
                             "sample1.mean-quality-by-cycle.txt:md5,022828223ec254dc82935ee886413fbe",
                             "sample1.quality-score-distribution.pdf:md5,0564c904cc1234189061a6f5362393f6",
-                            "sample1.quality-score-distribution.txt:md5,89e46bfc59dbc7aed65d9c1e2350dd3a"
+                            "sample1.quality-score-distribution.txt:md5,89e46bfc59dbc7aed65d9c1e2350dd3a",
+                            "sample1.wgs-coverage.txt:md5,4387e3d5a1046eb409a8ebb451fabcc7",
+                            "sample1.wgs-metrics.txt:md5,05c64580c5ea68ba1987c56c4cc31968"
                         ]
                     ]
                 ],
@@ -1215,10 +1224,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-15T08:38:36.674001",
+        "timestamp": "2026-06-30T12:28:33.877205",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "preprocessing - fastq - bwa - bamsormadup - roi - no coverage": {
@@ -1477,6 +1486,10 @@
                             "sample1.alignment-metrics.txt:md5,0c6f36de09941f6d379bed9e772e50c1",
                             "sample1.base-distribution-by-cycle.pdf:md5,0fbd0473740dc74751af4d4503511a5f",
                             "sample1.base-distribution-by-cycle.txt:md5,832a8f50ac2102d5ffc6d796bec099a3",
+                            "sample1.gcbias-chart.pdf:md5,76b876df43ac778292fc03bcdc90398c",
+                            "sample1.gcbias-detail.txt:md5,b2533e5ee58845d5c45b6d1461db846c",
+                            "sample1.gcbias-summary.txt:md5,fd2ebca34401bfda1579b21062977b6f",
+                            "sample1.hybcap-metrics.txt:md5,7cae4a6cf3b7b4bf0958553c1c89ed62",
                             "sample1.isize-histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "sample1.isize-metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "sample1.mean-quality-by-cycle.pdf:md5,f90eae685942493bdf1df90d39650c2c",
@@ -1613,10 +1626,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-15T09:20:27.039822",
+        "timestamp": "2026-06-30T12:29:57.195562",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "preprocessing - flowcell - bwa - bamsormadup - roi": {
