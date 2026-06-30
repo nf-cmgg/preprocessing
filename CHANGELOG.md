@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Drop `Picard` modules and associated parameters in favor of `riker multi`, which is much more efficient and now run by default.
 - Add `apple` profile to enable the use of Apple containers.
+- Drop `hook_url` parameter. To configure messaging services, use a custom config in tandem with the `nf-teams`/`nf-slack` plugin instead.
 
 ## 3.0.2
 
