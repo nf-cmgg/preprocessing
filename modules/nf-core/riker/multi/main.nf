@@ -11,7 +11,23 @@ process RIKER_MULTI {
     tuple val(meta), path(bam), path(bai), path(roi), path(fasta), path(fai)
 
     output:
-    tuple val(meta), path("*.{txt,pdf}"), emit: metrics
+    tuple val(meta), path("*.alignment-metrics.txt"),          emit: alignment_metrics, optional: true
+    tuple val(meta), path("*.base-distribution-by-cycle.txt"), emit: base_dist,         optional: true
+    tuple val(meta), path("*.mean-quality-by-cycle.txt"),      emit: mean_qual,         optional: true
+    tuple val(meta), path("*.quality-score-distribution.txt"), emit: qual_dist,         optional: true
+    tuple val(meta), path("*.error-mismatch.txt"),             emit: error_mismatch,    optional: true
+    tuple val(meta), path("*.error-overlap.txt"),              emit: error_overlap,     optional: true
+    tuple val(meta), path("*.error-indel.txt"),                emit: error_indel,       optional: true
+    tuple val(meta), path("*.gcbias-detail.txt"),              emit: gcbias_detail,     optional: true
+    tuple val(meta), path("*.gcbias-summary.txt"),             emit: gcbias_summary,    optional: true
+    tuple val(meta), path("*.hybcap-metrics.txt"),             emit: hybcap_metrics,    optional: true
+    tuple val(meta), path("*.hybcap-per-target.txt"),          emit: hybcap_per_target, optional: true
+    tuple val(meta), path("*.hybcap-per-base.txt*"),           emit: hybcap_per_base,   optional: true
+    tuple val(meta), path("*.isize-metrics.txt"),              emit: isize_metrics,     optional: true
+    tuple val(meta), path("*.isize-histogram.txt"),            emit: isize_histogram,   optional: true
+    tuple val(meta), path("*.wgs-metrics.txt"),                emit: wgs_metrics,       optional: true
+    tuple val(meta), path("*.wgs-coverage.txt"),               emit: wgs_coverage,      optional: true
+    tuple val(meta), path("*.pdf"),                            emit: pdf,               optional: true
     tuple val("${task.process}"), val('riker'), eval("riker --version 2>&1 | sed 's/riker //'") , topic: versions, emit: versions_riker
 
     when:
@@ -22,6 +38,7 @@ process RIKER_MULTI {
     def prefix      = task.ext.prefix ?: "${meta.id}"
     def ref         = fasta ? "-r ${fasta}" : ''
     def hybcap_opts = roi ? "--hybcap::baits ${roi} --hybcap::targets ${roi}" : ''
+
     """
     riker multi \\
         -i ${bam} \\

@@ -2,116 +2,6 @@
     "bam QC - basic - no roi": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
-                    ]
-                ],
-                "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    
-                ],
-                "14": [
-                    
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
-                    ]
-                ],
-                "17": [
-                    
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
-                    ]
-                ],
-                "3": [
-                    
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
-                    ]
-                ],
-                "6": [
-                    
-                ],
-                "7": [
-                    
-                ],
-                "8": [
-                    
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.mosdepth.summary.txt:md5,6c29875b821ba44f5cc5254a2339db90"
-                    ]
-                ],
                 "mosdepth_global": [
                     [
                         {
@@ -193,7 +83,55 @@
                 "panelcoverage": [
                     
                 ],
-                "riker_metrics": [
+                "riker_alignment_metrics": [
+                    
+                ],
+                "riker_base_dist": [
+                    
+                ],
+                "riker_error_indel": [
+                    
+                ],
+                "riker_error_mismatch": [
+                    
+                ],
+                "riker_error_overlap": [
+                    
+                ],
+                "riker_gcbias_detail": [
+                    
+                ],
+                "riker_gcbias_summary": [
+                    
+                ],
+                "riker_hybcap_metrics": [
+                    
+                ],
+                "riker_hybcap_per_base": [
+                    
+                ],
+                "riker_hybcap_per_target": [
+                    
+                ],
+                "riker_isize_histogram": [
+                    
+                ],
+                "riker_isize_metrics": [
+                    
+                ],
+                "riker_mean_qual": [
+                    
+                ],
+                "riker_pdf": [
+                    
+                ],
+                "riker_qual_dist": [
+                    
+                ],
+                "riker_wgs_coverage": [
+                    
+                ],
+                "riker_wgs_metrics": [
                     
                 ],
                 "samtools_coverage": [
@@ -224,7 +162,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-30T13:45:28.834986",
+        "timestamp": "2026-06-30T14:27:56.863163",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -233,200 +171,6 @@
     "bam QC - full - roi - WES": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
-                    ]
-                ],
-                "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        [
-                            "test_Treatable_ID_per_exon.mosdepth.region.dist.txt:md5,6c2b5237d98e0a2f118a3553c2ba478e",
-                            "test_bladder_cancer_per_exon.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "13": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        [
-                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
-                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
-                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
-                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
-                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
-                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
-                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
-                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
-                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
-                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
-                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
-                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
-                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
-                        ]
-                    ]
-                ],
-                "14": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
-                    ]
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
-                    ]
-                ],
-                "17": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
-                    ]
-                ],
-                "3": [
-                    
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.regions.bed.gz.csi:md5,d128b1a1648ebc007d22b5c4a23663a6"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "WES"
-                        },
-                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
-                    ]
-                ],
                 "mosdepth_global": [
                     [
                         {
@@ -549,7 +293,7 @@
                         ]
                     ]
                 ],
-                "riker_metrics": [
+                "riker_alignment_metrics": [
                     [
                         {
                             "id": "test",
@@ -557,24 +301,142 @@
                             "qc_mode": "full",
                             "tag": "WES"
                         },
+                        "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb"
+                    ]
+                ],
+                "riker_base_dist": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
+                    ]
+                ],
+                "riker_error_indel": [
+                    
+                ],
+                "riker_error_mismatch": [
+                    
+                ],
+                "riker_error_overlap": [
+                    
+                ],
+                "riker_gcbias_detail": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63"
+                    ]
+                ],
+                "riker_gcbias_summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb"
+                    ]
+                ],
+                "riker_hybcap_metrics": [
+                    
+                ],
+                "riker_hybcap_per_base": [
+                    
+                ],
+                "riker_hybcap_per_target": [
+                    
+                ],
+                "riker_isize_histogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81"
+                    ]
+                ],
+                "riker_isize_metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b"
+                    ]
+                ],
+                "riker_mean_qual": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6"
+                    ]
+                ],
+                "riker_pdf": [
+                    [
+                        {
+                            "id": "test",
+                            "qc_mode": "full",
+                            "single_end": false,
+                            "tag": "WES"
+                        },
                         [
-                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
-                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
-                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
-                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
-                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
-                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
-                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
-                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
-                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
-                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
-                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
-                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
-                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
+                            "test.base-distribution-by-cycle.pdf",
+                            "test.gcbias-chart.pdf",
+                            "test.isize-histogram.pdf",
+                            "test.mean-quality-by-cycle.pdf",
+                            "test.quality-score-distribution.pdf",
+                            "test.wgs-coverage.pdf"
                         ]
+                    ]
+                ],
+                "riker_qual_dist": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                    ]
+                ],
+                "riker_wgs_coverage": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5"
+                    ]
+                ],
+                "riker_wgs_metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "WES"
+                        },
+                        "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
                     ]
                 ],
                 "samtools_coverage": [
@@ -623,7 +485,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-30T13:46:19.404056",
+        "timestamp": "2026-06-30T14:28:45.159533",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -632,197 +494,6 @@
     "bam QC - full - roi - seqcap": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
-                    ]
-                ],
-                "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test_seqcap_Connective_tissue_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
-                    ]
-                ],
-                "13": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        [
-                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
-                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
-                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
-                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
-                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
-                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
-                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
-                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
-                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
-                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
-                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
-                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
-                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
-                        ]
-                    ]
-                ],
-                "14": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
-                    ]
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
-                    ]
-                ],
-                "17": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
-                    ]
-                ],
-                "3": [
-                    
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.regions.bed.gz.csi:md5,d128b1a1648ebc007d22b5c4a23663a6"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full",
-                            "tag": "seqcap"
-                        },
-                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
-                    ]
-                ],
                 "mosdepth_global": [
                     [
                         {
@@ -942,7 +613,7 @@
                         "test_seqcap_Connective_tissue_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
                     ]
                 ],
-                "riker_metrics": [
+                "riker_alignment_metrics": [
                     [
                         {
                             "id": "test",
@@ -950,24 +621,142 @@
                             "qc_mode": "full",
                             "tag": "seqcap"
                         },
+                        "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb"
+                    ]
+                ],
+                "riker_base_dist": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
+                    ]
+                ],
+                "riker_error_indel": [
+                    
+                ],
+                "riker_error_mismatch": [
+                    
+                ],
+                "riker_error_overlap": [
+                    
+                ],
+                "riker_gcbias_detail": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63"
+                    ]
+                ],
+                "riker_gcbias_summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb"
+                    ]
+                ],
+                "riker_hybcap_metrics": [
+                    
+                ],
+                "riker_hybcap_per_base": [
+                    
+                ],
+                "riker_hybcap_per_target": [
+                    
+                ],
+                "riker_isize_histogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81"
+                    ]
+                ],
+                "riker_isize_metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b"
+                    ]
+                ],
+                "riker_mean_qual": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6"
+                    ]
+                ],
+                "riker_pdf": [
+                    [
+                        {
+                            "id": "test",
+                            "qc_mode": "full",
+                            "single_end": false,
+                            "tag": "seqcap"
+                        },
                         [
-                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
-                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
-                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
-                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
-                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
-                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
-                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
-                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
-                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
-                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
-                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
-                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
-                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
+                            "test.base-distribution-by-cycle.pdf",
+                            "test.gcbias-chart.pdf",
+                            "test.isize-histogram.pdf",
+                            "test.mean-quality-by-cycle.pdf",
+                            "test.quality-score-distribution.pdf",
+                            "test.wgs-coverage.pdf"
                         ]
+                    ]
+                ],
+                "riker_qual_dist": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                    ]
+                ],
+                "riker_wgs_coverage": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5"
+                    ]
+                ],
+                "riker_wgs_metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full",
+                            "tag": "seqcap"
+                        },
+                        "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
                     ]
                 ],
                 "samtools_coverage": [
@@ -1016,7 +805,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-30T13:46:37.813735",
+        "timestamp": "2026-06-30T14:29:02.372004",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -1025,164 +814,6 @@
     "bam QC - full - no roi": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
-                    ]
-                ],
-                "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        [
-                            "test_Treatable_ID_per_exon.mosdepth.region.dist.txt:md5,6c2b5237d98e0a2f118a3553c2ba478e",
-                            "test_bladder_cancer_per_exon.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "13": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        [
-                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
-                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
-                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
-                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
-                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
-                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
-                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
-                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
-                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
-                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
-                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
-                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
-                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
-                        ]
-                    ]
-                ],
-                "14": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
-                    ]
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
-                    ]
-                ],
-                "17": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
-                    ]
-                ],
-                "3": [
-                    
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
-                    ]
-                ],
-                "6": [
-                    
-                ],
-                "7": [
-                    
-                ],
-                "8": [
-                    
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
-                        },
-                        "test.mosdepth.summary.txt:md5,6c29875b821ba44f5cc5254a2339db90"
-                    ]
-                ],
                 "mosdepth_global": [
                     [
                         {
@@ -1274,31 +905,139 @@
                         ]
                     ]
                 ],
-                "riker_metrics": [
+                "riker_alignment_metrics": [
                     [
                         {
                             "id": "test",
                             "single_end": false,
                             "qc_mode": "full"
                         },
+                        "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb"
+                    ]
+                ],
+                "riker_base_dist": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
+                    ]
+                ],
+                "riker_error_indel": [
+                    
+                ],
+                "riker_error_mismatch": [
+                    
+                ],
+                "riker_error_overlap": [
+                    
+                ],
+                "riker_gcbias_detail": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63"
+                    ]
+                ],
+                "riker_gcbias_summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb"
+                    ]
+                ],
+                "riker_hybcap_metrics": [
+                    
+                ],
+                "riker_hybcap_per_base": [
+                    
+                ],
+                "riker_hybcap_per_target": [
+                    
+                ],
+                "riker_isize_histogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81"
+                    ]
+                ],
+                "riker_isize_metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b"
+                    ]
+                ],
+                "riker_mean_qual": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6"
+                    ]
+                ],
+                "riker_pdf": [
+                    [
+                        {
+                            "id": "test",
+                            "qc_mode": "full",
+                            "single_end": false
+                        },
                         [
-                            "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb",
-                            "test.base-distribution-by-cycle.pdf:md5,71ccfb355fc2fa585ecab03a3487a63b",
-                            "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a",
-                            "test.gcbias-chart.pdf:md5,275b5a861a8d6d976708ba0b13de2c8f",
-                            "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63",
-                            "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb",
-                            "test.isize-histogram.pdf:md5,c18e427f1c7e4c8f164557da30ad9d71",
-                            "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81",
-                            "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b",
-                            "test.mean-quality-by-cycle.pdf:md5,4ebf87a4d12db4269267b56d0441388e",
-                            "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6",
-                            "test.quality-score-distribution.pdf:md5,fd61e5e131a0b71d225decc167b29101",
-                            "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc",
-                            "test.wgs-coverage.pdf:md5,882aaad6e9c04de2f6d322f8b67d4ecf",
-                            "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5",
-                            "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
+                            "test.base-distribution-by-cycle.pdf",
+                            "test.gcbias-chart.pdf",
+                            "test.isize-histogram.pdf",
+                            "test.mean-quality-by-cycle.pdf",
+                            "test.quality-score-distribution.pdf",
+                            "test.wgs-coverage.pdf"
                         ]
+                    ]
+                ],
+                "riker_qual_dist": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
+                    ]
+                ],
+                "riker_wgs_coverage": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5"
+                    ]
+                ],
+                "riker_wgs_metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "qc_mode": "full"
+                        },
+                        "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
                     ]
                 ],
                 "samtools_coverage": [
@@ -1343,7 +1082,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-30T13:45:47.29527",
+        "timestamp": "2026-06-30T14:28:14.248686",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -1352,137 +1091,6 @@
     "bam QC - basic - roi": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
-                    ]
-                ],
-                "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    
-                ],
-                "14": [
-                    
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
-                    ]
-                ],
-                "17": [
-                    
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
-                    ]
-                ],
-                "3": [
-                    
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.regions.bed.gz.csi:md5,d128b1a1648ebc007d22b5c4a23663a6"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
-                        },
-                        "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
-                    ]
-                ],
                 "mosdepth_global": [
                     [
                         {
@@ -1585,7 +1193,55 @@
                 "panelcoverage": [
                     
                 ],
-                "riker_metrics": [
+                "riker_alignment_metrics": [
+                    
+                ],
+                "riker_base_dist": [
+                    
+                ],
+                "riker_error_indel": [
+                    
+                ],
+                "riker_error_mismatch": [
+                    
+                ],
+                "riker_error_overlap": [
+                    
+                ],
+                "riker_gcbias_detail": [
+                    
+                ],
+                "riker_gcbias_summary": [
+                    
+                ],
+                "riker_hybcap_metrics": [
+                    
+                ],
+                "riker_hybcap_per_base": [
+                    
+                ],
+                "riker_hybcap_per_target": [
+                    
+                ],
+                "riker_isize_histogram": [
+                    
+                ],
+                "riker_isize_metrics": [
+                    
+                ],
+                "riker_mean_qual": [
+                    
+                ],
+                "riker_pdf": [
+                    
+                ],
+                "riker_qual_dist": [
+                    
+                ],
+                "riker_wgs_coverage": [
+                    
+                ],
+                "riker_wgs_metrics": [
                     
                 ],
                 "samtools_coverage": [
@@ -1616,7 +1272,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-30T13:45:59.9134",
+        "timestamp": "2026-06-30T14:28:26.674146",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
