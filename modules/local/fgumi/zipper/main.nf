@@ -2,9 +2,10 @@ process FGUMI_ZIPPER {
     tag "$meta.id"
     label 'process_high'
 
+    conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/763a833519c23555be888065f492215f57344155106972e272a0f8df78c57659/data'
-        : 'community.wave.seqera.io/library/fgumi_samtools_snap-aligner:c985f9394623a414'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c5/c566f9e20f9eb4c5be9ff5a68e854f974caae916d67b4e03eb30eece186b73e8/data'
+        : 'community.wave.seqera.io/library/fgumi_samtools_snap-aligner:1708ad8bd6e764b6'}"
 
     input:
     tuple val(meta), path(mapped_sam), path(unmapped_qname_bam), path(fasta), path(dict)
