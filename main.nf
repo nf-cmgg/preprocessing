@@ -180,7 +180,6 @@ workflow {
     sormadup_metrics           = PREPROCESSING.out.sormadup_metrics
     // Additional UMI consensus outputs.
     family_size_histogram      = PREPROCESSING.out.family_size_histogram
-    umi_filtered_consensus_cram = PREPROCESSING.out.umi_filtered_consensus_cram
     mosdepth_global            = PREPROCESSING.out.mosdepth_global
     mosdepth_summary           = PREPROCESSING.out.mosdepth_summary
     mosdepth_regions           = PREPROCESSING.out.mosdepth_regions
@@ -282,11 +281,6 @@ output {
     family_size_histogram {
         path { meta, histogram ->
             histogram >> (meta.library ? "${meta.library}/${meta.samplename}/${histogram.name}" : "${meta.samplename}/${histogram.name}")
-        }
-    }
-    umi_filtered_consensus_cram {
-        path { meta, cram ->
-            cram >> (meta.library ? "${meta.library}/${meta.samplename}/${cram.name}" : "${meta.samplename}/${cram.name}")
         }
     }
     mosdepth_global {

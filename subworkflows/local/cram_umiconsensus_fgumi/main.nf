@@ -6,7 +6,6 @@ include { FGUMI_FILTER           } from "../../../modules/nf-core/fgumi/filter/m
 include { FGUMI_GROUP            } from "../../../modules/nf-core/fgumi/group/main.nf"
 include { FGUMI_SIMPLEX          } from "../../../modules/nf-core/fgumi/simplex/main.nf"
 include { CRAM_SNAPZIPPER_FGUMI  } from "../cram_snapzipper_fgumi/main.nf"
-include { SAMTOOLS_SORT          } from "../../../modules/nf-core/samtools/sort/main.nf"
 
 // FUNCTIONS
 include { getGenomeAttribute      } from '../../local/utils_nfcore_preprocessing_pipeline'
@@ -57,21 +56,12 @@ workflow CRAM_UMICONSENSUS_FGUMI {
         false
     )
 
-    SAMTOOLS_SORT(
-        FGUMI_FILTER.out.bam
-            .join(
-                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta, fai -> [meta, fasta, fai] },
-            ),
-        ""
-    )
-
     emit:
-    cram                  = SAMTOOLS_SORT.out.cram
+    cram                  = FGUMI_FILTER.out.bam
     // Compatibility output kept for downstream interfaces; currently not produced by this branch.
     zipper_diagnostics    = channel.empty()
     grouping_metrics      = FGUMI_GROUP.out.metrics
     family_size_histogram = FGUMI_GROUP.out.histogram
     consensus_metrics     = FGUMI_SIMPLEX.out.stats
     filtering_metrics     = FGUMI_FILTER.out.stats
-    filtered_consensus_cram = SAMTOOLS_SORT.out.cram
 }
