@@ -5,7 +5,8 @@ include { FGUMI_EXTRACT          } from "../../../modules/nf-core/fgumi/extract/
 include { FGUMI_FILTER           } from "../../../modules/nf-core/fgumi/filter/main.nf"
 include { FGUMI_GROUP            } from "../../../modules/nf-core/fgumi/group/main.nf"
 include { FGUMI_SIMPLEX          } from "../../../modules/nf-core/fgumi/simplex/main.nf"
-include { CRAM_SNAPZIPPER_FGUMI  } from "../cram_snapzipper_fgumi/main.nf"
+include { CRAM_SNAPZIPPER_FGUMI as RAW_CRAM_SNAPZIPPER_FGUMI  } from "../cram_snapzipper_fgumi/main.nf"
+include { CRAM_SNAPZIPPER_FGUMI as UMI_CRAM_SNAPZIPPER_FGUMI  } from "../cram_snapzipper_fgumi/main.nf"
 
 // FUNCTIONS
 include { getGenomeAttribute      } from '../../local/utils_nfcore_preprocessing_pipeline'
@@ -23,7 +24,7 @@ workflow CRAM_UMICONSENSUS_FGUMI {
     )
 
     // Step 3: align with SNAP, zipper tags back, then template-coordinate sort.
-    CRAM_SNAPZIPPER_FGUMI(
+    RAW_CRAM_SNAPZIPPER_FGUMI(
         FGUMI_EXTRACT.out.bam
             .join(
                 ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta, fai ->
@@ -33,7 +34,7 @@ workflow CRAM_UMICONSENSUS_FGUMI {
     )
 
     FGUMI_GROUP(
-        CRAM_SNAPZIPPER_FGUMI.out.bam,
+        RAW_CRAM_SNAPZIPPER_FGUMI.out.bam,
         (params.fgumi_group_strategy ?: 'adjacency')
     )
 
@@ -52,8 +53,14 @@ workflow CRAM_UMICONSENSUS_FGUMI {
         false
     )
 
+    UMI_CRAM_SNAPZIPPER_FGUMI(
+        FGUMI_FILTER.out.bam
+            .join(ch_meta_reads_aligner_index_fasta)
+            .map { meta, filtered_bams, _reads, _aligner, _index, fasta, fai -> [meta, filtered_bams, getGenomeAttribute(meta.genome_data, 'snap'), fasta, getGenomeAttribute(meta.genome_data, 'dict'), fai] }
+    )
+
     emit:
-    cram                  = FGUMI_FILTER.out.bam
+    cram                  = UMI_CRAM_SNAPZIPPER_FGUMI.out.bam
     // Compatibility output kept for downstream interfaces; currently not produced by this branch.
     zipper_diagnostics    = channel.empty()
     grouping_metrics      = FGUMI_GROUP.out.metrics
