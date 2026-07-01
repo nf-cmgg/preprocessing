@@ -7,7 +7,7 @@ include { FGUMI_SORT as FGUMI_TEMPLATE_SORT  } from "../../../modules/nf-core/fg
 include { SAMTOOLS_SORT as SAMTOOLS_QNAME_SORT_UNMAPPED } from "../../../modules/nf-core/samtools/sort/main.nf"
 include { SAMTOOLS_SORT as SAMTOOLS_QNAME_SORT_MAPPED   } from "../../../modules/nf-core/samtools/sort/main.nf"
 
-workflow FGUMI_SNAP_ZIPPER {
+workflow CRAM_SNAPZIPPER_FGUMI {
     take:
     ch_meta_unmapped_index_fasta_dict
 

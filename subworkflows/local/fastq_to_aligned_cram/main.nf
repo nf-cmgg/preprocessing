@@ -13,7 +13,7 @@ include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/m
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA       } from '../../nf-core/fastq_align_dna/main'
 include { FASTQ_ALIGN_RNA       } from '../../local/fastq_align_rna/main'
-include { UMI_CONSENSUS_FGUMI   } from '../../local/umi_consensus/main.nf'
+include { CRAM_UMICONSENSUS_FGUMI   } from '../../local/cram_umiconsensus_fgumi/main.nf'
 
 // FUNCTIONS
 include { getGenomeAttribute    } from '../../local/utils_nfcore_preprocessing_pipeline'
@@ -60,7 +60,7 @@ workflow FASTQ_TO_CRAM {
     )
 
     // UMI-aware fgumi branch (steps 1, 3, 4, 5, 6, 7 in fgumi Basic Workflow)
-    UMI_CONSENSUS_FGUMI(
+    CRAM_UMICONSENSUS_FGUMI(
         ch_dna_to_align.umi
     )
 
@@ -118,15 +118,15 @@ workflow FASTQ_TO_CRAM {
 
     // UMI branch outputs are mixed into the common markdup/metrics streams.
     ch_markdup_index = ch_markdup_index.mix(
-        UMI_CONSENSUS_FGUMI.out.cram_crai
+        CRAM_UMICONSENSUS_FGUMI.out.cram_crai
     )
-    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.grouping_metrics)
-    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.family_size_histogram)
-    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.consensus_metrics)
-    ch_sormadup_metrics = ch_sormadup_metrics.mix(UMI_CONSENSUS_FGUMI.out.filtering_metrics)
-    ch_family_size_histogram = UMI_CONSENSUS_FGUMI.out.family_size_histogram
-    ch_filtered_consensus_cram = UMI_CONSENSUS_FGUMI.out.filtered_consensus_cram
-    ch_zipper_diagnostics = UMI_CONSENSUS_FGUMI.out.zipper_diagnostics
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(CRAM_UMICONSENSUS_FGUMI.out.grouping_metrics)
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(CRAM_UMICONSENSUS_FGUMI.out.family_size_histogram)
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(CRAM_UMICONSENSUS_FGUMI.out.consensus_metrics)
+    ch_sormadup_metrics = ch_sormadup_metrics.mix(CRAM_UMICONSENSUS_FGUMI.out.filtering_metrics)
+    ch_family_size_histogram = CRAM_UMICONSENSUS_FGUMI.out.family_size_histogram
+    ch_filtered_consensus_cram = CRAM_UMICONSENSUS_FGUMI.out.filtered_consensus_cram
+    ch_zipper_diagnostics = CRAM_UMICONSENSUS_FGUMI.out.zipper_diagnostics
 
     // BIOBAMBAM_BAMSORMADUP([meta, [bam, bam]], fasta, fai)
     BIOBAMBAM_BAMSORMADUP(ch_bam_fasta_fai.bamsormadup)

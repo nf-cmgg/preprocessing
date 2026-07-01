@@ -5,13 +5,13 @@ include { FGUMI_EXTRACT          } from "../../../modules/nf-core/fgumi/extract/
 include { FGUMI_FILTER           } from "../../../modules/nf-core/fgumi/filter/main.nf"
 include { FGUMI_GROUP            } from "../../../modules/nf-core/fgumi/group/main.nf"
 include { FGUMI_SIMPLEX          } from "../../../modules/nf-core/fgumi/simplex/main.nf"
-include { FGUMI_SNAP_ZIPPER      } from "../fgumi_snapzipper/main.nf"
+include { CRAM_SNAPZIPPER_FGUMI  } from "../cram_snapzipper_fgumi/main.nf"
 include { SAMTOOLS_SORT          } from "../../../modules/nf-core/samtools/sort/main.nf"
 
 // FUNCTIONS
 include { getGenomeAttribute      } from '../../local/utils_nfcore_preprocessing_pipeline'
 
-workflow UMI_CONSENSUS_FGUMI {
+workflow CRAM_UMICONSENSUS_FGUMI {
     take:
     ch_meta_reads_aligner_index_fasta // channel: [mandatory] [meta, reads, aligner, index, fasta]
 
@@ -24,7 +24,7 @@ workflow UMI_CONSENSUS_FGUMI {
     )
 
     // Step 3: align with SNAP, zipper tags back, then template-coordinate sort.
-    FGUMI_SNAP_ZIPPER(
+    CRAM_SNAPZIPPER_FGUMI(
         FGUMI_EXTRACT.out.bam
             .join(
                 ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta ->
@@ -36,7 +36,7 @@ workflow UMI_CONSENSUS_FGUMI {
     )
 
     FGUMI_GROUP(
-        FGUMI_SNAP_ZIPPER.out.bam,
+        CRAM_SNAPZIPPER_FGUMI.out.bam,
         (params.fgumi_group_strategy ?: 'adjacency')
     )
 
