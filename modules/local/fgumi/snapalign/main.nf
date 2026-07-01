@@ -12,7 +12,6 @@ process FGUMI_SNAP_ALIGN {
 
     output:
     tuple val(meta), path("${prefix}.snap.bam"), emit: mapped_bam
-    tuple val(meta), path(unmapped_bam), emit: unmapped_bam
     tuple val("${task.process}"), val('fgumi'), eval("fgumi --version | sed 's/^fgumi //;q'"), topic: versions, emit: versions_fgumi
 
     when:

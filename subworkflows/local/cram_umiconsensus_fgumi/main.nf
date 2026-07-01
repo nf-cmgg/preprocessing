@@ -20,19 +20,17 @@ workflow CRAM_UMICONSENSUS_FGUMI {
     // Step 1: build an unmapped BAM with UMI tags from input FASTQ.
     FGUMI_EXTRACT(
         ch_meta_reads_aligner_index_fasta
-            .map { meta, reads, _aligner, _index, _fasta -> [meta, reads, (meta.readgroup?.LB ?: meta.library ?: meta.id)] }
+            .map { meta, reads, _aligner, _index, _fasta, _fai -> [meta, reads, (meta.readgroup?.LB ?: meta.library ?: meta.id)] }
     )
 
     // Step 3: align with SNAP, zipper tags back, then template-coordinate sort.
     CRAM_SNAPZIPPER_FGUMI(
         FGUMI_EXTRACT.out.bam
             .join(
-                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta ->
-                    [meta, getGenomeAttribute(meta.genome_data, 'snap'), fasta, getGenomeAttribute(meta.genome_data, 'dict')]
+                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta, fai ->
+                    [meta, getGenomeAttribute(meta.genome_data, 'snap'), fasta, getGenomeAttribute(meta.genome_data, 'dict'), fai]
                 },
-                by: 0,
             )
-            .map { meta, unmapped_bam, snap_index, fasta, dict -> [meta, unmapped_bam, snap_index, fasta, dict] }
     )
 
     FGUMI_GROUP(
@@ -51,21 +49,19 @@ workflow CRAM_UMICONSENSUS_FGUMI {
         FGUMI_SIMPLEX.out.bam,
         FGUMI_SIMPLEX.out.bam
             .join(
-                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta -> [meta, fasta] },
+                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta, _fai -> [meta, fasta] },
                 by: 0,
             )
             .map { meta, _bam, fasta -> [meta, fasta] },
-        "1,1,1",
+        '1,1,1',
         false
     )
 
     SAMTOOLS_SORT(
         FGUMI_FILTER.out.bam
             .join(
-                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta -> [meta, fasta] },
-                by: 0,
-            )
-            .map { meta, bam, fasta -> [meta, bam, fasta] },
+                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta, fai -> [meta, fasta, fai] },
+            ),
         "crai"
     )
 

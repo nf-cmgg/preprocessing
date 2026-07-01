@@ -9,19 +9,14 @@ include { SAMTOOLS_SORT as SAMTOOLS_QNAME_SORT_MAPPED   } from "../../../modules
 
 workflow CRAM_SNAPZIPPER_FGUMI {
     take:
-    ch_meta_unmapped_index_fasta_dict
+    ch_meta_unmapped_index_fasta_dict_fai
 
     main:
-    FGUMI_SNAP_ALIGN(ch_meta_unmapped_index_fasta_dict)
+    FGUMI_SNAP_ALIGN(ch_meta_unmapped_index_fasta_dict_fai.map { meta, unmapped_bam, index, fasta, dict, _fai -> [meta, unmapped_bam, index, fasta, dict] })
 
     // Queryname sort the unmapped BAM in parallel with mapped BAM sort.
     SAMTOOLS_QNAME_SORT_UNMAPPED(
-        FGUMI_SNAP_ALIGN.out.unmapped_bam
-            .join(
-                ch_meta_unmapped_index_fasta_dict.map { meta, _unmapped_bam, _index, fasta, _dict -> [meta, fasta] },
-                by: 0,
-            )
-            .map { meta, unmapped_bam, fasta -> [meta, unmapped_bam, fasta] },
+        ch_meta_unmapped_index_fasta_dict_fai.map { meta, unmapped_bam, _index, fasta, _dict, fai -> [meta, unmapped_bam, fasta, fai] },
         ''
     )
 
@@ -29,21 +24,17 @@ workflow CRAM_SNAPZIPPER_FGUMI {
     SAMTOOLS_QNAME_SORT_MAPPED(
         FGUMI_SNAP_ALIGN.out.mapped_bam
             .join(
-                ch_meta_unmapped_index_fasta_dict.map { meta, _unmapped_bam, _index, fasta, _dict -> [meta, fasta] },
-                by: 0,
-            )
-            .map { meta, mapped_bam, fasta -> [meta, mapped_bam, fasta] },
+                ch_meta_unmapped_index_fasta_dict_fai.map { meta, _unmapped_bam, _index, fasta, _dict, fai -> [meta, fasta, fai] },
+            ),
         ''
     )
 
     FGUMI_ZIPPER(
-        SAMTOOLS_QNAME_SORT_MAPPED.out.sam
-            .join(SAMTOOLS_QNAME_SORT_UNMAPPED.out.bam, by: 0)
+        SAMTOOLS_QNAME_SORT_MAPPED.out.bam
+            .join(SAMTOOLS_QNAME_SORT_UNMAPPED.out.bam)
             .join(
-                ch_meta_unmapped_index_fasta_dict.map { meta, _unmapped_bam, _index, fasta, dict -> [meta, fasta, dict] },
-                by: 0,
+                ch_meta_unmapped_index_fasta_dict_fai.map { meta, _unmapped_bam, _index, fasta, dict, _fai -> [meta, fasta, dict] },
             )
-            .map { meta, mapped_sam, unmapped_qname_bam, fasta, dict -> [meta, mapped_sam, unmapped_qname_bam, fasta, dict] }
     )
 
     FGUMI_TEMPLATE_SORT(FGUMI_ZIPPER.out.bam)
