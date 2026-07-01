@@ -45,13 +45,9 @@ workflow CRAM_UMICONSENSUS_FGUMI {
 
     // Step 7: filter consensus reads, then coordinate-sort/index for downstream CRAM conversion.
     FGUMI_FILTER(
-        FGUMI_SIMPLEX.out.bam,
         FGUMI_SIMPLEX.out.bam
-            .join(
-                ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta, _fai -> [meta, fasta] },
-                by: 0,
-            )
-            .map { meta, _bam, fasta -> [meta, fasta] },
+            .join(ch_meta_reads_aligner_index_fasta)
+            .map { meta, simplex_bams, _reads, _aligner, _index, fasta, _fai -> [meta, simplex_bams, fasta] },
         '1,1,1',
         false
     )

@@ -8,8 +8,7 @@ process FGUMI_FILTER {
           'community.wave.seqera.io/library/fgumi:0.4.0--9fce7cd93e5aceee' }"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(fasta)
+    tuple val(meta), path(bam), path(fasta)
     val min_reads
     val keep_rejected
 
