@@ -92,35 +92,6 @@
                     "minimum": 1,
                     "description": "Minimum number of reads required per UMI family for fgumi simplex consensus generation."
                 },
-                "fgumi_queue_memory": {
-                    "type": "integer",
-                    "default": 768,
-                    "minimum": 64,
-                    "description": "fgumi queue-memory budget in MB."
-                },
-                "fgumi_queue_memory_per_thread": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Scale fgumi queue-memory by allocated thread count."
-                },
-                "fgumi_compression_level": {
-                    "type": "integer",
-                    "default": 1,
-                    "minimum": 0,
-                    "maximum": 12,
-                    "description": "Compression level for fgumi BAM outputs."
-                },
-                "fgumi_sort_max_memory": {
-                    "type": "string",
-                    "default": "2G",
-                    "pattern": "^\\d+(\\.\\d+)?[KMG]$",
-                    "description": "Memory budget for fgumi sort, for example 2G or 768M."
-                },
-                "fgumi_sort_memory_per_thread": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Scale fgumi sort memory by allocated thread count."
-                },
                 "fgumi_snap_ignore_mismatched_pairs": {
                     "type": "boolean",
                     "default": true,
