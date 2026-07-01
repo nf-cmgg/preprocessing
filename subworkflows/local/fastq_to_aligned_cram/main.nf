@@ -74,6 +74,7 @@ workflow FASTQ_TO_CRAM {
 
     FASTQ_ALIGN_DNA.out.bam
         .mix(FASTQ_ALIGN_RNA.out.bam)
+        .mix(CRAM_UMICONSENSUS_FGUMI.out.cram)
         .map { meta, files ->
             def gk = (meta.chunks as Integer ?: 1)
             return [
@@ -114,10 +115,6 @@ workflow FASTQ_TO_CRAM {
 
     ch_markdup_index = channel.empty()
 
-    // UMI branch outputs are mixed into the common markdup/metrics streams.
-    ch_markdup_index = ch_markdup_index.mix(
-        CRAM_UMICONSENSUS_FGUMI.out.cram_crai
-    )
     ch_sormadup_metrics = ch_sormadup_metrics.mix(CRAM_UMICONSENSUS_FGUMI.out.grouping_metrics)
     ch_sormadup_metrics = ch_sormadup_metrics.mix(CRAM_UMICONSENSUS_FGUMI.out.family_size_histogram)
     ch_sormadup_metrics = ch_sormadup_metrics.mix(CRAM_UMICONSENSUS_FGUMI.out.consensus_metrics)

@@ -62,11 +62,11 @@ workflow CRAM_UMICONSENSUS_FGUMI {
             .join(
                 ch_meta_reads_aligner_index_fasta.map { meta, _reads, _aligner, _index, fasta, fai -> [meta, fasta, fai] },
             ),
-        "crai"
+        ""
     )
 
     emit:
-    cram_crai             = SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.index, failOnMismatch: true, failOnDuplicate: true)
+    cram                  = SAMTOOLS_SORT.out.cram
     // Compatibility output kept for downstream interfaces; currently not produced by this branch.
     zipper_diagnostics    = channel.empty()
     grouping_metrics      = FGUMI_GROUP.out.metrics
