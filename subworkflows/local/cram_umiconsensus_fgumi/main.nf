@@ -70,7 +70,7 @@ workflow CRAM_UMICONSENSUS_FGUMI {
     )
 
     emit:
-    cram_crai             = SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.crai, failOnMismatch: true, failOnDuplicate: true)
+    cram_crai             = SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.index, failOnMismatch: true, failOnDuplicate: true)
     // Compatibility output kept for downstream interfaces; currently not produced by this branch.
     zipper_diagnostics    = channel.empty()
     grouping_metrics      = FGUMI_GROUP.out.metrics
