@@ -8,8 +8,7 @@ process FGUMI_ZIPPER {
         'community.wave.seqera.io/library/fgumi:0.4.0--1fb5dc6de05ce63b' }"
 
     input:
-    tuple val(meta), path(bam), path(unmapped)
-    tuple val(meta2), path(fasta), path(fai), path(dict)
+    tuple val(meta), path(bam), path(unmapped), path(fasta), path(fai), path(dict)
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
