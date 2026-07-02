@@ -54,7 +54,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
     FGUMI_FILTER(
         FGUMI_SIMPLEX.out.bam
             .join(ch_meta_fastqs)
-            .map { meta, simplex_bams, _fastqs -> 
+            .map { meta, simplex_bams, _fastqs ->
                 [meta, simplex_bams, getGenomeAttribute(meta.genome_data, 'fasta')]
             },
         '1,1,1',
@@ -64,7 +64,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
     UMI_FGUMI_SNAPZIPSORT(
         FGUMI_FILTER.out.bam
             .join(ch_meta_fastqs)
-            .map { meta, filtered_bams, _fastqs -> 
+            .map { meta, filtered_bams, _fastqs ->
                 [
                     meta,
                     filtered_bams,
