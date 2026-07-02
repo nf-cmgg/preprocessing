@@ -5,8 +5,9 @@ include { FGUMI_EXTRACT          } from "../../../modules/nf-core/fgumi/extract/
 include { FGUMI_FILTER           } from "../../../modules/nf-core/fgumi/filter/main.nf"
 include { FGUMI_GROUP            } from "../../../modules/nf-core/fgumi/group/main.nf"
 include { FGUMI_SIMPLEX          } from "../../../modules/nf-core/fgumi/simplex/main.nf"
-include { CRAM_SNAPZIPPER_FGUMI as RAW_CRAM_SNAPZIPPER_FGUMI  } from "../cram_snapzipper_fgumi/main.nf"
-include { CRAM_SNAPZIPPER_FGUMI as UMI_CRAM_SNAPZIPPER_FGUMI  } from "../cram_snapzipper_fgumi/main.nf"
+include { FGUMI_SNAPZIPSORT as RAW_FGUMI_SNAPZIPSORT } from "../../../modules/local/fgumi/snapzipsort/main.nf"
+include { FGUMI_SNAPZIPSORT as UMI_FGUMI_SNAPZIPSORT } from "../../../modules/local/fgumi/snapzipsort/main.nf"
+
 
 // FUNCTIONS
 include { getGenomeAttribute      } from '../../local/utils_nfcore_preprocessing_pipeline'
@@ -24,7 +25,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
     )
 
     // Step 3: align with SNAP, zipper tags back, then template-coordinate sort.
-    RAW_CRAM_SNAPZIPPER_FGUMI(
+    RAW_FGUMI_SNAPZIPSORT(
         FGUMI_EXTRACT.out.bam
             .join(ch_meta_fastqs)
             .map { meta, ubams, _fastqs ->
@@ -33,14 +34,14 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
                     ubams,
                     getGenomeAttribute(meta.genome_data, 'snap'),
                     getGenomeAttribute(meta.genome_data, 'fasta'),
-                    getGenomeAttribute(meta.genome_data, 'dict'),
-                    getGenomeAttribute(meta.genome_data, 'fai')
+                    getGenomeAttribute(meta.genome_data, 'fai'),
+                    getGenomeAttribute(meta.genome_data, 'dict')
                 ]
             },
     )
 
     FGUMI_GROUP(
-        RAW_CRAM_SNAPZIPPER_FGUMI.out.bam,
+        RAW_FGUMI_SNAPZIPSORT.out.bam,
         'adjacency'
     )
 
@@ -60,7 +61,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
         false
     )
 
-    UMI_CRAM_SNAPZIPPER_FGUMI(
+    UMI_FGUMI_SNAPZIPSORT(
         FGUMI_FILTER.out.bam
             .join(ch_meta_fastqs)
             .map { meta, filtered_bams, _fastqs -> 
@@ -69,14 +70,14 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
                     filtered_bams,
                     getGenomeAttribute(meta.genome_data, 'snap'),
                     getGenomeAttribute(meta.genome_data, 'fasta'),
-                    getGenomeAttribute(meta.genome_data, 'dict'),
-                    getGenomeAttribute(meta.genome_data, 'fai')
+                    getGenomeAttribute(meta.genome_data, 'fai'),
+                    getGenomeAttribute(meta.genome_data, 'dict')
                 ]
             }
     )
 
     emit:
-    cram                  = UMI_CRAM_SNAPZIPPER_FGUMI.out.bam
+    cram                  = UMI_FGUMI_SNAPZIPSORT.out.bam
     grouping_metrics      = FGUMI_GROUP.out.metrics
     family_size_histogram = FGUMI_GROUP.out.histogram
     consensus_metrics     = FGUMI_SIMPLEX.out.stats
