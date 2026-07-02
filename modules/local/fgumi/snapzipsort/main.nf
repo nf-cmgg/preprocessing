@@ -38,6 +38,7 @@ process FGUMI_SNAPZIPSORT {
         \$INDEX \\
         -pairedInterleavedFastq - \\
         -t ${task.cpus} \\
+        -o -sam - \\
         ${args2} \\
     | fgumi zipper \\
         --unmapped ${unmapped_bam} \\
