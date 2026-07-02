@@ -2146,7 +2146,7 @@
                                 "id": "sample1"
                             }
                         },
-                        "sample1.hybcap-metrics.txt:md5,7cae4a6cf3b7b4bf0958553c1c89ed62"
+                        "sample1.hybcap-metrics.txt:md5,0e5cf0bfd2f1142f56462ec7cf4c990c"
                     ]
                 ],
                 "riker_hybcap_per_base": [
@@ -2464,7 +2464,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-02T16:21:35.586757084",
+        "timestamp": "2026-07-02T17:01:29.294260704",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
