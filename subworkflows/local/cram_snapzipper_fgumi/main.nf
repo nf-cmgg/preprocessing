@@ -12,7 +12,12 @@ workflow CRAM_SNAPZIPPER_FGUMI {
     ch_meta_unmapped_index_fasta_dict_fai
 
     main:
-    FGUMI_SNAPALIGN(ch_meta_unmapped_index_fasta_dict_fai.map { meta, unmapped_bam, index, fasta, dict, _fai -> [meta, unmapped_bam, index, fasta, dict] })
+    FGUMI_SNAPALIGN(
+        ch_meta_unmapped_index_fasta_dict_fai
+            .map { meta, unmapped_bam, index, fasta, dict, _fai ->
+                [meta, unmapped_bam, index, fasta, dict]
+            }
+    )
 
     // Queryname sort the unmapped BAM in parallel with mapped BAM sort.
     SAMTOOLS_QNAME_SORT_UNMAPPED(
@@ -32,9 +37,8 @@ workflow CRAM_SNAPZIPPER_FGUMI {
     FGUMI_ZIPPER(
         SAMTOOLS_QNAME_SORT_MAPPED.out.bam
             .join(SAMTOOLS_QNAME_SORT_UNMAPPED.out.bam)
-            .join(
-                ch_meta_unmapped_index_fasta_dict_fai.map { meta, _unmapped_bam, _index, fasta, dict, _fai -> [meta, fasta, dict] },
-            )
+            .join(ch_meta_unmapped_index_fasta_dict_fai)
+            .map { meta, mbam, ubam, _reads, _index, fasta, dict, fai -> [meta, mbam, ubam, fasta, fai, dict] },
     )
 
     FGUMI_TEMPLATE_SORT(FGUMI_ZIPPER.out.bam)

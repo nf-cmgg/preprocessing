@@ -53,6 +53,25 @@
                 "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name.",
                 "default": false
             },
+            "fgumi_aware": {
+                "meta": ["fgumi_aware"],
+                "type": "boolean",
+                "description": "Enable UMI-aware consensus processing through the fgumi branch.",
+                "default": false
+            },
+            "fgumi_simplex_min_reads": {
+                "meta": ["fgumi_simplex_min_reads"],
+                "type": "integer",
+                "default": 1,
+                "minimum": 1,
+                "description": "Minimum number of reads required per UMI family for fgumi simplex consensus generation."
+            },
+            "fgumi_snap_ignore_mismatched_pairs": {
+                "meta": ["fgumi_snap_ignore_mismatched_pairs"],
+                "type": "boolean",
+                "default": true,
+                "description": "Pass -I to SNAP to ignore mismatched read IDs in paired-end input."
+            },
             "skip_trimming": {
                 "meta": ["skip_trimming"],
                 "type": "boolean",
