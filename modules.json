@@ -50,6 +50,36 @@
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
+                    "fgumi/extract": {
+                        "branch": "master",
+                        "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",
+                        "installed_by": ["modules"]
+                    },
+                    "fgumi/filter": {
+                        "branch": "master",
+                        "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",
+                        "installed_by": ["modules"]
+                    },
+                    "fgumi/group": {
+                        "branch": "master",
+                        "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",
+                        "installed_by": ["modules"]
+                    },
+                    "fgumi/simplex": {
+                        "branch": "master",
+                        "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",
+                        "installed_by": ["modules"]
+                    },
+                    "fgumi/sort": {
+                        "branch": "master",
+                        "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",
+                        "installed_by": ["modules"]
+                    },
+                    "fgumi/zipper": {
+                        "branch": "master",
+                        "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",
+                        "installed_by": ["modules"]
+                    },
                     "gnu/sort": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
