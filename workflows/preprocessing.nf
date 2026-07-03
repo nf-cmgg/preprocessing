@@ -270,7 +270,10 @@ workflow PREPROCESSING {
     FASTQ_TO_CRAM(
         ch_meta_reads_aligner_index_fasta_gtf
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        FASTQ_TO_CRAM.out.sormadup_metrics,
+        FASTQ_TO_CRAM.out.family_size_histogram
+    )
 
     /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -25,6 +25,9 @@
                         "test.merged.cram.crai"
                     ]
                 ],
+                "family_size_histogram": [
+                    
+                ],
                 "rna_junctions": [
                     
                 ],
@@ -36,10 +39,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:19:51.825749",
+        "timestamp": "2026-07-03T10:49:36.809748622",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
         }
     },
     "fastq to cram - bwa - bamsormadup": {
@@ -68,6 +71,9 @@
                         "test.cram.crai"
                     ]
                 ],
+                "family_size_histogram": [
+                    
+                ],
                 "rna_junctions": [
                     
                 ],
@@ -95,10 +101,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:10:31.616836",
+        "timestamp": "2026-07-03T10:46:02.767572226",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
         }
     },
     "fastq to cram - bwa - samtools sormadup": {
@@ -127,6 +133,9 @@
                         "test.merged.cram.crai"
                     ]
                 ],
+                "family_size_histogram": [
+                    
+                ],
                 "rna_junctions": [
                     
                 ],
@@ -154,10 +163,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:15:15.495706",
+        "timestamp": "2026-07-03T10:48:25.249088385",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
         }
     },
     "fastq to cram - star - bamsormadup": {
@@ -186,6 +195,9 @@
                         "test.cram",
                         "test.cram.crai"
                     ]
+                ],
+                "family_size_histogram": [
+                    
                 ],
                 "rna_junctions": [
                     [
@@ -249,10 +261,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-14T08:18:36.857986",
+        "timestamp": "2026-07-03T10:47:44.53060843",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "26.04.4"
         }
     },
     "fastq to cram - bwa - samtools sort": {
@@ -281,6 +293,9 @@
                         "test.merged.cram.crai"
                     ]
                 ],
+                "family_size_histogram": [
+                    
+                ],
                 "rna_junctions": [
                     
                 ],
@@ -292,10 +307,79 @@
                 ]
             }
         ],
-        "timestamp": "2026-02-11T20:16:26.285299",
+        "timestamp": "2026-07-03T10:48:56.909948371",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
+    },
+    "fastq to cram - umi": {
+        "content": [
+            {
+                "align_reports": [
+                    
+                ],
+                "cram_crai": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "fgumi_aware": true,
+                                "fgumi_simplex_min_reads": 1,
+                                "fgumi_snap_ignore_mismatched_pairs": false,
+                                "genome_data": {
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/"
+                                },
+                                "id": "test",
+                                "markdup": "false",
+                                "sample_type": "DNA",
+                                "samplename": "test",
+                                "single_end": false
+                            }
+                        },
+                        "test.merged.cram",
+                        "test.merged.cram.crai"
+                    ]
+                ],
+                "family_size_histogram": [
+                    [
+                        {
+                            "id": "test",
+                            "samplename": "test",
+                            "single_end": false,
+                            "sample_type": "DNA",
+                            "markdup": "false",
+                            "fgumi_aware": true,
+                            "fgumi_simplex_min_reads": 1,
+                            "fgumi_snap_ignore_mismatched_pairs": false,
+                            "genome_data": {
+                                "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
+                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                            }
+                        },
+                        "test.fgumi.group.family_size_histogram.txt:md5,57742826c7e781f773840f1c977f5f0b"
+                    ]
+                ],
+                "rna_junctions": [
+                    
+                ],
+                "rna_splice_junctions": [
+                    
+                ],
+                "sormadup_metrics": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-07-03T10:54:15.783957564",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
         }
     }
 }
