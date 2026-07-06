@@ -66,7 +66,6 @@ workflow FASTQ_TO_CRAM {
 
     FASTQ_ALIGN_DNA.out.bam
         .mix(FASTQ_ALIGN_RNA.out.bam)
-        .mix(FASTQ_UMICONSENSUS_FGUMI.out.cram)
         .map { meta, files ->
             def gk = (meta.chunks as Integer ?: 1)
             return [
@@ -131,6 +130,7 @@ workflow FASTQ_TO_CRAM {
     */
 
     ch_markdup_index
+        .mix(FASTQ_UMICONSENSUS_FGUMI.out.bam) // no markdup for FGUMI as this is already solved by the tooling itself
         .branch { meta, reads, index ->
             bam: reads.getExtension() == "bam"
             return [meta, reads, index]

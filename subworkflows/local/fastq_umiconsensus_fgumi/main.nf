@@ -77,7 +77,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
     )
 
     emit:
-    cram                  = UMI_FGUMI_SNAPZIPSORT.out.bam
+    bam                   = UMI_FGUMI_SNAPZIPSORT.out.bam.join(UMI_FGUMI_SNAPZIPSORT.out.bai)
     grouping_metrics      = FGUMI_GROUP.out.metrics
     family_size_histogram = FGUMI_GROUP.out.histogram
     consensus_metrics     = FGUMI_SIMPLEX.out.stats
