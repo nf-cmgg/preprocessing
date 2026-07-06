@@ -2,61 +2,71 @@
     "umi consensus test": {
         "content": [
             {
+                "bam": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test",
+                                "samplename": "test",
+                                "single_end": false,
+                                "sample_type": "DNA",
+                                "markdup": "bamsormadup",
+                                "fgumi_simplex_min_reads": 1,
+                                "fgumi_snap_ignore_mismatched_pairs": false,
+                                "genome_data": {
+                                    "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                                }
+                            }
+                        },
+                        "test.fgumi.bam:md5,d8847959ea89503e93669d3d5526813c",
+                        "test.fgumi.bam.bai:md5,6b054c31ca1e0c5cdf99d6fdc6229654"
+                    ]
+                ],
                 "consensus_metrics": [
                     [
                         {
-                            "id": "test",
-                            "samplename": "test",
-                            "single_end": false,
-                            "sample_type": "DNA",
-                            "markdup": "bamsormadup",
-                            "fgumi_simplex_min_reads": 1,
-                            "fgumi_snap_ignore_mismatched_pairs": false,
-                            "genome_data": {
-                                "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
-                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test",
+                                "samplename": "test",
+                                "single_end": false,
+                                "sample_type": "DNA",
+                                "markdup": "bamsormadup",
+                                "fgumi_simplex_min_reads": 1,
+                                "fgumi_snap_ignore_mismatched_pairs": false,
+                                "genome_data": {
+                                    "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                                }
                             }
                         },
                         "test.fgumi.simplex.stats.txt:md5,c259ad6db7c02de9e0f1b9f95a3d6ab0"
                     ]
                 ],
-                "cram": [
-                    [
-                        {
-                            "id": "test",
-                            "samplename": "test",
-                            "single_end": false,
-                            "sample_type": "DNA",
-                            "markdup": "bamsormadup",
-                            "fgumi_simplex_min_reads": 1,
-                            "fgumi_snap_ignore_mismatched_pairs": false,
-                            "genome_data": {
-                                "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
-                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
-                            }
-                        },
-                        "test.fgumi.bam:md5,fdad08ae32095f2fd8a3f9d5f7d697d1"
-                    ]
-                ],
                 "family_size_histogram": [
                     [
                         {
-                            "id": "test",
-                            "samplename": "test",
-                            "single_end": false,
-                            "sample_type": "DNA",
-                            "markdup": "bamsormadup",
-                            "fgumi_simplex_min_reads": 1,
-                            "fgumi_snap_ignore_mismatched_pairs": false,
-                            "genome_data": {
-                                "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
-                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test",
+                                "samplename": "test",
+                                "single_end": false,
+                                "sample_type": "DNA",
+                                "markdup": "bamsormadup",
+                                "fgumi_simplex_min_reads": 1,
+                                "fgumi_snap_ignore_mismatched_pairs": false,
+                                "genome_data": {
+                                    "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                                }
                             }
                         },
                         "test.fgumi.group.family_size_histogram.txt:md5,57742826c7e781f773840f1c977f5f0b"
@@ -65,18 +75,21 @@
                 "filtering_metrics": [
                     [
                         {
-                            "id": "test",
-                            "samplename": "test",
-                            "single_end": false,
-                            "sample_type": "DNA",
-                            "markdup": "bamsormadup",
-                            "fgumi_simplex_min_reads": 1,
-                            "fgumi_snap_ignore_mismatched_pairs": false,
-                            "genome_data": {
-                                "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
-                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test",
+                                "samplename": "test",
+                                "single_end": false,
+                                "sample_type": "DNA",
+                                "markdup": "bamsormadup",
+                                "fgumi_simplex_min_reads": 1,
+                                "fgumi_snap_ignore_mismatched_pairs": false,
+                                "genome_data": {
+                                    "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                                }
                             }
                         },
                         "test.fgumi.filter.stats.txt:md5,01b1b32c9151552a623eef933b8d1f96"
@@ -85,18 +98,21 @@
                 "grouping_metrics": [
                     [
                         {
-                            "id": "test",
-                            "samplename": "test",
-                            "single_end": false,
-                            "sample_type": "DNA",
-                            "markdup": "bamsormadup",
-                            "fgumi_simplex_min_reads": 1,
-                            "fgumi_snap_ignore_mismatched_pairs": false,
-                            "genome_data": {
-                                "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
-                                "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "id": "test",
+                                "samplename": "test",
+                                "single_end": false,
+                                "sample_type": "DNA",
+                                "markdup": "bamsormadup",
+                                "fgumi_simplex_min_reads": 1,
+                                "fgumi_snap_ignore_mismatched_pairs": false,
+                                "genome_data": {
+                                    "snap": "s3://test-data/genomics/homo_sapiens/genome/snap/",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "dict": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                                }
                             }
                         },
                         "test.fgumi.group.grouping_metrics.txt:md5,deb6be58b11022b67145fe4e2c7ca299"
@@ -104,7 +120,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-02T16:50:47.876765096",
+        "timestamp": "2026-07-06T13:29:57.554096841",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

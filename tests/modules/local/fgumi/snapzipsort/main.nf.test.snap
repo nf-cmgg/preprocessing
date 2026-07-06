@@ -2,13 +2,16 @@
     "homo sapiens - test": {
         "content": [
             {
+                "bai": [
+                    
+                ],
                 "bam": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.fgumi.bam:md5,42aeef21615cf8f3a8908abb6229595c"
+                        "test.fgumi.bam:md5,6bab0c75514fda4b4e7efbbae5e33cc8"
                     ]
                 ]
             },
@@ -27,7 +30,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-02T16:15:25.079107282",
+        "timestamp": "2026-07-06T13:16:43.167620236",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -36,6 +39,9 @@
     "homo sapiens - test - stub": {
         "content": [
             {
+                "bai": [
+                    
+                ],
                 "bam": [
                     [
                         {
@@ -61,7 +67,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-02T16:17:04.152576656",
+        "timestamp": "2026-07-06T13:18:57.541461241",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
