@@ -66,6 +66,11 @@
                         "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",
                         "installed_by": ["modules"]
                     },
+                    "fgumi/merge": {
+                        "branch": "master",
+                        "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",
+                        "installed_by": ["modules"]
+                    },
                     "fgumi/simplex": {
                         "branch": "master",
                         "git_sha": "c3e04783b2ac99ffc011745ec092614a7bef86ca",

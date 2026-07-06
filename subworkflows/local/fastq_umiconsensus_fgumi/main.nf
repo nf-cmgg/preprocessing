@@ -4,6 +4,7 @@
 include { FGUMI_EXTRACT          } from "../../../modules/nf-core/fgumi/extract/main.nf"
 include { FGUMI_FILTER           } from "../../../modules/nf-core/fgumi/filter/main.nf"
 include { FGUMI_GROUP            } from "../../../modules/nf-core/fgumi/group/main.nf"
+include { FGUMI_MERGE            } from "../../../modules/nf-core/fgumi/merge/main.nf"
 include { FGUMI_SIMPLEX          } from "../../../modules/nf-core/fgumi/simplex/main.nf"
 include { FGUMI_SNAPZIPSORT as RAW_FGUMI_SNAPZIPSORT } from "../../../modules/local/fgumi/snapzipsort/main.nf"
 include { FGUMI_SNAPZIPSORT as UMI_FGUMI_SNAPZIPSORT } from "../../../modules/local/fgumi/snapzipsort/main.nf"
@@ -40,8 +41,39 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
             },
     )
 
+    def ch_merge_input = RAW_FGUMI_SNAPZIPSORT.out.bam
+        .map { meta, files ->
+            def gk = (meta.chunks as Integer ?: 1)
+            return [
+                groupKey(
+                    meta - meta.subMap('readgroup', 'chunks') + [id: meta.id ==~ /^\d{4}\..*$/ ? meta.id[5..-1] : meta.id],
+                    gk,
+                ),
+                files,
+            ]
+        }
+        .groupTuple()
+        .map { meta, files ->
+            def gk = (meta.count as Integer ?: 1)
+            return [
+                groupKey(
+                    meta - meta.subMap('count') + [id: meta.samplename ?: meta.id],
+                    gk,
+                ),
+                files,
+            ]
+        }
+        .groupTuple()
+        .map { meta, files ->
+            return [meta, files.flatten()]
+        }
+
+    FGUMI_MERGE(
+        ch_merge_input
+    )
+
     FGUMI_GROUP(
-        RAW_FGUMI_SNAPZIPSORT.out.bam,
+        FGUMI_MERGE.out.bam,
         'adjacency'
     )
 
