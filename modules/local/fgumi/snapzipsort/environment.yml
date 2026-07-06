@@ -1,0 +1,6 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::fgumi=0.4.0
+  - bioconda::snap-aligner=2.0.5

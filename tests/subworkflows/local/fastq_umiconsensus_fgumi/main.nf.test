@@ -1,0 +1,52 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_UMICONSENSUS_FGUMI"
+    script "subworkflows/local/fastq_umiconsensus_fgumi/main.nf"
+    workflow "FASTQ_UMICONSENSUS_FGUMI"
+
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/fastq_umiconsensus_fgumi"
+
+    test("umi consensus test") {
+        when {
+            workflow {
+                """
+                // [meta, [fq_1,fq_2]]
+                input[0] = channel.of([
+                    [
+                        id:'test',
+                        samplename:'test',
+                        single_end:false,
+                        sample_type:'DNA',
+                        markdup: "bamsormadup",
+                        fgumi_simplex_min_reads: 1,
+                        fgumi_snap_ignore_mismatched_pairs: false,
+                        genome_data: [
+                            snap: "s3://test-data/genomics/homo_sapiens/genome/snap/",
+                            fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                            dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict"
+                        ]
+                    ], // meta map
+                    [
+                        file("https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/sample1_S31_R1_001.fastq.gz", checkIfExists: true),
+                        file("https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/sample1_S31_R2_001.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {
+                    assert workflow.success
+                    assert snapshot(
+                        sanitizeOutput(workflow.out)
+                    ).match()
+                }
+            )
+        }
+    }
+}

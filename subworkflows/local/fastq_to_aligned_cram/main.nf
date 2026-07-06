@@ -11,8 +11,9 @@ include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormad
 include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
 
 // SUBWORKFLOWS
-include { FASTQ_ALIGN_DNA       } from '../../nf-core/fastq_align_dna/main'
-include { FASTQ_ALIGN_RNA       } from '../../local/fastq_align_rna/main'
+include { FASTQ_ALIGN_DNA          } from '../../nf-core/fastq_align_dna/main'
+include { FASTQ_ALIGN_RNA          } from '../../local/fastq_align_rna/main'
+include { FASTQ_UMICONSENSUS_FGUMI } from '../fastq_umiconsensus_fgumi/main.nf'
 
 // FUNCTIONS
 include { getGenomeAttribute    } from '../../local/utils_nfcore_preprocessing_pipeline'
@@ -35,6 +36,8 @@ workflow FASTQ_TO_CRAM {
         .branch { meta, reads, aligner, index, fasta, fai, gtf ->
             rna: meta.sample_type == "RNA"
             return [meta, reads, "star", getGenomeAttribute(meta.genome_data, 'star'), gtf]
+            umi: meta.fgumi_aware == true
+            return [meta, reads]
             dna: true
             // catch all non-RNA samples as DNA, as some may be missing sample_type or have other sample types (e.g. tissue, cell line, etc.) that should be aligned with the DNA aligner
             //dna: meta.sample_type == "DNA" || meta.sample_type == "Tissue"
@@ -44,6 +47,9 @@ workflow FASTQ_TO_CRAM {
 
     // align fastq files per sample
     // ALIGNMENT([meta,fastq], index, sort)
+    FASTQ_UMICONSENSUS_FGUMI(
+        ch_meta_reads_aligner_index_fasta_datatype.umi
+    )
     FASTQ_ALIGN_DNA(
         ch_meta_reads_aligner_index_fasta_datatype.dna,
         false,
@@ -124,6 +130,7 @@ workflow FASTQ_TO_CRAM {
     */
 
     ch_markdup_index
+        .mix(FASTQ_UMICONSENSUS_FGUMI.out.bam) // no markdup for FGUMI as this is already solved by the tooling itself
         .branch { meta, reads, index ->
             bam: reads.getExtension() == "bam"
             return [meta, reads, index]
@@ -148,9 +155,10 @@ workflow FASTQ_TO_CRAM {
     ch_cram_crai.dump(tag: "FASTQ_TO_CRAM: cram and crai", pretty: true)
 
     emit:
-    cram_crai            = ch_cram_crai
-    rna_splice_junctions = FASTQ_ALIGN_RNA.out.splice_junctions
-    rna_junctions        = FASTQ_ALIGN_RNA.out.junctions
-    sormadup_metrics     = ch_sormadup_metrics
-    align_reports        = FASTQ_ALIGN_DNA.out.reports
+    cram_crai             = ch_cram_crai
+    rna_splice_junctions  = FASTQ_ALIGN_RNA.out.splice_junctions
+    rna_junctions         = FASTQ_ALIGN_RNA.out.junctions
+    sormadup_metrics      = ch_sormadup_metrics
+    align_reports         = FASTQ_ALIGN_DNA.out.reports
+    family_size_histogram = FASTQ_UMICONSENSUS_FGUMI.out.family_size_histogram
 }
