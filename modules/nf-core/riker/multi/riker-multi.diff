@@ -8,25 +8,12 @@ Changes in 'riker/multi/main.nf':
          'community.wave.seqera.io/library/riker:0.4.0--4e7eeb0beed906c0' }"
  
      input:
--    tuple val(meta),  path(bam), path(bai), path(baits, stageAs: 'baits/*'), path(targets, stageAs: 'targets/*')
+-    tuple val(meta),  path(bam), path(bai), path(error_vcf), path(error_vcf_idx), path(error_intervals), path(gcbias_exclude_intervals), path(hybcap_baits, stageAs: 'baits/*'), path(hybcap_targets, stageAs: 'targets/*'), path(rna_gene_model), path(rna_ribosomal_intervals), path(wgs_intervals)
 -    tuple val(meta2), path(fasta), path(fai)
-+    tuple val(meta), path(bam), path(bai), path(roi), path(fasta), path(fai)
++    tuple val(meta),  path(bam), path(bai), path(error_vcf), path(error_vcf_idx), path(error_intervals), path(gcbias_exclude_intervals), path(hybcap_baits, stageAs: 'baits/*'), path(hybcap_targets, stageAs: 'targets/*'), path(rna_gene_model), path(rna_ribosomal_intervals), path(wgs_intervals), path(fasta), path(fai)
  
      output:
-     tuple val(meta), path("*.alignment-metrics.txt"),          emit: alignment_metrics, optional: true
-@@ -38,10 +37,8 @@
-     def args        = task.ext.args ?: ''
-     def prefix      = task.ext.prefix ?: "${meta.id}"
-     def ref         = fasta ? "-r ${fasta}" : ''
--    if ((baits as Boolean) ^ (targets as Boolean)) {
--        error "RIKER_MULTI: both 'baits' and 'targets' must be provided together, or neither"
--    }
--    def hybcap_opts = (baits && targets) ? "--hybcap::baits ${baits} --hybcap::targets ${targets}" : ''
-+    def hybcap_opts = roi ? "--hybcap::baits ${roi} --hybcap::targets ${roi}" : ''
-+
-     """
-     riker multi \\
-         -i ${bam} \\
+     tuple val(meta), path("*.alignment-metrics.txt"),          emit: alignment_metrics,         optional: true
 
 'modules/nf-core/riker/multi/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/riker/multi/tests/nextflow.config' is unchanged

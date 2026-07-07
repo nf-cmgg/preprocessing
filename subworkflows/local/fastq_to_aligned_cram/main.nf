@@ -5,10 +5,10 @@
 //
 
 // MODULES
-include { BIOBAMBAM_BAMSORMADUP } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
-include { SAMTOOLS_CONVERT      } from "../../../modules/nf-core/samtools/convert/main"
-include { SAMTOOLS_SORMADUP     } from "../../../modules/nf-core/samtools/sormadup/main.nf"
-include { SAMTOOLS_SORT         } from "../../../modules/nf-core/samtools/sort/main"
+include { BIOBAMBAM_BAMSORMADUP    } from "../../../modules/nf-core/biobambam/bamsormadup/main.nf"
+include { SAMTOOLS_CONVERT         } from "../../../modules/nf-core/samtools/convert/main"
+include { SAMTOOLS_SORMADUP        } from "../../../modules/nf-core/samtools/sormadup/main.nf"
+include { SAMTOOLS_SORT            } from "../../../modules/nf-core/samtools/sort/main"
 
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA          } from '../../nf-core/fastq_align_dna/main'
@@ -16,7 +16,7 @@ include { FASTQ_ALIGN_RNA          } from '../../local/fastq_align_rna/main'
 include { FASTQ_UMICONSENSUS_FGUMI } from '../fastq_umiconsensus_fgumi/main.nf'
 
 // FUNCTIONS
-include { getGenomeAttribute    } from '../../local/utils_nfcore_preprocessing_pipeline'
+include { getGenomeAttribute       } from '../../local/utils_nfcore_preprocessing_pipeline'
 
 workflow FASTQ_TO_CRAM {
     take:
@@ -130,7 +130,7 @@ workflow FASTQ_TO_CRAM {
     */
 
     ch_markdup_index
-        .mix(FASTQ_UMICONSENSUS_FGUMI.out.bam) // no markdup for FGUMI as this is already solved by the tooling itself
+        .mix(FASTQ_UMICONSENSUS_FGUMI.out.bam)
         .branch { meta, reads, index ->
             bam: reads.getExtension() == "bam"
             return [meta, reads, index]
