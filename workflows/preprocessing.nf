@@ -272,7 +272,7 @@ workflow PREPROCESSING {
     )
     ch_multiqc_files = ch_multiqc_files.mix(
         FASTQ_TO_CRAM.out.sormadup_metrics,
-        FASTQ_TO_CRAM.out.family_size_histogram
+        FASTQ_TO_CRAM.out.family_size_histogram,
     )
 
     /*
@@ -289,6 +289,7 @@ workflow PREPROCESSING {
                 meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
                 getGenomeAttribute(meta.genome_data, "fasta"),
                 getGenomeAttribute(meta.genome_data, "fai"),
+                getGenomeAttribute(meta.genome_data, "gtf"),
             ]
         }
         .set { ch_bam_qc }
@@ -403,62 +404,66 @@ workflow PREPROCESSING {
     MULTIQC(ch_multiqc_input)
 
     emit:
-    demultiplex_reports        = BCLCONVERT.out.reports.map { meta, reports ->
+    demultiplex_reports             = BCLCONVERT.out.reports.map { meta, reports ->
         return [meta, files(reports.resolve("*"))]
     }
-    demultiplex_logs           = BCLCONVERT.out.logs.map { meta, logs ->
+    demultiplex_logs                = BCLCONVERT.out.logs.map { meta, logs ->
         return [meta, files(logs.resolve("*"))]
     }
-    demultiplex_interop        = BCLCONVERT.out.interop
-    fastq                      = ch_fastq_per_sample.other
-    falco_html                 = FALCO.out.html
-    falco_txt                  = FALCO.out.txt
-    fastp_json                 = FASTP.out.json
-    fastp_html                 = FASTP.out.html
-    crams                      = FASTQ_TO_CRAM.out.cram_crai
-    rna_splice_junctions       = FASTQ_TO_CRAM.out.rna_splice_junctions
-    rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
-    align_reports              = FASTQ_TO_CRAM.out.align_reports
-    sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
-    mosdepth_global            = BAM_QC.out.mosdepth_global
-    mosdepth_summary           = BAM_QC.out.mosdepth_summary
-    mosdepth_regions           = BAM_QC.out.mosdepth_regions
-    mosdepth_per_base_d4       = BAM_QC.out.mosdepth_per_base_d4
-    mosdepth_per_base_bed      = BAM_QC.out.mosdepth_per_base_bed
-    mosdepth_per_base_csi      = BAM_QC.out.mosdepth_per_base_csi
-    mosdepth_regions_bed       = BAM_QC.out.mosdepth_regions_bed
-    mosdepth_regions_csi       = BAM_QC.out.mosdepth_regions_csi
-    mosdepth_quantized_bed     = BAM_QC.out.mosdepth_quantized_bed
-    mosdepth_quantized_csi     = BAM_QC.out.mosdepth_quantized_csi
-    mosdepth_thresholds_bed    = BAM_QC.out.mosdepth_thresholds_bed
-    mosdepth_thresholds_csi    = BAM_QC.out.mosdepth_thresholds_csi
-    samtools_coverage          = BAM_QC.out.samtools_coverage
-    panelcoverage              = BAM_QC.out.panelcoverage
-    samtools_stats             = BAM_QC.out.samtools_stats
-    samtools_flagstat          = BAM_QC.out.samtools_flagstat
-    samtools_idxstats          = BAM_QC.out.samtools_idxstats
-    riker_alignment_metrics    = BAM_QC.out.riker_alignment_metrics
-    riker_base_dist            = BAM_QC.out.riker_base_dist
-    riker_mean_qual            = BAM_QC.out.riker_mean_qual
-    riker_qual_dist            = BAM_QC.out.riker_qual_dist
-    riker_error_mismatch       = BAM_QC.out.riker_error_mismatch
-    riker_error_overlap        = BAM_QC.out.riker_error_overlap
-    riker_error_indel          = BAM_QC.out.riker_error_indel
-    riker_gcbias_detail        = BAM_QC.out.riker_gcbias_detail
-    riker_gcbias_summary       = BAM_QC.out.riker_gcbias_summary
-    riker_hybcap_metrics       = BAM_QC.out.riker_hybcap_metrics
-    riker_hybcap_per_target    = BAM_QC.out.riker_hybcap_per_target
-    riker_hybcap_per_base      = BAM_QC.out.riker_hybcap_per_base
-    riker_isize_metrics        = BAM_QC.out.riker_isize_metrics
-    riker_isize_histogram      = BAM_QC.out.riker_isize_histogram
-    riker_wgs_metrics          = BAM_QC.out.riker_wgs_metrics
-    riker_wgs_coverage         = BAM_QC.out.riker_wgs_coverage
-    riker_pdf                  = BAM_QC.out.riker_pdf
-    md5sums                    = MD5SUM.out.checksum
-    multiqcsav_report          = MULTIQCSAV.out.report.toList()
-    multiqcsav_data            = MULTIQCSAV.out.data.toList()
-    multiqcsav_plots           = MULTIQCSAV.out.plots.toList()
-    multiqc_report             = MULTIQC.out.report
-    multiqc_data               = MULTIQC.out.data
-    multiqc_plots              = MULTIQC.out.plots
+    demultiplex_interop             = BCLCONVERT.out.interop
+    fastq                           = ch_fastq_per_sample.other
+    falco_html                      = FALCO.out.html
+    falco_txt                       = FALCO.out.txt
+    fastp_json                      = FASTP.out.json
+    fastp_html                      = FASTP.out.html
+    crams                           = FASTQ_TO_CRAM.out.cram_crai
+    rna_splice_junctions            = FASTQ_TO_CRAM.out.rna_splice_junctions
+    rna_junctions                   = FASTQ_TO_CRAM.out.rna_junctions
+    align_reports                   = FASTQ_TO_CRAM.out.align_reports
+    sormadup_metrics                = FASTQ_TO_CRAM.out.sormadup_metrics
+    mosdepth_global                 = BAM_QC.out.mosdepth_global
+    mosdepth_summary                = BAM_QC.out.mosdepth_summary
+    mosdepth_regions                = BAM_QC.out.mosdepth_regions
+    mosdepth_per_base_d4            = BAM_QC.out.mosdepth_per_base_d4
+    mosdepth_per_base_bed           = BAM_QC.out.mosdepth_per_base_bed
+    mosdepth_per_base_csi           = BAM_QC.out.mosdepth_per_base_csi
+    mosdepth_regions_bed            = BAM_QC.out.mosdepth_regions_bed
+    mosdepth_regions_csi            = BAM_QC.out.mosdepth_regions_csi
+    mosdepth_quantized_bed          = BAM_QC.out.mosdepth_quantized_bed
+    mosdepth_quantized_csi          = BAM_QC.out.mosdepth_quantized_csi
+    mosdepth_thresholds_bed         = BAM_QC.out.mosdepth_thresholds_bed
+    mosdepth_thresholds_csi         = BAM_QC.out.mosdepth_thresholds_csi
+    samtools_coverage               = BAM_QC.out.samtools_coverage
+    panelcoverage                   = BAM_QC.out.panelcoverage
+    samtools_stats                  = BAM_QC.out.samtools_stats
+    samtools_flagstat               = BAM_QC.out.samtools_flagstat
+    samtools_idxstats               = BAM_QC.out.samtools_idxstats
+    riker_alignment_metrics         = BAM_QC.out.riker_alignment_metrics
+    riker_base_dist                 = BAM_QC.out.riker_base_dist
+    riker_mean_qual                 = BAM_QC.out.riker_mean_qual
+    riker_qual_dist                 = BAM_QC.out.riker_qual_dist
+    riker_error_mismatch            = BAM_QC.out.riker_error_mismatch
+    riker_error_overlap             = BAM_QC.out.riker_error_overlap
+    riker_error_indel               = BAM_QC.out.riker_error_indel
+    riker_gcbias_detail             = BAM_QC.out.riker_gcbias_detail
+    riker_gcbias_summary            = BAM_QC.out.riker_gcbias_summary
+    riker_hybcap_metrics            = BAM_QC.out.riker_hybcap_metrics
+    riker_hybcap_per_target         = BAM_QC.out.riker_hybcap_per_target
+    riker_hybcap_per_base           = BAM_QC.out.riker_hybcap_per_base
+    riker_isize_metrics             = BAM_QC.out.riker_isize_metrics
+    riker_isize_histogram           = BAM_QC.out.riker_isize_histogram
+    riker_wgs_metrics               = BAM_QC.out.riker_wgs_metrics
+    riker_wgs_coverage              = BAM_QC.out.riker_wgs_coverage
+    riker_pdf                       = BAM_QC.out.riker_pdf
+    riker_rna_biotype               = BAM_QC.out.riker_rna_biotype
+    riker_rna_insert_size_histogram = BAM_QC.out.riker_rna_insert_size_histogram
+    riker_rna_insert_size           = BAM_QC.out.riker_rna_insert_size
+    riker_rna_metrics               = BAM_QC.out.riker_rna_metrics
+    md5sums                         = MD5SUM.out.checksum
+    multiqcsav_report               = MULTIQCSAV.out.report.toList()
+    multiqcsav_data                 = MULTIQCSAV.out.data.toList()
+    multiqcsav_plots                = MULTIQCSAV.out.plots.toList()
+    multiqc_report                  = MULTIQC.out.report
+    multiqc_data                    = MULTIQC.out.data
+    multiqc_plots                   = MULTIQC.out.plots
 }

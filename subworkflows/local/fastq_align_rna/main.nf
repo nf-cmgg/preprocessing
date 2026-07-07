@@ -41,9 +41,9 @@ workflow FASTQ_ALIGN_RNA {
     )
 
     // Concatenate splice junction files
-    SORT_MERGE_SPLICE_JUNCTIONS(group_junctions(STAR_ALIGN.out.spl_junc_tab).map { meta, files -> [meta, files, "tab"]})
+    SORT_MERGE_SPLICE_JUNCTIONS(group_junctions(STAR_ALIGN.out.spl_junc_tab).map { meta, files -> [meta, files, "tab"] })
     // Concatenate junction files
-    SORT_MERGE_JUNCTIONS(group_junctions(STAR_ALIGN.out.junction).map { meta, files -> [meta, files, "junction"]})
+    SORT_MERGE_JUNCTIONS(group_junctions(STAR_ALIGN.out.junction).map { meta, files -> [meta, files, "junction"] })
 
     emit:
     bam              = ch_bam // channel: [ [meta], bam       ]

@@ -1,17 +1,17 @@
 #!/usr/bin/env nextflow
 
 // MODULES
-include { FGUMI_EXTRACT          } from "../../../modules/nf-core/fgumi/extract/main.nf"
-include { FGUMI_FILTER           } from "../../../modules/nf-core/fgumi/filter/main.nf"
-include { FGUMI_GROUP            } from "../../../modules/nf-core/fgumi/group/main.nf"
-include { FGUMI_MERGE            } from "../../../modules/nf-core/fgumi/merge/main.nf"
-include { FGUMI_SIMPLEX          } from "../../../modules/nf-core/fgumi/simplex/main.nf"
+include { FGUMI_EXTRACT                              } from "../../../modules/nf-core/fgumi/extract/main.nf"
+include { FGUMI_FILTER                               } from "../../../modules/nf-core/fgumi/filter/main.nf"
+include { FGUMI_GROUP                                } from "../../../modules/nf-core/fgumi/group/main.nf"
+include { FGUMI_MERGE                                } from "../../../modules/nf-core/fgumi/merge/main.nf"
+include { FGUMI_SIMPLEX                              } from "../../../modules/nf-core/fgumi/simplex/main.nf"
 include { FGUMI_SNAPZIPSORT as RAW_FGUMI_SNAPZIPSORT } from "../../../modules/local/fgumi/snapzipsort/main.nf"
 include { FGUMI_SNAPZIPSORT as UMI_FGUMI_SNAPZIPSORT } from "../../../modules/local/fgumi/snapzipsort/main.nf"
 
 
 // FUNCTIONS
-include { getGenomeAttribute      } from '../../local/utils_nfcore_preprocessing_pipeline'
+include { getGenomeAttribute                         } from '../../local/utils_nfcore_preprocessing_pipeline'
 
 workflow FASTQ_UMICONSENSUS_FGUMI {
     take:
@@ -74,23 +74,21 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
 
     FGUMI_GROUP(
         FGUMI_MERGE.out.bam,
-        'adjacency'
+        'adjacency',
     )
 
     FGUMI_SIMPLEX(
-        FGUMI_GROUP.out.bam.map { meta, bams -> [ meta, bams, meta.fgumi_simplex_min_reads ] },
-        false
+        FGUMI_GROUP.out.bam.map { meta, bams -> [meta, bams, meta.fgumi_simplex_min_reads] },
+        false,
     )
 
     // Step 7: filter consensus reads, then coordinate-sort/index for downstream CRAM conversion.
     FGUMI_FILTER(
-        FGUMI_SIMPLEX.out.bam
-            .join(ch_meta_fastqs)
-            .map { meta, simplex_bams, _fastqs ->
-                [meta, simplex_bams, getGenomeAttribute(meta.genome_data, 'fasta')]
-            },
+        FGUMI_SIMPLEX.out.bam.join(ch_meta_fastqs).map { meta, simplex_bams, _fastqs ->
+            [meta, simplex_bams, getGenomeAttribute(meta.genome_data, 'fasta')]
+        },
         '1,1,1',
-        false
+        false,
     )
 
     UMI_FGUMI_SNAPZIPSORT(

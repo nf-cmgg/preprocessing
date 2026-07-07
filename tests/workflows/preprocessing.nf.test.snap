@@ -646,6 +646,18 @@
                         "sample1.quality-score-distribution.txt:md5,89e46bfc59dbc7aed65d9c1e2350dd3a"
                     ]
                 ],
+                "riker_rna_biotype": [
+                    
+                ],
+                "riker_rna_insert_size": [
+                    
+                ],
+                "riker_rna_insert_size_histogram": [
+                    
+                ],
+                "riker_rna_metrics": [
+                    
+                ],
                 "riker_wgs_coverage": [
                     [
                         {
@@ -850,7 +862,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-30T14:25:16.877778",
+        "timestamp": "2026-07-07T11:21:47.095717",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -1422,6 +1434,18 @@
                 "riker_qual_dist": [
 
                 ],
+                "riker_rna_biotype": [
+                    
+                ],
+                "riker_rna_insert_size": [
+                    
+                ],
+                "riker_rna_insert_size_histogram": [
+                    
+                ],
+                "riker_rna_metrics": [
+                    
+                ],
                 "riker_wgs_coverage": [
 
                 ],
@@ -1529,7 +1553,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-06-30T14:26:38.2057",
+        "timestamp": "2026-07-07T11:23:03.818827",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -2305,6 +2329,18 @@
                         "sample1.quality-score-distribution.txt:md5,89e46bfc59dbc7aed65d9c1e2350dd3a"
                     ]
                 ],
+                "riker_rna_biotype": [
+                    
+                ],
+                "riker_rna_insert_size": [
+                    
+                ],
+                "riker_rna_insert_size_histogram": [
+                    
+                ],
+                "riker_rna_metrics": [
+                    
+                ],
                 "riker_wgs_coverage": [
 
                 ],
@@ -2464,7 +2500,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-02T17:01:29.294260704",
+        "timestamp": "2026-07-07T11:20:32.551532",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

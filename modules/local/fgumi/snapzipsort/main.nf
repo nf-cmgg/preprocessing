@@ -1,5 +1,5 @@
 process FGUMI_SNAPZIPSORT {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
