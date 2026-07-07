@@ -36,7 +36,7 @@ workflow FASTQ_TO_CRAM {
         .branch { meta, reads, aligner, index, fasta, fai, gtf ->
             rna: meta.sample_type == "RNA"
             return [meta, reads, "star", getGenomeAttribute(meta.genome_data, 'star'), gtf]
-            umi: meta.fgumi_aware == true
+            umi: meta.call_consensus == true
             return [meta, reads]
             dna: true
             // catch all non-RNA samples as DNA, as some may be missing sample_type or have other sample types (e.g. tissue, cell line, etc.) that should be aligned with the DNA aligner
