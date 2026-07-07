@@ -3,7 +3,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "crams": [
                     [
@@ -35,19 +35,19 @@
                     ]
                 ],
                 "demultiplex_interop": [
-                    
+
                 ],
                 "demultiplex_logs": [
-                    
+
                 ],
                 "demultiplex_reports": [
-                    
+
                 ],
                 "falco_html": [
-                    
+
                 ],
                 "falco_txt": [
-                    
+
                 ],
                 "fastp_html": [
                     [
@@ -118,7 +118,7 @@
                     ]
                 ],
                 "fastq": [
-                    
+
                 ],
                 "md5sums": [
                     [
@@ -233,7 +233,7 @@
                     ]
                 ],
                 "mosdepth_per_base_d4": [
-                    
+
                 ],
                 "mosdepth_quantized_bed": [
                     [
@@ -292,13 +292,13 @@
                     ]
                 ],
                 "mosdepth_regions": [
-                    
+
                 ],
                 "mosdepth_regions_bed": [
-                    
+
                 ],
                 "mosdepth_regions_csi": [
-                    
+
                 ],
                 "mosdepth_summary": [
                     [
@@ -329,10 +329,10 @@
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
-                    
+
                 ],
                 "mosdepth_thresholds_csi": [
-                    
+
                 ],
                 "multiqc_data": [
                     [
@@ -343,7 +343,7 @@
                     ]
                 ],
                 "multiqc_plots": [
-                    
+
                 ],
                 "multiqc_report": [
                     [
@@ -355,21 +355,21 @@
                 ],
                 "multiqcsav_data": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_plots": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_report": [
                     [
-                        
+
                     ]
                 ],
                 "panelcoverage": [
-                    
+
                 ],
                 "riker_alignment_metrics": [
                     [
@@ -428,13 +428,13 @@
                     ]
                 ],
                 "riker_error_indel": [
-                    
+
                 ],
                 "riker_error_mismatch": [
-                    
+
                 ],
                 "riker_error_overlap": [
-                    
+
                 ],
                 "riker_gcbias_detail": [
                     [
@@ -493,13 +493,13 @@
                     ]
                 ],
                 "riker_hybcap_metrics": [
-                    
+
                 ],
                 "riker_hybcap_per_base": [
-                    
+
                 ],
                 "riker_hybcap_per_target": [
-                    
+
                 ],
                 "riker_isize_histogram": [
                     [
@@ -703,10 +703,10 @@
                     ]
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "samtools_coverage": [
                     [
@@ -870,23 +870,23 @@
                                 "library": "test",
                                 "tag": "WES",
                                 "purpose": [
-                                    
+
                                 ],
                                 "organism": "Homo sapiens",
                                 "genome": "GRCh38",
                                 "vivar_project": [
-                                    
+
                                 ],
                                 "binsize": [
-                                    
+
                                 ],
                                 "panels": [
-                                    
+
                                 ],
                                 "aligner": "bwamem",
                                 "markdup": "bamsormadup",
                                 "umi_aware": false,
-                                "fgumi_aware": false,
+                                "call_consensus": false,
                                 "fgumi_simplex_min_reads": 1,
                                 "fgumi_snap_ignore_mismatched_pairs": true,
                                 "skip_trimming": false,
@@ -921,7 +921,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "crams": [
                     [
@@ -954,19 +954,19 @@
                     ]
                 ],
                 "demultiplex_interop": [
-                    
+
                 ],
                 "demultiplex_logs": [
-                    
+
                 ],
                 "demultiplex_reports": [
-                    
+
                 ],
                 "falco_html": [
-                    
+
                 ],
                 "falco_txt": [
-                    
+
                 ],
                 "fastp_html": [
                     [
@@ -1039,7 +1039,7 @@
                     ]
                 ],
                 "fastq": [
-                    
+
                 ],
                 "md5sums": [
                     [
@@ -1158,7 +1158,7 @@
                     ]
                 ],
                 "mosdepth_per_base_d4": [
-                    
+
                 ],
                 "mosdepth_quantized_bed": [
                     [
@@ -1335,10 +1335,10 @@
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
-                    
+
                 ],
                 "mosdepth_thresholds_csi": [
-                    
+
                 ],
                 "multiqc_data": [
                     [
@@ -1349,7 +1349,7 @@
                     ]
                 ],
                 "multiqc_plots": [
-                    
+
                 ],
                 "multiqc_report": [
                     [
@@ -1361,81 +1361,81 @@
                 ],
                 "multiqcsav_data": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_plots": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_report": [
                     [
-                        
+
                     ]
                 ],
                 "panelcoverage": [
-                    
+
                 ],
                 "riker_alignment_metrics": [
-                    
+
                 ],
                 "riker_base_dist": [
-                    
+
                 ],
                 "riker_error_indel": [
-                    
+
                 ],
                 "riker_error_mismatch": [
-                    
+
                 ],
                 "riker_error_overlap": [
-                    
+
                 ],
                 "riker_gcbias_detail": [
-                    
+
                 ],
                 "riker_gcbias_summary": [
-                    
+
                 ],
                 "riker_hybcap_metrics": [
-                    
+
                 ],
                 "riker_hybcap_per_base": [
-                    
+
                 ],
                 "riker_hybcap_per_target": [
-                    
+
                 ],
                 "riker_isize_histogram": [
-                    
+
                 ],
                 "riker_isize_metrics": [
-                    
+
                 ],
                 "riker_mean_qual": [
-                    
+
                 ],
                 "riker_pdf": [
-                    
+
                 ],
                 "riker_qual_dist": [
-                    
+
                 ],
                 "riker_wgs_coverage": [
-                    
+
                 ],
                 "riker_wgs_metrics": [
-                    
+
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "samtools_coverage": [
-                    
+
                 ],
                 "samtools_flagstat": [
                     [
@@ -1496,7 +1496,7 @@
                     ]
                 ],
                 "samtools_stats": [
-                    
+
                 ],
                 "sormadup_metrics": [
                     [
@@ -1539,7 +1539,7 @@
         "content": [
             {
                 "align_reports": [
-                    
+
                 ],
                 "crams": [
                     [
@@ -1572,19 +1572,19 @@
                     ]
                 ],
                 "demultiplex_interop": [
-                    
+
                 ],
                 "demultiplex_logs": [
-                    
+
                 ],
                 "demultiplex_reports": [
-                    
+
                 ],
                 "falco_html": [
-                    
+
                 ],
                 "falco_txt": [
-                    
+
                 ],
                 "fastp_html": [
                     [
@@ -1657,7 +1657,7 @@
                     ]
                 ],
                 "fastq": [
-                    
+
                 ],
                 "md5sums": [
                     [
@@ -1776,7 +1776,7 @@
                     ]
                 ],
                 "mosdepth_per_base_d4": [
-                    
+
                 ],
                 "mosdepth_quantized_bed": [
                     [
@@ -1953,10 +1953,10 @@
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
-                    
+
                 ],
                 "mosdepth_thresholds_csi": [
-                    
+
                 ],
                 "multiqc_data": [
                     [
@@ -1967,7 +1967,7 @@
                     ]
                 ],
                 "multiqc_plots": [
-                    
+
                 ],
                 "multiqc_report": [
                     [
@@ -1979,21 +1979,21 @@
                 ],
                 "multiqcsav_data": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_plots": [
                     [
-                        
+
                     ]
                 ],
                 "multiqcsav_report": [
                     [
-                        
+
                     ]
                 ],
                 "panelcoverage": [
-                    
+
                 ],
                 "riker_alignment_metrics": [
                     [
@@ -2054,13 +2054,13 @@
                     ]
                 ],
                 "riker_error_indel": [
-                    
+
                 ],
                 "riker_error_mismatch": [
-                    
+
                 ],
                 "riker_error_overlap": [
-                    
+
                 ],
                 "riker_gcbias_detail": [
                     [
@@ -2150,10 +2150,10 @@
                     ]
                 ],
                 "riker_hybcap_per_base": [
-                    
+
                 ],
                 "riker_hybcap_per_target": [
-                    
+
                 ],
                 "riker_isize_histogram": [
                     [
@@ -2306,16 +2306,16 @@
                     ]
                 ],
                 "riker_wgs_coverage": [
-                    
+
                 ],
                 "riker_wgs_metrics": [
-                    
+
                 ],
                 "rna_junctions": [
-                    
+
                 ],
                 "rna_splice_junctions": [
-                    
+
                 ],
                 "samtools_coverage": [
                     [

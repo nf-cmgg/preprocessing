@@ -193,7 +193,7 @@ nextflow_workflow {
                         single_end: false,
                         sample_type: "DNA",
                         markdup: "false",
-                        fgumi_aware: true,
+                        call_consensus: true,
                         fgumi_simplex_min_reads: 1,
                         fgumi_snap_ignore_mismatched_pairs: false,
                         genome_data: [
