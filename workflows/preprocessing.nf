@@ -184,7 +184,7 @@ workflow PREPROCESSING {
             }
             return [meta, reads]
         }
-        .map { meta, reads -> [meta.samplename, [meta, reads]] }
+        .map { meta, reads -> [[meta.samplename, meta.library], [meta, reads]] }
         .groupTuple()
         .map { _samplename, meta_fastq -> [meta_fastq, meta_fastq.size()] }
         .transpose()
