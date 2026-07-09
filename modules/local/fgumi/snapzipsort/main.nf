@@ -23,7 +23,6 @@ process FGUMI_SNAPZIPSORT {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args3 = task.ext.args3 ?: ''
-    def args4 = task.ext.args4 ?: ''
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
 
     """
@@ -32,25 +31,22 @@ process FGUMI_SNAPZIPSORT {
     [ -z "\$INDEX_FILE" ] && echo "Snap index files not found" 1>&2 && exit 1
     INDEX=\$(dirname "\$INDEX_FILE")
 
-    fgumi fastq \\
-        --input ${unmapped_bam} \\
-        ${args} \\
-    | snap-aligner paired \\
+    snap-aligner paired \\
         \$INDEX \\
-        -pairedInterleavedFastq - \\
+        -bam - \\
         -t ${task.cpus} \\
         -o -bam - \\
-        ${args2} \\
+        ${args} \\
     | fgumi zipper \\
         --unmapped ${unmapped_bam} \\
         --reference ${fasta} \\
         --threads ${task.cpus} \\
-        ${args3} \\
+        ${args2} \\
     | fgumi sort \\
         --input - \\
         --output ${prefix}.bam \\
         --threads ${task.cpus} \\
-        ${args4}
+        ${args3}
     """
 
     stub:
