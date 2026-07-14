@@ -5,7 +5,7 @@ Changes in 'samtools/coverage/main.nf':
 --- modules/nf-core/samtools/coverage/main.nf
 +++ modules/nf-core/samtools/coverage/main.nf
 @@ -8,8 +8,7 @@
-         : 'community.wave.seqera.io/library/htslib_samtools:1.23.1--5b6bb4ede7e612e5'}"
+         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
  
      input:
 -    tuple val(meta), path(input), path(input_index)

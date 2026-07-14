@@ -5,10 +5,10 @@ Changes in 'samtools/sort/main.nf':
 --- modules/nf-core/samtools/sort/main.nf
 +++ modules/nf-core/samtools/sort/main.nf
 @@ -8,8 +8,7 @@
-         : 'community.wave.seqera.io/library/htslib_samtools:1.23.1--5b6bb4ede7e612e5'}"
+         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
  
      input:
--    tuple val(meta), path(bam)
+-    tuple val(meta), path(bam, stageAs: "?/*")
 -    tuple val(meta2), path(fasta), path(fai)
 +    tuple val(meta), path(bam), path(fasta), path(fai)
      val index_format
