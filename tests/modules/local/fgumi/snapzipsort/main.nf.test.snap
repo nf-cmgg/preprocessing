@@ -11,7 +11,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.fgumi.bam:md5,12bd726ae1623b7133398e231f866cd8"
+                        "test.fgumi.bam:md5,9bfbd21ebea8ca63427cec8dd13e6063"
                     ]
                 ]
             },
@@ -30,7 +30,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-15T10:27:42.862700628",
+        "timestamp": "2026-07-15T13:19:00.257043127",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

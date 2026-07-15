@@ -33,7 +33,7 @@ process FGUMI_SNAPZIPSORT {
 
     snap-aligner paired \\
         \$INDEX \\
-        -bam ${unmapped_bam} \\
+        -samNoSQ ${unmapped_bam} \\
         -t ${task.cpus} \\
         -o -bam - \\
         ${args} \\
