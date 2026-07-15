@@ -84,7 +84,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
 
     // Step 7: filter consensus reads, then coordinate-sort/index for downstream CRAM conversion.
     FGUMI_FILTER(
-        FGUMI_SIMPLEX.out.bam.join(ch_meta_fastqs).map { meta, simplex_bams, _fastqs ->
+        FGUMI_SIMPLEX.out.bam.map { meta, simplex_bams ->
             [meta, simplex_bams, getGenomeAttribute(meta.genome_data, 'fasta')]
         },
         '1,1,1',
@@ -93,8 +93,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
 
     UMI_FGUMI_SNAPZIPSORT(
         FGUMI_FILTER.out.bam
-            .join(ch_meta_fastqs)
-            .map { meta, filtered_bams, _fastqs ->
+            .map { meta, filtered_bams ->
                 [
                     meta,
                     filtered_bams,

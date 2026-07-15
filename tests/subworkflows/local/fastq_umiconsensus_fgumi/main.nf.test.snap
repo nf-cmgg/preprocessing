@@ -22,7 +22,7 @@
                                 }
                             }
                         },
-                        "test.fgumi.bam:md5,271e203740c8d65a49458ed13cb8be7d",
+                        "test.fgumi.bam:md5,c4a33382a1fb8a6361d23928359d672f",
                         "test.fgumi.bam.bai:md5,0d76977b2e36046cc176112776c5fa4e"
                     ]
                 ],
@@ -120,7 +120,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-15T13:16:45.581965003",
+        "timestamp": "2026-07-15T15:59:40.968881197",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
