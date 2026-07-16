@@ -23,6 +23,7 @@ process FGUMI_SNAPZIPSORT {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args3 = task.ext.args3 ?: ''
+    def args4 = task.ext.args4 ?: ''
     prefix = task.ext.prefix ?: "${meta.id}.fgumi"
 
     """
@@ -37,16 +38,23 @@ process FGUMI_SNAPZIPSORT {
         -t ${task.cpus} \\
         -o -bam - \\
         ${args} \\
-    | fgumi zipper \\
+    | fgumi sort \\
+        --input - \\
+        --output ${prefix}.intermediate.bam \\
+        --threads ${task.cpus} \\
+        ${args2}
+
+    fgumi zipper \\
+        --input ${prefix}.intermediate.bam \\
         --unmapped ${unmapped_bam} \\
         --reference ${fasta} \\
         --threads ${task.cpus} \\
-        ${args2} \\
+        ${args3} \\
     | fgumi sort \\
         --input - \\
         --output ${prefix}.bam \\
         --threads ${task.cpus} \\
-        ${args3}
+        ${args4}
     """
 
     stub:
