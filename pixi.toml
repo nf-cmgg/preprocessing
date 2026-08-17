@@ -1,5 +1,5 @@
 [workspace]
-authors = ["Nicolas Vannieuwkerke <nicolas.vannieuwkerke@ugent.be>"]
+authors = ["Matthias De Smet <matthias.desmet@ugent.be>", "Nicolas Vannieuwkerke <nicolas.vannieuwkerke@ugent.be>"]
 channels = ["conda-forge", "bioconda"]
 name = "preprocessing"
 platforms = ["linux-64", "osx-arm64"]
@@ -11,4 +11,4 @@ version = "0.1.0"
 nextflow = ">=26.04,<27"
 nf-test = ">=0.9.5,<0.10"
 prek = ">=0.3.13,<0.4"
-nf-core = ">=4.0.2,<5"
+nf-core = ">=4.1.0,<5"

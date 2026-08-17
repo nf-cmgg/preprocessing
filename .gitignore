@@ -7,8 +7,6 @@ testing/
 testing*
 *.pyc
 null/
-.nf-test*
-test_fc
 .lineage/
 # pixi environments
 .pixi/*

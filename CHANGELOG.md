@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `apple` profile to enable the use of Apple containers.
 - Drop `hook_url` parameter. To configure messaging services, use a custom config in tandem with the `nf-teams`/`nf-slack` plugin instead.
 - Drop `run_coverage` and add `qc_mode` parameter. Thorough coveage analysis is now included in the `qc_mode` parameter, which can be set to `basic` or `full`. Basic QC includes samtools flagstat, idxstats and mosdepth. Full QC includes samtools stats, samtools coverage, riker metrics and panel coverage in addition to basic QC.
+- Revert default custom config to `nf-core` source
+- Bump pipeline to nf-core template v4.1.0
+- Bump modules to latest versions
 
 ## 3.0.2
 
