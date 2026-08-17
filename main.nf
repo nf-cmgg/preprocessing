@@ -109,12 +109,6 @@ params {
 
     // Directory / URL base for iGenomes references.
     igenomes_base: String = '/references/'
-
-    // Do not load the iGenomes reference config.
-    igenomes_ignore: Boolean = false
-
-    // Name of iGenomes reference.
-    genome: String?
 }
 
 workflow {
@@ -146,7 +140,7 @@ workflow {
             ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), params.multiqc_config]
             : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
         params.multiqc_logo ? params.multiqc_logo : [],
-        params.multiqc_methods_description ? params.multiqc_methods_description : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
+        params.multiqc_methods_description,
         params.outdir,
     )
 
