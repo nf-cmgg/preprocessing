@@ -8,9 +8,7 @@ process FGUMI_SIMPLEX {
         : 'community.wave.seqera.io/library/fgumi:0.6.0--c97194d17da0d1cd'}"
 
     input:
-    tuple val(meta), path(grouped_bam)
-    val min_reads
-    val keep_rejected
+    tuple val(meta), path(grouped_bam), val(min_reads), val(keep_rejected)
 
     output:
     tuple val(meta), path("${prefix}.bam"), emit: bam
