@@ -20,8 +20,7 @@ include { BAM_QC                      } from '../subworkflows/local/bam_qc'
 include { FASTQ_TO_CRAM               } from '../subworkflows/local/fastq_to_aligned_cram'
 
 // Functions
-include { getReadgroupsFromBclconvert } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
-include { getReadgroupFromFastq       } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
+include { associateSampleinfo ; getReadgroupsFromBclconvert ; getReadgroupFromFastq } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
 include { paramsSummaryMap            } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML      } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -82,7 +81,7 @@ workflow PREPROCESSING {
             return [meta, file(reports).resolve("fastq_list.csv")]
         },
         BCLCONVERT.out.fastq,
-    ).dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true).map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
+    ).dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true).set { ch_demultiplexed_fastq }
 
     // Run QC
     ch_mqcsav_input = ch_illumina_flowcell.flowcell
@@ -109,12 +108,10 @@ workflow PREPROCESSING {
     ch_illumina_flowcell.info
         .flatten()
         .transpose()
-        .map { sampleinfo -> [sampleinfo.samplename, sampleinfo] }
         .set { ch_sampleinfo }
 
-    ch_demultiplexed_fastq
-        .combine(ch_sampleinfo, by: 0)
-        .map { _samplename, meta, fastq, sampleinfo ->
+    associateSampleinfo(ch_demultiplexed_fastq, ch_sampleinfo)
+        .map { meta, fastq, sampleinfo ->
             def new_rg = [:]
             if (sampleinfo.library) {
                 new_rg = meta.readgroup + ['LB': sampleinfo.library]

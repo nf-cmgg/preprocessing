@@ -1,0 +1,131 @@
+nextflow_function {
+
+    name "Test Functions"
+    script "subworkflows/local/utils_nfcmgg_preprocessing_pipeline/main.nf"
+    tag "subworkflows"
+    tag "subworkflows/local"
+    tag "subworkflows/local/utils_nfcmgg_preprocessing_pipeline"
+
+    test("Test Function matchSampleinfo - singleton") {
+
+        function "matchSampleinfo"
+
+        when {
+            function {
+                """
+                input[0] = [readgroup: [SM: 'Sample1', LB: '']]
+                input[1] = [[samplename: 'Sample1', library: 'test', aligner: 'bwamem']]
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert function.result.library == 'test'
+            assert function.result.aligner == 'bwamem'
+        }
+    }
+
+    test("Test Function matchSampleinfo - multiplexed library") {
+
+        function "matchSampleinfo"
+
+        when {
+            function {
+                """
+                input[0] = [readgroup: [SM: 'Sample1', LB: 'libB']]
+                input[1] = [
+                    [samplename: 'Sample1', library: 'libA', aligner: 'bwamem'],
+                    [samplename: 'Sample1', library: 'libB', aligner: 'star']
+                ]
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert function.result.library == 'libB'
+            assert function.result.aligner == 'star'
+        }
+    }
+
+    test("Test Function matchSampleinfo - multiplexed missing RGLB") {
+
+        function "matchSampleinfo"
+
+        when {
+            function {
+                """
+                input[0] = [readgroup: [SM: 'Sample1', LB: '']]
+                input[1] = [
+                    [samplename: 'Sample1', library: 'libA'],
+                    [samplename: 'Sample1', library: 'libB']
+                ]
+                """
+            }
+        }
+
+        then {
+            assert !function.success
+            assert function.stdout.any { it.contains("Multiplexed sample 'Sample1'") }
+        }
+    }
+
+    test("Test Function matchSampleinfo - multiplexed unmatched library") {
+
+        function "matchSampleinfo"
+
+        when {
+            function {
+                """
+                input[0] = [readgroup: [SM: 'Sample1', LB: 'libC']]
+                input[1] = [
+                    [samplename: 'Sample1', library: 'libA'],
+                    [samplename: 'Sample1', library: 'libB']
+                ]
+                """
+            }
+        }
+
+        then {
+            assert !function.success
+            assert function.stdout.any { it.contains("library 'libC'") }
+        }
+    }
+
+    test("Test Function samplePublishDir - multiplexed library") {
+
+        function "samplePublishDir"
+
+        when {
+            function {
+                """
+                input[0] = [samplename: 'Sample1', library: 'libB']
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert function.result == 'libB/Sample1'
+        }
+    }
+
+    test("Test Function samplePublishDir - no library") {
+
+        function "samplePublishDir"
+
+        when {
+            function {
+                """
+                input[0] = [samplename: 'Sample1']
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert function.result == 'Sample1'
+        }
+    }
+}

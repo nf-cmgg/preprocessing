@@ -20,7 +20,7 @@ After any code or docs edit, run the deslop skill on the new diff. Strip extra c
 After Nextflow code edits, run on the files you changed:
 
 ```
-nextflow lint -format -sort-declarations -exclude ".nf-test" -exclude ".pixi" -exclude "modules/nf-core" -exclude "subworkflows/nf-core" .
+nextflow lint -format -sort-declarations -exclude ".nf-test" -exclude ".pixi" -exclude "modules/nf-core" -exclude "subworkflows/nf-core" -harshil-alignment .
 ```
 
 Resolve reported issues. Do not format `modules/nf-core` or `subworkflows/nf-core`.

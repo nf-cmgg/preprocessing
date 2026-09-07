@@ -93,3 +93,45 @@ def getReadgroupsFromBclconvert(ch_fastq_list_csv, ch_fastq) {
         }
         .flatMap()
 }
+
+//
+// Pick the sampleinfo row for a demultiplexed FASTQ.
+// One row per samplename is attached as-is. Multiple rows require a unique
+// match of sampleinfo.library to readgroup.LB.
+//
+def matchSampleinfo(meta, infos) {
+    def rows = infos instanceof Collection ? infos as List : [infos]
+    if (rows.size() == 1) {
+        return rows[0]
+    }
+    def samplename = meta.readgroup?.SM ?: meta.samplename
+    def lb = meta.readgroup?.LB
+    def matches = rows.findAll { row -> row.library && lb && row.library == lb }
+    if (matches.size() != 1) {
+        error("Multiplexed sample '${samplename}' needs a unique sampleinfo row for library '${lb}'. Set Illumina LibraryName so BCL Convert RGLB matches sampleinfo.library.")
+    }
+    return matches[0]
+}
+
+//
+// Associate demultiplexed FASTQs [meta, fastq] with sampleinfo rows.
+//
+def associateSampleinfo(ch_fastq, ch_sampleinfo) {
+    def ch_info = ch_sampleinfo
+        .map { sampleinfo -> [sampleinfo.samplename, sampleinfo] }
+        .groupTuple()
+    return ch_fastq
+        .map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }
+        .combine(ch_info, by: 0)
+        .map { _samplename, meta, fastq, infos ->
+            return [meta, fastq, matchSampleinfo(meta, infos)]
+        }
+}
+
+//
+// Output directory for a sample. Multiplexed libraries stay under library/samplename.
+//
+def samplePublishDir(meta) {
+    def samplename = meta.samplename ?: meta.id
+    return meta.library ? "${meta.library}/${samplename}" : "${samplename}"
+}
