@@ -10,7 +10,7 @@ The directories listed below will be created in the results directory after the 
 
 ### Sample information
 
-A separate directory will be created in the output directory for each sample containing all output files for that sample. If a library name is given in the samplesheet, the sample directories will be nested within a library directory.
+A separate directory will be created in the output directory for each sample containing all output files for that sample. If a library name is given in the samplesheet, the sample directories will be nested within a library directory (`LIBRARY/SAMPLENAME`). The same samplename in more than one library is published under each library, so the files do not overwrite each other.
 
 <details markdown="1">
 <summary>Output files</summary>

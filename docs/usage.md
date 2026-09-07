@@ -114,6 +114,8 @@ A `flowcell` sample info JSON/YML file consisting for one sequencing run may loo
   sample_type: DNA
 ```
 
+The same `samplename` may appear in more than one library. In that case each row needs a distinct `library` value, and the Illumina samplesheet must set `LibraryName` so that BCL Convert `RGLB` matches `sampleinfo.library`. A single row per `samplename` does not need `RGLB` on the demultiplexed FASTQ.
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
