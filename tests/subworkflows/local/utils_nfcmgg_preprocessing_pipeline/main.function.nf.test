@@ -49,6 +49,54 @@ nextflow_function {
         }
     }
 
+    test("Test Function matchSampleinfo - singleton repeated per lane") {
+
+        function "matchSampleinfo"
+
+        when {
+            function {
+                """
+                input[0] = [readgroup: [SM: 'Sample1', LB: 'libA']]
+                input[1] = [
+                    [samplename: 'Sample1', library: 'libA', aligner: 'bwamem'],
+                    [samplename: 'Sample1', library: 'libA', aligner: 'bwamem']
+                ]
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert function.result.library == 'libA'
+            assert function.result.aligner == 'bwamem'
+        }
+    }
+
+    test("Test Function matchSampleinfo - multiplexed repeated per lane") {
+
+        function "matchSampleinfo"
+
+        when {
+            function {
+                """
+                input[0] = [readgroup: [SM: 'Sample1', LB: 'libB']]
+                input[1] = [
+                    [samplename: 'Sample1', library: 'libA', aligner: 'bwamem'],
+                    [samplename: 'Sample1', library: 'libB', aligner: 'star'],
+                    [samplename: 'Sample1', library: 'libA', aligner: 'bwamem'],
+                    [samplename: 'Sample1', library: 'libB', aligner: 'star']
+                ]
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert function.result.library == 'libB'
+            assert function.result.aligner == 'star'
+        }
+    }
+
     test("Test Function matchSampleinfo - multiplexed missing RGLB") {
 
         function "matchSampleinfo"

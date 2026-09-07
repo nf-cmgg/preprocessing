@@ -96,11 +96,12 @@ def getReadgroupsFromBclconvert(ch_fastq_list_csv, ch_fastq) {
 
 //
 // Pick the sampleinfo row for a demultiplexed FASTQ.
+// Sampleinfo is parsed once per flowcell lane, so identical rows repeat and are deduplicated.
 // One row per samplename is attached as-is. Multiple rows require a unique
 // match of sampleinfo.library to readgroup.LB.
 //
 def matchSampleinfo(meta, infos) {
-    def rows = infos instanceof Collection ? infos as List : [infos]
+    def rows = (infos instanceof Collection ? infos as List : [infos]).unique(false)
     if (rows.size() == 1) {
         return rows[0]
     }
