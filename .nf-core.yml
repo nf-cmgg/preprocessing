@@ -45,5 +45,4 @@ template:
     - fastqc
     - seqera_platform
     - gpu
-    - citations
   is_nfcore: false

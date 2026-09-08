@@ -14,7 +14,7 @@
                             "samplename": "test",
                             "single_end": false
                         },
-                        "test.star.Aligned.out.bam"
+                        "test.star.Aligned.out.bam:md5,13af9aefc99af1a0825b6a4508c818e3"
                     ]
                 ],
                 "junctions": [
@@ -81,14 +81,14 @@
                         {
                             "groupSize": 1,
                             "groupTarget": {
-                                "id": "test",
-                                "samplename": "test",
-                                "single_end": false,
-                                "sample_type": "RNA",
                                 "genome": {
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"
-                                }
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                                },
+                                "id": "test",
+                                "sample_type": "RNA",
+                                "samplename": "test",
+                                "single_end": false
                             }
                         },
                         "test.SJ.out.tab:md5,15852c5678c04e86dcb66793b7e02bb9"
@@ -96,10 +96,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-14T08:11:34.101241",
+        "timestamp": "2026-09-08T12:11:08.386137",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "26.04.6"
         }
     },
     "fastq align rna - unknown aligner": {

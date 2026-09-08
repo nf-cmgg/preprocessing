@@ -6,8 +6,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
                     ]
@@ -16,8 +16,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
                     ]
@@ -26,8 +26,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
                     ]
@@ -39,8 +39,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
                     ]
@@ -49,8 +49,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
                     ]
@@ -68,8 +68,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.mosdepth.summary.txt:md5,6c29875b821ba44f5cc5254a2339db90"
                     ]
@@ -153,8 +153,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
                     ]
@@ -163,8 +163,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
                     ]
@@ -174,10 +174,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-07T11:16:10.062439",
+        "timestamp": "2026-09-08T12:05:02.450949",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "bam QC - full - roi - WES": {
@@ -187,8 +187,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
@@ -198,8 +198,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
@@ -209,8 +209,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
@@ -223,8 +223,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
@@ -234,8 +234,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
@@ -245,8 +245,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
@@ -256,8 +256,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
@@ -267,8 +267,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.regions.bed.gz.csi:md5,d128b1a1648ebc007d22b5c4a23663a6"
@@ -278,8 +278,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
@@ -295,22 +295,19 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
-                        [
-                            "test_Treatable_ID_per_exon.mosdepth.region.dist.txt:md5,6c2b5237d98e0a2f118a3553c2ba478e",
-                            "test_bladder_cancer_per_exon.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test_chr21test_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
                     ]
                 ],
                 "riker_alignment_metrics": [
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb"
@@ -320,8 +317,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
@@ -340,8 +337,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63"
@@ -351,8 +348,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb"
@@ -371,8 +368,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81"
@@ -382,8 +379,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b"
@@ -393,8 +390,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6"
@@ -422,8 +419,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
@@ -445,8 +442,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5"
@@ -456,8 +453,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
@@ -467,8 +464,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
@@ -478,8 +475,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
@@ -489,8 +486,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
@@ -500,19 +497,19 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "WES"
                         },
-                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
+                        "test.stats:md5,6423f67b823c7c85bb0f0e94f4675131"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-07T11:16:59.089346",
+        "timestamp": "2026-09-08T12:39:43.691597",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "bam QC - full - roi - seqcap": {
@@ -522,8 +519,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
@@ -533,8 +530,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
@@ -544,8 +541,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
@@ -558,8 +555,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
@@ -569,8 +566,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
@@ -580,8 +577,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
@@ -591,8 +588,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
@@ -602,8 +599,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.regions.bed.gz.csi:md5,d128b1a1648ebc007d22b5c4a23663a6"
@@ -613,8 +610,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
@@ -630,19 +627,19 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
-                        "test_seqcap_Connective_tissue_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
+                        "test_seqcap_chr21test_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
                     ]
                 ],
                 "riker_alignment_metrics": [
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb"
@@ -652,8 +649,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
@@ -672,8 +669,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63"
@@ -683,8 +680,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb"
@@ -703,8 +700,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81"
@@ -714,8 +711,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b"
@@ -725,8 +722,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6"
@@ -754,8 +751,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
@@ -777,8 +774,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5"
@@ -788,8 +785,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
@@ -799,8 +796,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
@@ -810,8 +807,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
@@ -821,8 +818,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
@@ -832,19 +829,19 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
                             "qc_mode": "full",
+                            "single_end": false,
                             "tag": "seqcap"
                         },
-                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
+                        "test.stats:md5,6423f67b823c7c85bb0f0e94f4675131"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-07T11:19:02.438284",
+        "timestamp": "2026-09-08T12:40:19.331388",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "bam QC - full - no roi": {
@@ -854,8 +851,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
                     ]
@@ -864,8 +861,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
                     ]
@@ -874,8 +871,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
                     ]
@@ -887,8 +884,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
                     ]
@@ -897,8 +894,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
                     ]
@@ -916,8 +913,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.mosdepth.summary.txt:md5,6c29875b821ba44f5cc5254a2339db90"
                     ]
@@ -932,21 +929,18 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
-                        [
-                            "test_Treatable_ID_per_exon.mosdepth.region.dist.txt:md5,6c2b5237d98e0a2f118a3553c2ba478e",
-                            "test_bladder_cancer_per_exon.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test_chr21test_per_exon.mosdepth.region.dist.txt:md5,e098c901acb1da8c2cf64a248306e71c"
                     ]
                 ],
                 "riker_alignment_metrics": [
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.alignment-metrics.txt:md5,6afbb56c56893875c8e580704f9553fb"
                     ]
@@ -955,8 +949,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
                     ]
@@ -974,8 +968,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.gcbias-detail.txt:md5,04f2b60028e4f604e398805c7e3d5c63"
                     ]
@@ -984,8 +978,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.gcbias-summary.txt:md5,928803e32fb84268ae253de0ef5750cb"
                     ]
@@ -1003,8 +997,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.isize-histogram.txt:md5,377a5662dd0bd893e2fb9bcec50ccd81"
                     ]
@@ -1013,8 +1007,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.isize-metrics.txt:md5,77611ea453436da4af1619283d8d1a7b"
                     ]
@@ -1023,8 +1017,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.mean-quality-by-cycle.txt:md5,2f257f4133b678c7c953cb30714548d6"
                     ]
@@ -1050,8 +1044,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.quality-score-distribution.txt:md5,0187a3f6c5bace7415a19e510c9d7ddc"
                     ]
@@ -1072,8 +1066,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.wgs-coverage.txt:md5,b36c075591ac1e8c01ab181e072c65a5"
                     ]
@@ -1082,8 +1076,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.wgs-metrics.txt:md5,a1fe4910710f106af7c995f929f4b7c9"
                     ]
@@ -1092,8 +1086,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.coverage.txt:md5,2d81e108bf4175f2b892ab6e749fdf92"
                     ]
@@ -1102,8 +1096,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
                     ]
@@ -1112,8 +1106,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
                     ]
@@ -1122,18 +1116,18 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "full"
+                            "qc_mode": "full",
+                            "single_end": false
                         },
-                        "test.stats:md5,ff81063faa5cf509f16044c4160733b5"
+                        "test.stats:md5,6423f67b823c7c85bb0f0e94f4675131"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-07T11:16:29.597141",
+        "timestamp": "2026-09-08T12:38:39.483718",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "bam QC - basic - roi": {
@@ -1143,8 +1137,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.mosdepth.global.dist.txt:md5,ceec5e216dac6a4e15b961713ee8b16c"
                     ]
@@ -1153,8 +1147,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.per-base.bed.gz:md5,c89a207273626f8415df1710bc522e8e"
                     ]
@@ -1163,8 +1157,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.per-base.bed.gz.csi:md5,c89ce701cf04e44aa49f54e2341c4bf0"
                     ]
@@ -1176,8 +1170,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.quantized.bed.gz:md5,8975e3f5a62bb2ea6f349539daf8e9a4"
                     ]
@@ -1186,8 +1180,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.quantized.bed.gz.csi:md5,a4dd4f2635eaa215cc92ec03d754e955"
                     ]
@@ -1196,8 +1190,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.mosdepth.region.dist.txt:md5,baffaa91e753347fd44c2e6e0a618d1f"
                     ]
@@ -1206,8 +1200,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.regions.bed.gz:md5,82848481047cda38748ec0409db8a669"
                     ]
@@ -1216,8 +1210,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.regions.bed.gz.csi:md5,d128b1a1648ebc007d22b5c4a23663a6"
                     ]
@@ -1226,8 +1220,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.mosdepth.summary.txt:md5,c929389c608f49ca01d800fb5cc94bb9"
                     ]
@@ -1311,8 +1305,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.flagstat:md5,167e69b479663a15194ddf56cbc9e60e"
                     ]
@@ -1321,8 +1315,8 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "qc_mode": "basic"
+                            "qc_mode": "basic",
+                            "single_end": false
                         },
                         "test.idxstats:md5,081d0431383fb7ea6b51b7077c6ec93c"
                     ]
@@ -1332,10 +1326,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-07T11:16:41.798471",
+        "timestamp": "2026-09-08T12:06:10.847868",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     }
 }

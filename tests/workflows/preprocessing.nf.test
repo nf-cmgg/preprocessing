@@ -61,13 +61,12 @@ nextflow_workflow {
         }
 
         then {
-            def fasta = "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(
                     workflow.out,
                     readsMD5Keys:["crams"],
-                    referenceFasta: fasta,
+                    referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                     unstableKeys:[
                         "fastp_html",
                         "mosdepth_per_base_csi",
@@ -140,13 +139,12 @@ nextflow_workflow {
         }
 
         then {
-            def fasta = "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(
                     workflow.out,
                     readsMD5Keys:["crams"],
-                    referenceFasta: fasta,
+                    referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                     unstableKeys:[
                         "fastp_html",
                         "mosdepth_per_base_csi",
@@ -221,13 +219,12 @@ nextflow_workflow {
         }
 
         then {
-            def fasta = "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(
                     workflow.out,
                     readsMD5Keys:["crams"],
-                    referenceFasta: fasta,
+                    referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                     unstableKeys:[
                         "fastp_html",
                         "mosdepth_per_base_csi",
@@ -290,15 +287,13 @@ nextflow_workflow {
         }
 
         then {
-            def fasta = "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
             assert workflow.success
             assert snapshot(
                 sanitizeOutput(
                     workflow.out,
                     readsMD5Keys:["crams"],
-                    referenceFasta: fasta,
+                    referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                     unstableKeys:[
-                        "crams",
                         "demultiplex_logs",
                         "demultiplex_reports",
                         "fastp_html",

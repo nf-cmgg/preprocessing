@@ -11,7 +11,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.fgumi.bam:md5,6bab0c75514fda4b4e7efbbae5e33cc8"
+                        "test.fgumi.bam:md5,f9cd7808f58b41cdf0eb29e76afd97d8"
                     ]
                 ]
             },
@@ -20,7 +20,7 @@
                     [
                         "FGUMI_SNAPZIPSORT",
                         "fgumi",
-                        "0.4.0"
+                        "0.7.0"
                     ],
                     [
                         "FGUMI_SNAPZIPSORT",
@@ -30,10 +30,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-06T13:16:43.167620236",
+        "timestamp": "2026-09-08T11:56:58.495522",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "homo sapiens - test - stub": {
@@ -57,7 +57,7 @@
                     [
                         "FGUMI_SNAPZIPSORT",
                         "fgumi",
-                        "0.4.0"
+                        "0.7.0"
                     ],
                     [
                         "FGUMI_SNAPZIPSORT",
@@ -67,10 +67,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-06T13:18:57.541461241",
+        "timestamp": "2026-09-08T12:01:16.811993",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     }
 }
