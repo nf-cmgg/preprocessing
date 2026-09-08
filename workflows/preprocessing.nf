@@ -169,6 +169,9 @@ workflow PREPROCESSING {
                 else if (meta.organism ==~ /(?i)Danio[\s_]rerio/) {
                     meta = meta + ["genome": "GRCz11"]
                 }
+                else if (meta.organism ==~ /(?i)Equus[\s_]caballus/) {
+                    meta = meta + ["genome": "EquCab2"]
+                }
                 else {
                     meta = meta + ["genome": null]
                 }
