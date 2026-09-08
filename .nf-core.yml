@@ -19,7 +19,6 @@ lint:
     - manifest.homePage
   multiqc_config: false
   files_exist:
-    - CITATIONS.md
     - CODE_OF_CONDUCT.md
     - docs/CONTRIBUTING.md
     - assets/nf-core-preprocessing_logo_light.png

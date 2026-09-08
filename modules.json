@@ -52,28 +52,28 @@
                     },
                     "fgumi/extract": {
                         "branch": "master",
-                        "git_sha": "d5de7a949aa84689f4098c958f05733a6c3804f5",
+                        "git_sha": "9fd3ec2625f849749bc39596f30d0d2a08c49845",
                         "installed_by": ["modules"]
                     },
                     "fgumi/filter": {
                         "branch": "master",
-                        "git_sha": "d5de7a949aa84689f4098c958f05733a6c3804f5",
+                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/fgumi/filter/fgumi-filter.diff"
                     },
                     "fgumi/group": {
                         "branch": "master",
-                        "git_sha": "d5de7a949aa84689f4098c958f05733a6c3804f5",
+                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
                         "installed_by": ["modules"]
                     },
                     "fgumi/merge": {
                         "branch": "master",
-                        "git_sha": "d5de7a949aa84689f4098c958f05733a6c3804f5",
+                        "git_sha": "9fd3ec2625f849749bc39596f30d0d2a08c49845",
                         "installed_by": ["modules"]
                     },
                     "fgumi/simplex": {
                         "branch": "master",
-                        "git_sha": "d5de7a949aa84689f4098c958f05733a6c3804f5",
+                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/fgumi/simplex/fgumi-simplex.diff"
                     },
@@ -101,12 +101,12 @@
                     },
                     "multiqcsav": {
                         "branch": "master",
-                        "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
+                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
                         "installed_by": ["modules"]
                     },
                     "riker/multi": {
                         "branch": "master",
-                        "git_sha": "da4b4aa519d032c6689cb7d27c6dda496f657989",
+                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/riker/multi/riker-multi.diff"
                     },
@@ -152,7 +152,7 @@
                     },
                     "snapaligner/align": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "c8ebae73f5cd2886ad8e3e28d52fe6f6f22cd9ca",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/snapaligner/align/snapaligner-align.diff"
                     },
@@ -164,7 +164,7 @@
                     },
                     "strobealign": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
                         "installed_by": ["fastq_align_dna", "modules"],
                         "patch": "modules/nf-core/strobealign/strobealign.diff"
                     }
@@ -174,18 +174,18 @@
                 "nf-core": {
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "a0961c41021561ac7cf139f86bd7812a2f99e994",
+                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
                         "installed_by": ["subworkflows"],
                         "patch": "subworkflows/nf-core/fastq_align_dna/fastq_align_dna.diff"
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "1a545fcbd762911c21a64ced3dbef99b2b51ac75",
+                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "a3fb7351b1fdb2b1de282b765816bbea190e86a8",
+                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {
