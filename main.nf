@@ -231,7 +231,7 @@ output {
     }
     demultiplex_interop {
         path { _meta, bin ->
-            bin >> "Interop/${bin.name}"
+            bin >> "InterOp/${bin.name}"
         }
     }
     fastq {

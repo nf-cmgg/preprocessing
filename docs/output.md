@@ -33,7 +33,7 @@ Some additional files will be created when a flowcell input has been used.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Interop/`: InterOp binary files from the flowcell
+- `InterOp/`: InterOp binary files from the flowcell
 - `Reports/`: BCL Convert reports (`Reports/L00<lane>/` when a lane is set)
 - `Logs/`: BCL Convert logs (`Logs/L00<lane>/` when a lane is set)
 
