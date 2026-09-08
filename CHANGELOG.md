@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.1.0 (dev)
 
+- Fail DNA alignment when the requested aligner is not supported instead of dropping the sample.
 - Keep UMI consensus filter/SNAP steps on the merged sample meta so they still run after fastp splitting.
 - Omit empty FASTQ `CN`/`LB` read-group fields so they are not written as empty strings.
 - Add support for Equus caballus genome (EquCab2) when the organism is specified in the sample metadata.
