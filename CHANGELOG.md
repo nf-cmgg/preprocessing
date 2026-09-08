@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.1.0 (dev)
 
+- Omit empty FASTQ `CN`/`LB` read-group fields so they are not written as empty strings.
 - Add support for Equus caballus genome (EquCab2) when the organism is specified in the sample metadata.
 - Associate demultiplexed FASTQs with multiplexed `sampleinfo` rows using `readgroup.LB` when the same `samplename` appears in more than one library ([#169](https://github.com/nf-cmgg/preprocessing/issues/169)). Those libraries are published under `LIBRARY/SAMPLENAME`.
 - Drop `Picard` modules and associated parameters in favor of `riker multi`, which is much more efficient and now run by default.

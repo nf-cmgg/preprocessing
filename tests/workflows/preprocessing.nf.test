@@ -309,11 +309,7 @@ nextflow_workflow {
                         "riker_pdf",
                     ]
                 ).collectEntries { key, value ->
-                    if (key in ["demultiplex_logs", "demultiplex_reports"]) {
-                        [ key: value.sort() ]
-                    } else {
-                        [ key: value ]
-                    }
+                    [(key): key in ["demultiplex_logs", "demultiplex_reports"] ? value.sort() : value]
                 }
             ).match()
         }
