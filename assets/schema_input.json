@@ -22,7 +22,7 @@
             "organism": {
                 "meta": ["organism"],
                 "type": "string",
-                "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus and Danio rerio",
+                "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus, Danio rerio and Equus caballus",
                 "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "genome": {
@@ -164,7 +164,7 @@
                 "type": "string",
                 "format": "file-path",
                 "pattern": "^\\S+\\.(json|yaml|yml)$",
-                "description": "JSON/YAML file with sample information, must contain fields 'samplename', 'organism' and 'tag'"
+                "description": "JSON/YAML file with sample information, must contain fields 'samplename', 'aligner', 'tag' and either 'genome' or 'organism'"
             },
             "flowcell": {
                 "type": "string",
