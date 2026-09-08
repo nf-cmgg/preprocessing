@@ -2,11 +2,11 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/nf-cmgg/preprocessing)
 [![GitHub Actions CI Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/nf-test.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions Linting Status](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/preprocessing/actions/workflows/linting.yml)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A526.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.2)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-cmgg/preprocessing)
@@ -20,14 +20,15 @@ The pipeline is built using Nextflow, a workflow tool to run tasks across multip
 
 Steps include:
 
-- Demultiplexing using [`BCLconvert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
+- Demultiplexing using [`BCL Convert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
 - Run QC using [`MultiQC SAV`](https://github.com/MultiQC/MultiQC_SAV)
-- Read QC and trimming using [`fastp`](https://github.com/OpenGene/fastp) or [`falco`](https://github.com/smithlabcode/falco)
-- Alignment using either [`bwa`](https://github.com/lh3/bwa), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bowtie2`](https://github.com/BenLangmead/bowtie2), [`dragmap`](https://github.com/Illumina/DRAGMAP), [`snap`](https://github.com/amplab/snap) or [`strobe`](https://github.com/ksahlin/strobealign) for DNA-seq and [`STAR`](https://github.com/alexdobin/STAR) for RNA-seq
+- Read QC and adapter trimming using [`fastp`](https://github.com/OpenGene/fastp). Samples without a supported genome or with `aligner` set to `false` skip alignment and are QC'd with [`falco`](https://github.com/smithlabcode/falco) instead
+- Alignment using [`bwa`](https://github.com/lh3/bwa), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bowtie2`](https://github.com/BenLangmead/bowtie2), [`dragmap`](https://github.com/Illumina/DRAGMAP), [`snap`](https://github.com/amplab/snap) or [`strobealign`](https://github.com/ksahlin/strobealign) for DNA-seq and [`STAR`](https://github.com/alexdobin/STAR) for RNA-seq
+- UMI consensus (`call_consensus`) using [`fgumi`](https://github.com/fulcrumgenomics/fgbio) with SNAP
 - Duplicate marking using [`bamsormadup`](https://gitlab.com/german.tischler/biobambam2) or [`samtools markdup`](http://www.htslib.org/doc/samtools-markdup.html)
-- Coverage analysis using [`mosdepth`](https://github.com/brentp/mosdepth) and [`samtools coverage`](http://www.htslib.org/doc/samtools-coverage.html)
-- Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and [`riker multi`](https://github.com/fulcrumgenomics/riker)
-- QC aggregation using [`multiqc`](https://multiqc.info/)
+- Coverage analysis using [`mosdepth`](https://github.com/brentp/mosdepth) and, in `qc_mode: full`, [`samtools coverage`](http://www.htslib.org/doc/samtools-coverage.html)
+- Alignment QC using [`samtools flagstat`](http://www.htslib.org/doc/samtools-flagstat.html), [`samtools idxstats`](http://www.htslib.org/doc/samtools-idxstats.html) and, in `qc_mode: full`, [`samtools stats`](http://www.htslib.org/doc/samtools-stats.html) and [`riker multi`](https://github.com/fulcrumgenomics/riker)
+- QC aggregation using [`MultiQC`](https://multiqc.info/)
 
 <picture>
 
@@ -72,6 +73,8 @@ Then run `pixi shell` to enter the environment and start developing.
 ## Credits
 
 nf-cmgg/preprocessing was originally written by the CMGG ICT team.
+
+An extensive list of references for the tools used by the pipeline can be found in [`CITATIONS.md`](CITATIONS.md).
 
 ## Support
 

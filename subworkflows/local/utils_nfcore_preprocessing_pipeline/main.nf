@@ -178,12 +178,23 @@ def genomeExistsError() {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-    // TODO nf-core: Optionally add in-text citation tools to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
         "Tools used in the workflow included:",
-        "FastQC (Andrews 2010),",
+        "BCL Convert,",
+        "fastp (Chen et al. 2018),",
+        "Falco (de Sena Brandine and Smith 2021),",
+        "BWA-MEM (Li 2013),",
+        "BWA-MEM2 (Vasimuddin et al. 2019),",
+        "Bowtie 2 (Langmead and Salzberg 2012),",
+        "DRAGMAP,",
+        "SNAP (Zaharia et al. 2011),",
+        "strobealign (Sahlin 2022),",
+        "STAR (Dobin et al. 2013),",
+        "fgumi,",
+        "biobambam2 (Tischler and Leonard 2014),",
+        "SAMtools (Li et al. 2009),",
+        "mosdepth (Pedersen and Quinlan 2018),",
+        "riker,",
         "MultiQC (Ewels et al. 2016)",
         ".",
     ].join(' ').trim()
@@ -192,12 +203,19 @@ def toolCitationText() {
 }
 
 def toolBibliographyText() {
-    // TODO nf-core: Optionally add bibliographic entries to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
     def reference_text = [
-        "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-        "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>",
+        "<li>Chen S, Zhou Y, Chen Y, Gu J. fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics. 2018 Sep 1;34(17):i884-i890. doi: 10.1093/bioinformatics/bty560.</li>",
+        "<li>de Sena Brandine G, Smith AD. Falco: high-speed FastQC emulation for quality control of sequencing data. F1000Res. 2021 Jan 27;8:1874. doi: 10.12688/f1000research.21142.2.</li>",
+        "<li>Li H. Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM. arXiv 2013. doi: 10.48550/arXiv.1303.3997.</li>",
+        "<li>Vasimuddin M, Misra S, Li H, Aluru S. Efficient Architecture-Aware Acceleration of BWA-MEM for Multicore Systems. 2019 IEEE IPDPS, pp. 314-324. doi: 10.1109/IPDPS.2019.00041.</li>",
+        "<li>Langmead B, Salzberg SL. Fast gapped-read alignment with Bowtie 2. Nat Methods. 2012 Mar 4;9(4):357-9. doi: 10.1038/nmeth.1923.</li>",
+        "<li>Zaharia M, et al. Faster and More Accurate Sequence Alignment with SNAP. arXiv 2011. doi: 10.48550/arXiv.1111.5572.</li>",
+        "<li>Sahlin K. Strobealign: flexible seed size enables ultra-fast and accurate read alignment. Genome Biol. 2022 Dec 29;23(1):260. doi: 10.1186/s13059-022-02831-7.</li>",
+        "<li>Dobin A, et al. STAR: ultrafast universal RNA-seq aligner. Bioinformatics. 2013 Jan 1;29(1):15-21. doi: 10.1093/bioinformatics/bts635.</li>",
+        "<li>Tischler G, Leonard S. biobambam: tools for read pair collation based algorithms on BAM files. Source Code Biol Med. 2014 Jun 20;9:13. doi: 10.1186/1751-0473-9-13.</li>",
+        "<li>Li H, et al. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-9. doi: 10.1093/bioinformatics/btp352.</li>",
+        "<li>Pedersen BS, Quinlan AR. Mosdepth: quick coverage calculation for genomes and exomes. Bioinformatics. 2018 Mar 1;34(5):867-868. doi: 10.1093/bioinformatics/btx699.</li>",
+        "<li>Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354.</li>",
     ].join(' ').trim()
 
     return reference_text
@@ -226,13 +244,8 @@ def methodsDescriptionText(mqc_methods_yaml) {
     }
     meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
 
-    // Tool references
-    meta["tool_citations"] = ""
-    meta["tool_bibliography"] = ""
-
-    // TODO nf-core: Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
-    // meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
-    // meta["tool_bibliography"] = toolBibliographyText()
+    meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
+    meta["tool_bibliography"] = toolBibliographyText()
 
 
     def methods_text = mqc_methods_yaml.text

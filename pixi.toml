@@ -1,14 +1,23 @@
 [workspace]
-authors = ["Nicolas Vannieuwkerke <nicolas.vannieuwkerke@ugent.be>"]
+authors = ["Matthias De Smet <matthias.desmet@ugent.be>", "Nicolas Vannieuwkerke <nicolas.vannieuwkerke@ugent.be>"]
 channels = ["conda-forge", "bioconda"]
 name = "preprocessing"
 platforms = ["linux-64", "osx-arm64"]
-version = "0.1.0"
 
 [tasks]
+lint = "nextflow lint -format -sort-declarations -exclude \".nf-test\" -exclude \".pixi\" -exclude \"modules/nf-core\" -exclude \"subworkflows/nf-core\" -harshil-alignment ."
+
+[target.linux-64.tasks]
+test-latest = "export AWS_PROFILE=ugent; nf-test test --verbose --profile docker,s3_ugent --update-snapshot --clean-snapshot --changed-since HEAD^ ."
+test-all = "export AWS_PROFILE=ugent; nf-test test --verbose --profile docker,s3_ugent --update-snapshot --clean-snapshot ."
+
+[target.osx-arm64.tasks]
+test-latest = "export AWS_PROFILE=ugent; nf-test test --verbose --profile docker,emulate_amd64,s3_ugent --update-snapshot --clean-snapshot --changed-since HEAD^ ."
+test-all = "export AWS_PROFILE=ugent; nf-test test --verbose --profile docker,emulate_amd64,s3_ugent --update-snapshot --clean-snapshot ."
 
 [dependencies]
-nextflow = ">=26.04,<27"
+nextflow = ">=26.4.6,<27"
 nf-test = ">=0.9.5,<0.10"
 prek = ">=0.3.13,<0.4"
-nf-core = ">=4.0.2,<5"
+nf-core = ">=4.1.0,<5"
+nf-metro = ">=2.0.0,<3"

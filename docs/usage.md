@@ -2,17 +2,15 @@
 
 Parameter documentation can be found [here](parameters.md)
 
-## Introduction
-
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It can be a CSV (comma-separated values), TSV (tab-separated values), JSON (javascript object notation) or YAML (yet another markup language) file.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It can be a CSV, TSV, JSON or YAML file.
 
 ```bash
 --input '[path to samplesheet file]'
 ```
 
-The pipeline supports two types of samplesheets to be used as input: [`fastq`](#fastq-samplesheet) and [`flowcell`](#flowcell-samplesheet) samplesheets. The type will be automatically detected and applied by the pipeline. The pipeline will also auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire.
+The pipeline supports two types of samplesheets to be used as input: [`fastq`](#fastq-samplesheet) and [`flowcell`](#flowcell-samplesheet) samplesheets. The type will be automatically detected and applied by the pipeline. FASTQ rows currently require both `fastq_1` and `fastq_2`. After demultiplexing, single-end FASTQs are still handled if only one read file is produced.
 
 ### Fastq samplesheet
 
@@ -45,11 +43,11 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
 | `id`                                 | Unique sample identifier                                                                                                                                                                                                           | :heavy_check_mark:                              |
 | `samplename`                         | The sample name corresponding to the sample in the Fastq file(s)                                                                                                                                                                   | :heavy_check_mark:                              |
-| `genome`                             | The genome build to use for the analysis. Currently supports `GRCh38`, `GRCm39` and `GRCz11`                                                                                                                                       | :heavy_check_mark: (unless `organism` is given) |
+| `genome`                             | Genome build. Allowed values: `GRCh38`, `GRCh38-noalt`, `GRCm39`, `GRCz11`, `hg38`, `hg38-noalt`. If only `organism` is set, `Homo sapiens` maps to `GRCh38`, `Mus musculus` to `mm10`, and `Danio rerio` to `GRCz11`.             | :heavy_check_mark: (unless `organism` is given) |
 | `organism`                           | Full name of the organism. Currently supports `Homo sapiens`, `Mus musculus` and `Danio rerio`                                                                                                                                     | :heavy_check_mark: (unless `genome` is given)   |
-| `library`                            | Sample library name                                                                                                                                                                                                                | :x:                                             |
-| `tag`                                | The tag used by the sample. Can be one of `WES`, `WGS`, `SeqCap` and `coPGT-M`                                                                                                                                                     | :x:                                             |
-| `aligner`                            | The aligner to use for this sample. Can be one of these: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` and `snap`. Set to `false` to output fastq.                                                                           | :heavy_check_mark:                              |
+| `library`                            | Sample library name. When set, results are published under `library/samplename`.                                                                                                                                                   | :x:                                             |
+| `tag`                                | Sample tag (free-form). `SeqCap` restricts panel coverage gene lists to files whose names contain `seqcap`.                                                                                                                        | :x:                                             |
+| `aligner`                            | DNA aligner: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` or `snap`. Set to `false` to skip alignment and emit FASTQ. RNA samples (`sample_type: RNA`) always use `star`.                                                   | :heavy_check_mark:                              |
 | `markdup`                            | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                                                                                                 | :x:                                             |
 | `umi_aware`                          | Whether UMI-aware processing should be used. Only applies when `markdup` is set to `samtools`                                                                                                                                      | :x:                                             |
 | `call_consensus`                     | Perform consensus calling using the `fgumi` toolsuite. This only works for DNA samples and will always run the SNAP aligner                                                                                                        | :x:                                             |
@@ -62,9 +60,9 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `adapter_R2`                         | Adapter sequence for read 2                                                                                                                                                                                                        | :x:                                             |
 | `qc_mode`                            | QC mode for the sample. Can be set to `basic` or `full`. Basic QC includes samtools flagstat, idxstats and mosdepth. Full QC includes samtools stats, samtools coverage, riker metrics and panel coverage in addition to basic QC. | :x:                                             |
 | `roi`                                | The path to a BED file containing Regions Of Interest for coverage analysis                                                                                                                                                        | :x:                                             |
-| `sample_type`                        | Sample type (e.g., `DNA`, `RNA`)                                                                                                                                                                                                   | :x:                                             |
+| `sample_type`                        | Sample type. Allowed values: `DNA`, `RNA`, `Tissue`. Defaults to `DNA`. RNA samples are aligned with STAR.                                                                                                                         | :x:                                             |
 | `fastq_1`                            | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                     | :heavy_check_mark:                              |
-| `fastq_2`                            | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                                       | :x:                                             |
+| `fastq_2`                            | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                                       | :heavy_check_mark:                              |
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
@@ -82,22 +80,22 @@ A `flowcell` samplesheet file consisting of one sequencing run may look somethin
 
 Following table shows the fields that are used by the `flowcell` samplesheet:
 
-| Column        | Description                                                                                                 | Required           |
-| ------------- | ----------------------------------------------------------------------------------------------------------- | ------------------ |
-| `samplesheet` | Illumina flowcell for the flowcell lane                                                                     | :heavy_check_mark: |
-| `sample_info` | JSON/YML file with sample information. See the [flowcell sample info](#flowcell-sample-info) documentation. | :heavy_check_mark: |
-| `flowcell`    | Illumina flowcell directory                                                                                 | :heavy_check_mark: |
-| `lane`        | Lane number                                                                                                 | :x:                |
+| Column        | Description                                                                                                  | Required           |
+| ------------- | ------------------------------------------------------------------------------------------------------------ | ------------------ |
+| `id`          | Unique flowcell identifier                                                                                   | :heavy_check_mark: |
+| `samplesheet` | Illumina sample sheet CSV for the flowcell lane                                                              | :heavy_check_mark: |
+| `sample_info` | JSON/YAML file with sample information. See the [flowcell sample info](#flowcell-sample-info) documentation. | :heavy_check_mark: |
+| `flowcell`    | Illumina flowcell directory                                                                                  | :heavy_check_mark: |
+| `lane`        | Lane number                                                                                                  | :x:                |
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
 ### Flowcell sample info
 
-A `flowcell` sample info JSON/YML file consisting for one sequencing run may look something like the one below.
+A `flowcell` sample info JSON/YAML file for one sequencing run may look something like the one below.
 
 ```yml
-- id: DNA1_L001
-  samplename: DNA_paired1
+- samplename: DNA_paired1
   library: test_library
   genome: GRCh38
   aligner: bwamem
@@ -113,6 +111,10 @@ A `flowcell` sample info JSON/YML file consisting for one sequencing run may loo
   tag: WES
   sample_type: DNA
 ```
+
+Each row needs `samplename`, `aligner`, `tag`, and either `genome` or `organism`. Analysis fields match the [fastq samplesheet](#fastq-samplesheet). Extra sample-info fields are `purpose` (`research` or `diagnostic`), `vivar_project`, `binsize`, and `panels`.
+
+The same `samplename` may appear in more than one library. In that case each row needs a distinct `library` value, and the Illumina sample sheet must set `LibraryName` so that BCL Convert `RGLB` matches `sampleinfo.library`. A single row per `samplename` does not need `RGLB` on the demultiplexed FASTQ.
 
 ## Running the pipeline
 
@@ -189,9 +191,9 @@ These options are part of Nextflow and use a _single_ hyphen (pipeline parameter
 
 Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
 
-Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer) - see below.
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Apple containers) - see below.
 
-The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+The pipeline also dynamically loads configurations from [https://github.com/nf-cmgg/configs](https://github.com/nf-cmgg/configs) when it runs (`params.custom_config_base`). It does not load [nf-core/configs](https://github.com/nf-core/configs).
 
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
@@ -204,9 +206,13 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic profile with settings to run the pipeline on ARM64 architecture machines (eg. Apple Silicon). It will use software containers built for ARM64 where available.
 - `emulate_amd64`
   - A generic profile with settings to run the pipeline on ARM64 architecture machines (eg. Apple Silicon) using AMD64 software containers. This is for when ARM64 containers are not available but you still want to run the pipeline on an ARM64 machine. Note that this will be slower than using ARM64 containers.
+- `apple`
+  - A generic configuration profile to be used with [Apple containers](https://github.com/apple/container)
 - `test`
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
+- `test_full`
+  - A profile with a more complete test dataset
 - `docker`
   - A generic configuration profile to be used with [Docker](https://docker.com/)
 - `singularity`
@@ -219,6 +225,10 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
+- `wave`
+  - Enable Seqera Wave to resolve containers
+- `gpu`
+  - Pass GPU flags through to Docker, Apptainer or Singularity
 
 ### `-resume`
 
@@ -250,13 +260,11 @@ A pipeline might not always support every possible argument or option of a parti
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
 
-### nf-core/configs and nf-cmgg/configs
+### nf-cmgg/configs
 
-In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-cmgg pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
+Shared institutional settings for nf-cmgg pipelines live in [nf-cmgg/configs](https://github.com/nf-cmgg/configs). Test a one-off config with `-c` first. Shared profiles belong in that repository (`nfcore_custom.config` and `pipeline/preprocessing.config`), not in nf-core/configs.
 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
-
-If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
 ## Running in the background
 
@@ -270,7 +278,7 @@ Some HPC setups also allow you to run nextflow within a cluster job submitted to
 ## Nextflow memory requirements
 
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
-We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
+We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~/.bash_profile`):
 
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
