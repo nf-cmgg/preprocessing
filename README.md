@@ -74,6 +74,8 @@ Then run `pixi shell` to enter the environment and start developing.
 
 nf-cmgg/preprocessing was originally written by the CMGG ICT team.
 
+An extensive list of references for the tools used by the pipeline can be found in [`CITATIONS.md`](CITATIONS.md).
+
 ## Support
 
 This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
