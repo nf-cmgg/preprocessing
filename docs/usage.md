@@ -46,7 +46,7 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `genome`                             | Genome build. Allowed values: `GRCh38`, `GRCh38-noalt`, `GRCm39`, `GRCz11`, `hg38`, `hg38-noalt`. If only `organism` is set, `Homo sapiens` maps to `GRCh38`, `Mus musculus` to `mm10`, and `Danio rerio` to `GRCz11`.             | :heavy_check_mark: (unless `organism` is given) |
 | `organism`                           | Full name of the organism. Currently supports `Homo sapiens`, `Mus musculus` and `Danio rerio`                                                                                                                                     | :heavy_check_mark: (unless `genome` is given)   |
 | `library`                            | Sample library name. When set, results are published under `library/samplename`.                                                                                                                                                   | :x:                                             |
-| `tag`                                | Sample tag (free-form). `SeqCap` restricts panel coverage gene lists to files whose names contain `seqcap`.                                                                                                                        | :x:                                             |
+| `tag`                                | Sample tag (`[A-Za-z0-9_-]+`). `SeqCap` restricts panel coverage gene lists to files whose names contain `seqcap`.                                                                                                                 | :x:                                             |
 | `aligner`                            | DNA aligner: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` or `snap`. Set to `false` to skip alignment and emit FASTQ. RNA samples (`sample_type: RNA`) always use `star`.                                                   | :heavy_check_mark:                              |
 | `markdup`                            | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                                                                                                 | :x:                                             |
 | `umi_aware`                          | Whether UMI-aware processing should be used. Only applies when `markdup` is set to `samtools`                                                                                                                                      | :x:                                             |
@@ -193,7 +193,7 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Apple containers) - see below.
 
-The pipeline also dynamically loads configurations from [https://github.com/nf-cmgg/configs](https://github.com/nf-cmgg/configs) when it runs (`params.custom_config_base`). It does not load [nf-core/configs](https://github.com/nf-core/configs).
+The pipeline loads institutional configs from [nf-core/configs](https://github.com/nf-core/configs) by default (`params.custom_config_base`). If `custom_config_base` points at an nf-cmgg configs tree, it also loads `pipeline/preprocessing.config` from that repo.
 
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
@@ -260,9 +260,9 @@ A pipeline might not always support every possible argument or option of a parti
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
 
-### nf-cmgg/configs
+### Institutional configs
 
-Shared institutional settings for nf-cmgg pipelines live in [nf-cmgg/configs](https://github.com/nf-cmgg/configs). Test a one-off config with `-c` first. Shared profiles belong in that repository (`nfcore_custom.config` and `pipeline/preprocessing.config`), not in nf-core/configs.
+Override `custom_config_base` (and usually `custom_config_version`) to use [nf-cmgg/configs](https://github.com/nf-cmgg/configs) instead of the default nf-core configs. Test a one-off config with `-c` first.
 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
 

@@ -9,7 +9,6 @@
 [![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-cmgg/preprocessing)
 
 ## Introduction
 
@@ -34,7 +33,7 @@ Steps include:
 
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/metro_map_dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/images/metro_map_light.svg">
-  <img alt="Fallback image description" src="docs/images/metro_map_light.svg">
+  <img alt="nf-cmgg/preprocessing workflow overview" src="docs/images/metro_map_light.svg">
 </picture>
 
 ## Usage
