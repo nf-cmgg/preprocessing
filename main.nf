@@ -16,6 +16,7 @@
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_preprocessing_pipeline'
 include { PREPROCESSING           } from './workflows/preprocessing'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { samplePublishDir        } from './subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -235,248 +236,248 @@ output {
     }
     fastq {
         path { meta, fastq ->
-            fastq >> (meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" : "${meta.samplename}/${fastq.name}")
+            fastq >> "${samplePublishDir(meta)}/${fastq.name}"
         }
     }
     falco_html {
         path { meta, html ->
-            html >> (meta.library ? "${meta.library}/${meta.samplename}/${html.name}" : "${meta.samplename}/${html.name}")
+            html >> "${samplePublishDir(meta)}/${html.name}"
         }
     }
     falco_txt {
         path { meta, txt ->
-            txt >> (meta.library ? "${meta.library}/${meta.samplename}/${txt.name}" : "${meta.samplename}/${txt.name}")
+            txt >> "${samplePublishDir(meta)}/${txt.name}"
         }
     }
     fastp_json {
         path { meta, json ->
-            json >> (meta.library ? "${meta.library}/${meta.samplename}/${json.name}" : "${meta.samplename}/${json.name}")
+            json >> "${samplePublishDir(meta)}/${json.name}"
         }
     }
     fastp_html {
         path { meta, html ->
-            html >> (meta.library ? "${meta.library}/${meta.samplename}/${html.name}" : "${meta.samplename}/${html.name}")
+            html >> "${samplePublishDir(meta)}/${html.name}"
         }
     }
     crams {
         path { meta, cram, crai ->
-            cram >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" : "${meta.samplename}/${meta.samplename}.cram")
-            crai >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram.crai" : "${meta.samplename}/${meta.samplename}.cram.crai")
+            cram >> "${samplePublishDir(meta)}/${meta.samplename}.cram"
+            crai >> "${samplePublishDir(meta)}/${meta.samplename}.cram.crai"
         }
     }
     rna_splice_junctions {
         path { meta, sjt ->
-            sjt >> (meta.library ? "${meta.library}/${meta.samplename}/${sjt.name}" : "${meta.samplename}/${sjt.name}")
+            sjt >> "${samplePublishDir(meta)}/${sjt.name}"
         }
     }
     rna_junctions {
         path { meta, junctions ->
-            junctions >> (meta.library ? "${meta.library}/${meta.samplename}/${junctions.name}" : "${meta.samplename}/${junctions.name}")
+            junctions >> "${samplePublishDir(meta)}/${junctions.name}"
         }
     }
     align_reports {
         path { meta, log ->
-            log >> (meta.library ? "${meta.library}/${meta.samplename}/${log.name}" : "${meta.samplename}/${log.name}")
+            log >> "${samplePublishDir(meta)}/${log.name}"
         }
     }
     sormadup_metrics {
         path { meta, metrics ->
-            metrics >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.duplicate_metrics.txt" : "${meta.samplename}/${meta.samplename}.duplicate_metrics.txt")
+            metrics >> "${samplePublishDir(meta)}/${meta.samplename}.duplicate_metrics.txt"
         }
     }
     mosdepth_global {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_summary {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_regions {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_per_base_d4 {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_per_base_bed {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_per_base_csi {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_regions_bed {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_regions_csi {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_quantized_bed {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_quantized_csi {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_thresholds_bed {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_thresholds_csi {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     samtools_coverage {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     panelcoverage {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     samtools_stats {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     samtools_flagstat {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     samtools_idxstats {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_alignment_metrics {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_base_dist {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_mean_qual {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_qual_dist {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_error_mismatch {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_error_overlap {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_error_indel {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_gcbias_detail {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_gcbias_summary {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_hybcap_metrics {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_hybcap_per_target {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_hybcap_per_base {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_isize_metrics {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_isize_histogram {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_wgs_metrics {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_wgs_coverage {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_pdf {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_rna_biotype {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_rna_insert_size_histogram {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_rna_insert_size {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     riker_rna_metrics {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     md5sums {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     multiqcsav_report {
