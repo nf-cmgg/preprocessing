@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.1.0 (dev)
 
+- Add optional `sequencing_center` samplesheet field for BAM `@RG CN`.
 - Allow single-end FASTQ samplesheet rows (`fastq_2` optional).
 - Default typed institutional config params to nf-core/configs.
 - Error when a BCL Convert `fastq_list.csv` Read1File is missing from demultiplexed FASTQs.

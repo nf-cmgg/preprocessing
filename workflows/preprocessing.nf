@@ -145,7 +145,7 @@ workflow PREPROCESSING {
             // add readgroup metadata
             // if the sample name starts with "snp_", remove it so the sampletracking works later on.
             def samplename = meta.samplename.startsWith("snp_") ? meta.samplename.substring(4) : meta.samplename
-            def rg = getReadgroupFromFastq(fastq[0], samplename, meta.library, meta.platform)
+            def rg = getReadgroupFromFastq(fastq[0], samplename, meta.library, meta.sequencing_center)
             def meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
             return [meta_with_readgroup, fastq]
         }

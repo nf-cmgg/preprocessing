@@ -26,6 +26,12 @@
                 "description": "Library name",
                 "pattern": "^[a-zA-Z0-9_-]+$"
             },
+            "sequencing_center": {
+                "meta": ["sequencing_center"],
+                "type": "string",
+                "description": "Sequencing centre for the BAM @RG CN field",
+                "pattern": "^[a-zA-Z0-9_-]+$"
+            },
             "tag": {
                 "meta": ["tag"],
                 "type": "string",

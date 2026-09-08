@@ -46,6 +46,7 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `genome`                             | Genome build. Allowed values: `GRCh38`, `GRCh38-noalt`, `GRCm39`, `GRCz11`, `hg38`, `hg38-noalt`. See [organism to genome mapping](#organism-to-genome-mapping) for what is used when only `organism` is set.                      | :heavy_check_mark: (unless `organism` is given) |
 | `organism`                           | Full name of the organism. Currently supports `Homo sapiens`, `Mus musculus`, `Danio rerio` and `Equus caballus`                                                                                                                   | :heavy_check_mark: (unless `genome` is given)   |
 | `library`                            | Sample library name. When set, results are published under `library/samplename`.                                                                                                                                                   | :x:                                             |
+| `sequencing_center`                  | Sequencing centre written to BAM `@RG CN`.                                                                                                                                                                                         | :x:                                             |
 | `tag`                                | Sample tag (`[A-Za-z0-9_-]+`). `SeqCap` restricts panel coverage gene lists to files whose names contain `seqcap`.                                                                                                                 | :x:                                             |
 | `aligner`                            | DNA aligner: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` or `snap`. Set to `false` to skip alignment and emit FASTQ. RNA samples (`sample_type: RNA`) always use `star`.                                                   | :heavy_check_mark:                              |
 | `markdup`                            | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                                                                                                 | :x:                                             |
@@ -112,7 +113,7 @@ A `flowcell` sample info JSON/YAML file for one sequencing run may look somethin
   sample_type: DNA
 ```
 
-Each row needs `samplename`, `aligner`, `tag`, and either `genome` or `organism`. Analysis fields match the [fastq samplesheet](#fastq-samplesheet). Extra sample-info fields are `purpose` (`research` or `diagnostic`), `vivar_project`, `binsize`, and `panels`.
+Each row needs `samplename`, `aligner`, `tag`, and either `genome` or `organism`. Analysis fields match the [fastq samplesheet](#fastq-samplesheet). Extra sample-info fields are `purpose` (`research` or `diagnostic`), `vivar_project`, `binsize`, `panels`, and `sequencing_center`.
 
 The same `samplename` may appear in more than one library. In that case each row needs a distinct `library` value, and the Illumina sample sheet must set `LibraryName` so that BCL Convert `RGLB` matches `sampleinfo.library`. A single row per `samplename` does not need `RGLB` on the demultiplexed FASTQ.
 

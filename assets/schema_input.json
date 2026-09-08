@@ -136,6 +136,12 @@
                 "pattern": "^[a-zA-Z0-9_-]+$",
                 "description": "Sample library name"
             },
+            "sequencing_center": {
+                "meta": ["sequencing_center"],
+                "type": "string",
+                "description": "Sequencing centre for the BAM @RG CN field",
+                "pattern": "^[a-zA-Z0-9_-]+$"
+            },
             "lane": {
                 "type": "integer",
                 "meta": ["lane"],
