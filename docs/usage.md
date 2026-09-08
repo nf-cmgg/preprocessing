@@ -10,7 +10,7 @@ You will need to create a samplesheet with information about the samples you wou
 --input '[path to samplesheet file]'
 ```
 
-The pipeline supports two types of samplesheets to be used as input: [`fastq`](#fastq-samplesheet) and [`flowcell`](#flowcell-samplesheet) samplesheets. The type will be automatically detected and applied by the pipeline. FASTQ rows currently require both `fastq_1` and `fastq_2`. After demultiplexing, single-end FASTQs are still handled if only one read file is produced.
+The pipeline supports two types of samplesheets to be used as input: [`fastq`](#fastq-samplesheet) and [`flowcell`](#flowcell-samplesheet) samplesheets. The type will be automatically detected and applied by the pipeline. FASTQ rows need `fastq_1`; `fastq_2` is optional for single-end data. After demultiplexing, single-end FASTQs are handled if only one read file is produced.
 
 ### Fastq samplesheet
 
@@ -62,7 +62,7 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `roi`                                | The path to a BED file containing Regions Of Interest for coverage analysis                                                                                                                                                        | :x:                                             |
 | `sample_type`                        | Sample type. Allowed values: `DNA`, `RNA`, `Tissue`. Defaults to `DNA`. RNA samples are aligned with STAR.                                                                                                                         | :x:                                             |
 | `fastq_1`                            | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                     | :heavy_check_mark:                              |
-| `fastq_2`                            | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                                       | :heavy_check_mark:                              |
+| `fastq_2`                            | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'. Omit for single-end data.                                                                                                            | :x:                                             |
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
