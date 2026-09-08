@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "FASTQ_TO_CRAM"
+description: Align FASTQ files, mark duplicates, and convert to CRAM
+keywords:
+  - fastq
+  - alignment
+  - markdup
+  - cram
+components:
+  - biobambam/bamsormadup
+  - samtools/convert
+  - samtools/sormadup
+  - samtools/sort
+  - fastq_align_dna
+  - fastq_align_rna
+  - fastq_umiconsensus_fgumi
+  - getgenomeattribute
+input:
+  - ch_meta_reads_aligner_index_fasta_fai_gtf:
+      type: file
+      description: |
+        Reads, aligner, index, and references.
+
+        Structure: [ val(meta), path(reads), val(aligner), path(index), path(fasta), path(fai), path(gtf) ]
+output:
+  - cram_crai:
+      type: file
+      description: |
+        CRAM and index.
+
+        Structure: [ val(meta), path(cram), path(crai) ]
+  - rna_splice_junctions:
+      type: file
+      description: STAR splice junctions
+  - rna_junctions:
+      type: file
+      description: STAR junctions
+  - sormadup_metrics:
+      type: file
+      description: Duplicate metrics
+  - align_reports:
+      type: file
+      description: Aligner's report files
+  - family_size_histogram:
+      type: file
+      description: UMI family size histogram from fgumi
+authors:
+  - "@matthdsm"
+maintainers:
+  - "@matthdsm"
+  - "@nvnieuwk"

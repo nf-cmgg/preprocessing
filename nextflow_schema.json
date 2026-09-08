@@ -15,6 +15,7 @@
                 "input": {
                     "type": "string",
                     "format": "file-path",
+                    "mimetype": "text/csv",
                     "exists": true,
                     "schema": "assets/schema_input.json",
                     "pattern": "^\\S+\\.(csv|tsv|yaml|yml|json)$",
@@ -80,6 +81,7 @@
             "properties": {
                 "genomes": {
                     "type": "object",
+                    "description": "Map of genome keys to reference files. Populated from `conf/igenomes.config`.",
                     "hidden": true
                 },
                 "igenomes_base": {

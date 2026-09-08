@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "UTILS_NFCMGG_PREPROCESSING_PIPELINE"
+description: Helper functions for nf-cmgg/preprocessing (readgroups, sampleinfo, publish paths)
+keywords:
+  - utility
+  - readgroup
+  - sampleinfo
+  - preprocessing
+components: []
+input: []
+output:
+  - dummy_emit:
+      type: boolean
+      description: Dummy emit
+authors:
+  - "@matthdsm"
+maintainers:
+  - "@matthdsm"
+  - "@nvnieuwk"

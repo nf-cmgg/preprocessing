@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "PIPELINE_INITIALISATION"
+description: Initialise and complete nf-cmgg/preprocessing runs
+keywords:
+  - utility
+  - pipeline
+  - initialise
+  - samplesheet
+components:
+  - utils_nfschema_plugin
+  - utils_nfcore_pipeline
+  - utils_nextflow_pipeline
+  - completionemail
+  - completionsummary
+input:
+  - version:
+      type: boolean
+      description: Print the pipeline version and exit
+  - validate_params:
+      type: boolean
+      description: Validate pipeline parameters against the schema
+  - monochrome_logs:
+      type: boolean
+      description: Disable coloured log output
+  - nextflow_cli_args:
+      type: list
+      description: Nextflow CLI positional arguments
+  - outdir:
+      type: directory
+      description: Pipeline results directory
+  - input:
+      type: file
+      description: Samplesheet path
+  - help:
+      type: boolean
+      description: Show the help message and exit
+  - help_full:
+      type: boolean
+      description: Show the full help message and exit
+  - show_hidden:
+      type: boolean
+      description: Show hidden parameters in the help message
+output:
+  - samplesheet:
+      type: map
+      description: Channel of samplesheet rows
+  - versions:
+      type: file
+      description: Software versions collected during initialisation
+authors:
+  - "@matthdsm"
+maintainers:
+  - "@matthdsm"
+  - "@nvnieuwk"

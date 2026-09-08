@@ -4,8 +4,13 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Mock subworkflow to please linting
 workflow UTILS_NFCMGG_PREPROCESSING_PIPELINE {
+
+    main:
+    dummy_emit = true
+
+    emit:
+    dummy_emit
 }
 
 /*
