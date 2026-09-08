@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Workflow FASTQ_UMICONSENSUS_FGUMI"
     script "subworkflows/local/fastq_umiconsensus_fgumi/main.nf"
     workflow "FASTQ_UMICONSENSUS_FGUMI"
+    config "./nextflow.config"
 
     tag "subworkflows"
     tag "subworkflows/local"

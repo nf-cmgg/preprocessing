@@ -22,8 +22,8 @@
                                 }
                             }
                         },
-                        "test.fgumi.bam:md5,d8847959ea89503e93669d3d5526813c",
-                        "test.fgumi.bam.bai:md5,6b054c31ca1e0c5cdf99d6fdc6229654"
+                        "test.fgumi.bam:md5,c4a33382a1fb8a6361d23928359d672f",
+                        "test.fgumi.bam.bai:md5,0d76977b2e36046cc176112776c5fa4e"
                     ]
                 ],
                 "consensus_metrics": [
@@ -46,7 +46,7 @@
                                 }
                             }
                         },
-                        "test.fgumi.simplex.stats.txt:md5,c259ad6db7c02de9e0f1b9f95a3d6ab0"
+                        "test.fgumi.simplex.stats.txt:md5,8729c0587ff37d0e71b466c694bc62e4"
                     ]
                 ],
                 "family_size_histogram": [
@@ -69,7 +69,7 @@
                                 }
                             }
                         },
-                        "test.fgumi.group.family_size_histogram.txt:md5,57742826c7e781f773840f1c977f5f0b"
+                        "test.fgumi.group.family_size_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "filtering_metrics": [
@@ -92,7 +92,7 @@
                                 }
                             }
                         },
-                        "test.fgumi.filter.stats.txt:md5,01b1b32c9151552a623eef933b8d1f96"
+                        "test.fgumi.filter.stats.txt:md5,88b8f839f5e05e7944504f526949763c"
                     ]
                 ],
                 "grouping_metrics": [
@@ -115,12 +115,12 @@
                                 }
                             }
                         },
-                        "test.fgumi.group.grouping_metrics.txt:md5,deb6be58b11022b67145fe4e2c7ca299"
+                        "test.fgumi.group.grouping_metrics.txt:md5,b177c7de45cf25495c61f7bced9d8416"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-06T13:29:57.554096841",
+        "timestamp": "2026-07-15T15:59:40.968881197",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

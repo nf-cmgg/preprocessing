@@ -32,16 +32,20 @@ process FGUMI_SNAPZIPSORT {
     [ -z "\$INDEX_FILE" ] && echo "Snap index files not found" 1>&2 && exit 1
     INDEX=\$(dirname "\$INDEX_FILE")
 
-    fgumi fastq \\
-        --input ${unmapped_bam} \\
-        ${args} \\
-    | snap-aligner paired \\
+    snap-aligner paired \\
         \$INDEX \\
-        -pairedInterleavedFastq - \\
+        ${unmapped_bam} \\
         -t ${task.cpus} \\
         -o -bam - \\
-        ${args2} \\
-    | fgumi zipper \\
+        ${args} \\
+    | fgumi sort \\
+        --input - \\
+        --output ${prefix}.intermediate.bam \\
+        --threads ${task.cpus} \\
+        ${args2}
+
+    fgumi zipper \\
+        --input ${prefix}.intermediate.bam \\
         --unmapped ${unmapped_bam} \\
         --reference ${fasta} \\
         --threads ${task.cpus} \\

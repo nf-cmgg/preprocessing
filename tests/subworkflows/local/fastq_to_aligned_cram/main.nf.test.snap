@@ -3,7 +3,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -26,16 +26,16 @@
                     ]
                 ],
                 "family_size_histogram": [
-
+                    
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ]
             }
         ],
@@ -49,7 +49,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -72,13 +72,13 @@
                     ]
                 ],
                 "family_size_histogram": [
-
+                    
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
                     [
@@ -111,7 +111,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -134,13 +134,13 @@
                     ]
                 ],
                 "family_size_histogram": [
-
+                    
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
                     [
@@ -173,7 +173,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -197,7 +197,7 @@
                     ]
                 ],
                 "family_size_histogram": [
-
+                    
                 ],
                 "rna_junctions": [
                     [
@@ -271,7 +271,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -294,16 +294,16 @@
                     ]
                 ],
                 "family_size_histogram": [
-
+                    
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ]
             }
         ],
@@ -317,7 +317,7 @@
         "content": [
             {
                 "align_reports": [
-
+                    
                 ],
                 "cram_crai": [
                     [
@@ -365,21 +365,21 @@
                                 }
                             }
                         },
-                        "test.fgumi.group.family_size_histogram.txt:md5,57742826c7e781f773840f1c977f5f0b"
+                        "test.fgumi.group.family_size_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "rna_junctions": [
-
+                    
                 ],
                 "rna_splice_junctions": [
-
+                    
                 ],
                 "sormadup_metrics": [
-
+                    
                 ]
             }
         ],
-        "timestamp": "2026-07-06T13:26:52.23745498",
+        "timestamp": "2026-07-15T16:14:27.2930013",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

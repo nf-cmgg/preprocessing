@@ -2,6 +2,7 @@
 
 // MODULES
 include { FGUMI_EXTRACT                              } from "../../../modules/nf-core/fgumi/extract/main.nf"
+include { FGUMI_SORT                                 } from "../../../modules/nf-core/fgumi/sort/main.nf"
 include { FGUMI_FILTER                               } from "../../../modules/nf-core/fgumi/filter/main.nf"
 include { FGUMI_GROUP                                } from "../../../modules/nf-core/fgumi/group/main.nf"
 include { FGUMI_MERGE                                } from "../../../modules/nf-core/fgumi/merge/main.nf"
@@ -25,9 +26,13 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
             .map { meta, fastqs -> [meta, fastqs, (meta.readgroup?.LB ?: meta.library ?: meta.id)] }
     )
 
+    FGUMI_SORT(
+        FGUMI_EXTRACT.out.bam
+    )
+
     // Step 3: align with SNAP, zipper tags back, then template-coordinate sort.
     RAW_FGUMI_SNAPZIPSORT(
-        FGUMI_EXTRACT.out.bam
+        FGUMI_SORT.out.bam
             .join(ch_meta_fastqs)
             .map { meta, ubams, _fastqs ->
                 [
@@ -84,7 +89,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
 
     // Step 7: filter consensus reads, then coordinate-sort/index for downstream CRAM conversion.
     FGUMI_FILTER(
-        FGUMI_SIMPLEX.out.bam.join(ch_meta_fastqs).map { meta, simplex_bams, _fastqs ->
+        FGUMI_SIMPLEX.out.bam.map { meta, simplex_bams ->
             [meta, simplex_bams, getGenomeAttribute(meta.genome_data, 'fasta')]
         },
         '1,1,1',
@@ -93,8 +98,7 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
 
     UMI_FGUMI_SNAPZIPSORT(
         FGUMI_FILTER.out.bam
-            .join(ch_meta_fastqs)
-            .map { meta, filtered_bams, _fastqs ->
+            .map { meta, filtered_bams ->
                 [
                     meta,
                     filtered_bams,

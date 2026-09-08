@@ -3,6 +3,7 @@ nextflow_process {
     name "Test Process FGUMI_SNAPZIPSORT"
     script "modules/local/fgumi/snapzipsort/main.nf"
     process "FGUMI_SNAPZIPSORT"
+    config "./nextflow.config"
 
     tag "modules"
     tag "modules/local"
