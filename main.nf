@@ -46,10 +46,10 @@ params {
     genelists: Path?
 
     // Git commit id for Institutional configs.
-    custom_config_version: String = 'main'
+    custom_config_version: String = 'master'
 
-    // Base directory for custom configs.
-    custom_config_base: String = 'https://raw.githubusercontent.com/nf-cmgg/configs/main'
+    // Base directory for Institutional configs.
+    custom_config_base: String = 'https://raw.githubusercontent.com/nf-core/configs/master'
 
     // Institutional config name.
     config_profile_name: String?
@@ -109,7 +109,7 @@ params {
     show_hidden: Boolean = false
 
     // Directory / URL base for iGenomes references.
-    igenomes_base: String = '/references/'
+    igenomes_base: String = '/references'
 }
 
 workflow {
