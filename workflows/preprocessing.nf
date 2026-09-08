@@ -230,7 +230,7 @@ workflow PREPROCESSING {
     // edit meta.id to match sample name
     FASTP.out.reads
         .map { meta, reads ->
-            def read_files = meta.single_end.toBoolean() ? reads : reads.sort { a, b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+            def read_files = meta.single_end.toBoolean() ? reads : reads.sort { fq -> fq.name }.collate(2)
             return [
                 meta + [chunks: read_files instanceof List ? read_files.size() : [read_files].size()],
                 read_files,
