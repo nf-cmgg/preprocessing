@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.1.0 (dev)
 
+- Drop unused `fgumi_group_edits` meta; fgumi group always uses `--edits 1`.
 - Pair split FASTP R1/R2 chunks by filename so mates stay together.
 - Align paired FASTQs with BWA as separate mates instead of interleaved input.
 - Fail DNA alignment when the requested aligner is not supported instead of dropping the sample.
