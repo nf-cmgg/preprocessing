@@ -15,7 +15,7 @@ Changes in 'fastq_align_dna/main.nf':
      sort // boolean: [mandatory] true -> sort, false -> don't sort
  
      main:
-@@ -28,45 +25,52 @@
+@@ -28,45 +25,54 @@
      ch_bam = channel.empty()
      ch_reports = channel.empty()
  
@@ -38,9 +38,11 @@ Changes in 'fastq_align_dna/main.nf':
 +        .set { ch_to_align }
 +
 +    // Throw error for all samples with unsupported aligners
-+    ch_to_align.other.map { meta, _reads, aligner, _index, _fasta ->
-+        error("Unsupported aligner ${aligner} for sample ${meta.id}")
-+    }
++    ch_bam = ch_bam.mix(
++        ch_to_align.other.map { meta, _reads, aligner, _index, _fasta, _fai ->
++            error("Unsupported aligner ${aligner} for sample ${meta.id}")
++        }
++    )
 +
      // Align fastq files to reference genome and (optionally) sort
 -    if (aligner == 'bowtie2') {
