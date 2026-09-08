@@ -93,6 +93,9 @@ def getReadgroupsFromBclconvert(ch_fastq_list_csv, ch_fastq) {
 
                     // dereference the fastq files in the csv
                     def fastq1 = fastq_list.find { fq -> file(fq).name == file(row.Read1File).name }
+                    if (!fastq1) {
+                        error("BCL Convert fastq_list.csv Read1File '${row.Read1File}' for sample '${row.RGSM}' was not in the demultiplexed FASTQs")
+                    }
                     def fastq2 = row.Read2File ? fastq_list.find { fq -> file(fq).name == file(row.Read2File).name } : null
 
                     // set fastq metadata
