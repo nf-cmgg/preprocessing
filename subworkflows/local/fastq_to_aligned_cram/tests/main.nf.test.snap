@@ -67,8 +67,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.cram:md5,7de3fcba93c6288b62c0ca287295afc8",
-                        "test.cram.crai:md5,6e95be28eb57b931cdfec33b9425d861"
+                        "test.cram:md5Reads,33644f762d4a6fc380373efbf39e0a3b",
+                        "test.cram.crai:md5,302f195325757e26d0ec58438d486ee1"
                     ]
                 ],
                 "family_size_histogram": [
@@ -96,12 +96,12 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.metrics.txt:md5,4ee20f12cb4d6077479a08310c8f6c70"
+                        "test.merged.metrics.txt:md5,389dc2da2dd448c54dadd8c3fa110dc5"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:13:30.355656",
+        "timestamp": "2026-09-09T09:58:54.760238",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -129,8 +129,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.cram",
-                        "test.merged.cram.crai"
+                        "test.merged.cram:md5Reads,be3af975f135567af9acc432a9e17382",
+                        "test.merged.cram.crai:md5,8dfa208b44393393ce74a0689efed0e3"
                     ]
                 ],
                 "family_size_histogram": [
@@ -158,12 +158,12 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.metrics:md5,795c73aa836eb480e418f52db98e37cc"
+                        "test.merged.metrics:md5,c4de8e394bb7110b952b2f42af335484"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:19:01.141343",
+        "timestamp": "2026-09-09T10:01:50.352925",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -192,8 +192,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.cram:md5,91a099657b7daf1b17e3f609b631635f",
-                        "test.cram.crai:md5,b44156926d4bc9c750b3f32967fce63b"
+                        "test.cram:md5Reads,da6655e507deb514cd7d2518592529a5",
+                        "test.cram.crai:md5,34786bcb308f1b92e2c9fe4ee0449e07"
                     ]
                 ],
                 "family_size_histogram": [
@@ -261,7 +261,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:17:42.382693",
+        "timestamp": "2026-09-09T10:00:51.776498",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -340,8 +340,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.cram",
-                        "test.cram.crai"
+                        "test.cram:md5Reads,d769350c92859f1366810cfc89e6d909",
+                        "test.cram.crai:md5,3b8f334778aa5a7665235a2a1de9ce73"
                     ]
                 ],
                 "family_size_histogram": [
@@ -379,7 +379,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:25:49.319141",
+        "timestamp": "2026-09-09T14:01:25.839925",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
