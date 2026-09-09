@@ -340,8 +340,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.cram:md5Reads,d769350c92859f1366810cfc89e6d909",
-                        "test.cram.crai:md5,3b8f334778aa5a7665235a2a1de9ce73"
+                        "test.cram",
+                        "test.cram.crai"
                     ]
                 ],
                 "family_size_histogram": [
@@ -379,7 +379,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T14:01:25.839925",
+        "timestamp": "2026-09-09T15:19:04.111649",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
