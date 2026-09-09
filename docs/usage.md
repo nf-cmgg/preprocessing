@@ -66,6 +66,8 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `fastq_1`                            | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                     | :heavy_check_mark:                              |
 | `fastq_2`                            | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                                       | :x:                                             |
 
+When `call_consensus` is enabled, the fgumi SNAP/zipper stages require consistent queryname ordering between mapped and unmapped BAMs. This pipeline uses natural queryname ordering in those stages to avoid mapped/unmapped template order mismatches during consensus alignment.
+
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
 ### Flowcell samplesheet
