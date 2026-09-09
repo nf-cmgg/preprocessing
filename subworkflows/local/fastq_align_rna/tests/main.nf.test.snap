@@ -14,7 +14,7 @@
                             "samplename": "test",
                             "single_end": false
                         },
-                        "test.star.Aligned.out.bam:md5,13af9aefc99af1a0825b6a4508c818e3"
+                        "test.star.Aligned.out.bam"
                     ]
                 ],
                 "junctions": [
@@ -96,7 +96,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:11:08.386137",
+        "timestamp": "2026-09-08T17:13:53.56364",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

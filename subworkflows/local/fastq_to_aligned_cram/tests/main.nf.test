@@ -44,7 +44,11 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        sanitizeOutput(workflow.out, readsMD5Keys:["cram_crai"])
+                        sanitizeOutput(
+                            workflow.out,
+                            referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            readsMD5Keys:["cram_crai"]
+                        )
                     ).match()
                 }
             )
@@ -88,7 +92,12 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        sanitizeOutput(workflow.out, readsMD5Keys:["cram_crai"], unstableKeys:["rna_junctions"])
+                        sanitizeOutput(
+                            workflow.out,
+                            readsMD5Keys:["cram_crai"],
+                            referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
+                            unstableKeys:["rna_junctions"]
+                        )
                     ).match()
                 }
             )
@@ -131,7 +140,11 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        sanitizeOutput(workflow.out, unstableKeys:["cram_crai"])
+                        sanitizeOutput(
+                            workflow.out,
+                            readsMD5Keys:["cram_crai"],
+                            referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                        )
                     ).match()
                 }
             )
@@ -174,7 +187,11 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        sanitizeOutput(workflow.out, unstableKeys:["cram_crai"])
+                        sanitizeOutput(
+                            workflow.out,
+                            readsMD5Keys:["cram_crai"],
+                            referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                        )
                     ).match()
                 }
             )
@@ -222,7 +239,11 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        sanitizeOutput(workflow.out, unstableKeys:["cram_crai"])
+                        sanitizeOutput(
+                            workflow.out,
+                            readsMD5Keys:["cram_crai"],
+                            referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                        )
                     ).match()
                 }
             )
@@ -266,7 +287,7 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        sanitizeOutput(workflow.out, unstableKeys:["cram_crai"])
+                        sanitizeOutput(workflow.out)
                     ).match()
                 }
             )
