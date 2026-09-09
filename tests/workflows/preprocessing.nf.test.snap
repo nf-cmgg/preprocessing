@@ -30,8 +30,8 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.cram:md5Reads,ba0d476c1b9a97521970154662205b7c",
-                        "sample1.cram.crai:md5,278e7d9e9725780a0a10b84c38abcd55"
+                        "sample1.cram",
+                        "sample1.cram.crai"
                     ]
                 ],
                 "demultiplex_interop": [
@@ -143,7 +143,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.md5:md5,2d8d69c0c0c68b2afc2a36b294aedb16"
+                        "sample1.md5"
                     ]
                 ],
                 "mosdepth_global": [
@@ -597,7 +597,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.isize-histogram.txt:md5,f3412469c721b5e011f1549746f77532"
+                        "sample1.isize-histogram.txt"
                     ]
                 ],
                 "riker_isize_metrics": [
@@ -935,7 +935,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T09:29:13.029189",
+        "timestamp": "2026-09-09T14:57:37.455831",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -997,8 +997,8 @@
                                 ]
                             }
                         },
-                        "Sample1.cram:md5Reads,1977f8ebd012ea9fe952ff9f94cc29e6",
-                        "Sample1.cram.crai:md5,12702659480c11386df4190d3e915cd7"
+                        "Sample1.cram",
+                        "Sample1.cram.crai"
                     ]
                 ],
                 "demultiplex_interop": [
@@ -1115,7 +1115,7 @@
                                 
                             ]
                         },
-                        "Sample2_S2_L001_report.html:md5,77749dc32a18e7225afee81ac1bf00b2"
+                        "Sample2_S2_L001_report.html:md5,98a41c9e073a681a3a4dc7e14c4a58f2"
                     ]
                 ],
                 "falco_txt": [
@@ -1397,7 +1397,7 @@
                                 ]
                             }
                         },
-                        "Sample1.md5:md5,d36a2db932ec422a28afd77e8a98ec5f"
+                        "Sample1.md5"
                     ],
                     [
                         {
@@ -1449,7 +1449,7 @@
                                 
                             ]
                         },
-                        "Sample2_S2_L001.md5:md5,b8055417fab09fc438dcd72369fc2bb7"
+                        "Sample2_S2_L001.md5"
                     ]
                 ],
                 "mosdepth_global": [
@@ -2139,7 +2139,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T09:33:41.995704",
+        "timestamp": "2026-09-09T15:00:36.75375",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -2177,8 +2177,8 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.cram:md5Reads,ba0d476c1b9a97521970154662205b7c",
-                        "sample1.cram.crai:md5,d3d1a673c849a94d03cdff6cc2990fcd"
+                        "sample1.cram",
+                        "sample1.cram.crai"
                     ]
                 ],
                 "demultiplex_interop": [
@@ -2293,7 +2293,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.md5:md5,c1e7b5acdda9dfbf0d5e738314377c25"
+                        "sample1.md5"
                     ]
                 ],
                 "mosdepth_global": [
@@ -2805,7 +2805,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T09:31:02.424977",
+        "timestamp": "2026-09-09T14:59:18.27375",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -2843,8 +2843,8 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.cram:md5Reads,ba0d476c1b9a97521970154662205b7c",
-                        "sample1.cram.crai:md5,f47639fbb7bf840742c3f26718c6dd9c"
+                        "sample1.cram",
+                        "sample1.cram.crai"
                     ]
                 ],
                 "demultiplex_interop": [
@@ -2959,7 +2959,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.md5:md5,b0960a96a23e07c234a96cc34dbff459"
+                        "sample1.md5"
                     ]
                 ],
                 "mosdepth_global": [
@@ -3492,7 +3492,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.hybcap-metrics.txt:md5,06fc80a1a8a6c06decaba1153f815af7"
+                        "sample1.hybcap-metrics.txt"
                     ]
                 ],
                 "riker_hybcap_per_base": [
@@ -3527,7 +3527,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.isize-histogram.txt:md5,f3412469c721b5e011f1549746f77532"
+                        "sample1.isize-histogram.txt"
                     ]
                 ],
                 "riker_isize_metrics": [
@@ -3823,7 +3823,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T09:27:21.310034",
+        "timestamp": "2026-09-09T14:55:56.636493",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

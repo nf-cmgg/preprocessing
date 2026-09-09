@@ -22,8 +22,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.fgumi.bam:md5Reads,d769350c92859f1366810cfc89e6d909",
-                        "test.fgumi.bam.bai:md5,6b054c31ca1e0c5cdf99d6fdc6229654"
+                        "test.fgumi.bam",
+                        "test.fgumi.bam.bai"
                     ]
                 ],
                 "consensus_metrics": [
@@ -120,7 +120,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T08:50:03.754769",
+        "timestamp": "2026-09-09T14:08:25.229882",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

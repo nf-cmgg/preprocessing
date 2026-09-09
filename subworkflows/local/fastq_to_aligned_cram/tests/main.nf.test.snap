@@ -67,8 +67,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.cram:md5Reads,33644f762d4a6fc380373efbf39e0a3b",
-                        "test.cram.crai:md5,302f195325757e26d0ec58438d486ee1"
+                        "test.cram",
+                        "test.cram.crai"
                     ]
                 ],
                 "family_size_histogram": [
@@ -101,7 +101,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T09:58:54.760238",
+        "timestamp": "2026-09-09T14:17:49.889335",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -129,8 +129,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.cram:md5Reads,be3af975f135567af9acc432a9e17382",
-                        "test.merged.cram.crai:md5,8dfa208b44393393ce74a0689efed0e3"
+                        "test.merged.cram",
+                        "test.merged.cram.crai"
                     ]
                 ],
                 "family_size_histogram": [
@@ -163,7 +163,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T10:01:50.352925",
+        "timestamp": "2026-09-09T14:10:49.27252",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -192,8 +192,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.cram:md5Reads,da6655e507deb514cd7d2518592529a5",
-                        "test.cram.crai:md5,34786bcb308f1b92e2c9fe4ee0449e07"
+                        "test.cram",
+                        "test.cram.crai"
                     ]
                 ],
                 "family_size_histogram": [
@@ -261,7 +261,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T10:00:51.776498",
+        "timestamp": "2026-09-09T14:19:41.853779",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
