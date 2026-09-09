@@ -30,8 +30,8 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.cram:md5Reads,a06920d0956e5f474134c3608e5abd0a",
-                        "sample1.cram.crai:md5,421a03ab23e29cd81c13df4a16d01c59"
+                        "sample1.cram:md5Reads,ba0d476c1b9a97521970154662205b7c",
+                        "sample1.cram.crai:md5,278e7d9e9725780a0a10b84c38abcd55"
                     ]
                 ],
                 "demultiplex_interop": [
@@ -143,7 +143,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.md5:md5,f9bdb9bdb9dff71f3aea69ea503befcb"
+                        "sample1.md5:md5,2d8d69c0c0c68b2afc2a36b294aedb16"
                     ]
                 ],
                 "mosdepth_global": [
@@ -171,7 +171,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.mosdepth.global.dist.txt:md5,4574a0f755903d7ab7aa07297cc1efee"
+                        "sample1.mosdepth.global.dist.txt:md5,c040c96ab1744361a7d18129aa24ec17"
                     ]
                 ],
                 "mosdepth_per_base_bed": [
@@ -199,7 +199,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.per-base.bed.gz:md5,571e385c956ac453b94e0aa4bbf348ce"
+                        "sample1.per-base.bed.gz:md5,a717c3ae016a09682a3cb42953626abd"
                     ]
                 ],
                 "mosdepth_per_base_csi": [
@@ -258,7 +258,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.quantized.bed.gz:md5,d54d469a692c3fe4a4e1db02c08be518"
+                        "sample1.quantized.bed.gz:md5,e877ffaa3fb270adef307fb492477749"
                     ]
                 ],
                 "mosdepth_quantized_csi": [
@@ -323,7 +323,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.mosdepth.summary.txt:md5,a3fa3d5529e58933ed7ab4dbec128d9a"
+                        "sample1.mosdepth.summary.txt:md5,e7b820f11ab98ae3e3c44c7422d0f7f6"
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
@@ -372,6 +372,7 @@
                             "multiqc_riker_basic_quality_score_distribution.txt",
                             "multiqc_riker_gcbias_detail.txt",
                             "multiqc_riker_gcbias_summary.txt",
+                            "multiqc_riker_isize.txt",
                             "multiqc_riker_wgs.txt",
                             "multiqc_samtools_coverage.txt",
                             "multiqc_samtools_flagstat.txt",
@@ -387,6 +388,8 @@
                             "riker_base_distribution_by_cycle__N.txt",
                             "riker_base_distribution_by_cycle__T.txt",
                             "riker_gcbias_normalized_coverage.txt",
+                            "riker_insert_size_FR.txt",
+                            "riker_insert_size_RF.txt",
                             "riker_mean_quality_by_cycle.txt",
                             "riker_quality_score_distribution.txt",
                             "riker_wgs_coverage_histogram.txt",
@@ -405,7 +408,8 @@
                             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt",
                             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt",
                             "samtools-stats-dp.txt",
-                            "samtools_alignment_plot.txt"
+                            "samtools_alignment_plot.txt",
+                            "samtools_insert_size.txt"
                         ]
                     ]
                 ],
@@ -463,7 +467,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.alignment-metrics.txt:md5,e9e856e9a1fa0783a26dab3695aa2685"
+                        "sample1.alignment-metrics.txt:md5,b7e1d8433e1e3ac164ae0df11d0e715c"
                     ]
                 ],
                 "riker_base_dist": [
@@ -491,7 +495,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.base-distribution-by-cycle.txt:md5,1a094db2f3de33d3a9952c11118343aa"
+                        "sample1.base-distribution-by-cycle.txt:md5,7da0182f73031d3a29becfba74cf5a8c"
                     ]
                 ],
                 "riker_error_indel": [
@@ -528,7 +532,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.gcbias-detail.txt:md5,5d5a6da4d2546471dc4a5b2f3863e80e"
+                        "sample1.gcbias-detail.txt:md5,6e32c262bf2c35aa0619b89df3b19c3f"
                     ]
                 ],
                 "riker_gcbias_summary": [
@@ -556,7 +560,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.gcbias-summary.txt:md5,1578b96277517a475881587fc71ed096"
+                        "sample1.gcbias-summary.txt:md5,ca3d89d83a8abd07720f84f68474b597"
                     ]
                 ],
                 "riker_hybcap_metrics": [
@@ -593,7 +597,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.isize-histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample1.isize-histogram.txt:md5,f3412469c721b5e011f1549746f77532"
                     ]
                 ],
                 "riker_isize_metrics": [
@@ -621,7 +625,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.isize-metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample1.isize-metrics.txt:md5,ba8b257116ab05b3c365eb25804641e2"
                     ]
                 ],
                 "riker_mean_qual": [
@@ -649,7 +653,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.mean-quality-by-cycle.txt:md5,022828223ec254dc82935ee886413fbe"
+                        "sample1.mean-quality-by-cycle.txt:md5,36a3fc4e275b74b2b9a0c0a09ab26f61"
                     ]
                 ],
                 "riker_pdf": [
@@ -680,8 +684,10 @@
                         [
                             "sample1.base-distribution-by-cycle.pdf",
                             "sample1.gcbias-chart.pdf",
+                            "sample1.isize-histogram.pdf",
                             "sample1.mean-quality-by-cycle.pdf",
-                            "sample1.quality-score-distribution.pdf"
+                            "sample1.quality-score-distribution.pdf",
+                            "sample1.wgs-coverage.pdf"
                         ]
                     ]
                 ],
@@ -710,7 +716,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.quality-score-distribution.txt:md5,89e46bfc59dbc7aed65d9c1e2350dd3a"
+                        "sample1.quality-score-distribution.txt:md5,25ca86376dee0f853c3effc180b4a8c9"
                     ]
                 ],
                 "riker_rna_biotype": [
@@ -750,7 +756,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.wgs-coverage.txt:md5,4387e3d5a1046eb409a8ebb451fabcc7"
+                        "sample1.wgs-coverage.txt:md5,615e0408bc81b922a2f042a4b79531c8"
                     ]
                 ],
                 "riker_wgs_metrics": [
@@ -778,7 +784,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.wgs-metrics.txt:md5,47b644a3915b50b8b2d6bfdefef88082"
+                        "sample1.wgs-metrics.txt:md5,9e9225d00dc2a8ac2560bdbf11678a89"
                     ]
                 ],
                 "rna_junctions": [
@@ -812,7 +818,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.coverage.txt:md5,6447f66def88a2223e3f8fa6188c5b50"
+                        "sample1.coverage.txt:md5,f9c7a6396f17209b2038c2d6ca77c1e9"
                     ]
                 ],
                 "samtools_flagstat": [
@@ -840,7 +846,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.flagstat:md5,62fd4c6355ab213170ff4dc977563056"
+                        "sample1.flagstat:md5,e4e08d3241e03f6e7d7251efd4907e87"
                     ]
                 ],
                 "samtools_idxstats": [
@@ -868,7 +874,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.idxstats:md5,4e1b204d3bb59e42022c5d84be705ed8"
+                        "sample1.idxstats:md5,a861f699339736abb64e36c17a9542f6"
                     ]
                 ],
                 "samtools_stats": [
@@ -896,7 +902,7 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.stats:md5,ab94e8615bf40e18a975894dec496364"
+                        "sample1.stats:md5,2969ffda928b816d2fd4690521f9c148"
                     ]
                 ],
                 "sormadup_metrics": [
@@ -924,12 +930,12 @@
                                 "tag": "WGS"
                             }
                         },
-                        "sample1.merged.metrics.txt:md5,d90772d0baf449a70b11192d1c36834b"
+                        "sample1.merged.metrics.txt:md5,4d15baa69fa5af4d51cc9e2e4e3ecd35"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-08T14:34:13.479323",
+        "timestamp": "2026-09-09T09:29:13.029189",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -977,6 +983,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -988,8 +997,8 @@
                                 ]
                             }
                         },
-                        "Sample1.cram:md5Reads,93ea6dbc2939ad7dd594daec7ef3b6bc",
-                        "Sample1.cram.crai:md5,68efa40fb47132e5eebbb1530465cc56"
+                        "Sample1.cram:md5Reads,1977f8ebd012ea9fe952ff9f94cc29e6",
+                        "Sample1.cram.crai:md5,12702659480c11386df4190d3e915cd7"
                     ]
                 ],
                 "demultiplex_interop": [
@@ -1093,6 +1102,9 @@
                             "roi": null,
                             "sample_type": "DNA",
                             "samplename": "Sample2",
+                            "sequencing_center": [
+                                
+                            ],
                             "single_end": true,
                             "skip_trimming": false,
                             "tag": "WES",
@@ -1103,7 +1115,7 @@
                                 
                             ]
                         },
-                        "Sample2_S2_L001_report.html:md5,9ad16c8133a7ed91d607e0e82ef7ee6a"
+                        "Sample2_S2_L001_report.html:md5,77749dc32a18e7225afee81ac1bf00b2"
                     ]
                 ],
                 "falco_txt": [
@@ -1144,6 +1156,9 @@
                             "roi": null,
                             "sample_type": "DNA",
                             "samplename": "Sample2",
+                            "sequencing_center": [
+                                
+                            ],
                             "single_end": true,
                             "skip_trimming": false,
                             "tag": "WES",
@@ -1202,6 +1217,9 @@
                             "roi": null,
                             "sample_type": "DNA",
                             "samplename": "Sample1",
+                            "sequencing_center": [
+                                
+                            ],
                             "single_end": true,
                             "skip_trimming": false,
                             "tag": "WES",
@@ -1257,6 +1275,9 @@
                             "roi": null,
                             "sample_type": "DNA",
                             "samplename": "Sample1",
+                            "sequencing_center": [
+                                
+                            ],
                             "single_end": true,
                             "skip_trimming": false,
                             "tag": "WES",
@@ -1267,7 +1288,7 @@
                                 
                             ]
                         },
-                        "Sample1_S1_L001.fastp.json:md5,2cd82a02fd8f4f4b68770835d5471085"
+                        "Sample1_S1_L001.fastp.json:md5,21dbdbc2232f6e231f72d84d4a48f0b3"
                     ]
                 ],
                 "fastq": [
@@ -1308,6 +1329,9 @@
                             "roi": null,
                             "sample_type": "DNA",
                             "samplename": "Sample2",
+                            "sequencing_center": [
+                                
+                            ],
                             "single_end": true,
                             "skip_trimming": false,
                             "tag": "WES",
@@ -1359,6 +1383,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -1370,7 +1397,7 @@
                                 ]
                             }
                         },
-                        "Sample1.md5:md5,b5fc38794d163d3ad1bcd474d0405d3b"
+                        "Sample1.md5:md5,d36a2db932ec422a28afd77e8a98ec5f"
                     ],
                     [
                         {
@@ -1409,6 +1436,9 @@
                             "roi": null,
                             "sample_type": "DNA",
                             "samplename": "Sample2",
+                            "sequencing_center": [
+                                
+                            ],
                             "single_end": true,
                             "skip_trimming": false,
                             "tag": "WES",
@@ -1458,6 +1488,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -1508,6 +1541,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -1558,6 +1594,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -1611,6 +1650,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -1661,6 +1703,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -1720,6 +1765,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -1963,6 +2011,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -2013,6 +2064,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -2066,6 +2120,9 @@
                                 "roi": null,
                                 "sample_type": "DNA",
                                 "samplename": "Sample1",
+                                "sequencing_center": [
+                                    
+                                ],
                                 "single_end": true,
                                 "skip_trimming": false,
                                 "tag": "WES",
@@ -2082,7 +2139,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T14:38:19.722381",
+        "timestamp": "2026-09-09T09:33:41.995704",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -2120,8 +2177,8 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.cram:md5Reads,a06920d0956e5f474134c3608e5abd0a",
-                        "sample1.cram.crai:md5,f4c5496e435ba84f8095b27c846b50f4"
+                        "sample1.cram:md5Reads,ba0d476c1b9a97521970154662205b7c",
+                        "sample1.cram.crai:md5,d3d1a673c849a94d03cdff6cc2990fcd"
                     ]
                 ],
                 "demultiplex_interop": [
@@ -2236,7 +2293,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.md5:md5,09e10f4d32cada03b920a0bff97e66e7"
+                        "sample1.md5:md5,c1e7b5acdda9dfbf0d5e738314377c25"
                     ]
                 ],
                 "mosdepth_global": [
@@ -2265,7 +2322,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.mosdepth.global.dist.txt:md5,4574a0f755903d7ab7aa07297cc1efee"
+                        "sample1.mosdepth.global.dist.txt:md5,c040c96ab1744361a7d18129aa24ec17"
                     ]
                 ],
                 "mosdepth_per_base_bed": [
@@ -2294,7 +2351,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.per-base.bed.gz:md5,571e385c956ac453b94e0aa4bbf348ce"
+                        "sample1.per-base.bed.gz:md5,a717c3ae016a09682a3cb42953626abd"
                     ]
                 ],
                 "mosdepth_per_base_csi": [
@@ -2355,7 +2412,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.quantized.bed.gz:md5,d54d469a692c3fe4a4e1db02c08be518"
+                        "sample1.quantized.bed.gz:md5,e877ffaa3fb270adef307fb492477749"
                     ]
                 ],
                 "mosdepth_quantized_csi": [
@@ -2413,7 +2470,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.mosdepth.region.dist.txt:md5,388e05b0b4d7754be6fdc0b1b6eabed9"
+                        "sample1.mosdepth.region.dist.txt:md5,201f1b8c3d4e56d74203c199d76d2199"
                     ]
                 ],
                 "mosdepth_regions_bed": [
@@ -2442,7 +2499,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.regions.bed.gz:md5,9579cedc6806466cd3d888d01cebf43d"
+                        "sample1.regions.bed.gz:md5,e6071566ed7428c7efbb7bd36ad9799f"
                     ]
                 ],
                 "mosdepth_regions_csi": [
@@ -2500,7 +2557,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.mosdepth.summary.txt:md5,63f163747de796128123442f2a571ebb"
+                        "sample1.mosdepth.summary.txt:md5,e9e000f4c7bd96b768388fd8a4e4e8b4"
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
@@ -2682,7 +2739,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.flagstat:md5,62fd4c6355ab213170ff4dc977563056"
+                        "sample1.flagstat:md5,e4e08d3241e03f6e7d7251efd4907e87"
                     ]
                 ],
                 "samtools_idxstats": [
@@ -2711,7 +2768,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.idxstats:md5,4e1b204d3bb59e42022c5d84be705ed8"
+                        "sample1.idxstats:md5,a861f699339736abb64e36c17a9542f6"
                     ]
                 ],
                 "samtools_stats": [
@@ -2743,12 +2800,12 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.merged.metrics.txt:md5,d90772d0baf449a70b11192d1c36834b"
+                        "sample1.merged.metrics.txt:md5,4d15baa69fa5af4d51cc9e2e4e3ecd35"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-08T14:36:18.583542",
+        "timestamp": "2026-09-09T09:31:02.424977",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -2786,8 +2843,8 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.cram:md5Reads,a06920d0956e5f474134c3608e5abd0a",
-                        "sample1.cram.crai:md5,421a03ab23e29cd81c13df4a16d01c59"
+                        "sample1.cram:md5Reads,ba0d476c1b9a97521970154662205b7c",
+                        "sample1.cram.crai:md5,f47639fbb7bf840742c3f26718c6dd9c"
                     ]
                 ],
                 "demultiplex_interop": [
@@ -2902,7 +2959,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.md5:md5,5b41183b3aa9c9a3cb9d30f7c5fe5221"
+                        "sample1.md5:md5,b0960a96a23e07c234a96cc34dbff459"
                     ]
                 ],
                 "mosdepth_global": [
@@ -2931,7 +2988,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.mosdepth.global.dist.txt:md5,4574a0f755903d7ab7aa07297cc1efee"
+                        "sample1.mosdepth.global.dist.txt:md5,c040c96ab1744361a7d18129aa24ec17"
                     ]
                 ],
                 "mosdepth_per_base_bed": [
@@ -2960,7 +3017,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.per-base.bed.gz:md5,571e385c956ac453b94e0aa4bbf348ce"
+                        "sample1.per-base.bed.gz:md5,a717c3ae016a09682a3cb42953626abd"
                     ]
                 ],
                 "mosdepth_per_base_csi": [
@@ -3021,7 +3078,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.quantized.bed.gz:md5,d54d469a692c3fe4a4e1db02c08be518"
+                        "sample1.quantized.bed.gz:md5,e877ffaa3fb270adef307fb492477749"
                     ]
                 ],
                 "mosdepth_quantized_csi": [
@@ -3079,7 +3136,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.mosdepth.region.dist.txt:md5,388e05b0b4d7754be6fdc0b1b6eabed9"
+                        "sample1.mosdepth.region.dist.txt:md5,201f1b8c3d4e56d74203c199d76d2199"
                     ]
                 ],
                 "mosdepth_regions_bed": [
@@ -3108,7 +3165,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.regions.bed.gz:md5,9579cedc6806466cd3d888d01cebf43d"
+                        "sample1.regions.bed.gz:md5,e6071566ed7428c7efbb7bd36ad9799f"
                     ]
                 ],
                 "mosdepth_regions_csi": [
@@ -3166,7 +3223,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.mosdepth.summary.txt:md5,63f163747de796128123442f2a571ebb"
+                        "sample1.mosdepth.summary.txt:md5,e9e000f4c7bd96b768388fd8a4e4e8b4"
                     ]
                 ],
                 "mosdepth_thresholds_bed": [
@@ -3215,6 +3272,8 @@
                             "multiqc_riker_basic_quality_score_distribution.txt",
                             "multiqc_riker_gcbias_detail.txt",
                             "multiqc_riker_gcbias_summary.txt",
+                            "multiqc_riker_hybcap.txt",
+                            "multiqc_riker_isize.txt",
                             "multiqc_samtools_coverage.txt",
                             "multiqc_samtools_flagstat.txt",
                             "multiqc_samtools_idxstats.txt",
@@ -3229,6 +3288,10 @@
                             "riker_base_distribution_by_cycle__N.txt",
                             "riker_base_distribution_by_cycle__T.txt",
                             "riker_gcbias_normalized_coverage.txt",
+                            "riker_hybcap_table.txt",
+                            "riker_hybcap_target_coverage.txt",
+                            "riker_insert_size_FR.txt",
+                            "riker_insert_size_RF.txt",
                             "riker_mean_quality_by_cycle.txt",
                             "riker_quality_score_distribution.txt",
                             "samtools-coverage-table.txt",
@@ -3244,7 +3307,8 @@
                             "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt",
                             "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt",
                             "samtools-stats-dp.txt",
-                            "samtools_alignment_plot.txt"
+                            "samtools_alignment_plot.txt",
+                            "samtools_insert_size.txt"
                         ]
                     ]
                 ],
@@ -3303,7 +3367,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.alignment-metrics.txt:md5,e9e856e9a1fa0783a26dab3695aa2685"
+                        "sample1.alignment-metrics.txt:md5,b7e1d8433e1e3ac164ae0df11d0e715c"
                     ]
                 ],
                 "riker_base_dist": [
@@ -3332,7 +3396,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.base-distribution-by-cycle.txt:md5,1a094db2f3de33d3a9952c11118343aa"
+                        "sample1.base-distribution-by-cycle.txt:md5,7da0182f73031d3a29becfba74cf5a8c"
                     ]
                 ],
                 "riker_error_indel": [
@@ -3370,7 +3434,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.gcbias-detail.txt:md5,5d5a6da4d2546471dc4a5b2f3863e80e"
+                        "sample1.gcbias-detail.txt:md5,6e32c262bf2c35aa0619b89df3b19c3f"
                     ]
                 ],
                 "riker_gcbias_summary": [
@@ -3399,7 +3463,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.gcbias-summary.txt:md5,1578b96277517a475881587fc71ed096"
+                        "sample1.gcbias-summary.txt:md5,ca3d89d83a8abd07720f84f68474b597"
                     ]
                 ],
                 "riker_hybcap_metrics": [
@@ -3428,7 +3492,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.hybcap-metrics.txt:md5,08e18fa64e76d829f92f3a13e137f594"
+                        "sample1.hybcap-metrics.txt:md5,06fc80a1a8a6c06decaba1153f815af7"
                     ]
                 ],
                 "riker_hybcap_per_base": [
@@ -3463,7 +3527,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.isize-histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample1.isize-histogram.txt:md5,f3412469c721b5e011f1549746f77532"
                     ]
                 ],
                 "riker_isize_metrics": [
@@ -3492,7 +3556,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.isize-metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample1.isize-metrics.txt:md5,ba8b257116ab05b3c365eb25804641e2"
                     ]
                 ],
                 "riker_mean_qual": [
@@ -3521,7 +3585,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.mean-quality-by-cycle.txt:md5,022828223ec254dc82935ee886413fbe"
+                        "sample1.mean-quality-by-cycle.txt:md5,36a3fc4e275b74b2b9a0c0a09ab26f61"
                     ]
                 ],
                 "riker_pdf": [
@@ -3553,6 +3617,7 @@
                         [
                             "sample1.base-distribution-by-cycle.pdf",
                             "sample1.gcbias-chart.pdf",
+                            "sample1.isize-histogram.pdf",
                             "sample1.mean-quality-by-cycle.pdf",
                             "sample1.quality-score-distribution.pdf"
                         ]
@@ -3584,7 +3649,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.quality-score-distribution.txt:md5,89e46bfc59dbc7aed65d9c1e2350dd3a"
+                        "sample1.quality-score-distribution.txt:md5,25ca86376dee0f853c3effc180b4a8c9"
                     ]
                 ],
                 "riker_rna_biotype": [
@@ -3637,7 +3702,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.coverage.txt:md5,6447f66def88a2223e3f8fa6188c5b50"
+                        "sample1.coverage.txt:md5,f9c7a6396f17209b2038c2d6ca77c1e9"
                     ]
                 ],
                 "samtools_flagstat": [
@@ -3666,7 +3731,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.flagstat:md5,62fd4c6355ab213170ff4dc977563056"
+                        "sample1.flagstat:md5,e4e08d3241e03f6e7d7251efd4907e87"
                     ]
                 ],
                 "samtools_idxstats": [
@@ -3695,7 +3760,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.idxstats:md5,4e1b204d3bb59e42022c5d84be705ed8"
+                        "sample1.idxstats:md5,a861f699339736abb64e36c17a9542f6"
                     ]
                 ],
                 "samtools_stats": [
@@ -3724,7 +3789,7 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.stats:md5,ab94e8615bf40e18a975894dec496364"
+                        "sample1.stats:md5,2969ffda928b816d2fd4690521f9c148"
                     ]
                 ],
                 "sormadup_metrics": [
@@ -3753,12 +3818,12 @@
                                 "tag": "WES"
                             }
                         },
-                        "sample1.merged.metrics.txt:md5,d90772d0baf449a70b11192d1c36834b"
+                        "sample1.merged.metrics.txt:md5,4d15baa69fa5af4d51cc9e2e4e3ecd35"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-08T14:32:15.965538",
+        "timestamp": "2026-09-09T09:27:21.310034",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
