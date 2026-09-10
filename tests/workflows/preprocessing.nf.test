@@ -299,8 +299,6 @@ nextflow_workflow {
                     workflow.out,
                     unstableKeys:[
                         "crams",
-                        "demultiplex_logs",
-                        "demultiplex_reports",
                         "fastp_html",
                         "md5sums",
                         "mosdepth_per_base_csi",
@@ -315,10 +313,9 @@ nextflow_workflow {
                         "riker_hybcap_metrics",
                         "riker_isize_histogram",
                         "riker_pdf",
-                    ]
-                ).collectEntries { key, value ->
-                    [(key): key in ["demultiplex_logs", "demultiplex_reports"] ? value.sort() : value]
-                }
+                    ],
+                    ignoreKeys: ["demultiplex_logs", "demultiplex_reports"]
+                )
             ).match()
         }
     }

@@ -21,8 +21,8 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.cram",
-                        "test.merged.cram.crai"
+                        "test.merged.cram:md5,5c7750147e9d17817cb3d688834f6ed2",
+                        "test.merged.cram.crai:md5,107734ec9d6a5bf508c9bc8ee6705156"
                     ]
                 ],
                 "family_size_histogram": [
@@ -39,10 +39,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-03T10:49:36.809748622",
+        "timestamp": "2026-09-10T08:41:20.670587",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "fastq to cram - bwa - bamsormadup": {

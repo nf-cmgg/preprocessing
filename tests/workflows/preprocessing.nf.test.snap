@@ -1027,43 +1027,6 @@
                         ]
                     ]
                 ],
-                "demultiplex_logs": [
-                    [
-                        {
-                            "id": "200624_A00834_0183_BHMTFYDRXX",
-                            "lane": 1
-                        },
-                        [
-                            "Warnings.log",
-                            "Info.log",
-                            "Errors.log",
-                            "FastqComplete.txt"
-                        ]
-                    ]
-                ],
-                "demultiplex_reports": [
-                    [
-                        {
-                            "id": "200624_A00834_0183_BHMTFYDRXX",
-                            "lane": 1
-                        },
-                        [
-                            "Top_Unknown_Barcodes.csv",
-                            "fastq_list.csv",
-                            "RunInfo.xml",
-                            "Quality_Tile_Metrics.csv",
-                            "Quality_Metrics.csv",
-                            "Index_Hopping_Counts.csv",
-                            "Demultiplex_Stats.csv",
-                            "IndexMetricsOut.bin",
-                            "Adapter_Cycle_Metrics.csv",
-                            "Adapter_Metrics.csv",
-                            "Demultiplex_Tile_Stats.csv",
-                            "SampleSheet.csv",
-                            "Demultiplex_Detailed_Stats.csv"
-                        ]
-                    ]
-                ],
                 "falco_html": [
                     [
                         {
@@ -1115,7 +1078,7 @@
                                 
                             ]
                         },
-                        "Sample2_S2_L001_report.html:md5,98a41c9e073a681a3a4dc7e14c4a58f2"
+                        "Sample2_S2_L001_report.html:md5,dbd3c3fed7f689495cf82252e3faa279"
                     ]
                 ],
                 "falco_txt": [
@@ -2139,7 +2102,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T15:00:36.75375",
+        "timestamp": "2026-09-10T08:55:20.560157",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
