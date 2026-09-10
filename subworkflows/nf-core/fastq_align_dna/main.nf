@@ -44,9 +44,11 @@ workflow FASTQ_ALIGN_DNA {
         .set { ch_to_align }
 
     // Throw error for all samples with unsupported aligners
-    ch_to_align.other.map { meta, _reads, aligner, _index, _fasta ->
-        error("Unsupported aligner ${aligner} for sample ${meta.id}")
-    }
+    ch_bam = ch_bam.mix(
+        ch_to_align.other.map { meta, _reads, aligner, _index, _fasta, _fai ->
+            error("Unsupported aligner ${aligner} for sample ${meta.id}")
+        }
+    )
 
     // Align fastq files to reference genome and (optionally) sort
     BOWTIE2_ALIGN(ch_to_align.bowtie2, false, sort)

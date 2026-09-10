@@ -5,11 +5,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.1.0 (dev)
 
+- Publish flowcell InterOp binaries under `InterOp/`.
+- Add optional `sequencing_center` samplesheet field for BAM `@RG CN`.
+- Allow single-end FASTQ samplesheet rows (`fastq_2` optional).
+- Default typed institutional config params to nf-core/configs.
+- Error when a BCL Convert `fastq_list.csv` Read1File is missing from demultiplexed FASTQs.
+- Skip panel coverage when no gene lists remain after SeqCap filtering.
+- Drop unused `fgumi_group_edits` meta; fgumi group always uses `--edits 1`.
+- Pair split FASTP R1/R2 chunks by filename so mates stay together.
+- Align paired FASTQs with BWA as separate mates instead of interleaved input.
+- Fail DNA alignment when the requested aligner is not supported instead of dropping the sample.
+- Keep UMI consensus filter/SNAP steps on the merged sample meta so they still run after fastp splitting.
+- Omit empty FASTQ `CN`/`LB` read-group fields so they are not written as empty strings.
+- Add support for Equus caballus genome (EquCab2) when the organism is specified in the sample metadata.
 - Associate demultiplexed FASTQs with multiplexed `sampleinfo` rows using `readgroup.LB` when the same `samplename` appears in more than one library ([#169](https://github.com/nf-cmgg/preprocessing/issues/169)). Those libraries are published under `LIBRARY/SAMPLENAME`.
 - Drop `Picard` modules and associated parameters in favor of `riker multi`, which is much more efficient and now run by default.
 - Add `apple` profile to enable the use of Apple containers.
-- Drop `hook_url` parameter. To configure messaging services, use a custom config in tandem with the `nf-teams`/`nf-slack` plugin instead.
+- Drop `hook_url` parameter. Notifications are now handled by the `nf-teams` plugin, which is enabled in `nextflow.config` and configured through a custom config.
 - Drop `run_coverage` and add `qc_mode` parameter. Thorough coverage analysis is now included in the `qc_mode` parameter, which can be set to `basic` or `full`. Basic QC includes samtools flagstat, idxstats and mosdepth. Full QC includes samtools stats, samtools coverage, riker metrics and panel coverage in addition to basic QC.
+- Revert default custom config to `nf-core` source
+- Bump pipeline to nf-core template v4.1.0
+- Bump modules to latest versions
 
 ## 3.0.2
 

@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "FASTQ_ALIGN_RNA"
+description: Align RNA-seq FASTQ files with STAR and merge junction files
+keywords:
+  - rna
+  - star
+  - alignment
+  - junctions
+components:
+  - star/align
+  - gnu/sort
+input:
+  - ch_reads_aligner_index_gtf:
+      type: file
+      description: |
+        Reads, aligner name, STAR index, and GTF.
+
+        Structure: [ val(meta), path(reads), val(aligner), path(index), path(gtf) ]
+output:
+  - bam:
+      type: file
+      description: |
+        Aligned BAM.
+
+        Structure: [ val(meta), path(bam) ]
+  - splice_junctions:
+      type: file
+      description: Merged STAR splice junction table
+  - junctions:
+      type: file
+      description: Merged STAR junction file
+  - reports:
+      type: file
+      description: STAR log files
+authors:
+  - "@matthdsm"
+maintainers:
+  - "@matthdsm"
+  - "@nvnieuwk"

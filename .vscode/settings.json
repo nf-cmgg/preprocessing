@@ -1,4 +1,3 @@
 {
-    "markdown.styles": ["public/vscode_markdown.css"],
-    "nextflow.telemetry.enabled": false
+    "markdown.styles": ["public/vscode_markdown.css"]
 }

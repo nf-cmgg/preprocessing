@@ -9,7 +9,7 @@ Follow [nf-core pipeline AGENTS.md](https://github.com/nf-core/agents/blob/main/
 ## This repository
 
 - Use `pixi install` then `pixi shell` for development. `pixi.toml` provides nextflow, nf-core, nf-test, and prek.
-- Institutional configs come from [nf-cmgg/configs](https://github.com/nf-cmgg/configs) via `params.custom_config_base` in `nextflow.config`, not from nf-core/configs.
+- Institutional configs default to [nf-core/configs](https://github.com/nf-core/configs) via `params.custom_config_base`. If that URL contains `nf-cmgg`, `pipeline/preprocessing.config` is also loaded.
 - Main analysis lives in `workflows/preprocessing.nf`. Pipeline-only code belongs in `modules/local/` and `subworkflows/local/`.
 - Use `nf-core modules install` to add new modules. Remember to also amend citations across the repository.
 - Use `nf-metro` to render custom workflow diagram based on the mermaid source in `docs/images/metro_map_light.md` and `docs/images/metro_map_dark.md`.
