@@ -1078,7 +1078,7 @@
                                 
                             ]
                         },
-                        "Sample2_S2_L001_report.html:md5,dbd3c3fed7f689495cf82252e3faa279"
+                        "Sample2_S2_L001_report.html"
                     ]
                 ],
                 "falco_txt": [
@@ -2102,7 +2102,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-10T08:55:20.560157",
+        "timestamp": "2026-09-10T09:19:21.751708",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

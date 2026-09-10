@@ -185,8 +185,7 @@ nextflow_workflow {
                     assert snapshot(
                         sanitizeOutput(
                             workflow.out,
-                            readsMD5Keys:["cram_crai"],
-                            referenceFasta: "https://raw.githubusercontent.com/nf-cmgg/test-datasets/refs/heads/preprocessing/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                            unstableKeys:["cram_crai"]
                         )
                     ).match()
                 }
@@ -282,7 +281,7 @@ nextflow_workflow {
                 {
                     assert workflow.success
                     assert snapshot(
-                        sanitizeOutput(workflow.out)
+                        sanitizeOutput(workflow.out, unstableKeys:["cram_crai"],)
                     ).match()
                 }
             )

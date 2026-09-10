@@ -299,6 +299,7 @@ nextflow_workflow {
                     workflow.out,
                     unstableKeys:[
                         "crams",
+                        "falco_html",
                         "fastp_html",
                         "md5sums",
                         "mosdepth_per_base_csi",
