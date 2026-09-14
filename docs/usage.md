@@ -26,6 +26,10 @@ A `fastq` samplesheet file consisting of paired-end data may look something like
   aligner: bwamem
   markdup: bamsormadup
   umi_aware: false
+  call_consensus: true
+  fgumi_extract_mode: read_structures
+  fgumi_read_structure_r1: 3M3S+T
+  fgumi_read_structure_r2: +T
   skip_trimming: false
   trim_front: 0
   trim_tail: 0
@@ -53,6 +57,7 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `markdup`                            | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                                                                                                 | :x:                                             |
 | `umi_aware`                          | Whether UMI-aware processing should be used. Only applies when `markdup` is set to `samtools`                                                                                                                                      | :x:                                             |
 | `call_consensus`                     | Perform consensus calling using the `fgumi` toolsuite. This only works for DNA samples and will always run the SNAP aligner                                                                                                        | :x:                                             |
+| `fgumi_extract_mode`                 | UMI extraction mode for fgumi consensus. Use `read_structures` (default) for sequence-based extraction or `read_names` for FASTQ read-name extraction                                                                              | :x:                                             |
 | `fgumi_simplex_min_reads`            | Minimum number of reads required per UMI family for fgumi simplex consensus generation. Defaults to `1` and should be `1` or higher.                                                                                               | :x:                                             |
 | `fgumi_snap_ignore_mismatched_pairs` | Pass -I to SNAP to ignore mismatched read IDs in paired-end input when using the `fgumi` toolsuite (`call_consensus` set as `true`). Defaults to `true`                                                                            | :x:                                             |
 | `skip_trimming`                      | Skip adapter trimming step                                                                                                                                                                                                         | :x:                                             |
@@ -67,6 +72,8 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `fastq_2`                            | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                                       | :x:                                             |
 
 When `call_consensus` is enabled, the fgumi SNAP/zipper stages require consistent queryname ordering between mapped and unmapped BAMs. This pipeline uses natural queryname ordering in those stages to avoid mapped/unmapped template order mismatches during consensus alignment.
+
+When `call_consensus` is enabled, fgumi extraction defaults to `fgumi_extract_mode: read_structures` with `fgumi_read_structure_r1: 3M3S+T` and `fgumi_read_structure_r2: +T`. For legacy read-name UMI formats, set `fgumi_extract_mode: read_names`.
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
@@ -105,6 +112,10 @@ A `flowcell` sample info JSON/YML file consisting for one sequencing run may loo
   aligner: bwamem
   markdup: bamsormadup
   umi_aware: false
+  call_consensus: true
+  fgumi_extract_mode: read_structures
+  fgumi_read_structure_r1: 3M3S+T
+  fgumi_read_structure_r2: +T
   skip_trimming: false
   trim_front: 0
   trim_tail: 0

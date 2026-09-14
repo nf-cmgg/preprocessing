@@ -99,6 +99,25 @@
                 "description": "Enable UMI-aware consensus processing through the fgumi branch.",
                 "default": false
             },
+            "fgumi_extract_mode": {
+                "meta": ["fgumi_extract_mode"],
+                "type": "string",
+                "enum": ["read_structures", "read_names"],
+                "default": "read_structures",
+                "description": "UMI extraction mode for fgumi consensus. Use 'read_structures' for sequence-based extraction or 'read_names' to parse UMIs from FASTQ read names."
+            },
+            "fgumi_read_structure_r1": {
+                "meta": ["fgumi_read_structure_r1"],
+                "type": "string",
+                "default": "3M3S+T",
+                "description": "Read structure for FASTQ read 1 when fgumi_extract_mode is 'read_structures'."
+            },
+            "fgumi_read_structure_r2": {
+                "meta": ["fgumi_read_structure_r2"],
+                "type": "string",
+                "default": "+T",
+                "description": "Read structure for FASTQ read 2 when fgumi_extract_mode is 'read_structures'."
+            },
             "fgumi_simplex_min_reads": {
                 "meta": ["fgumi_simplex_min_reads"],
                 "type": "integer",

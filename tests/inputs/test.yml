@@ -58,6 +58,9 @@
   aligner: snap
   markdup: bamsormadup
   call_consensus: true
+  fgumi_extract_mode: read_structures
+  fgumi_read_structure_r1: 3M3S+T
+  fgumi_read_structure_r2: +T
   run_coverage: true
   fastq_1: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/sample1_S31_R1_001.fastq.gz
   fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/sample1_S31_R2_001.fastq.gz

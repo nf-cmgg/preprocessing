@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drop `hook_url` parameter. To configure messaging services, use a custom config in tandem with the `nf-teams`/`nf-slack` plugin instead.
 - Drop `run_coverage` and add `qc_mode` parameter. Thorough coveage analysis is now included in the `qc_mode` parameter, which can be set to `basic` or `full`. Basic QC includes samtools flagstat, idxstats and mosdepth. Full QC includes samtools stats, samtools coverage, riker metrics and panel coverage in addition to basic QC.
 - Fix UMI consensus SNAP/zipper ordering by standardizing fgumi queryname sorting to natural order, preventing mapped/unmapped template order mismatches.
+- Implement configurable fgumi UMI extraction modes and default to read-structure extraction (`3M3S+T` for read 1 and `+T` for read 2) with an explicit fallback to read-name extraction.
 
 ## 3.0.2
 

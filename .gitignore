@@ -9,6 +9,7 @@ testing*
 null/
 .nf-test*
 test_fc
+input/
 .lineage/
 # pixi environments
 .pixi/*
