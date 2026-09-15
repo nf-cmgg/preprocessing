@@ -22,7 +22,7 @@
             "organism": {
                 "meta": ["organism"],
                 "type": "string",
-                "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus and Danio rerio",
+                "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus, Danio rerio and Equus caballus",
                 "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "genome": {
@@ -136,6 +136,12 @@
                 "pattern": "^[a-zA-Z0-9_-]+$",
                 "description": "Sample library name"
             },
+            "sequencing_center": {
+                "meta": ["sequencing_center"],
+                "type": "string",
+                "description": "Sequencing centre for the BAM @RG CN field",
+                "pattern": "^[a-zA-Z0-9_-]+$"
+            },
             "lane": {
                 "type": "integer",
                 "meta": ["lane"],
@@ -164,7 +170,7 @@
                 "type": "string",
                 "format": "file-path",
                 "pattern": "^\\S+\\.(json|yaml|yml)$",
-                "description": "JSON/YAML file with sample information, must contain fields 'samplename', 'organism' and 'tag'"
+                "description": "JSON/YAML file with sample information, must contain fields 'samplename', 'aligner', 'tag' and either 'genome' or 'organism'"
             },
             "flowcell": {
                 "type": "string",
@@ -174,10 +180,10 @@
         },
         "anyOf": [
             {
-                "required": ["id", "samplename", "organism", "aligner", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "organism", "aligner", "fastq_1"]
             },
             {
-                "required": ["id", "samplename", "genome", "aligner", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "genome", "aligner", "fastq_1"]
             },
             {
                 "required": ["id", "samplesheet", "sample_info", "flowcell"]

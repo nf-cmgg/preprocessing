@@ -63,24 +63,26 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "crams",
-                    "fastp_html",
-                    "md5sums",
-                    "mosdepth_per_base_csi",
-                    "mosdepth_quantized_csi",
-                    "mosdepth_regions_csi",
-                    "multiqc_data",
-                    "multiqc_plots",
-                    "multiqc_report",
-                    "multiqcsav_data",
-                    "multiqcsav_plots",
-                    "multiqcsav_report",
-                    "riker_pdf",
-                    "samtools_coverage",
-                    "samtools_flagstat",
-                    "samtools_stats"
-                ])
+                sanitizeOutput(
+                    workflow.out,
+                    unstableKeys:[
+                        "crams",
+                        "fastp_html",
+                        "md5sums",
+                        "mosdepth_per_base_csi",
+                        "mosdepth_quantized_csi",
+                        "mosdepth_regions_csi",
+                        "multiqc_data",
+                        "multiqc_plots",
+                        "multiqc_report",
+                        "multiqcsav_data",
+                        "multiqcsav_plots",
+                        "multiqcsav_report",
+                        "riker_hybcap_metrics",
+                        "riker_isize_histogram",
+                        "riker_pdf"
+                    ]
+                )
             ).match()
         }
     }
@@ -141,24 +143,26 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "crams",
-                    "fastp_html",
-                    "md5sums",
-                    "mosdepth_per_base_csi",
-                    "mosdepth_quantized_csi",
-                    "mosdepth_regions_csi",
-                    "multiqc_data",
-                    "multiqc_plots",
-                    "multiqc_report",
-                    "multiqcsav_data",
-                    "multiqcsav_plots",
-                    "multiqcsav_report",
-                    "riker_pdf",
-                    "samtools_coverage",
-                    "samtools_flagstat",
-                    "samtools_stats"
-                ])
+                sanitizeOutput(
+                    workflow.out,
+                    unstableKeys:[
+                        "crams",
+                        "fastp_html",
+                        "md5sums",
+                        "mosdepth_per_base_csi",
+                        "mosdepth_quantized_csi",
+                        "mosdepth_regions_csi",
+                        "multiqc_data",
+                        "multiqc_plots",
+                        "multiqc_report",
+                        "multiqcsav_data",
+                        "multiqcsav_plots",
+                        "multiqcsav_report",
+                        "riker_hybcap_metrics",
+                        "riker_isize_histogram",
+                        "riker_pdf"
+                    ]
+                )
             ).match()
         }
     }
@@ -221,24 +225,26 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "crams",
-                    "fastp_html",
-                    "md5sums",
-                    "mosdepth_per_base_csi",
-                    "mosdepth_quantized_csi",
-                    "mosdepth_regions_csi",
-                    "multiqc_data",
-                    "multiqc_plots",
-                    "multiqc_report",
-                    "multiqcsav_data",
-                    "multiqcsav_plots",
-                    "multiqcsav_report",
-                    "riker_pdf",
-                    "samtools_coverage",
-                    "samtools_flagstat",
-                    "samtools_stats"
-                ])
+                sanitizeOutput(
+                    workflow.out,
+                    unstableKeys:[
+                        "crams",
+                        "fastp_html",
+                        "md5sums",
+                        "mosdepth_per_base_csi",
+                        "mosdepth_quantized_csi",
+                        "mosdepth_regions_csi",
+                        "multiqc_data",
+                        "multiqc_plots",
+                        "multiqc_report",
+                        "multiqcsav_data",
+                        "multiqcsav_plots",
+                        "multiqcsav_report",
+                        "riker_hybcap_metrics",
+                        "riker_isize_histogram",
+                        "riker_pdf"
+                    ]
+                )
             ).match()
         }
     }
@@ -289,34 +295,29 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "crams",
-                    "demultiplex_logs",
-                    "demultiplex_reports",
-                    "fastp_html",
-                    "md5sums",
-                    "mosdepth_per_base_csi",
-                    "mosdepth_quantized_csi",
-                    "mosdepth_regions_csi",
-                    "multiqc_data",
-                    "multiqc_plots",
-                    "multiqc_report",
-                    "multiqcsav_data",
-                    "multiqcsav_plots",
-                    "multiqcsav_report",
-                    "riker_pdf",
-                    "samtools_coverage",
-                    "samtools_flagstat",
-                    "samtools_stats"
-                ]).collectEntries { key, value ->
-                    if (key in ["demultiplex_logs", "demultiplex_reports"]) {
-                        [ key: value.sort() ]
-                    } else {
-                        [ key: value ]
-                    }
-                }
+                sanitizeOutput(
+                    workflow.out,
+                    unstableKeys:[
+                        "crams",
+                        "falco_html",
+                        "fastp_html",
+                        "md5sums",
+                        "mosdepth_per_base_csi",
+                        "mosdepth_quantized_csi",
+                        "mosdepth_regions_csi",
+                        "multiqc_data",
+                        "multiqc_plots",
+                        "multiqc_report",
+                        "multiqcsav_data",
+                        "multiqcsav_plots",
+                        "multiqcsav_report",
+                        "riker_hybcap_metrics",
+                        "riker_isize_histogram",
+                        "riker_pdf",
+                    ],
+                    ignoreKeys: ["demultiplex_logs", "demultiplex_reports"]
+                )
             ).match()
         }
     }
-
 }

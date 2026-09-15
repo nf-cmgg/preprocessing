@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "FASTQ_UMICONSENSUS_FGUMI"
+description: Extract UMIs, consensus-call with fgumi, and SNAP-align
+keywords:
+  - umi
+  - fgumi
+  - snap
+  - consensus
+components:
+  - fgumi/extract
+  - fgumi/filter
+  - fgumi/group
+  - fgumi/merge
+  - fgumi/simplex
+  - fgumi/snapzipsort
+  - getgenomeattribute
+input:
+  - ch_meta_fastqs:
+      type: file
+      description: |
+        FASTQ files for UMI consensus.
+
+        Structure: [ val(meta), path(fastqs) ]
+output:
+  - bam:
+      type: file
+      description: |
+        Coordinate-sorted BAM and index.
+
+        Structure: [ val(meta), path(bam), path(bai) ]
+  - grouping_metrics:
+      type: file
+      description: fgumi group metrics
+  - family_size_histogram:
+      type: file
+      description: UMI family size histogram
+  - consensus_metrics:
+      type: file
+      description: fgumi simplex stats
+  - filtering_metrics:
+      type: file
+      description: fgumi filter stats
+authors:
+  - "@matthdsm"
+maintainers:
+  - "@matthdsm"
+  - "@nvnieuwk"

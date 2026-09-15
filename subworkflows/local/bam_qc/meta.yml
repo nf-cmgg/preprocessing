@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "BAM_QC"
+description: Alignment QC, coverage, riker metrics, and optional panel coverage
+keywords:
+  - bam
+  - qc
+  - coverage
+  - mosdepth
+  - riker
+  - samtools
+components:
+  - mosdepth
+  - panelcoverage
+  - riker/multi
+  - samtools/coverage
+  - samtools/flagstat
+  - samtools/idxstats
+  - samtools/stats
+input:
+  - ch_bam_bai_roi_fasta_fai_gtf:
+      type: file
+      description: |
+        Aligned BAM, index, ROI, and references.
+
+        Structure: [ val(meta), path(bam), path(bai), path(roi), path(fasta), path(fai), path(gtf) ]
+  - ch_genelists:
+      type: file
+      description: Optional gene-list BED files for panel coverage
+output:
+  - mosdepth_global:
+      type: file
+      description: mosdepth global distribution
+  - mosdepth_per_base_bed:
+      type: file
+      description: mosdepth per-base BED
+  - mosdepth_per_base_csi:
+      type: file
+      description: Index for mosdepth per-base BED
+  - mosdepth_per_base_d4:
+      type: file
+      description: mosdepth per-base d4
+  - mosdepth_quantized_bed:
+      type: file
+      description: mosdepth quantized BED
+  - mosdepth_quantized_csi:
+      type: file
+      description: Index for mosdepth quantized BED
+  - mosdepth_regions:
+      type: file
+      description: mosdepth regions summary
+  - mosdepth_regions_bed:
+      type: file
+      description: mosdepth regions BED
+  - mosdepth_regions_csi:
+      type: file
+      description: Index for mosdepth regions BED
+  - mosdepth_summary:
+      type: file
+      description: mosdepth summary
+  - mosdepth_thresholds_bed:
+      type: file
+      description: mosdepth thresholds BED
+  - mosdepth_thresholds_csi:
+      type: file
+      description: Index for mosdepth thresholds BED
+  - panelcoverage:
+      type: file
+      description: Panel coverage region distributions
+  - riker_alignment_metrics:
+      type: file
+      description: riker alignment metrics
+  - riker_base_dist:
+      type: file
+      description: riker base distribution
+  - riker_mean_qual:
+      type: file
+      description: riker mean quality
+  - riker_qual_dist:
+      type: file
+      description: riker quality distribution
+  - riker_error_mismatch:
+      type: file
+      description: riker mismatch error metrics
+  - riker_error_overlap:
+      type: file
+      description: riker overlap error metrics
+  - riker_error_indel:
+      type: file
+      description: riker indel error metrics
+  - riker_gcbias_detail:
+      type: file
+      description: riker GC bias detail
+  - riker_gcbias_summary:
+      type: file
+      description: riker GC bias summary
+  - riker_hybcap_metrics:
+      type: file
+      description: riker hybrid capture metrics
+  - riker_hybcap_per_target:
+      type: file
+      description: riker hybrid capture per-target metrics
+  - riker_hybcap_per_base:
+      type: file
+      description: riker hybrid capture per-base metrics
+  - riker_isize_metrics:
+      type: file
+      description: riker insert size metrics
+  - riker_isize_histogram:
+      type: file
+      description: riker insert size histogram
+  - riker_wgs_metrics:
+      type: file
+      description: riker WGS metrics
+  - riker_wgs_coverage:
+      type: file
+      description: riker WGS coverage
+  - riker_pdf:
+      type: file
+      description: riker PDF plots
+  - riker_rna_biotype:
+      type: file
+      description: riker RNA biotype metrics
+  - riker_rna_insert_size_histogram:
+      type: file
+      description: riker RNA insert size histogram
+  - riker_rna_insert_size:
+      type: file
+      description: riker RNA insert size metrics
+  - riker_rna_metrics:
+      type: file
+      description: riker RNA metrics
+  - samtools_coverage:
+      type: file
+      description: samtools coverage
+  - samtools_flagstat:
+      type: file
+      description: samtools flagstat
+  - samtools_idxstats:
+      type: file
+      description: samtools idxstats
+  - samtools_stats:
+      type: file
+      description: samtools stats
+authors:
+  - "@matthdsm"
+maintainers:
+  - "@matthdsm"
+  - "@nvnieuwk"

@@ -88,16 +88,8 @@ workflow BAM_QC {
             def filtered_genelists = (meta.tag && meta.tag.toLowerCase() == "seqcap")
                 ? genelists.findAll { genelist -> genelist.name.toLowerCase().contains("seqcap") }
                 : genelists.findAll { genelist -> !genelist.name.toLowerCase().contains("seqcap") }
-
-            if (filtered_genelists.size() > 0) {
-                return [
-                    meta,
-                    bed,
-                    index,
-                    filtered_genelists,
-                ]
-            }
-        }
+            return [meta, bed, index, filtered_genelists]
+        }.filter { _meta, _bed, _index, filtered_genelists -> filtered_genelists.size() > 0 }
     )
 
     emit:

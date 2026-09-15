@@ -10,7 +10,7 @@ You will need to create a samplesheet with information about the samples you wou
 --input '[path to samplesheet file]'
 ```
 
-The pipeline supports two types of samplesheets to be used as input: [`fastq`](#fastq-samplesheet) and [`flowcell`](#flowcell-samplesheet) samplesheets. The type will be automatically detected and applied by the pipeline. FASTQ rows currently require both `fastq_1` and `fastq_2`. After demultiplexing, single-end FASTQs are still handled if only one read file is produced.
+The pipeline supports two types of samplesheets to be used as input: [`fastq`](#fastq-samplesheet) and [`flowcell`](#flowcell-samplesheet) samplesheets. The type will be automatically detected and applied by the pipeline. FASTQ rows need `fastq_1`; `fastq_2` is optional for single-end data. After demultiplexing, single-end FASTQs are handled if only one read file is produced.
 
 ### Fastq samplesheet
 
@@ -43,10 +43,11 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
 | `id`                                 | Unique sample identifier                                                                                                                                                                                                           | :heavy_check_mark:                              |
 | `samplename`                         | The sample name corresponding to the sample in the Fastq file(s)                                                                                                                                                                   | :heavy_check_mark:                              |
-| `genome`                             | Genome build. Allowed values: `GRCh38`, `GRCh38-noalt`, `GRCm39`, `GRCz11`, `hg38`, `hg38-noalt`. If only `organism` is set, `Homo sapiens` maps to `GRCh38`, `Mus musculus` to `mm10`, and `Danio rerio` to `GRCz11`.             | :heavy_check_mark: (unless `organism` is given) |
-| `organism`                           | Full name of the organism. Currently supports `Homo sapiens`, `Mus musculus` and `Danio rerio`                                                                                                                                     | :heavy_check_mark: (unless `genome` is given)   |
+| `genome`                             | Genome build. Allowed values: `GRCh38`, `GRCh38-noalt`, `GRCm39`, `GRCz11`, `hg38`, `hg38-noalt`. See [organism to genome mapping](#organism-to-genome-mapping) for what is used when only `organism` is set.                      | :heavy_check_mark: (unless `organism` is given) |
+| `organism`                           | Full name of the organism. Currently supports `Homo sapiens`, `Mus musculus`, `Danio rerio` and `Equus caballus`                                                                                                                   | :heavy_check_mark: (unless `genome` is given)   |
 | `library`                            | Sample library name. When set, results are published under `library/samplename`.                                                                                                                                                   | :x:                                             |
-| `tag`                                | Sample tag (free-form). `SeqCap` restricts panel coverage gene lists to files whose names contain `seqcap`.                                                                                                                        | :x:                                             |
+| `sequencing_center`                  | Sequencing centre written to BAM `@RG CN`.                                                                                                                                                                                         | :x:                                             |
+| `tag`                                | Sample tag (`[A-Za-z0-9_-]+`). `SeqCap` restricts panel coverage gene lists to files whose names contain `seqcap`.                                                                                                                 | :x:                                             |
 | `aligner`                            | DNA aligner: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` or `snap`. Set to `false` to skip alignment and emit FASTQ. RNA samples (`sample_type: RNA`) always use `star`.                                                   | :heavy_check_mark:                              |
 | `markdup`                            | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                                                                                                 | :x:                                             |
 | `umi_aware`                          | Whether UMI-aware processing should be used. Only applies when `markdup` is set to `samtools`                                                                                                                                      | :x:                                             |
@@ -62,7 +63,7 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `roi`                                | The path to a BED file containing Regions Of Interest for coverage analysis                                                                                                                                                        | :x:                                             |
 | `sample_type`                        | Sample type. Allowed values: `DNA`, `RNA`, `Tissue`. Defaults to `DNA`. RNA samples are aligned with STAR.                                                                                                                         | :x:                                             |
 | `fastq_1`                            | FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                     | :heavy_check_mark:                              |
-| `fastq_2`                            | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'                                                                                                                                       | :heavy_check_mark:                              |
+| `fastq_2`                            | FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'. Omit for single-end data.                                                                                                            | :x:                                             |
 
 An [example samplesheet](../tests/inputs/test.yml) has been provided with the pipeline.
 
@@ -112,9 +113,22 @@ A `flowcell` sample info JSON/YAML file for one sequencing run may look somethin
   sample_type: DNA
 ```
 
-Each row needs `samplename`, `aligner`, `tag`, and either `genome` or `organism`. Analysis fields match the [fastq samplesheet](#fastq-samplesheet). Extra sample-info fields are `purpose` (`research` or `diagnostic`), `vivar_project`, `binsize`, and `panels`.
+Each row needs `samplename`, `aligner`, `tag`, and either `genome` or `organism`. Analysis fields match the [fastq samplesheet](#fastq-samplesheet). Extra sample-info fields are `purpose` (`research` or `diagnostic`), `vivar_project`, `binsize`, `panels`, and `sequencing_center`.
 
 The same `samplename` may appear in more than one library. In that case each row needs a distinct `library` value, and the Illumina sample sheet must set `LibraryName` so that BCL Convert `RGLB` matches `sampleinfo.library`. A single row per `samplename` does not need `RGLB` on the demultiplexed FASTQ.
+
+### Organism to genome mapping
+
+When a row sets `organism` but no `genome`, the pipeline derives the genome build:
+
+| Organism         | Genome build |
+| ---------------- | ------------ |
+| `Homo sapiens`   | `GRCh38`     |
+| `Mus musculus`   | `mm10`       |
+| `Danio rerio`    | `GRCz11`     |
+| `Equus caballus` | `EquCab2`    |
+
+Matching is case-insensitive and also accepts an underscore instead of a space. Any other organism leaves the genome unset. Samples whose genome has no entry in `conf/igenomes.config` skip alignment and are QC'd with falco.
 
 ## Running the pipeline
 
@@ -193,7 +207,7 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Apple containers) - see below.
 
-The pipeline also dynamically loads configurations from [https://github.com/nf-cmgg/configs](https://github.com/nf-cmgg/configs) when it runs (`params.custom_config_base`). It does not load [nf-core/configs](https://github.com/nf-core/configs).
+The pipeline loads institutional configs from [nf-core/configs](https://github.com/nf-core/configs) by default (`params.custom_config_base`). If `custom_config_base` points at an nf-cmgg configs tree, it also loads `pipeline/preprocessing.config` from that repo.
 
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
@@ -260,9 +274,9 @@ A pipeline might not always support every possible argument or option of a parti
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
 
-### nf-cmgg/configs
+### Institutional configs
 
-Shared institutional settings for nf-cmgg pipelines live in [nf-cmgg/configs](https://github.com/nf-cmgg/configs). Test a one-off config with `-c` first. Shared profiles belong in that repository (`nfcore_custom.config` and `pipeline/preprocessing.config`), not in nf-core/configs.
+Override `custom_config_base` (and usually `custom_config_version`) to use [nf-cmgg/configs](https://github.com/nf-cmgg/configs) instead of the default nf-core configs. Test a one-off config with `-c` first.
 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
 

@@ -4,8 +4,13 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Mock subworkflow to please linting
 workflow UTILS_NFCMGG_PREPROCESSING_PIPELINE {
+
+    main:
+    dummy_emit = true
+
+    emit:
+    dummy_emit
 }
 
 /*
@@ -34,10 +39,14 @@ def getReadgroupFromFastq(fastq, SM, LB, CN) {
     line = line.substring(1)
     def fields = line.split(':')
     def rg = [:]
-    rg.LB = LB ?: ''
-    rg.CN = CN ?: ''
     rg.PL = 'ILLUMINA'
     rg.SM = SM ?: fastq.name.toString() - ~/_R[0-9]_001.*$/
+    if (LB) {
+        rg.LB = LB
+    }
+    if (CN) {
+        rg.CN = CN
+    }
     if (fields.size() >= 7) {
         // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
         // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
@@ -77,11 +86,16 @@ def getReadgroupsFromBclconvert(ch_fastq_list_csv, ch_fastq) {
                     // RGPU is a custom column in the samplesheet containing the flowcell ID
                     rg.PU = row.RGPU ? row.RGPU : meta.id + "." + row.Lane
                     rg.SM = row.RGSM
-                    rg.LB = row.RGLB ? row.RGLB : ""
+                    if (row.RGLB) {
+                        rg.LB = row.RGLB
+                    }
                     rg.PL = "ILLUMINA"
 
                     // dereference the fastq files in the csv
                     def fastq1 = fastq_list.find { fq -> file(fq).name == file(row.Read1File).name }
+                    if (!fastq1) {
+                        error("BCL Convert fastq_list.csv Read1File '${row.Read1File}' for sample '${row.RGSM}' was not in the demultiplexed FASTQs")
+                    }
                     def fastq2 = row.Read2File ? fastq_list.find { fq -> file(fq).name == file(row.Read2File).name } : null
 
                     // set fastq metadata

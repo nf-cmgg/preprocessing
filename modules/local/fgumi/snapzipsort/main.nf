@@ -4,8 +4,8 @@ process FGUMI_SNAPZIPSORT {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/05/057cc55ab35ff976996184621e292608f3f53e5fae66aeb36a6ec13659ad6beb/data'
-        : 'community.wave.seqera.io/library/fgumi_snap-aligner:fa44bec655a3a203'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fa/fa173043be444ca10a7b50fb74d46b643c75abd24547fbfeae8dd75af9172b63/data'
+        : 'community.wave.seqera.io/library/fgumi_snap-aligner:cafdcb9148178d5f'}"
 
     input:
     tuple val(meta), path(unmapped_bam), path(index, stageAs: "index/*"), path(fasta), path(fai), path(dict)
