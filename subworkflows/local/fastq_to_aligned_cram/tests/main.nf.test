@@ -206,6 +206,9 @@ nextflow_workflow {
                         sample_type: "DNA",
                         markdup: "false",
                         call_consensus: true,
+                        fgumi_extract_mode: "read_structures",
+                        fgumi_read_structure_r1: "3M3S+T",
+                        fgumi_read_structure_r2: "+T",
                         fgumi_simplex_min_reads: 1,
                         fgumi_snap_ignore_mismatched_pairs: false,
                         genome_data: [
