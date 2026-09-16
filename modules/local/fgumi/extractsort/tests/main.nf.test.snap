@@ -7,7 +7,7 @@
                         {
                             "id": "test"
                         },
-                        "test.fgumi.unmapped.bam:md5,56e97fb0ff8184c3ecdcdedab6587eef"
+                        "test.fgumi.unmapped.bam"
                     ]
                 ],
                 "versions_fgumi": [
@@ -19,7 +19,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-16T13:43:31.193483",
+        "timestamp": "2026-09-16T15:59:25.807775",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
