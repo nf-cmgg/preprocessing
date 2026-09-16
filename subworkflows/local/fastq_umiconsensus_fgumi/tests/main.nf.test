@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Workflow FASTQ_UMICONSENSUS_FGUMI"
     script "subworkflows/local/fastq_umiconsensus_fgumi/main.nf"
     workflow "FASTQ_UMICONSENSUS_FGUMI"
+    config "./nextflow.config"
 
     tag "subworkflows"
     tag "subworkflows/local"
@@ -16,10 +17,24 @@ nextflow_workflow {
                 input[0] = channel.of([
                     [
                         id:'test',
+                        readgroup: [
+                            ID: "test",
+                            LB: "lib1",
+                            PL: "ILLUMINA",
+                            PU: "unit1",
+                            PM: "model1",
+                            CN: "center1",
+                            PI: 300,
+                            DS: "description",
+                            DT: "2024-06-01"
+                        ],
                         samplename:'test',
                         single_end:false,
                         sample_type:'DNA',
-                        markdup: "bamsormadup",
+                        markdup: "false",
+                        fgumi_extract_mode: "read_structures",
+                        fgumi_read_structure_r1: "3M3S+T",
+                        fgumi_read_structure_r2: "+T",
                         fgumi_simplex_min_reads: 1,
                         fgumi_snap_ignore_mismatched_pairs: false,
                         genome_data: [

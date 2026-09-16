@@ -49,3 +49,18 @@
   qc_mode: basic
   fastq_1: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R1.fastq.gz
   fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/test_R2.fastq.gz
+- id: umi_sample
+  samplename: umi_sample
+  library: test_library
+  organism: Homo sapiens
+  tag: WES
+  sample_type: DNA
+  aligner: snap
+  markdup: false
+  call_consensus: true
+  fgumi_extract_mode: read_structures
+  fgumi_read_structure_r1: 3M3S+T
+  fgumi_read_structure_r2: +T
+  qc_mode: basic
+  fastq_1: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/sample1_S31_R1_001.fastq.gz
+  fastq_2: https://github.com/nf-cmgg/test-datasets/raw/main/data/genomics/homo_sapiens/illumina/fastq/sample1_S31_R2_001.fastq.gz

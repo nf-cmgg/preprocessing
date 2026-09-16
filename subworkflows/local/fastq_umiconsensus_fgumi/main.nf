@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 // MODULES
-include { FGUMI_EXTRACT                              } from "../../../modules/nf-core/fgumi/extract/main.nf"
+include { FGUMI_EXTRACTSORT                          } from "../../../modules/local/fgumi/extractsort/main.nf"
 include { FGUMI_FILTER                               } from "../../../modules/nf-core/fgumi/filter/main.nf"
 include { FGUMI_GROUP                                } from "../../../modules/nf-core/fgumi/group/main.nf"
 include { FGUMI_MERGE                                } from "../../../modules/nf-core/fgumi/merge/main.nf"
@@ -20,13 +20,13 @@ workflow FASTQ_UMICONSENSUS_FGUMI {
     main:
     // Step numbers follow the fgumi basic workflow terminology (this path executes steps 1, 3, 4, 5, and 7).
     // Step 1: build an unmapped BAM with UMI tags from input FASTQ.
-    FGUMI_EXTRACT(
+    FGUMI_EXTRACTSORT(
         ch_meta_fastqs.map { meta, fastqs -> [meta, fastqs, (meta.readgroup?.LB ?: meta.library ?: meta.id)] }
     )
 
     // Step 3: align with SNAP, zipper tags back, then template-coordinate sort.
     RAW_FGUMI_SNAPZIPSORT(
-        FGUMI_EXTRACT.out.bam.join(ch_meta_fastqs).map { meta, ubams, _fastqs ->
+        FGUMI_EXTRACTSORT.out.bam.map { meta, ubams ->
             [meta, ubams, getGenomeAttribute(meta.genome_data, 'snap'), getGenomeAttribute(meta.genome_data, 'fasta'), getGenomeAttribute(meta.genome_data, 'fai'), getGenomeAttribute(meta.genome_data, 'dict')]
         }
     )

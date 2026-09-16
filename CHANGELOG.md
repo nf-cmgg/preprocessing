@@ -5,6 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.1.0 (dev)
 
+- Migrate `fgumi/extract` to a local process and add sorting.
+- Improve and fix `fgumi/snapzipsort` process by piping data, optimizing sorting (`queryname::natural` and `template-coordinate`) and compression steps.
+- Add configurable `fgumi extract` parameters for read structures and UMI extraction mode.
 - Publish flowcell InterOp binaries under `InterOp/`.
 - Add optional `sequencing_center` samplesheet field for BAM `@RG CN`.
 - Allow single-end FASTQ samplesheet rows (`fastq_2` optional).
