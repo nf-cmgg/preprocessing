@@ -26,6 +26,12 @@
                 "description": "Library name",
                 "pattern": "^[a-zA-Z0-9_-]+$"
             },
+            "sequencing_center": {
+                "meta": ["sequencing_center"],
+                "type": "string",
+                "description": "Sequencing centre for the BAM @RG CN field",
+                "pattern": "^[a-zA-Z0-9_-]+$"
+            },
             "tag": {
                 "meta": ["tag"],
                 "type": "string",
@@ -93,6 +99,44 @@
                 "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name.",
                 "default": false
             },
+            "call_consensus": {
+                "meta": ["call_consensus"],
+                "type": "boolean",
+                "description": "Enable UMI-aware consensus processing through the fgumi branch.",
+                "default": false
+            },
+            "fgumi_extract_mode": {
+                "meta": ["fgumi_extract_mode"],
+                "type": "string",
+                "enum": ["read_structures", "read_names"],
+                "default": "read_names",
+                "description": "UMI extraction mode for fgumi consensus. Use 'read_structures' for sequence-based extraction or 'read_names' to parse UMIs from FASTQ read names."
+            },
+            "fgumi_read_structure_r1": {
+                "meta": ["fgumi_read_structure_r1"],
+                "type": "string",
+                "default": "+T",
+                "description": "Read structure for FASTQ read 1 when fgumi_extract_mode is 'read_structures'."
+            },
+            "fgumi_read_structure_r2": {
+                "meta": ["fgumi_read_structure_r2"],
+                "type": "string",
+                "default": "+T",
+                "description": "Read structure for FASTQ read 2 when fgumi_extract_mode is 'read_structures'."
+            },
+            "fgumi_simplex_min_reads": {
+                "meta": ["fgumi_simplex_min_reads"],
+                "type": "integer",
+                "default": 1,
+                "minimum": 1,
+                "description": "Minimum number of reads required per UMI family for fgumi simplex consensus generation."
+            },
+            "fgumi_snap_ignore_mismatched_pairs": {
+                "meta": ["fgumi_snap_ignore_mismatched_pairs"],
+                "type": "boolean",
+                "default": true,
+                "description": "Pass -I to SNAP to ignore mismatched read IDs in paired-end input."
+            },
             "skip_trimming": {
                 "meta": ["skip_trimming"],
                 "type": "boolean",
@@ -123,17 +167,12 @@
                 "description": "Adapter sequence to trim from read 2",
                 "default": null
             },
-            "run_coverage": {
-                "meta": ["run_coverage"],
-                "type": "boolean",
-                "description": "Whether to run coverage analysis for the sample",
-                "default": true
-            },
-            "disable_picard_metrics": {
-                "meta": ["disable_picard_metrics"],
-                "type": "boolean",
-                "description": "Whether to disable Picard metrics calculation. This can be used to speed up processing if Picard is not needed.",
-                "default": true
+            "qc_mode": {
+                "meta": ["qc_mode"],
+                "type": "string",
+                "enum": ["basic", "full"],
+                "description": "Whether to run full QC for the sample. Basic QC includes samtools flagstat, idxstats and mosdepth. Full QC includes samtools stats, samtools coverage, riker metrics and panel coverage in addition to basic QC.",
+                "default": "basic"
             },
             "roi": {
                 "meta": ["roi"],

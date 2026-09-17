@@ -17,6 +17,7 @@ Changes in 'bowtie2/align/main.nf':
  
 
 'modules/nf-core/bowtie2/align/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/bowtie2/align/tests/bam.config' is unchanged
 'modules/nf-core/bowtie2/align/tests/large_index.config' is unchanged
 'modules/nf-core/bowtie2/align/tests/sam2.config' is unchanged
 'modules/nf-core/bowtie2/align/tests/main.nf.test' is unchanged

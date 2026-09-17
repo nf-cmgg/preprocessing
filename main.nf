@@ -16,6 +16,7 @@
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_preprocessing_pipeline'
 include { PREPROCESSING           } from './workflows/preprocessing'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_preprocessing_pipeline'
+include { samplePublishDir        } from './subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -28,7 +29,7 @@ params {
     input: Path
 
     // The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.
-    outdir: Path
+    outdir: String
 
     // Email address for completion summary.
     email: String?
@@ -45,10 +46,10 @@ params {
     genelists: Path?
 
     // Git commit id for Institutional configs.
-    custom_config_version: String = 'main'
+    custom_config_version: String = 'master'
 
-    // Base directory for custom configs.
-    custom_config_base: String = 'https://raw.githubusercontent.com/nf-cmgg/configs/main'
+    // Base directory for Institutional configs.
+    custom_config_base: String = 'https://raw.githubusercontent.com/nf-core/configs/master'
 
     // Institutional config name.
     config_profile_name: String?
@@ -80,9 +81,6 @@ params {
     // Do not use coloured log outputs.
     monochrome_logs: Boolean = false
 
-    // Incoming hook URL for messaging service
-    hook_url: String = System.getenv('HOOK_URL')
-
     // Custom config file to supply to MultiQC.
     multiqc_config: Path?
 
@@ -111,13 +109,7 @@ params {
     show_hidden: Boolean = false
 
     // Directory / URL base for iGenomes references.
-    igenomes_base: String = '/references/'
-
-    // Do not load the iGenomes reference config.
-    igenomes_ignore: Boolean = false
-
-    // Name of iGenomes reference.
-    genome: String?
+    igenomes_base: String = '/references'
 }
 
 workflow {
@@ -129,6 +121,7 @@ workflow {
     PIPELINE_INITIALISATION(
         params.version,
         params.validate_params,
+        params.monochrome_logs,
         args,
         params.outdir,
         params.input,
@@ -148,8 +141,8 @@ workflow {
             ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), params.multiqc_config]
             : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
         params.multiqc_logo ? params.multiqc_logo : [],
-        params.multiqc_methods_description ? params.multiqc_methods_description : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
-        params.outdir
+        params.multiqc_methods_description,
+        params.outdir,
     )
 
     //
@@ -165,47 +158,64 @@ workflow {
     )
 
     publish:
-    demultiplex_reports        = PREPROCESSING.out.demultiplex_reports.transpose()
-    demultiplex_logs           = PREPROCESSING.out.demultiplex_logs.transpose()
-    demultiplex_interop        = PREPROCESSING.out.demultiplex_interop.transpose(by: 1)
-    fastq                      = PREPROCESSING.out.fastq.transpose()
-    falco_html                 = PREPROCESSING.out.falco_html.transpose()
-    falco_txt                  = PREPROCESSING.out.falco_txt.transpose()
-    fastp_json                 = PREPROCESSING.out.fastp_json
-    fastp_html                 = PREPROCESSING.out.fastp_html
-    crams                      = PREPROCESSING.out.crams
-    rna_splice_junctions       = PREPROCESSING.out.rna_splice_junctions
-    rna_junctions              = PREPROCESSING.out.rna_junctions
-    align_reports              = PREPROCESSING.out.align_reports
-    sormadup_metrics           = PREPROCESSING.out.sormadup_metrics
-    mosdepth_global            = PREPROCESSING.out.mosdepth_global
-    mosdepth_summary           = PREPROCESSING.out.mosdepth_summary
-    mosdepth_regions           = PREPROCESSING.out.mosdepth_regions
-    mosdepth_per_base_d4       = PREPROCESSING.out.mosdepth_per_base_d4
-    mosdepth_per_base_bed      = PREPROCESSING.out.mosdepth_per_base_bed
-    mosdepth_per_base_csi      = PREPROCESSING.out.mosdepth_per_base_csi
-    mosdepth_regions_bed       = PREPROCESSING.out.mosdepth_regions_bed
-    mosdepth_regions_csi       = PREPROCESSING.out.mosdepth_regions_csi
-    mosdepth_quantized_bed     = PREPROCESSING.out.mosdepth_quantized_bed
-    mosdepth_quantized_csi     = PREPROCESSING.out.mosdepth_quantized_csi
-    mosdepth_thresholds_bed    = PREPROCESSING.out.mosdepth_thresholds_bed
-    mosdepth_thresholds_csi    = PREPROCESSING.out.mosdepth_thresholds_csi
-    samtools_coverage          = PREPROCESSING.out.samtools_coverage
-    panelcoverage              = PREPROCESSING.out.panelcoverage
-    samtools_stats             = PREPROCESSING.out.samtools_stats
-    samtools_flagstat          = PREPROCESSING.out.samtools_flagstat
-    samtools_idxstats          = PREPROCESSING.out.samtools_idxstats
-    picard_multiplemetrics     = PREPROCESSING.out.picard_multiplemetrics
-    picard_multiplemetrics_pdf = PREPROCESSING.out.picard_multiplemetrics_pdf
-    picard_wgsmetrics          = PREPROCESSING.out.picard_wgsmetrics
-    picard_hsmetrics           = PREPROCESSING.out.picard_hsmetrics
-    md5sums                    = PREPROCESSING.out.md5sums
-    multiqc_report             = PREPROCESSING.out.multiqc_report
-    multiqc_data               = PREPROCESSING.out.multiqc_data
-    multiqc_plots              = PREPROCESSING.out.multiqc_plots
-    multiqcsav_report          = PREPROCESSING.out.multiqcsav_report
-    multiqcsav_data            = PREPROCESSING.out.multiqcsav_data
-    multiqcsav_plots           = PREPROCESSING.out.multiqcsav_plots
+    demultiplex_reports             = PREPROCESSING.out.demultiplex_reports.transpose()
+    demultiplex_logs                = PREPROCESSING.out.demultiplex_logs.transpose()
+    demultiplex_interop             = PREPROCESSING.out.demultiplex_interop.transpose(by: 1)
+    fastq                           = PREPROCESSING.out.fastq.transpose()
+    falco_html                      = PREPROCESSING.out.falco_html.transpose()
+    falco_txt                       = PREPROCESSING.out.falco_txt.transpose()
+    fastp_json                      = PREPROCESSING.out.fastp_json
+    fastp_html                      = PREPROCESSING.out.fastp_html
+    crams                           = PREPROCESSING.out.crams
+    rna_splice_junctions            = PREPROCESSING.out.rna_splice_junctions
+    rna_junctions                   = PREPROCESSING.out.rna_junctions
+    align_reports                   = PREPROCESSING.out.align_reports
+    sormadup_metrics                = PREPROCESSING.out.sormadup_metrics
+    mosdepth_global                 = PREPROCESSING.out.mosdepth_global
+    mosdepth_summary                = PREPROCESSING.out.mosdepth_summary
+    mosdepth_regions                = PREPROCESSING.out.mosdepth_regions
+    mosdepth_per_base_d4            = PREPROCESSING.out.mosdepth_per_base_d4
+    mosdepth_per_base_bed           = PREPROCESSING.out.mosdepth_per_base_bed
+    mosdepth_per_base_csi           = PREPROCESSING.out.mosdepth_per_base_csi
+    mosdepth_regions_bed            = PREPROCESSING.out.mosdepth_regions_bed
+    mosdepth_regions_csi            = PREPROCESSING.out.mosdepth_regions_csi
+    mosdepth_quantized_bed          = PREPROCESSING.out.mosdepth_quantized_bed
+    mosdepth_quantized_csi          = PREPROCESSING.out.mosdepth_quantized_csi
+    mosdepth_thresholds_bed         = PREPROCESSING.out.mosdepth_thresholds_bed
+    mosdepth_thresholds_csi         = PREPROCESSING.out.mosdepth_thresholds_csi
+    samtools_coverage               = PREPROCESSING.out.samtools_coverage
+    panelcoverage                   = PREPROCESSING.out.panelcoverage
+    samtools_stats                  = PREPROCESSING.out.samtools_stats
+    samtools_flagstat               = PREPROCESSING.out.samtools_flagstat
+    samtools_idxstats               = PREPROCESSING.out.samtools_idxstats
+    riker_alignment_metrics         = PREPROCESSING.out.riker_alignment_metrics
+    riker_base_dist                 = PREPROCESSING.out.riker_base_dist
+    riker_mean_qual                 = PREPROCESSING.out.riker_mean_qual
+    riker_qual_dist                 = PREPROCESSING.out.riker_qual_dist
+    riker_error_mismatch            = PREPROCESSING.out.riker_error_mismatch
+    riker_error_overlap             = PREPROCESSING.out.riker_error_overlap
+    riker_error_indel               = PREPROCESSING.out.riker_error_indel
+    riker_gcbias_detail             = PREPROCESSING.out.riker_gcbias_detail
+    riker_gcbias_summary            = PREPROCESSING.out.riker_gcbias_summary
+    riker_hybcap_metrics            = PREPROCESSING.out.riker_hybcap_metrics
+    riker_hybcap_per_target         = PREPROCESSING.out.riker_hybcap_per_target
+    riker_hybcap_per_base           = PREPROCESSING.out.riker_hybcap_per_base
+    riker_isize_metrics             = PREPROCESSING.out.riker_isize_metrics
+    riker_isize_histogram           = PREPROCESSING.out.riker_isize_histogram
+    riker_wgs_metrics               = PREPROCESSING.out.riker_wgs_metrics
+    riker_wgs_coverage              = PREPROCESSING.out.riker_wgs_coverage
+    riker_pdf                       = PREPROCESSING.out.riker_pdf
+    riker_rna_biotype               = PREPROCESSING.out.riker_rna_biotype
+    riker_rna_insert_size_histogram = PREPROCESSING.out.riker_rna_insert_size_histogram
+    riker_rna_insert_size           = PREPROCESSING.out.riker_rna_insert_size
+    riker_rna_metrics               = PREPROCESSING.out.riker_rna_metrics
+    md5sums                         = PREPROCESSING.out.md5sums
+    multiqc_report                  = PREPROCESSING.out.multiqc_report
+    multiqc_data                    = PREPROCESSING.out.multiqc_data
+    multiqc_plots                   = PREPROCESSING.out.multiqc_plots
+    multiqcsav_report               = PREPROCESSING.out.multiqcsav_report
+    multiqcsav_data                 = PREPROCESSING.out.multiqcsav_data
+    multiqcsav_plots                = PREPROCESSING.out.multiqcsav_plots
 }
 
 output {
@@ -221,168 +231,253 @@ output {
     }
     demultiplex_interop {
         path { _meta, bin ->
-            bin >> "Interop/${bin.name}"
+            bin >> "InterOp/${bin.name}"
         }
     }
     fastq {
         path { meta, fastq ->
-            fastq >> (meta.library ? "${meta.library}/${meta.samplename}/${fastq.name}" : "${meta.samplename}/${fastq.name}")
+            fastq >> "${samplePublishDir(meta)}/${fastq.name}"
         }
     }
     falco_html {
         path { meta, html ->
-            html >> (meta.library ? "${meta.library}/${meta.samplename}/${html.name}" : "${meta.samplename}/${html.name}")
+            html >> "${samplePublishDir(meta)}/${html.name}"
         }
     }
     falco_txt {
         path { meta, txt ->
-            txt >> (meta.library ? "${meta.library}/${meta.samplename}/${txt.name}" : "${meta.samplename}/${txt.name}")
+            txt >> "${samplePublishDir(meta)}/${txt.name}"
         }
     }
     fastp_json {
         path { meta, json ->
-            json >> (meta.library ? "${meta.library}/${meta.samplename}/${json.name}" : "${meta.samplename}/${json.name}")
+            json >> "${samplePublishDir(meta)}/${json.name}"
         }
     }
     fastp_html {
         path { meta, html ->
-            html >> (meta.library ? "${meta.library}/${meta.samplename}/${html.name}" : "${meta.samplename}/${html.name}")
+            html >> "${samplePublishDir(meta)}/${html.name}"
         }
     }
     crams {
         path { meta, cram, crai ->
-            cram >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram" : "${meta.samplename}/${meta.samplename}.cram")
-            crai >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.cram.crai" : "${meta.samplename}/${meta.samplename}.cram.crai")
+            cram >> "${samplePublishDir(meta)}/${meta.samplename}.cram"
+            crai >> "${samplePublishDir(meta)}/${meta.samplename}.cram.crai"
         }
     }
     rna_splice_junctions {
         path { meta, sjt ->
-            sjt >> (meta.library ? "${meta.library}/${meta.samplename}/${sjt.name}" : "${meta.samplename}/${sjt.name}")
+            sjt >> "${samplePublishDir(meta)}/${sjt.name}"
         }
     }
     rna_junctions {
         path { meta, junctions ->
-            junctions >> (meta.library ? "${meta.library}/${meta.samplename}/${junctions.name}" : "${meta.samplename}/${junctions.name}")
+            junctions >> "${samplePublishDir(meta)}/${junctions.name}"
         }
     }
     align_reports {
         path { meta, log ->
-            log >> (meta.library ? "${meta.library}/${meta.samplename}/${log.name}" : "${meta.samplename}/${log.name}")
+            log >> "${samplePublishDir(meta)}/${log.name}"
         }
     }
     sormadup_metrics {
         path { meta, metrics ->
-            metrics >> (meta.library ? "${meta.library}/${meta.samplename}/${meta.samplename}.duplicate_metrics.txt" : "${meta.samplename}/${meta.samplename}.duplicate_metrics.txt")
+            metrics >> "${samplePublishDir(meta)}/${meta.samplename}.duplicate_metrics.txt"
         }
     }
     mosdepth_global {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_summary {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_regions {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_per_base_d4 {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_per_base_bed {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_per_base_csi {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_regions_bed {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_regions_csi {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_quantized_bed {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_quantized_csi {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_thresholds_bed {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     mosdepth_thresholds_csi {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     samtools_coverage {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     panelcoverage {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     samtools_stats {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     samtools_flagstat {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     samtools_idxstats {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
-    picard_multiplemetrics {
+    riker_alignment_metrics {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
-    picard_multiplemetrics_pdf {
+    riker_base_dist {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
-    picard_wgsmetrics {
+    riker_mean_qual {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
-    picard_hsmetrics {
+    riker_qual_dist {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_error_mismatch {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_error_overlap {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_error_indel {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_gcbias_detail {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_gcbias_summary {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_hybcap_metrics {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_hybcap_per_target {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_hybcap_per_base {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_isize_metrics {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_isize_histogram {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_wgs_metrics {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_wgs_coverage {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_pdf {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_rna_biotype {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_rna_insert_size_histogram {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_rna_insert_size {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
+    riker_rna_metrics {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
         }
     }
     md5sums {
         path { meta, _file ->
-            return (meta.library ? "${meta.library}/${meta.samplename}/" : "${meta.samplename}/")
+            return "${samplePublishDir(meta)}/"
         }
     }
     multiqcsav_report {
