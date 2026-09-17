@@ -35,10 +35,9 @@ lint:
 template:
   org: nf-cmgg
   name: preprocessing
-  description: Demultiplexing, adapter trimming, alignment, and coverage calculation
-    for NGS data.
+  description: Demultiplexing, adapter trimming, alignment, and coverage calculation for NGS data.
   author: Matthias De Smet, Nicolas Vannieuwkerke and the CMGG IT Team
-  version: 3.1.0dev
+  version: 3.1.0
   force: true
   outdir: .
   skip_features:

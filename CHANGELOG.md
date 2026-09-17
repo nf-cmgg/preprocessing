@@ -3,7 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.1.0 (dev)
+## Unreleased
+
+## 3.1.0
 
 - Migrate `fgumi/extract` to a local process and add sorting.
 - Improve and fix `fgumi/snapzipsort` process by piping data, optimizing sorting (`queryname::natural` and `template-coordinate`) and compression steps.
