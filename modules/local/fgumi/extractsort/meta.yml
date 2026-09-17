@@ -1,5 +1,5 @@
 name: fgumi_extract
-description: Extract unique molecular indices (UMIs) from FASTQ files and write an unaligned BAM file.
+description: Extract unique molecular indices (UMIs) from FASTQ files and write a sorted unaligned BAM file.
 keywords:
   - umi
   - extract

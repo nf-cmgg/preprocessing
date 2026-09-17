@@ -1,13 +1,13 @@
 nextflow_process {
 
-    name "Test Process FGUMI_EXTRACT"
+    name "Test Process FGUMI_EXTRACTSORT"
     script "../main.nf"
-    process "FGUMI_EXTRACT"
+    process "FGUMI_EXTRACTSORT"
 
     tag "modules"
     tag "modules_nfcore"
     tag "fgumi"
-    tag "fgumi/extract"
+    tag "fgumi/extractsort"
 
     config "./nextflow.config"
 
@@ -15,7 +15,7 @@ nextflow_process {
 
         when {
             params {
-                module_args = ''
+                module_args = '--read-structures +T +M'
             }
             process {
                 """
@@ -34,7 +34,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bam"])).match() }
             )
         }
 

@@ -50,11 +50,6 @@
                         "git_sha": "826a9b28d6da61097d60e1923bb8a2e51de3c5b4",
                         "installed_by": ["modules"]
                     },
-                    "fgumi/extract": {
-                        "branch": "master",
-                        "git_sha": "9fd3ec2625f849749bc39596f30d0d2a08c49845",
-                        "installed_by": ["modules"]
-                    },
                     "fgumi/filter": {
                         "branch": "master",
                         "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",

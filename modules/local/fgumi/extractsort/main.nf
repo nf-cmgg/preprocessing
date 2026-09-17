@@ -1,4 +1,4 @@
-process FGUMI_EXTRACT {
+process FGUMI_EXTRACTSORT {
     tag "${meta.id}"
     label 'process_single'
 
@@ -19,15 +19,23 @@ process FGUMI_EXTRACT {
 
     script:
     def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     fgumi extract \\
         --inputs ${reads.join(' ')} \\
-        --output ${prefix}.bam \\
-        ${args} \\
+        --output - \\
         --sample ${prefix} \\
-        --library "${library}"
+        --library "${library}" \\
+        ${args} \\
+    | fgumi sort \\
+        --input - \\
+        --output ${prefix}.bam \\
+        --threads ${task.cpus} \\
+        --max-memory ${task.memory.toGiga() / task.cpus}G \\
+        --tmp-dir . \\
+        ${args2}
     """
 
     stub:
