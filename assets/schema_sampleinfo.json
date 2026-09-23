@@ -83,8 +83,8 @@
                 "meta": ["aligner"],
                 "type": ["string", "boolean"],
                 "description": "Aligner to use to align sample to the reference genome",
-                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star", "false", false],
-                "default": "false"
+                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star", ""],
+                "default": ""
             },
             "markdup": {
                 "meta": ["markdup"],

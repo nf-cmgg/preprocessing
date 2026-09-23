@@ -193,7 +193,7 @@ workflow PREPROCESSING {
             return [meta - meta.subMap('fcid', 'lane'), fastq]
         }
         .branch { meta, _reads ->
-            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && (meta.aligner && meta.aligner != "false")
+            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && meta.aligner
             other: true
         }
         .set { ch_fastq_per_sample }
