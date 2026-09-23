@@ -53,10 +53,10 @@
             "genome": {
                 "meta": ["genome"],
                 "type": "string",
-                "description": "Genome build. Currently supported genomes include GRCh38, GRCh38-noalt, GRCm39, GRCz11, hg38 and hg38-noalt",
+                "description": "Genome build. Currently supported genomes include EquCab2, GRCh38, GRCh38-noalt, GRCm39, GRCz11, hg38 and hg38-noalt",
                 "pattern": "^[a-zA-Z0-9_-]+$",
                 "default": null,
-                "enum": ["GRCh38", "GRCh38-noalt", "GRCm39", "GRCz11", "hg38", "hg38-noalt"]
+                "enum": ["hg38-noalt", "hg38", "GRCz11", "GRCm39", "GRCh38-noalt", "GRCh38", "EquCab2"]
             },
             "vivar_project": {
                 "meta": ["vivar_project"],
@@ -186,10 +186,10 @@
     },
     "anyOf": [
         {
-            "required": ["samplename", "organism", "aligner", "tag"]
+            "required": ["samplename", "organism"]
         },
         {
-            "required": ["samplename", "genome", "aligner", "tag"]
+            "required": ["samplename", "genome"]
         }
     ]
 }
