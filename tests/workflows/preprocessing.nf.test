@@ -7,7 +7,7 @@ nextflow_workflow {
     tag "workflows"
     tag "workflows/preprocessing"
 
-    test("preprocessing - fastq - bwa - bamsormadup - roi") {
+    test("preprocessing - fastq - bwa - bamsormadup - roi - full qc") {
 
         when {
             workflow {
@@ -24,7 +24,7 @@ nextflow_workflow {
                             sample_type: "DNA",
                             aligner: "bwamem",
                             markdup: "bamsormadup",
-                            run_coverage: true,
+                            qc_mode: "full",
                             roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
@@ -63,32 +63,31 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "crams",
-                    "fastp_html",
-                    "md5sums",
-                    "mosdepth_per_base_csi",
-                    "mosdepth_quantized_csi",
-                    "mosdepth_regions_csi",
-                    "multiqc_data",
-                    "multiqc_plots",
-                    "multiqc_report",
-                    "multiqcsav_data",
-                    "multiqcsav_plots",
-                    "multiqcsav_report",
-                    "picard_hsmetrics",
-                    "picard_multiplemetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_wgsmetrics",
-                    "samtools_coverage",
-                    "samtools_flagstat",
-                    "samtools_stats"
-                ])
+                sanitizeOutput(
+                    workflow.out,
+                    unstableKeys:[
+                        "crams",
+                        "fastp_html",
+                        "md5sums",
+                        "mosdepth_per_base_csi",
+                        "mosdepth_quantized_csi",
+                        "mosdepth_regions_csi",
+                        "multiqc_data",
+                        "multiqc_plots",
+                        "multiqc_report",
+                        "multiqcsav_data",
+                        "multiqcsav_plots",
+                        "multiqcsav_report",
+                        "riker_hybcap_metrics",
+                        "riker_isize_histogram",
+                        "riker_pdf"
+                    ]
+                )
             ).match()
         }
     }
 
-    test("preprocessing - fastq - bwa - bamsormadup - no roi") {
+    test("preprocessing - fastq - bwa - bamsormadup - no roi - full qc") {
 
         when {
             workflow {
@@ -105,7 +104,7 @@ nextflow_workflow {
                             sample_type: "DNA",
                             aligner: "bwamem",
                             markdup: "bamsormadup",
-                            run_coverage: true
+                            qc_mode: "full"
                         ],
                         //fastq_1
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R1.fastq.gz", checkIfExists: true),
@@ -144,36 +143,33 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "crams",
-                    "fastp_html",
-                    "md5sums",
-                    "mosdepth_per_base_csi",
-                    "mosdepth_quantized_csi",
-                    "mosdepth_regions_csi",
-                    "multiqc_data",
-                    "multiqc_plots",
-                    "multiqc_report",
-                    "multiqcsav_data",
-                    "multiqcsav_plots",
-                    "multiqcsav_report",
-                    "picard_hsmetrics",
-                    "picard_multiplemetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_wgsmetrics",
-                    "samtools_coverage",
-                    "samtools_flagstat",
-                    "samtools_stats"
-                ])
+                sanitizeOutput(
+                    workflow.out,
+                    unstableKeys:[
+                        "crams",
+                        "fastp_html",
+                        "md5sums",
+                        "mosdepth_per_base_csi",
+                        "mosdepth_quantized_csi",
+                        "mosdepth_regions_csi",
+                        "multiqc_data",
+                        "multiqc_plots",
+                        "multiqc_report",
+                        "multiqcsav_data",
+                        "multiqcsav_plots",
+                        "multiqcsav_report",
+                        "riker_hybcap_metrics",
+                        "riker_isize_histogram",
+                        "riker_pdf"
+                    ]
+                )
             ).match()
         }
     }
 
-    test("preprocessing - fastq - bwa - bamsormadup - roi - no coverage/no picard") {
+    test("preprocessing - fastq - bwa - bamsormadup - roi - basic qc") {
         when {
             params {
-                run_coverage = false
-                disable_picard_metrics = true
             }
             workflow {
                 """
@@ -189,8 +185,7 @@ nextflow_workflow {
                             sample_type: "DNA",
                             aligner: "bwamem",
                             markdup: "bamsormadup",
-                            run_coverage: false,
-                            disable_picard_metrics: true,
+                            qc_mode: "basic",
                             roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
                         ],
                         //fastq_1
@@ -230,32 +225,31 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "crams",
-                    "fastp_html",
-                    "md5sums",
-                    "mosdepth_per_base_csi",
-                    "mosdepth_quantized_csi",
-                    "mosdepth_regions_csi",
-                    "multiqc_data",
-                    "multiqc_plots",
-                    "multiqc_report",
-                    "multiqcsav_data",
-                    "multiqcsav_plots",
-                    "multiqcsav_report",
-                    "picard_hsmetrics",
-                    "picard_multiplemetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_wgsmetrics",
-                    "samtools_coverage",
-                    "samtools_flagstat",
-                    "samtools_stats"
-                ])
+                sanitizeOutput(
+                    workflow.out,
+                    unstableKeys:[
+                        "crams",
+                        "fastp_html",
+                        "md5sums",
+                        "mosdepth_per_base_csi",
+                        "mosdepth_quantized_csi",
+                        "mosdepth_regions_csi",
+                        "multiqc_data",
+                        "multiqc_plots",
+                        "multiqc_report",
+                        "multiqcsav_data",
+                        "multiqcsav_plots",
+                        "multiqcsav_report",
+                        "riker_hybcap_metrics",
+                        "riker_isize_histogram",
+                        "riker_pdf"
+                    ]
+                )
             ).match()
         }
     }
 
-    test("preprocessing - flowcell - bwa - bamsormadup - roi") {
+    test("preprocessing - flowcell - bwa - bamsormadup - roi - basic qc") {
         when {
             workflow {
                 """
@@ -301,37 +295,29 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert snapshot(
-                sanitizeOutput(workflow.out, unstableKeys:[
-                    "crams",
-                    "demultiplex_logs",
-                    "demultiplex_reports",
-                    "fastp_html",
-                    "md5sums",
-                    "mosdepth_per_base_csi",
-                    "mosdepth_quantized_csi",
-                    "mosdepth_regions_csi",
-                    "multiqc_data",
-                    "multiqc_plots",
-                    "multiqc_report",
-                    "multiqcsav_data",
-                    "multiqcsav_plots",
-                    "multiqcsav_report",
-                    "picard_hsmetrics",
-                    "picard_multiplemetrics",
-                    "picard_multiplemetrics_pdf",
-                    "picard_wgsmetrics",
-                    "samtools_coverage",
-                    "samtools_flagstat",
-                    "samtools_stats"
-                ]).collectEntries { key, value ->
-                    if (key in ["demultiplex_logs", "demultiplex_reports"]) {
-                        [ key: value.sort() ]
-                    } else {
-                        [ key: value ]
-                    }
-                }
+                sanitizeOutput(
+                    workflow.out,
+                    unstableKeys:[
+                        "crams",
+                        "falco_html",
+                        "fastp_html",
+                        "md5sums",
+                        "mosdepth_per_base_csi",
+                        "mosdepth_quantized_csi",
+                        "mosdepth_regions_csi",
+                        "multiqc_data",
+                        "multiqc_plots",
+                        "multiqc_report",
+                        "multiqcsav_data",
+                        "multiqcsav_plots",
+                        "multiqcsav_report",
+                        "riker_hybcap_metrics",
+                        "riker_isize_histogram",
+                        "riker_pdf",
+                    ],
+                    ignoreKeys: ["demultiplex_logs", "demultiplex_reports"]
+                )
             ).match()
         }
     }
-
 }

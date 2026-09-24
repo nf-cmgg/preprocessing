@@ -22,23 +22,23 @@
             "organism": {
                 "meta": ["organism"],
                 "type": "string",
-                "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus and Danio rerio",
+                "description": "Sample organism. Currently supported organisms include Homo sapiens, Mus musculus, Danio rerio and Equus caballus",
                 "pattern": "^[a-zA-Z0-9_\\s]+$"
             },
             "genome": {
                 "meta": ["genome"],
                 "type": "string",
-                "description": "Genome build. Currently supported genomes include GRCh38, GRCh38-noalt, GRCm39, GRCz11, hg38 and hg38-noalt",
+                "description": "Genome build. Currently supported genomes include EquCab2, GRCh38, GRCh38-noalt, GRCm39, GRCz11, hg38 and hg38-noalt",
                 "pattern": "^[a-zA-Z0-9_-]+$",
                 "default": null,
-                "enum": ["GRCh38", "GRCh38-noalt", "GRCm39", "GRCz11", "hg38", "hg38-noalt"]
+                "enum": ["hg38-noalt", "hg38", "GRCz11", "GRCm39", "GRCh38-noalt", "GRCh38", "EquCab2"]
             },
             "aligner": {
                 "meta": ["aligner"],
-                "type": ["string", "boolean"],
+                "type": ["string"],
                 "description": "Aligner to use to align sample to the reference genome",
-                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star", "false", false],
-                "default": "false"
+                "enum": ["bowtie2", "bwamem", "bwamem2", "dragmap", "snap", "strobe", "star", ""],
+                "default": ""
             },
             "markdup": {
                 "meta": ["markdup"],
@@ -52,6 +52,44 @@
                 "type": "boolean",
                 "description": "Run markdup in UMI-aware mode. This applies to Samtools only and requires the UMI to be in the read name.",
                 "default": false
+            },
+            "call_consensus": {
+                "meta": ["call_consensus"],
+                "type": "boolean",
+                "description": "Enable UMI-aware consensus processing through the fgumi branch.",
+                "default": false
+            },
+            "fgumi_extract_mode": {
+                "meta": ["fgumi_extract_mode"],
+                "type": "string",
+                "enum": ["read_structures", "read_names"],
+                "default": "read_names",
+                "description": "UMI extraction mode for fgumi consensus. Use 'read_structures' for sequence-based extraction or 'read_names' to parse UMIs from FASTQ read names."
+            },
+            "fgumi_read_structure_r1": {
+                "meta": ["fgumi_read_structure_r1"],
+                "type": "string",
+                "default": "+T",
+                "description": "Read structure for FASTQ read 1 when fgumi_extract_mode is 'read_structures'."
+            },
+            "fgumi_read_structure_r2": {
+                "meta": ["fgumi_read_structure_r2"],
+                "type": "string",
+                "default": "+T",
+                "description": "Read structure for FASTQ read 2 when fgumi_extract_mode is 'read_structures'."
+            },
+            "fgumi_simplex_min_reads": {
+                "meta": ["fgumi_simplex_min_reads"],
+                "type": "integer",
+                "default": 1,
+                "minimum": 1,
+                "description": "Minimum number of reads required per UMI family for fgumi simplex consensus generation."
+            },
+            "fgumi_snap_ignore_mismatched_pairs": {
+                "meta": ["fgumi_snap_ignore_mismatched_pairs"],
+                "type": "boolean",
+                "default": true,
+                "description": "Pass -I to SNAP to ignore mismatched read IDs in paired-end input."
             },
             "skip_trimming": {
                 "meta": ["skip_trimming"],
@@ -83,17 +121,12 @@
                 "description": "Adapter sequence to trim from read 2",
                 "default": null
             },
-            "run_coverage": {
-                "meta": ["run_coverage"],
-                "type": "boolean",
-                "description": "Whether to run coverage analysis for the sample",
-                "default": true
-            },
-            "disable_picard_metrics": {
-                "meta": ["disable_picard_metrics"],
-                "type": "boolean",
-                "description": "Whether to disable Picard metrics calculation. This can be used to speed up processing if Picard is not needed.",
-                "default": true
+            "qc_mode": {
+                "meta": ["qc_mode"],
+                "type": "string",
+                "enum": ["basic", "full"],
+                "description": "Whether to run full QC for the sample. Basic QC includes samtools flagstat, idxstats and mosdepth. Full QC includes samtools stats, samtools coverage, riker metrics and panel coverage in addition to basic QC.",
+                "default": "basic"
             },
             "roi": {
                 "meta": ["roi"],
@@ -121,6 +154,12 @@
                 "type": "string",
                 "pattern": "^[a-zA-Z0-9_-]+$",
                 "description": "Sample library name"
+            },
+            "sequencing_center": {
+                "meta": ["sequencing_center"],
+                "type": "string",
+                "description": "Sequencing centre for the BAM @RG CN field",
+                "pattern": "^[a-zA-Z0-9_-]+$"
             },
             "lane": {
                 "type": "integer",
@@ -150,7 +189,7 @@
                 "type": "string",
                 "format": "file-path",
                 "pattern": "^\\S+\\.(json|yaml|yml)$",
-                "description": "JSON/YAML file with sample information, must contain fields 'samplename', 'organism' and 'tag'"
+                "description": "JSON/YAML file with sample information, must contain fields 'samplename', 'aligner', 'tag' and either 'genome' or 'organism'"
             },
             "flowcell": {
                 "type": "string",
@@ -160,10 +199,10 @@
         },
         "anyOf": [
             {
-                "required": ["id", "samplename", "organism", "aligner", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "organism", "aligner", "fastq_1"]
             },
             {
-                "required": ["id", "samplename", "genome", "aligner", "fastq_1", "fastq_2"]
+                "required": ["id", "samplename", "genome", "aligner", "fastq_1"]
             },
             {
                 "required": ["id", "samplesheet", "sample_info", "flowcell"]

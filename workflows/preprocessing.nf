@@ -17,12 +17,10 @@ include { SAMTOOLS_COVERAGE           } from '../modules/nf-core/samtools/covera
 
 // Subworkflows
 include { BAM_QC                      } from '../subworkflows/local/bam_qc'
-include { COVERAGE                    } from '../subworkflows/local/coverage'
 include { FASTQ_TO_CRAM               } from '../subworkflows/local/fastq_to_aligned_cram'
 
 // Functions
-include { getReadgroupsFromBclconvert } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
-include { getReadgroupFromFastq       } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
+include { associateSampleinfo ; getReadgroupsFromBclconvert ; getReadgroupFromFastq } from '../subworkflows/local/utils_nfcmgg_preprocessing_pipeline'
 include { paramsSummaryMap            } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML      } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -83,7 +81,7 @@ workflow PREPROCESSING {
             return [meta, file(reports).resolve("fastq_list.csv")]
         },
         BCLCONVERT.out.fastq,
-    ).dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true).map { meta, fastq -> [meta.readgroup.SM, meta, fastq] }.set { ch_demultiplexed_fastq }
+    ).dump(tag: "DEMULTIPLEX: fastq with meta", pretty: true).set { ch_demultiplexed_fastq }
 
     // Run QC
     ch_mqcsav_input = ch_illumina_flowcell.flowcell
@@ -110,12 +108,10 @@ workflow PREPROCESSING {
     ch_illumina_flowcell.info
         .flatten()
         .transpose()
-        .map { sampleinfo -> [sampleinfo.samplename, sampleinfo] }
         .set { ch_sampleinfo }
 
-    ch_demultiplexed_fastq
-        .combine(ch_sampleinfo, by: 0)
-        .map { _samplename, meta, fastq, sampleinfo ->
+    associateSampleinfo(ch_demultiplexed_fastq, ch_sampleinfo)
+        .map { meta, fastq, sampleinfo ->
             def new_rg = [:]
             if (sampleinfo.library) {
                 new_rg = meta.readgroup + ['LB': sampleinfo.library]
@@ -149,7 +145,7 @@ workflow PREPROCESSING {
             // add readgroup metadata
             // if the sample name starts with "snp_", remove it so the sampletracking works later on.
             def samplename = meta.samplename.startsWith("snp_") ? meta.samplename.substring(4) : meta.samplename
-            def rg = getReadgroupFromFastq(fastq[0], samplename, meta.library, meta.platform)
+            def rg = getReadgroupFromFastq(fastq[0], samplename, meta.library, meta.sequencing_center)
             def meta_with_readgroup = meta + ['single_end': single_end, 'readgroup': rg]
             return [meta_with_readgroup, fastq]
         }
@@ -173,6 +169,9 @@ workflow PREPROCESSING {
                 else if (meta.organism ==~ /(?i)Danio[\s_]rerio/) {
                     meta = meta + ["genome": "GRCz11"]
                 }
+                else if (meta.organism ==~ /(?i)Equus[\s_]caballus/) {
+                    meta = meta + ["genome": "EquCab2"]
+                }
                 else {
                     meta = meta + ["genome": null]
                 }
@@ -185,7 +184,7 @@ workflow PREPROCESSING {
             }
             return [meta, reads]
         }
-        .map { meta, reads -> [meta.samplename, [meta, reads]] }
+        .map { meta, reads -> [[meta.samplename, meta.library], [meta, reads]] }
         .groupTuple()
         .map { _samplename, meta_fastq -> [meta_fastq, meta_fastq.size()] }
         .transpose()
@@ -194,7 +193,7 @@ workflow PREPROCESSING {
             return [meta - meta.subMap('fcid', 'lane'), fastq]
         }
         .branch { meta, _reads ->
-            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && (meta.aligner && meta.aligner != "false")
+            supported: meta.genome_data instanceof Map && meta.genome_data.size() > 0 && meta.aligner
             other: true
         }
         .set { ch_fastq_per_sample }
@@ -231,7 +230,7 @@ workflow PREPROCESSING {
     // edit meta.id to match sample name
     FASTP.out.reads
         .map { meta, reads ->
-            def read_files = meta.single_end.toBoolean() ? reads : reads.sort { a, b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+            def read_files = meta.single_end.toBoolean() ? reads : reads.sort { fq -> fq.name }.collate(2)
             return [
                 meta + [chunks: read_files instanceof List ? read_files.size() : [read_files].size()],
                 read_files,
@@ -271,35 +270,9 @@ workflow PREPROCESSING {
     FASTQ_TO_CRAM(
         ch_meta_reads_aligner_index_fasta_gtf
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_TO_CRAM.out.sormadup_metrics)
-
-    /*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// STEP: COVERAGE ANALYSIS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-    FASTQ_TO_CRAM.out.cram_crai
-        .filter { meta, _cram, _crai ->
-            meta.run_coverage.toBoolean()
-        }
-        .map { meta, cram, crai ->
-            return [
-                meta,
-                cram,
-                crai,
-                getGenomeAttribute(meta.genome_data, "fasta"),
-                getGenomeAttribute(meta.genome_data, "fai"),
-                meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
-            ]
-        }
-        .set { ch_coverage }
-
-    COVERAGE(ch_coverage, ch_genelists)
     ch_multiqc_files = ch_multiqc_files.mix(
-        COVERAGE.out.mosdepth_summary,
-        COVERAGE.out.mosdepth_global,
-        COVERAGE.out.mosdepth_regions,
-        COVERAGE.out.samtools_coverage,
+        FASTQ_TO_CRAM.out.sormadup_metrics,
+        FASTQ_TO_CRAM.out.family_size_histogram,
     )
 
     /*
@@ -316,20 +289,36 @@ workflow PREPROCESSING {
                 meta.roi && meta.roi != [] ? file(meta.roi, checkIfExists: true) : [],
                 getGenomeAttribute(meta.genome_data, "fasta"),
                 getGenomeAttribute(meta.genome_data, "fai"),
-                getGenomeAttribute(meta.genome_data, "dict"),
+                getGenomeAttribute(meta.genome_data, "gtf"),
             ]
         }
         .set { ch_bam_qc }
 
-    BAM_QC(ch_bam_qc)
+    BAM_QC(ch_bam_qc, ch_genelists)
     ch_multiqc_files = ch_multiqc_files.mix(
-        BAM_QC.out.samtools_stats,
+        BAM_QC.out.mosdepth_global,
+        BAM_QC.out.mosdepth_regions,
+        BAM_QC.out.mosdepth_summary,
+        BAM_QC.out.samtools_coverage,
         BAM_QC.out.samtools_flagstat,
         BAM_QC.out.samtools_idxstats,
-        BAM_QC.out.picard_multiplemetrics,
-        BAM_QC.out.picard_wgsmetrics,
-        BAM_QC.out.picard_wgsmetrics,
-        BAM_QC.out.picard_hsmetrics,
+        BAM_QC.out.samtools_stats,
+        BAM_QC.out.riker_alignment_metrics,
+        BAM_QC.out.riker_base_dist,
+        BAM_QC.out.riker_mean_qual,
+        BAM_QC.out.riker_qual_dist,
+        BAM_QC.out.riker_error_mismatch,
+        BAM_QC.out.riker_error_overlap,
+        BAM_QC.out.riker_error_indel,
+        BAM_QC.out.riker_gcbias_detail,
+        BAM_QC.out.riker_gcbias_summary,
+        BAM_QC.out.riker_hybcap_metrics,
+        BAM_QC.out.riker_hybcap_per_target,
+        BAM_QC.out.riker_hybcap_per_base,
+        BAM_QC.out.riker_isize_metrics,
+        BAM_QC.out.riker_isize_histogram,
+        BAM_QC.out.riker_wgs_metrics,
+        BAM_QC.out.riker_wgs_coverage,
     )
 
     /*
@@ -375,7 +364,7 @@ workflow PREPROCESSING {
     softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${outdir.toUriString()}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name: 'nf_cmgg_preprocessing_software_mqc_versions.yml',
             sort: true,
             newLine: true,
@@ -415,49 +404,66 @@ workflow PREPROCESSING {
     MULTIQC(ch_multiqc_input)
 
     emit:
-    demultiplex_reports        = BCLCONVERT.out.reports.map { meta, reports ->
+    demultiplex_reports             = BCLCONVERT.out.reports.map { meta, reports ->
         return [meta, files(reports.resolve("*"))]
     }
-    demultiplex_logs           = BCLCONVERT.out.logs.map { meta, logs ->
+    demultiplex_logs                = BCLCONVERT.out.logs.map { meta, logs ->
         return [meta, files(logs.resolve("*"))]
     }
-    demultiplex_interop        = BCLCONVERT.out.interop
-    fastq                      = ch_fastq_per_sample.other
-    falco_html                 = FALCO.out.html
-    falco_txt                  = FALCO.out.txt
-    fastp_json                 = FASTP.out.json
-    fastp_html                 = FASTP.out.html
-    crams                      = FASTQ_TO_CRAM.out.cram_crai
-    rna_splice_junctions       = FASTQ_TO_CRAM.out.rna_splice_junctions
-    rna_junctions              = FASTQ_TO_CRAM.out.rna_junctions
-    align_reports              = FASTQ_TO_CRAM.out.align_reports
-    sormadup_metrics           = FASTQ_TO_CRAM.out.sormadup_metrics
-    mosdepth_global            = COVERAGE.out.mosdepth_global
-    mosdepth_summary           = COVERAGE.out.mosdepth_summary
-    mosdepth_regions           = COVERAGE.out.mosdepth_regions
-    mosdepth_per_base_d4       = COVERAGE.out.mosdepth_per_base_d4
-    mosdepth_per_base_bed      = COVERAGE.out.mosdepth_per_base_bed
-    mosdepth_per_base_csi      = COVERAGE.out.mosdepth_per_base_csi
-    mosdepth_regions_bed       = COVERAGE.out.mosdepth_regions_bed
-    mosdepth_regions_csi       = COVERAGE.out.mosdepth_regions_csi
-    mosdepth_quantized_bed     = COVERAGE.out.mosdepth_quantized_bed
-    mosdepth_quantized_csi     = COVERAGE.out.mosdepth_quantized_csi
-    mosdepth_thresholds_bed    = COVERAGE.out.mosdepth_thresholds_bed
-    mosdepth_thresholds_csi    = COVERAGE.out.mosdepth_thresholds_csi
-    samtools_coverage          = COVERAGE.out.samtools_coverage
-    panelcoverage              = COVERAGE.out.panelcoverage
-    samtools_stats             = BAM_QC.out.samtools_stats
-    samtools_flagstat          = BAM_QC.out.samtools_flagstat
-    samtools_idxstats          = BAM_QC.out.samtools_idxstats
-    picard_multiplemetrics     = BAM_QC.out.picard_multiplemetrics
-    picard_multiplemetrics_pdf = BAM_QC.out.picard_multiplemetrics_pdf
-    picard_wgsmetrics          = BAM_QC.out.picard_wgsmetrics
-    picard_hsmetrics           = BAM_QC.out.picard_hsmetrics
-    md5sums                    = MD5SUM.out.checksum
-    multiqcsav_report          = MULTIQCSAV.out.report.toList()
-    multiqcsav_data            = MULTIQCSAV.out.data.toList()
-    multiqcsav_plots           = MULTIQCSAV.out.plots.toList()
-    multiqc_report             = MULTIQC.out.report
-    multiqc_data               = MULTIQC.out.data
-    multiqc_plots              = MULTIQC.out.plots
+    demultiplex_interop             = BCLCONVERT.out.interop
+    fastq                           = ch_fastq_per_sample.other
+    falco_html                      = FALCO.out.html
+    falco_txt                       = FALCO.out.txt
+    fastp_json                      = FASTP.out.json
+    fastp_html                      = FASTP.out.html
+    crams                           = FASTQ_TO_CRAM.out.cram_crai
+    rna_splice_junctions            = FASTQ_TO_CRAM.out.rna_splice_junctions
+    rna_junctions                   = FASTQ_TO_CRAM.out.rna_junctions
+    align_reports                   = FASTQ_TO_CRAM.out.align_reports
+    sormadup_metrics                = FASTQ_TO_CRAM.out.sormadup_metrics
+    mosdepth_global                 = BAM_QC.out.mosdepth_global
+    mosdepth_summary                = BAM_QC.out.mosdepth_summary
+    mosdepth_regions                = BAM_QC.out.mosdepth_regions
+    mosdepth_per_base_d4            = BAM_QC.out.mosdepth_per_base_d4
+    mosdepth_per_base_bed           = BAM_QC.out.mosdepth_per_base_bed
+    mosdepth_per_base_csi           = BAM_QC.out.mosdepth_per_base_csi
+    mosdepth_regions_bed            = BAM_QC.out.mosdepth_regions_bed
+    mosdepth_regions_csi            = BAM_QC.out.mosdepth_regions_csi
+    mosdepth_quantized_bed          = BAM_QC.out.mosdepth_quantized_bed
+    mosdepth_quantized_csi          = BAM_QC.out.mosdepth_quantized_csi
+    mosdepth_thresholds_bed         = BAM_QC.out.mosdepth_thresholds_bed
+    mosdepth_thresholds_csi         = BAM_QC.out.mosdepth_thresholds_csi
+    samtools_coverage               = BAM_QC.out.samtools_coverage
+    panelcoverage                   = BAM_QC.out.panelcoverage
+    samtools_stats                  = BAM_QC.out.samtools_stats
+    samtools_flagstat               = BAM_QC.out.samtools_flagstat
+    samtools_idxstats               = BAM_QC.out.samtools_idxstats
+    riker_alignment_metrics         = BAM_QC.out.riker_alignment_metrics
+    riker_base_dist                 = BAM_QC.out.riker_base_dist
+    riker_mean_qual                 = BAM_QC.out.riker_mean_qual
+    riker_qual_dist                 = BAM_QC.out.riker_qual_dist
+    riker_error_mismatch            = BAM_QC.out.riker_error_mismatch
+    riker_error_overlap             = BAM_QC.out.riker_error_overlap
+    riker_error_indel               = BAM_QC.out.riker_error_indel
+    riker_gcbias_detail             = BAM_QC.out.riker_gcbias_detail
+    riker_gcbias_summary            = BAM_QC.out.riker_gcbias_summary
+    riker_hybcap_metrics            = BAM_QC.out.riker_hybcap_metrics
+    riker_hybcap_per_target         = BAM_QC.out.riker_hybcap_per_target
+    riker_hybcap_per_base           = BAM_QC.out.riker_hybcap_per_base
+    riker_isize_metrics             = BAM_QC.out.riker_isize_metrics
+    riker_isize_histogram           = BAM_QC.out.riker_isize_histogram
+    riker_wgs_metrics               = BAM_QC.out.riker_wgs_metrics
+    riker_wgs_coverage              = BAM_QC.out.riker_wgs_coverage
+    riker_pdf                       = BAM_QC.out.riker_pdf
+    riker_rna_biotype               = BAM_QC.out.riker_rna_biotype
+    riker_rna_insert_size_histogram = BAM_QC.out.riker_rna_insert_size_histogram
+    riker_rna_insert_size           = BAM_QC.out.riker_rna_insert_size
+    riker_rna_metrics               = BAM_QC.out.riker_rna_metrics
+    md5sums                         = MD5SUM.out.checksum
+    multiqcsav_report               = MULTIQCSAV.out.report.toList()
+    multiqcsav_data                 = MULTIQCSAV.out.data.toList()
+    multiqcsav_plots                = MULTIQCSAV.out.plots.toList()
+    multiqc_report                  = MULTIQC.out.report
+    multiqc_data                    = MULTIQC.out.data
+    multiqc_plots                   = MULTIQC.out.plots
 }
