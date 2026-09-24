@@ -40,7 +40,7 @@ params {
     genomes: Map = [:]
 
     // Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.
-    split_fastq: Integer = 100000000
+    split_fastq: Integer = 0
 
     // Directory containing gene list bed files for granular coverage analysis
     genelists: Path?

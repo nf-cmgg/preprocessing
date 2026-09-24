@@ -13,7 +13,6 @@ nextflow_pipeline {
                 input = "${projectDir}/tests/inputs/test.yml"
                 igenomes_base = "s3://reference-data/genomes"
                 outdir = "$outputDir"
-                split_fastq = 0
             }
         }
 

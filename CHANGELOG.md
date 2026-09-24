@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.1.0
 
+- Set default `split_fastq` parameter to 0, disabling FastQ splitting by default.
 - Migrate `fgumi/extract` to a local process and add sorting.
 - Improve and fix `fgumi/snapzipsort` process by piping data, optimizing sorting (`queryname::natural` and `template-coordinate`) and compression steps.
 - Add configurable `fgumi extract` parameters for read structures and UMI extraction mode.
