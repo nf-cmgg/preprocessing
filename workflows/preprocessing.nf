@@ -375,7 +375,7 @@ workflow PREPROCESSING {
     // MODULE: MultiQC
     //
     // summary files without meta, e.g. versions, params
-    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    summary_params = paramsSummaryMap(parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
     ch_methods_description = channel.value(multiqc_methods_description ? methodsDescriptionText(multiqc_methods_description) : "")
 
