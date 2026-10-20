@@ -256,12 +256,12 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.metrics.txt:md5,641527401576375d7c0b0b54fbaf63ab"
+                        "test.merged.metrics.txt:md5,7afa97ed76abfd72a77d98709474be68"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-09T14:19:41.853779",
+        "timestamp": "2026-10-20T17:28:20.611765",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
