@@ -51,14 +51,7 @@
             "properties": {
                 "split_fastq": {
                     "type": "integer",
-                    "oneOf": [
-                        {
-                            "minimum": 250
-                        },
-                        {
-                            "const": 0
-                        }
-                    ],
+                    "minimum": 0,
                     "default": 0,
                     "fa_icon": "fas fa-clock",
                     "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.",
