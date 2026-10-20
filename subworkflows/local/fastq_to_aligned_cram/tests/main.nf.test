@@ -30,7 +30,7 @@ nextflow_workflow {
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
                     "bwamem3", // aligner
-                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwamem3/", checkIfExists: true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"),
                     []
@@ -123,7 +123,7 @@ nextflow_workflow {
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
                     "bwamem3", // aligner
-                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwamem3/", checkIfExists: true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"),
                     []
@@ -169,7 +169,7 @@ nextflow_workflow {
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
                     "bwamem3", // aligner
-                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwamem3/", checkIfExists: true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"),
                     []
@@ -270,7 +270,7 @@ nextflow_workflow {
                         file("https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/fastq/sample1_R2.fastq.gz", checkIfExists: true)
                     ],
                     "bwamem3", // aligner
-                    file("s3://test-data/genomics/homo_sapiens/genome/bwa/", checkIfExists: true),
+                    file("s3://test-data/genomics/homo_sapiens/genome/bwamem3/", checkIfExists: true),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
                     file("s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai"),
                     []
