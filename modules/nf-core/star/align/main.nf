@@ -9,8 +9,7 @@ process STAR_ALIGN {
 
     input:
     tuple val(meta), path(reads, stageAs: "input*/*"), path(index), path(gtf)
-    val seq_platform
-    val seq_center
+    val star_ignore_sjdbgtf
 
     output:
     tuple val(meta), path('*Log.final.out')   , emit: log_final
@@ -43,12 +42,11 @@ process STAR_ALIGN {
     def reads1 = []
     def reads2 = []
     meta.single_end ? [reads].flatten().each{ read -> reads1 << read} : reads.eachWithIndex{ v, ix -> ( ix & 1 ? reads2 : reads1) << v }
-    def ignore_gtf      = gtf ? "--sjdbGTFfile $gtf" : ''
-    def seq_platform_arg  = seq_platform ? "'PL:$seq_platform'" : ""
-    def seq_center_arg    = seq_center ? "'CN:$seq_center'" : ""
-    attrRG          = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:$prefix' $seq_center_arg 'SM:$prefix' $seq_platform_arg"
+    def ignore_gtf      = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
+    attrRG          = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:$prefix' 'SM:$prefix'"
     def out_sam_type    = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
     mv_unsorted_bam = (args.contains('--outSAMtype BAM Unsorted SortedByCoordinate')) ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
+    def zcat            = args.contains('--readFilesCommand') ? '' : reads1[0].getExtension() == 'gz' ? '--readFilesCommand zcat' : ''
     """
     STAR \\
         --genomeDir $index \\
@@ -57,6 +55,7 @@ process STAR_ALIGN {
         --outFileNamePrefix $prefix. \\
         $out_sam_type \\
         $ignore_gtf \\
+        $zcat \\
         $attrRG \\
         $args
 
