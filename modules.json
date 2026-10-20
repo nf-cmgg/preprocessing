@@ -52,23 +52,23 @@
                     },
                     "fgumi/filter": {
                         "branch": "master",
-                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
+                        "git_sha": "966e115099a2f57495eca984ba70c0fc91f198cd",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/fgumi/filter/fgumi-filter.diff"
                     },
                     "fgumi/group": {
                         "branch": "master",
-                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
+                        "git_sha": "966e115099a2f57495eca984ba70c0fc91f198cd",
                         "installed_by": ["modules"]
                     },
                     "fgumi/merge": {
                         "branch": "master",
-                        "git_sha": "9fd3ec2625f849749bc39596f30d0d2a08c49845",
+                        "git_sha": "966e115099a2f57495eca984ba70c0fc91f198cd",
                         "installed_by": ["modules"]
                     },
                     "fgumi/simplex": {
                         "branch": "master",
-                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
+                        "git_sha": "966e115099a2f57495eca984ba70c0fc91f198cd",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/fgumi/simplex/fgumi-simplex.diff"
                     },
