@@ -22,7 +22,7 @@ Steps include:
 - Demultiplexing using [`BCL Convert`](https://emea.support.illumina.com/sequencing/sequencing_software/bcl-convert.html)
 - Run QC using [`MultiQC SAV`](https://github.com/MultiQC/MultiQC_SAV)
 - Read QC and adapter trimming using [`fastp`](https://github.com/OpenGene/fastp). Samples without a supported genome or with `aligner` set to `false` skip alignment and are QC'd with [`falco`](https://github.com/smithlabcode/falco) instead
-- Alignment using [`bwa`](https://github.com/lh3/bwa), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bowtie2`](https://github.com/BenLangmead/bowtie2), [`dragmap`](https://github.com/Illumina/DRAGMAP), [`snap`](https://github.com/amplab/snap) or [`strobealign`](https://github.com/ksahlin/strobealign) for DNA-seq and [`STAR`](https://github.com/alexdobin/STAR) for RNA-seq
+- Alignment using [`bwa`](https://github.com/lh3/bwa), [`bwa-mem2`](https://github.com/bwa-mem2/bwa-mem2), [`bwa-mem3`](https://github.com/fg-labs/bwa-mem3), [`bowtie2`](https://github.com/BenLangmead/bowtie2), [`dragmap`](https://github.com/Illumina/DRAGMAP), [`snap`](https://github.com/amplab/snap) or [`strobealign`](https://github.com/ksahlin/strobealign) for DNA-seq and [`STAR`](https://github.com/alexdobin/STAR) for RNA-seq
 - UMI consensus (`call_consensus`) using [`fgumi`](https://github.com/fulcrumgenomics/fgbio) with SNAP
 - Duplicate marking using [`bamsormadup`](https://gitlab.com/german.tischler/biobambam2) or [`samtools markdup`](http://www.htslib.org/doc/samtools-markdup.html)
 - Coverage analysis using [`mosdepth`](https://github.com/brentp/mosdepth) and, in `qc_mode: full`, [`samtools coverage`](http://www.htslib.org/doc/samtools-coverage.html)

@@ -194,6 +194,7 @@ def toolCitationText() {
         "Falco (de Sena Brandine and Smith 2021),",
         "BWA-MEM (Li 2013),",
         "BWA-MEM2 (Vasimuddin et al. 2019),",
+        "BWA-MEM3 (Vasimuddin et al. 2019),",
         "Bowtie 2 (Langmead and Salzberg 2012),",
         "DRAGMAP,",
         "SNAP (Zaharia et al. 2011),",

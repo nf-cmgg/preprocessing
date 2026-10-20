@@ -20,7 +20,7 @@ include { getGenomeAttribute       } from '../../local/utils_nfcore_preprocessin
 
 workflow FASTQ_TO_CRAM {
     take:
-    ch_meta_reads_aligner_index_fasta_fai_gtf // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, dragmap, snap, star], aligner_index, fasta, fai, gtf]
+    ch_meta_reads_aligner_index_fasta_fai_gtf // channel: [mandatory] [meta, [fastq, ...], aligner [bowtie2, bwamem, bwamem2, bwamem3, dragmap, snap, star], aligner_index, fasta, fai, gtf]
 
     main:
     ch_sormadup_metrics = channel.empty()

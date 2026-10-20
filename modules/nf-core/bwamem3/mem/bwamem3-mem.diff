@@ -1,0 +1,21 @@
+Changes in component 'nf-core/bwamem3/mem'
+'modules/nf-core/bwamem3/mem/environment.yml' is unchanged
+'modules/nf-core/bwamem3/mem/meta.yml' is unchanged
+Changes in 'bwamem3/mem/main.nf':
+--- modules/nf-core/bwamem3/mem/main.nf
++++ modules/nf-core/bwamem3/mem/main.nf
+@@ -8,9 +8,7 @@
+         : 'community.wave.seqera.io/library/bwa-mem3_findutils_htslib_samtools:06f7d72b721717bd'}"
+ 
+     input:
+-    tuple val(meta), path(reads)
+-    tuple val(meta2), path(index)
+-    tuple val(meta3), path(fasta)
++    tuple val(meta), path(reads), path(index), path(fasta)
+     val sort_bam
+ 
+     output:
+
+'modules/nf-core/bwamem3/mem/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/bwamem3/mem/tests/main.nf.test' is unchanged
+************************************************************

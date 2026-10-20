@@ -21,7 +21,7 @@ A `fastq` samplesheet file consisting of paired-end data may look something like
   samplename: DNA_paired1
   library: test_library
   genome: GRCh38
-  aligner: bwamem
+  aligner: bwamem3
   markdup: bamsormadup
   umi_aware: false
   skip_trimming: false
@@ -48,7 +48,7 @@ Following table shows the fields that are used by the `fastq` samplesheet:
 | `library`                            | Sample library name. When set, results are published under `library/samplename`.                                                                                                                                                   | :x:                                             |
 | `sequencing_center`                  | Sequencing centre written to BAM `@RG CN`.                                                                                                                                                                                         | :x:                                             |
 | `tag`                                | Sample tag (`[A-Za-z0-9_-]+`). `SeqCap` restricts panel coverage gene lists to files whose names contain `seqcap`.                                                                                                                 | :x:                                             |
-| `aligner`                            | DNA aligner: `bowtie2`, `bwamem`, `bwamem2`, `dragmap`, `strobe` or `snap`. Set to `false` to skip alignment and emit FASTQ. RNA samples (`sample_type: RNA`) always use `star`.                                                   | :heavy_check_mark:                              |
+| `aligner`                            | DNA aligner: `bowtie2`, `bwamem`, `bwamem2`, `bwamem3`, `dragmap`, `strobe` or `snap`. Set to `false` to skip alignment and emit FASTQ. RNA samples (`sample_type: RNA`) always use `star`.                                        | :heavy_check_mark:                              |
 | `markdup`                            | Markdup algorithm to use for duplicate marking. Can be set to `bamsormadup`, `samtools` or `false`                                                                                                                                 | :x:                                             |
 | `umi_aware`                          | Whether UMI-aware processing should be used. Only applies when `markdup` is set to `samtools`                                                                                                                                      | :x:                                             |
 | `call_consensus`                     | Perform consensus calling using the `fgumi` toolsuite. This only works for DNA samples and will always run the SNAP aligner                                                                                                        | :x:                                             |
@@ -102,7 +102,7 @@ A `flowcell` sample info JSON/YAML file for one sequencing run may look somethin
 - samplename: DNA_paired1
   library: test_library
   genome: GRCh38
-  aligner: bwamem
+  aligner: bwamem3
   markdup: bamsormadup
   umi_aware: false
   call_consensus: true
