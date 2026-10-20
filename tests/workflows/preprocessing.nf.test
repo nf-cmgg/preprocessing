@@ -7,7 +7,7 @@ nextflow_workflow {
     tag "workflows"
     tag "workflows/preprocessing"
 
-    test("preprocessing - fastq - bwa - bamsormadup - roi - full qc") {
+    test("preprocessing - fastq - bwamem3 - bamsormadup - roi - full qc") {
 
         when {
             workflow {
@@ -22,7 +22,7 @@ nextflow_workflow {
                             organism: "Homo sapiens",
                             tag: "WES",
                             sample_type: "DNA",
-                            aligner: "bwamem",
+                            aligner: "bwamem3",
                             markdup: "bamsormadup",
                             qc_mode: "full",
                             roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
@@ -42,7 +42,7 @@ nextflow_workflow {
                         fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                         fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
                         dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
-                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                        bwamem3: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
@@ -87,7 +87,7 @@ nextflow_workflow {
         }
     }
 
-    test("preprocessing - fastq - bwa - bamsormadup - no roi - full qc") {
+    test("preprocessing - fastq - bwamem3 - bamsormadup - no roi - full qc") {
 
         when {
             workflow {
@@ -102,7 +102,7 @@ nextflow_workflow {
                             organism: "Homo sapiens",
                             tag: "WGS",
                             sample_type: "DNA",
-                            aligner: "bwamem",
+                            aligner: "bwamem3",
                             markdup: "bamsormadup",
                             qc_mode: "full"
                         ],
@@ -122,7 +122,7 @@ nextflow_workflow {
                         fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                         fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
                         dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
-                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                        bwamem3: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
@@ -167,7 +167,7 @@ nextflow_workflow {
         }
     }
 
-    test("preprocessing - fastq - bwa - bamsormadup - roi - basic qc") {
+    test("preprocessing - fastq - bwamem3 - bamsormadup - roi - basic qc") {
         when {
             params {
             }
@@ -183,7 +183,7 @@ nextflow_workflow {
                             organism: "Homo sapiens",
                             tag: "WES",
                             sample_type: "DNA",
-                            aligner: "bwamem",
+                            aligner: "bwamem3",
                             markdup: "bamsormadup",
                             qc_mode: "basic",
                             roi: "https://github.com/nf-cmgg/test-datasets/raw/preprocessing/data/genomics/homo_sapiens/illumina/regions/roi_chr21.bed"
@@ -204,7 +204,7 @@ nextflow_workflow {
                         fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                         fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
                         dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
-                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                        bwamem3: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]
@@ -249,7 +249,7 @@ nextflow_workflow {
         }
     }
 
-    test("preprocessing - flowcell - bwa - bamsormadup - roi - basic qc") {
+    test("preprocessing - flowcell - bwamem3 - bamsormadup - roi - basic qc") {
         when {
             workflow {
                 """
@@ -274,7 +274,7 @@ nextflow_workflow {
                         fasta: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna",
                         fai: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
                         dict: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.dict",
-                        bwamem: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
+                        bwamem3: "s3://test-data/genomics/homo_sapiens/genome/bwa/",
                         gtf: "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.gtf"
                     ]
                 ]

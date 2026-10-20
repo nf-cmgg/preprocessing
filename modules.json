@@ -34,6 +34,12 @@
                         "installed_by": ["fastq_align_dna"],
                         "patch": "modules/nf-core/bwamem2/mem/bwamem2-mem.diff"
                     },
+                    "bwamem3/mem": {
+                        "branch": "master",
+                        "git_sha": "d38f40ca73e22a520ad4bb56eed2906219696ccc",
+                        "installed_by": ["fastq_align_dna"],
+                        "patch": "modules/nf-core/bwamem3/mem/bwamem3-mem.diff"
+                    },
                     "dragmap/align": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
