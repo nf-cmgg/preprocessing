@@ -9,6 +9,7 @@ include { BIOBAMBAM_BAMSORMADUP    } from "../../../modules/nf-core/biobambam/ba
 include { SAMTOOLS_CONVERT         } from "../../../modules/nf-core/samtools/convert/main"
 include { SAMTOOLS_SORMADUP        } from "../../../modules/nf-core/samtools/sormadup/main.nf"
 include { SAMTOOLS_SORT            } from "../../../modules/nf-core/samtools/sort/main"
+include { MAKO                     } from "../../../modules/nf-core/mako/main.nf"
 
 // SUBWORKFLOWS
 include { FASTQ_ALIGN_DNA          } from '../../nf-core/fastq_align_dna/main'
@@ -97,8 +98,10 @@ workflow FASTQ_TO_CRAM {
             return [meta, files, fasta, fai]
             samtools: meta.markdup == "samtools"
             return [meta, files, fasta, fai]
-            sort: meta.markdup == "false" || meta.markdup == false
+            sort: meta.markdup == "false" || meta.markdup == false || meta.markdup == "sort"
             return [meta, files, fasta, fai]
+            mako: meta.markdup == "mako"
+            return [meta, files]
             unknown: true
             error("markdup option ${meta.markdup} not supported")
         }
@@ -120,6 +123,10 @@ workflow FASTQ_TO_CRAM {
     // SAMTOOLS_SORT([meta, [bam, bam], fasta],index_format)
     SAMTOOLS_SORT(ch_bam_fasta_fai.sort, "crai")
     ch_markdup_index = ch_markdup_index.mix(SAMTOOLS_SORT.out.cram.join(SAMTOOLS_SORT.out.index, failOnMismatch: true, failOnDuplicate: true))
+
+    // MAKO([meta, [bam, bam]])
+    MAKO(ch_bam_fasta_fai.mako)
+    ch_markdup_index = ch_markdup_index.mix(MAKO.out.bam.join(MAKO.out.bai, failOnMismatch: true, failOnDuplicate: true))
 
     ch_markdup_index.dump(tag: "FASTQ_TO_CRAM: postprocessed bam", pretty: true)
 
