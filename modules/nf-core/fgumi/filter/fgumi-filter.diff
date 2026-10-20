@@ -5,7 +5,7 @@ Changes in 'fgumi/filter/main.nf':
 --- modules/nf-core/fgumi/filter/main.nf
 +++ modules/nf-core/fgumi/filter/main.nf
 @@ -8,8 +8,7 @@
-         : 'community.wave.seqera.io/library/fgumi:0.6.0--c97194d17da0d1cd'}"
+ :         'community.wave.seqera.io/library/fgumi:0.8.0--4fd382d441fde4a1' }"
  
      input:
 -    tuple val(meta), path(bam)
@@ -18,6 +18,6 @@ Changes in 'fgumi/filter/main.nf':
 'modules/nf-core/fgumi/filter/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/fgumi/filter/tests/nextflow.config' is unchanged
 'modules/nf-core/fgumi/filter/tests/main.nf.test' is unchanged
-'modules/nf-core/fgumi/filter/.conda-lock/linux_amd64-bd-c97194d17da0d1cd_1.txt' is unchanged
-'modules/nf-core/fgumi/filter/.conda-lock/linux_arm64-bd-c2c03620f6999cbb_1.txt' is unchanged
+'modules/nf-core/fgumi/filter/.conda-lock/linux_amd64-bd-4fd382d441fde4a1_1.txt' is unchanged
+'modules/nf-core/fgumi/filter/.conda-lock/linux_arm64-bd-82dcb9f47f4b744a_1.txt' is unchanged
 ************************************************************
