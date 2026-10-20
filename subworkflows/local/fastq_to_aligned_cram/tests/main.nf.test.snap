@@ -158,12 +158,12 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.metrics:md5,c4de8e394bb7110b952b2f42af335484"
+                        "test.merged.metrics:md5,d6269854c9a7efd286e45506ef56c237"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-10-20T12:29:53.346485",
+        "timestamp": "2026-10-20T15:16:41.28026",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
