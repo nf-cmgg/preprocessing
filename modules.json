@@ -47,7 +47,7 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "826a9b28d6da61097d60e1923bb8a2e51de3c5b4",
+                        "git_sha": "1e31555fd8e5f4e959283d6db859a1f3a17fe25f",
                         "installed_by": ["modules"]
                     },
                     "fgumi/filter": {
