@@ -12,7 +12,7 @@
                     },
                     "biobambam/bamsormadup": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "d677860352f8618d66362c3d036441f7f0729584",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/biobambam/bamsormadup/biobambam-bamsormadup.diff"
                     },
