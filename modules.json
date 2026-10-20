@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "8b798ea24b2d639ef4d204add9ddb35dc0d8279f",
+                        "git_sha": "397f0b3f2741db37f51572a69841347c964efce9",
                         "installed_by": ["modules"]
                     },
                     "biobambam/bamsormadup": {
@@ -53,28 +53,28 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "826a9b28d6da61097d60e1923bb8a2e51de3c5b4",
+                        "git_sha": "1e31555fd8e5f4e959283d6db859a1f3a17fe25f",
                         "installed_by": ["modules"]
                     },
                     "fgumi/filter": {
                         "branch": "master",
-                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
+                        "git_sha": "966e115099a2f57495eca984ba70c0fc91f198cd",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/fgumi/filter/fgumi-filter.diff"
                     },
                     "fgumi/group": {
                         "branch": "master",
-                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
+                        "git_sha": "966e115099a2f57495eca984ba70c0fc91f198cd",
                         "installed_by": ["modules"]
                     },
                     "fgumi/merge": {
                         "branch": "master",
-                        "git_sha": "9fd3ec2625f849749bc39596f30d0d2a08c49845",
+                        "git_sha": "966e115099a2f57495eca984ba70c0fc91f198cd",
                         "installed_by": ["modules"]
                     },
                     "fgumi/simplex": {
                         "branch": "master",
-                        "git_sha": "4dd270e412e2a7e78761be38aafa5cfa1dcdf891",
+                        "git_sha": "966e115099a2f57495eca984ba70c0fc91f198cd",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/fgumi/simplex/fgumi-simplex.diff"
                     },
@@ -107,7 +107,7 @@
                     },
                     "riker/multi": {
                         "branch": "master",
-                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
+                        "git_sha": "1e13247023de6bb84f06459e2c4fae1028364a36",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/riker/multi/riker-multi.diff"
                     },
