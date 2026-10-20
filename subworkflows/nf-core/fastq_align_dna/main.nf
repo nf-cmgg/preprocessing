@@ -66,8 +66,8 @@ workflow FASTQ_ALIGN_DNA {
     ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
     BWAMEM3_MEM(ch_to_align.bwamem3, sort)
     // If aligner is bwa-mem3
-    ch_bam = ch_bam.mix(BWAMEM3_MEM.out.bam)
-    ch_bam_index = ch_bam_index.mix(BWAMEM3_MEM.out.csi)
+    ch_bam = ch_bam.mix(BWAMEM3_MEM.out.aligned)
+    ch_bam_index = ch_bam_index.mix(BWAMEM3_MEM.out.index)
     DRAGMAP_ALIGN(ch_to_align.dragmap, sort)
     // If aligner is dragmap
     ch_bam = ch_bam.mix(DRAGMAP_ALIGN.out.bam)
