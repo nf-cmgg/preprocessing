@@ -3,6 +3,6 @@ channels:
   - bioconda
 dependencies:
   # renovate: datasource=conda depName=bioconda/fgumi
-  - bioconda::fgumi=0.7.0
+  - bioconda::fgumi=0.8.0
   # renovate: datasource=conda depName=bioconda/snap-aligner
   - bioconda::snap-aligner=2.0.5
