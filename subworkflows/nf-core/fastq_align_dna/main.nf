@@ -8,6 +8,7 @@
 include { BOWTIE2_ALIGN                   } from "../../../modules/nf-core/bowtie2/align/main"
 include { BWA_MEM as BWAMEM1_MEM          } from '../../../modules/nf-core/bwa/mem/main'
 include { BWAMEM2_MEM as BWAMEM2_MEM      } from '../../../modules/nf-core/bwamem2/mem/main'
+include { BWAMEM3_MEM as BWAMEM3_MEM      } from '../../../modules/nf-core/bwamem3/mem/main'
 include { DRAGMAP_ALIGN                   } from "../../../modules/nf-core/dragmap/align/main"
 include { SNAPALIGNER_ALIGN as SNAP_ALIGN } from '../../../modules/nf-core/snapaligner/align/main'
 include { STROBEALIGN                     } from "../../../modules/nf-core/strobealign/main"
@@ -33,6 +34,8 @@ workflow FASTQ_ALIGN_DNA {
             return [meta, reads, index, fasta]
             bwamem2: aligner == 'bwamem2'
             return [meta, reads, index, fasta]
+            bwamem3: aligner == 'bwamem3'
+            return [meta, reads, index, fasta]
             dragmap: aligner == 'dragmap'
             return [meta, reads, index, fasta]
             snap: aligner == 'snap'
@@ -44,9 +47,11 @@ workflow FASTQ_ALIGN_DNA {
         .set { ch_to_align }
 
     // Throw error for all samples with unsupported aligners
-    ch_to_align.other.map { meta, _reads, aligner, _index, _fasta ->
-        error("Unsupported aligner ${aligner} for sample ${meta.id}")
-    }
+    ch_bam = ch_bam.mix(
+        ch_to_align.other.map { meta, _reads, aligner, _index, _fasta, _fai ->
+            error("Unsupported aligner ${aligner} for sample ${meta.id}")
+        }
+    )
 
     // Align fastq files to reference genome and (optionally) sort
     BOWTIE2_ALIGN(ch_to_align.bowtie2, false, sort)
@@ -59,6 +64,10 @@ workflow FASTQ_ALIGN_DNA {
     BWAMEM2_MEM(ch_to_align.bwamem2, sort)
     // If aligner is bwa-mem2
     ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
+    BWAMEM3_MEM(ch_to_align.bwamem3, sort)
+    // If aligner is bwa-mem3
+    ch_bam = ch_bam.mix(BWAMEM3_MEM.out.aligned)
+    ch_bam_index = ch_bam_index.mix(BWAMEM3_MEM.out.index)
     DRAGMAP_ALIGN(ch_to_align.dragmap, sort)
     // If aligner is dragmap
     ch_bam = ch_bam.mix(DRAGMAP_ALIGN.out.bam)

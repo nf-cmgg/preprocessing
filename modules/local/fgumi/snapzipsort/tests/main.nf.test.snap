@@ -1,0 +1,76 @@
+{
+    "homo sapiens - test": {
+        "content": [
+            {
+                "bai": [
+                    
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.fgumi.bam"
+                    ]
+                ]
+            },
+            {
+                "versions": [
+                    [
+                        "FGUMI_SNAPZIPSORT",
+                        "fgumi",
+                        "0.7.0"
+                    ],
+                    [
+                        "FGUMI_SNAPZIPSORT",
+                        "snap-aligner",
+                        "2.0.5"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-08T11:56:58.495522",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "homo sapiens - test - stub": {
+        "content": [
+            {
+                "bai": [
+                    
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.fgumi.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            },
+            {
+                "versions": [
+                    [
+                        "FGUMI_SNAPZIPSORT",
+                        "fgumi",
+                        "0.7.0"
+                    ],
+                    [
+                        "FGUMI_SNAPZIPSORT",
+                        "snap-aligner",
+                        "2.0.5"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-08T12:01:16.811993",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

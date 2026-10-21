@@ -3,7 +3,7 @@ Changes in component 'nf-core/fastq_align_dna'
 Changes in 'fastq_align_dna/main.nf':
 --- subworkflows/nf-core/fastq_align_dna/main.nf
 +++ subworkflows/nf-core/fastq_align_dna/main.nf
-@@ -16,10 +16,7 @@
+@@ -17,10 +17,7 @@
  
  workflow FASTQ_ALIGN_DNA {
      take:
@@ -15,7 +15,7 @@ Changes in 'fastq_align_dna/main.nf':
      sort // boolean: [mandatory] true -> sort, false -> don't sort
  
      main:
-@@ -28,45 +25,52 @@
+@@ -29,51 +26,60 @@
      ch_bam = channel.empty()
      ch_reports = channel.empty()
  
@@ -26,6 +26,8 @@ Changes in 'fastq_align_dna/main.nf':
 +            bwamem: aligner == 'bwamem'
 +            return [meta, reads, index, fasta]
 +            bwamem2: aligner == 'bwamem2'
++            return [meta, reads, index, fasta]
++            bwamem3: aligner == 'bwamem3'
 +            return [meta, reads, index, fasta]
 +            dragmap: aligner == 'dragmap'
 +            return [meta, reads, index, fasta]
@@ -38,9 +40,11 @@ Changes in 'fastq_align_dna/main.nf':
 +        .set { ch_to_align }
 +
 +    // Throw error for all samples with unsupported aligners
-+    ch_to_align.other.map { meta, _reads, aligner, _index, _fasta ->
-+        error("Unsupported aligner ${aligner} for sample ${meta.id}")
-+    }
++    ch_bam = ch_bam.mix(
++        ch_to_align.other.map { meta, _reads, aligner, _index, _fasta, _fai ->
++            error("Unsupported aligner ${aligner} for sample ${meta.id}")
++        }
++    )
 +
      // Align fastq files to reference genome and (optionally) sort
 -    if (aligner == 'bowtie2') {
@@ -59,6 +63,12 @@ Changes in 'fastq_align_dna/main.nf':
 -        BWAMEM2_MEM(ch_reads, ch_aligner_index, ch_fasta, sort)
 -        // If aligner is bwa-mem2
 -        ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
+-    }
+-    else if (aligner == 'bwamem3') {
+-        BWAMEM3_MEM(ch_reads, ch_aligner_index, ch_fasta, sort)
+-        // If aligner is bwa-mem3
+-        ch_bam = ch_bam.mix(BWAMEM3_MEM.out.aligned)
+-        ch_bam_index = ch_bam_index.mix(BWAMEM3_MEM.out.index)
 -    }
 -    else if (aligner == 'dragmap') {
 -        DRAGMAP_ALIGN(ch_reads, ch_aligner_index, ch_fasta, sort)
@@ -91,6 +101,10 @@ Changes in 'fastq_align_dna/main.nf':
 +    BWAMEM2_MEM(ch_to_align.bwamem2, sort)
 +    // If aligner is bwa-mem2
 +    ch_bam = ch_bam.mix(BWAMEM2_MEM.out.bam)
++    BWAMEM3_MEM(ch_to_align.bwamem3, sort)
++    // If aligner is bwa-mem3
++    ch_bam = ch_bam.mix(BWAMEM3_MEM.out.aligned)
++    ch_bam_index = ch_bam_index.mix(BWAMEM3_MEM.out.index)
 +    DRAGMAP_ALIGN(ch_to_align.dragmap, sort)
 +    // If aligner is dragmap
 +    ch_bam = ch_bam.mix(DRAGMAP_ALIGN.out.bam)

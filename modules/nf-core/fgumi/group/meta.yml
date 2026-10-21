@@ -1,0 +1,124 @@
+name: "fgumi_group"
+description: |
+  Groups reads together that appear to have come from the same original molecule.
+  Reads are grouped by template, and then templates are sorted by the 5' mapping positions
+  of the reads from the template. Reads that have the same end positions are then sub-grouped
+  by UMI sequence. This is a high-performance replacement for fgbio GroupReadsByUmi.
+keywords:
+  - umi
+  - groupreads
+  - bam
+tools:
+  - "fgumi":
+      description: "High-performance tools for working with UMI-tagged sequencing data."
+      homepage: "https://github.com/fulcrumgenomics/fgumi"
+      documentation: "https://docs.rs/fgumi"
+      tool_dev_url: "https://github.com/fulcrumgenomics/fgumi"
+      licence:
+        - "MIT"
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: |
+          BAM file containing reads with UMI tags. The file must be coordinate sorted.
+        pattern: "*.bam"
+        ontologies:
+          - edam: "http://edamontology.org/format_2572"
+  - strategy:
+      type: string
+      enum:
+        - "Identity"
+        - "Edit"
+        - "Adjacency"
+        - "Paired"
+      description: |
+        Required argument: defines the UMI assignment strategy.
+        Must be chosen among: Identity, Edit, Adjacency, Paired.
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: UMI-grouped BAM file
+          pattern: "*.bam"
+          ontologies:
+            - edam: "http://edamontology.org/format_2572"
+  histogram:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.family_size_histogram.txt":
+          type: file
+          description: Optional output of tag family size counts
+          pattern: "*.family_size_histogram.txt"
+  metrics:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.grouping_metrics.txt":
+          type: file
+          description: Optional output of UMI grouping metrics
+          pattern: "*.grouping_metrics.txt"
+  versions_fgumi:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgumi:
+          type: string
+          description: The tool name
+      - fgumi --version | sed "s/^fgumi //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgumi:
+          type: string
+          description: The tool name
+      - fgumi --version | sed "s/^fgumi //":
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@sppearce"
+maintainers:
+  - "@sppearce"
+containers:
+  docker:
+    linux/arm64:
+      name: community.wave.seqera.io/library/fgumi:0.8.0--82dcb9f47f4b744a
+      build_id: bd-82dcb9f47f4b744a_1
+      scan_id: sc-be5c5277e89b46c4_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/fgumi:0.8.0--4fd382d441fde4a1
+      build_id: bd-4fd382d441fde4a1_1
+      scan_id: sc-0e23c6c201b30c47_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/fgumi:0.8.0--29b7f6948037525b
+      build_id: bd-29b7f6948037525b_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/74/74c00516b0152fbf7f721f7b8983024c652639d47c5e225c0ad0f6ca00773788/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/fgumi:0.8.0--c262ba878d173764
+      build_id: bd-c262ba878d173764_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/01/011a2f83a2330368f86f310fec5b073c9c13a42243f8db151dd6dddf42feae19/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/fgumi/group/.conda-lock/linux_amd64-bd-4fd382d441fde4a1_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/fgumi/group/.conda-lock/linux_arm64-bd-82dcb9f47f4b744a_1.txt
