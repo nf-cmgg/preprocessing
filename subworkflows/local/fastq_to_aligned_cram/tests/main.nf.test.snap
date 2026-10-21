@@ -1,51 +1,5 @@
 {
-    "fastq to cram - stub": {
-        "content": [
-            {
-                "align_reports": [
-                    
-                ],
-                "cram_crai": [
-                    [
-                        {
-                            "groupSize": 1,
-                            "groupTarget": {
-                                "genome_data": {
-                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
-                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
-                                },
-                                "id": "test",
-                                "markdup": "false",
-                                "sample_type": "DNA",
-                                "samplename": "test",
-                                "single_end": false
-                            }
-                        },
-                        "test.merged.cram",
-                        "test.merged.cram.crai"
-                    ]
-                ],
-                "family_size_histogram": [
-                    
-                ],
-                "rna_junctions": [
-                    
-                ],
-                "rna_splice_junctions": [
-                    
-                ],
-                "sormadup_metrics": [
-                    
-                ]
-            }
-        ],
-        "timestamp": "2026-09-10T09:14:13.546181",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
-        }
-    },
-    "fastq to cram - bwa - bamsormadup": {
+    "fastq to cram - bwamem3 - bamsormadup": {
         "content": [
             {
                 "align_reports": [
@@ -101,13 +55,59 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-09T14:17:49.889335",
+        "timestamp": "2026-10-20T12:24:51.685577",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
         }
     },
-    "fastq to cram - bwa - samtools sormadup": {
+    "fastq to cram - stub": {
+        "content": [
+            {
+                "align_reports": [
+                    
+                ],
+                "cram_crai": [
+                    [
+                        {
+                            "groupSize": 1,
+                            "groupTarget": {
+                                "genome_data": {
+                                    "fai": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai",
+                                    "fasta": "s3://test-data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"
+                                },
+                                "id": "test",
+                                "markdup": "false",
+                                "sample_type": "DNA",
+                                "samplename": "test",
+                                "single_end": false
+                            }
+                        },
+                        "test.merged.cram",
+                        "test.merged.cram.crai"
+                    ]
+                ],
+                "family_size_histogram": [
+                    
+                ],
+                "rna_junctions": [
+                    
+                ],
+                "rna_splice_junctions": [
+                    
+                ],
+                "sormadup_metrics": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-09-10T09:14:13.546181",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "fastq to cram - bwamem3 - samtools sormadup": {
         "content": [
             {
                 "align_reports": [
@@ -158,12 +158,12 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.metrics:md5,c4de8e394bb7110b952b2f42af335484"
+                        "test.merged.metrics:md5,d6269854c9a7efd286e45506ef56c237"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-09T14:10:49.27252",
+        "timestamp": "2026-10-20T15:16:41.28026",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -256,18 +256,18 @@
                                 "single_end": false
                             }
                         },
-                        "test.merged.metrics.txt:md5,641527401576375d7c0b0b54fbaf63ab"
+                        "test.merged.metrics.txt:md5,7afa97ed76abfd72a77d98709474be68"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-09T14:19:41.853779",
+        "timestamp": "2026-10-20T17:28:20.611765",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
         }
     },
-    "fastq to cram - bwa - samtools sort": {
+    "fastq to cram - bwamem3 - samtools sort": {
         "content": [
             {
                 "align_reports": [
@@ -307,10 +307,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-03T10:48:56.909948371",
+        "timestamp": "2026-10-20T12:31:18.190623",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "fastq to cram - umi": {

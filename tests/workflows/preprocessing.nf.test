@@ -256,7 +256,7 @@ nextflow_workflow {
                 // ch_samplesheet
                 input[0] = Channel.of(
                     [
-                        [                           // meta
+                        [
                             id: "200624_A00834_0183_BHMTFYDRXX",
                             lane: 1,
                         ],

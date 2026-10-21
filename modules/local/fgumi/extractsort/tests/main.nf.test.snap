@@ -14,12 +14,12 @@
                     [
                         "FGUMI_EXTRACTSORT",
                         "fgumi",
-                        "0.7.0"
+                        "0.8.0"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-16T15:59:25.807775",
+        "timestamp": "2026-10-20T12:00:03.516457",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -40,12 +40,12 @@
                     [
                         "FGUMI_EXTRACTSORT",
                         "fgumi",
-                        "0.7.0"
+                        "0.8.0"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-16T13:43:37.727741",
+        "timestamp": "2026-10-20T12:00:10.547408",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
