@@ -107,7 +107,7 @@
                     },
                     "riker/multi": {
                         "branch": "master",
-                        "git_sha": "1e13247023de6bb84f06459e2c4fae1028364a36",
+                        "git_sha": "0ee1b0ff3aea883f4087973c2600413bc09d4d8f",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/riker/multi/riker-multi.diff"
                     },
