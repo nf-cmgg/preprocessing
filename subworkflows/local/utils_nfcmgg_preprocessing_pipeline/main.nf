@@ -7,10 +7,10 @@
 workflow UTILS_NFCMGG_PREPROCESSING_PIPELINE {
 
     main:
-    dummy_emit = true
+    _dummy_emit = true
 
     emit:
-    dummy_emit
+    _dummy_emit
 }
 
 /*
