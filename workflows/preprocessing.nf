@@ -454,6 +454,7 @@ workflow PREPROCESSING {
     riker_isize_histogram           = BAM_QC.out.riker_isize_histogram
     riker_wgs_metrics               = BAM_QC.out.riker_wgs_metrics
     riker_wgs_coverage              = BAM_QC.out.riker_wgs_coverage
+    riker_wgs_per_base_bw           = BAM_QC.out.riker_wgs_per_base_bw
     riker_pdf                       = BAM_QC.out.riker_pdf
     riker_rna_biotype               = BAM_QC.out.riker_rna_biotype
     riker_rna_insert_size_histogram = BAM_QC.out.riker_rna_insert_size_histogram

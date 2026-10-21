@@ -122,6 +122,7 @@ workflow BAM_QC {
     riker_isize_histogram           = RIKER_MULTI.out.isize_histogram
     riker_wgs_metrics               = RIKER_MULTI.out.wgs_metrics
     riker_wgs_coverage              = RIKER_MULTI.out.wgs_coverage
+    riker_wgs_per_base_bw           = RIKER_MULTI.out.wgs_per_base_bw
     riker_pdf                       = RIKER_MULTI.out.pdf
     riker_rna_biotype               = RIKER_MULTI.out.rna_biotype
     riker_rna_insert_size_histogram = RIKER_MULTI.out.rna_insert_size_histogram

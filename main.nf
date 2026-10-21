@@ -450,6 +450,11 @@ output {
             return "${samplePublishDir(meta)}/"
         }
     }
+    riker_wgs_per_base_bw {
+        path { meta, _file ->
+            return "${samplePublishDir(meta)}/"
+        }
+    }
     riker_pdf {
         path { meta, _file ->
             return "${samplePublishDir(meta)}/"
