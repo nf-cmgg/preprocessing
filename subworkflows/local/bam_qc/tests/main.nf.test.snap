@@ -321,7 +321,7 @@
                             "single_end": false,
                             "tag": "WES"
                         },
-                        "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
+                        "test.base-distribution-by-cycle.txt:md5,e45ca49955a9b7983a5e9ce8010b29b6"
                     ]
                 ],
                 "riker_error_indel": [
@@ -506,7 +506,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:39:43.691597",
+        "timestamp": "2026-10-20T12:09:49.454746",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -653,7 +653,7 @@
                             "single_end": false,
                             "tag": "seqcap"
                         },
-                        "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
+                        "test.base-distribution-by-cycle.txt:md5,e45ca49955a9b7983a5e9ce8010b29b6"
                     ]
                 ],
                 "riker_error_indel": [
@@ -838,7 +838,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:40:19.331388",
+        "timestamp": "2026-10-20T12:10:26.481198",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -952,7 +952,7 @@
                             "qc_mode": "full",
                             "single_end": false
                         },
-                        "test.base-distribution-by-cycle.txt:md5,a1554060830f234d63a282c89fa47b2a"
+                        "test.base-distribution-by-cycle.txt:md5,e45ca49955a9b7983a5e9ce8010b29b6"
                     ]
                 ],
                 "riker_error_indel": [
@@ -1124,7 +1124,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:38:39.483718",
+        "timestamp": "2026-10-20T12:08:54.175685",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

@@ -11,7 +11,7 @@ Changes in 'fgumi/simplex/main.nf':
 -    tuple val(meta), path(grouped_bam)
 -    val min_reads
 -    val keep_rejected
-+    tuple val(meta), path(grouped_bam), val(min_reads), val(keep_rejected)
++    tuple val(meta), path(grouped_bam),val(min_reads), val(keep_rejected)
  
      output:
      tuple val(meta), path("${prefix}.bam"), emit: bam

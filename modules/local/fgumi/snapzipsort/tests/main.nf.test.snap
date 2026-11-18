@@ -20,7 +20,7 @@
                     [
                         "FGUMI_SNAPZIPSORT",
                         "fgumi",
-                        "0.7.0"
+                        "0.8.0"
                     ],
                     [
                         "FGUMI_SNAPZIPSORT",
@@ -30,7 +30,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T11:56:58.495522",
+        "timestamp": "2026-10-20T12:04:08.462115",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -57,7 +57,7 @@
                     [
                         "FGUMI_SNAPZIPSORT",
                         "fgumi",
-                        "0.7.0"
+                        "0.8.0"
                     ],
                     [
                         "FGUMI_SNAPZIPSORT",
@@ -67,7 +67,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T12:01:16.811993",
+        "timestamp": "2026-10-20T12:06:36.677886",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

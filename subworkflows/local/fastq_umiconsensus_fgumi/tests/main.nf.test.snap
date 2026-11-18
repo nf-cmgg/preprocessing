@@ -80,7 +80,7 @@
                                 "single_end": false
                             }
                         },
-                        "test.fgumi.filter.stats.txt:md5,562a544db15f3953dd1f6dc61d44db76"
+                        "test.fgumi.filter.stats.txt:md5,6bdc324096df713e529d4104db6e1594"
                     ]
                 ],
                 "grouping_metrics": [
@@ -111,7 +111,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-16T15:47:47.748945",
+        "timestamp": "2026-10-20T12:39:44.852377",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
